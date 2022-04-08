@@ -4,7 +4,7 @@ const withMDX = require('@next/mdx')({
     extension: /\.(md|mdx)$/,
 })
 
-const repoName = 'Shiftt'
+const repoName = 'SHIFTT'
 const build = process.env.NODE_ENV === "production";
 console.log(`Running in ${process.env.NODE_ENV} mode`);
 process.env.NEXT_PUBLIC_REPO_NAME = repoName
