@@ -1,0 +1,1283 @@
+-   Accessibility: '
+
+
+        Accessibility is "the quality or condition of being accessible (in various
+        senses)," and "access" refers to "to obtain, acquire; to get hold of" or "to
+        gain admission to" (source: Oxford English Dictionary online). "Accessibility"
+        in design speak often refers to design for people with disabilities (see [Shawn
+        Lawton Henry, et al. 2014](https://dl.acm.org/citation.cfm?doid=2596695.2596719)).
+        This workshop employs the term "accessibility" to refer to access to those
+        folks as well as to people in different international contexts and/or who
+        speak different languages, and to methods of open or non-proprietary design
+        and sharing.
+
+        '
+-   Anaconda: '
+
+
+        Anaconda is a distribution for Python (and other languages) with tools for
+        data analysis.
+
+
+        #
+
+
+        - [Anaconda Documentation](https://docs.anaconda.com/anaconda/)'
+-   append: "\n\n`append()` is a method that adds an element to the end of a list.\
+        \ \n\n\n\nRead more about [append()](https://www.w3schools.com/python/ref_list_append.asp)\
+        \ at w3schools.\n"
+-   Attribute Table: '
+
+
+        An *attribute* is a characteristic of a feature. Attributes can contain data
+        of different types: strings (text), numerical values, dates, or booleans.
+        Each column in the *Attribute Table* represents a different attribute.
+
+        '
+-   Attributes: '
+
+
+        Attributes offer secondary information about an element in HTML. Each attribute
+        is nestled within the element tag. For example, the HTML command `<a href="https://www.dhinstitutes.org/">Digital
+        Humanities Research Institute</a>` contains a link to the Digital Humanities
+        Research Institute website. Here, the `a` element denotes a hyperlink and
+        the `href` denote an attribute that specifies the hyperlink''s destination.'
+-   'Attribute type ': '
+
+
+        Attributes can be stored as different data types, including strings (text),
+        integer, double, dates, and booleans.
+
+        '
+-   The Belmont Report: '
+
+
+        Published by the National Commission for the Protection of Human Subjects
+        of Biomedical and Behavioral Research in 1979, the Belmont Report ""identifies
+        basic ethical principles and guidelines that address ethical issues arising
+        from the conduct of research with human subjects" (source: [HHS.gov](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html).
+
+        '
+-   Beneficence: '
+
+
+        Beneficence is a core principle in *the Belmont Report* that stipulates that
+        researchers should "(1) do not harm and (2) maximize possible benefits and
+        minimize possible harms." A key concern when applying this principle is an
+        *assessment of risks and benefits* (source: [The Belmont Report](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html#xbasic).
+
+        '
+-   Big data: "\n\n\"Big data\" generally refers to digital projects that deal with\
+        \ very large datasets from which different kinds of patterns or analyses are\
+        \ computed. Oftentimes big data researchers do not obtain the informed consent\
+        \ of each person represented by or linked to the obtained data. This can be\
+        \ an ethical concern, given that \"even seemingly innocuous and anonymized\
+        \ data have produced unanticipated ethical questions and detrimental impacts\"\
+        \ (source: [Matthew Zook, et al. 2017](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005399)).\
+        \   \n"
+-   Boolean: "\n\nA data type in Python that is either \"True\" or \"False\" and is\
+        \ often used as a basic building block for logical operations. They are implied\
+        \ in conditional statements (which check if expressions are true in order\
+        \ to run a bit of code) and can be retruend by functions. \n\n\n\n- Read more\
+        \ about [Booleans and logical operators](https://thomas-cokelaer.info/tutorials/python/boolean.html)\
+        \ here. \n\n\n\n- Check out w3school's tutorial on using [Booleans](https://www.w3schools.com/python/python_booleans.asp).\
+        \ \n"
+-   branch: '
+
+
+        Branches are not used in the Git session in this curriculum, but are a frequently
+        used feature of Git. A branch is an alternative timeline of commits, usually
+        used to add a new feature or some other substantive change to a repository.
+        Once the feature or change is complete, the branch can be reintegrated with
+        the main timeline, which is usually called "master." The process of reintegration
+        is referred to as "merging".
+
+
+        #
+
+
+        - ["Git Branching - Branches in a Nutshell"](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell),
+        in Scott Chacon and Ben Straub, _Pro Git_, 2nd edition (Apress, 2014)
+
+
+        #
+
+
+        - ["Git Branching - Basic Branching and Merging"](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging),
+        _git-scm.com_
+
+        '
+-   Category: "\n\nA category is \"a term (meaning literally \u2018predication\u2019\
+        \ or \u2018assertion\u2019) given to certain general classes of terms, things,\
+        \ or notions\" (source: Oxford English Dictionary online). The construction\
+        \ and reproduction of categories\u2014through e.g. library subject headings,\
+        \ tags on websites, categorization methods informing algorithms, and spatial\
+        \ divisions on a map\u2014are an important ethical consideration when doing\
+        \ digital research or a digital project.\n"
+-   Class: '
+
+
+        Class is an attribute used in HTML and CSS to select and access specific elements.
+        Class is especially useful in applying standard styling to repeating elements
+        across a website. This helps create a consistent look to a website.'
+-   Cloning: "\n\nCloning a repository means making a copy of a repository on GitHub,\
+        \ to download and work on locally--on your local machine. \n\nCloning can\
+        \ be especially useful when you're joining a group project that is hosted\
+        \ on GitHub, and you want your changes to eventually be pushed and shared\
+        \ with that same repository. \n\nCloning can also be used in conjunction with\
+        \ forking. For example, you could fork the GitHub repository of this lesson\
+        \ to your GitHub account, and then clone or download the repository to make\
+        \ edits and admendations. Then you would push those changes to a repository\
+        \ under your GtiHub account. Git and GitHub work to make sure attribution\
+        \ of contributions and lineage are transparent. \n\n#\n\n- [Cloning a repository\
+        \ from GitHub](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github)"
+-   Color ramp: "\n\nprovides a range of color to the features of a map layer based\
+        \ on an attribute from the layer. \n"
+-   Command Line: '
+
+
+        The command line is a text-based way of interacting with your computer. Another
+        way of looking at it is that the command line is a program that accepts commands
+        as text input and converts them into appropriate operating system functions.
+
+
+        There are other words that can be used synonymously with "command line." Here
+        are some of them:
+
+        - _bash_ - the programming language used in the command line. (Yes, we tricked
+        you, you''re already programming!) Short for "Born Again SHell," for reasons
+        people on the internet will happily tell you about.
+
+        - _the terminal_ - Particularly used to refer to the command line on macOS.
+        This term made more sense when universities used mainframes and every computer
+        was only a terminal.
+
+        - _the shell_ - The part of an operating system that interacts with a human.
+        Technically, anything you do in a graphical interface is also in a shell,
+        but in practice this is just another synonym for the command line.
+
+        - _cli_ - "command-line interface," this is a super technical term for the
+        command line used to impress everyone around you.
+
+        '
+-   Commit: "\n\nWhen you commit your changes using Git, you are created a version\
+        \ a file that can be referenced even after further changes to the file are\
+        \ made and committed. \n\nMaking a commit involves 2 steps. \n- First, you\
+        \ need to stage  the files, or tell Git, which files it should pay attention\
+        \ to. Where are your changes? You use the command `git add` to point to them.\
+        \ \n- Second, you create the version by committing the changes. You use the\
+        \ command `git commit` to take the snapshot and add a label (the -m flag)\
+        \ that can help you in returning to that version in the future.\n\nMaking\
+        \ a commit is a lot like taking a photo. First, you have to decide who will\
+        \ be in the photo and arrange your friends or family in front of the camera\
+        \ (the staging process). Once everyone is present and ready, you take the\
+        \ picture, entering that moment into the permanent record (the commit process).\n\
+        \nBefore any of this can happen, you must initialize the Git folder, or put\
+        \ it on Git's radar. This only needs to happen one time to a folder."
+-   Concordance: '
+
+
+        Nltk function that allows to see the characters on both sides of the word;
+        an easy way to investigate the context of a certain word across a corpus.'
+-   Consent: '
+
+
+        To provide consent is to actively provide permission or agree to something.
+        The more specific term *"informed consent"* is used to emphasize that in order
+        to provide such permission, a person must be provided clear and correct information
+        (not deception), and be able to comprehend such information. In the context
+        of a research study, per *The Belmont Report* guidelines, a person must also
+        be informed of their right to volunteer or not to participate in the study,
+        and of their right to withdraw from the study at any point. Ideally, consent
+        would also be enthusiastically given (see [The Belmont Report](belmont.md)
+        page; also see [this image](https://github.com/DHRI-Curriculum/ethics/blob/master/images/consent_pp.png)
+        from Planned Parenthood that reads "CONSENT: I [heart] FRIES: Freely given,
+        Reversible, Informed, Enthusiastic, Specific."'
+-   Corpus: '
+
+
+        A collection of texts that are somehow related to each other. Plural: /corpora/'
+-   CSS: "\n\nCSS (Cascading Style Sheets) is usually used in conjunction with HTML.\
+        \ HTML tells the browser what the different parts of a document _are_. CSS\
+        \ tells the browser what the parts of the document should _look like_. It\
+        \ is essentially a set of rules that are applied when rendering an HTML document.\
+        \ Its name\u2014Cascading Style Sheets\u2014refers to the fact that there\
+        \ is an order of precedence in how the browswer applies CSS rules to a text. "
+-   CSS Selectors: "\n\nCSS Selectors select HTML elements on which to apply particular\
+        \ styling rules. For example, in the following CSS rule set, the `h1` selector\
+        \ applies orange color and italics to all content in the `h1` element.\n\n\
+        ```css\nh1 {\n    color: orange;\n    font-style: italic;\n}\n```\n"
+-   CSV (file format): '
+
+
+        CSV or Comma Separated Values uses---you guessed it!---commas to separate
+        values. Each line (First Name, Last Name) is a new "record" and each column
+        (separated by a comma) is a new "field." This data format stores tabular data
+        in a clean way that facilitates the transfer between different data architectures.
+        As data types go, it is very rudimentary (even predating computers!) and is
+        easy to type, without needing special characters beyond a comma.
+
+
+        ```
+
+        First Name,Last Name
+
+        Smally,McTiny
+
+        Kitty,Kitty
+
+        Foots,Smith
+
+        Tiger,Jaws
+
+        ```'
+-   Data: "\n\nThere are many different perspectives towards what counts as data.\
+        \ Some cites data as \"material or information\" for which \"an argument,\
+        \ theory, test or hypothesis, or another research output is based\" upon ([Queensland\
+        \ University of Technology](http://www.mopp.qut.edu.au/D/D_02_08.jsp)), while\
+        \ others critiques the understanding of data as \"mere descriptions ofa priori\
+        \ conditions\" ([Johanna Drucker](http://www.digitalhumanities.org/dhq/vol/5/1/000091/000091.html)).\
+        \ Data, in our case, are subjective (because of our interests and assumptions)\
+        \ and are materials and/or information necessary to come to our conclusion.\
+        \ \n\n#\n\n- Johanna Drucker's [Humanities Approaches to Graphical Display](http://www.digitalhumanities.org/dhq/vol/5/1/000091/000091.html)\n\
+        - Matthew Salganik's [Readymade v. Custommade Data](https://www.bitbybitbook.com/en/1st-ed/introduction/themes/)\n\
+        - Catherine D'Ignazio and Lauren Klein's [The Numbers Don't Speak for Themselves](https://data-feminism.mitpress.mit.edu/)"
+-   Database: '
+
+
+        A database is a collection of data that is structured to allow for manipulation.
+
+        '
+-   Descriptive Analysis: '
+
+
+        Descriptive analysis are techniques geared towards summarizing a data set,
+        such as:
+
+
+        - Mean
+
+        - Median
+
+        - Mode
+
+        - Average
+
+        - Standard deviation'
+-   Dictionaries: '
+
+
+        A collection which is unordered, changeable and indexed. In Python dictionaries
+        are written with curly brackets, and they have keys and values.'
+-   dir(): "\n\nThe `dir()` method returns a list of possible methods and attributes\
+        \ of an object, such as a variable or string. Useful for seeing what kinds\
+        \ of things you can do with that object. \n\n\n\n- Learn how to use [dir()](https://www.w3schools.com/python/ref_func_dir.asp)\
+        \ on w3schools.\n"
+-   Discourse: '
+
+
+        Discourses, per Michel Foucault''s theorization, are competing ideologies
+        (or individualized groups of statements), constructed by people and institutions
+        in power over time, that become dominant amongst societies of people. Discourses
+        produce knowledge in mediums that a society perceives as normative and generally
+        does not question; in doing so, discourses pervasively shape how the people
+        in that society think, act, and react (see Michel Foucault, _The Archaeology
+        of Knowledge and the Discourse on Language_, 1969).'
+-   '"The Distance Principle"': '
+
+
+        The distance principle refers to "the extent to which Internet texts or data
+        sets might connect to persons [even when] the conceptual or experiential distance
+        between the researcher and author/participant [does not appear to be] close"
+        (source:  [Annette Markam and Elizabeth Buchanon](https://www.academia.edu/8037870/Ethical_Concerns_in_Internet_Research).
+
+        '
+-   Elements: '
+
+
+        Elements identify the different parts of a page, such as paragraphs, headings,
+        titles, body text, images and more. Elements are demarcated by tags which
+        enclose the content of an element (ex. `<head>` and `</head>` are tags that
+        denote the head element of your page).'
+-   Ethics: '
+
+
+        Ethics are the moral principles that an individual aims to follow in practice
+        to the best of their ability, research, and foresight.
+
+        '
+-   f-string: "\n\nAlso called \u201Cformatted string literals,\u201D f-strings are\
+        \ ways of formating text so that expressions (like variables) can appear within\
+        \ strings. They have an f at the beginning and curly braces containing expressions\
+        \ that will be replaced with their values. \n\n\n\n- Read more about [f-strings](https://realpython.com/python-f-strings/#f-strings-a-new-and-improved-way-to-format-strings-in-python)\
+        \ on Real Python.\n\n\n\n- See [examples for using f-strings](https://www.geeksforgeeks.org/formatted-string-literals-f-strings-python/)\
+        \ on Geeks for Geeks.\n"
+-   Feature: "\n\nA feature is a visual element on a map. For vector data it's the\
+        \ points, lines and polygons. Each individual feature (each point, each line,\
+        \ and each polygon) is represented as a row in the attribute table. \n"
+-   "Filesystem\t": "\n\nA\_filesystem (or file system) is a set of methods and data\
+        \ structures that an operating system (e.g., Windows, MacOS, Linux, etc.)\
+        \ uses to  control how data is stored and retrieved on a disk (such as your\
+        \ computer\u2019s hard drive, or even a USB pen drive). Some operating systems\
+        \ include support for more than one file system. "
+-   float: "\n\nA data type in Python that represents numbers with decimal points.\
+        \ \n\n\n\n- Read more about [floats](https://www.geeksforgeeks.org/python-float-type-and-its-methods/)\
+        \ on Geeks for Geeks.\n"
+-   Forking: "\n\nForking is a proper function of the GitHub platform. It supports\
+        \ collaboration by allowing you to copy someone else's repository to your\
+        \ own account on GitHub while maintaining a trail of attribution and derivation.\
+        \ \n\nOnce the files are forks, you can clone or download them, edit them,\
+        \ and share your changes on GitHub. Git and GitHub help track and be transparent\
+        \ about contributions or attribution. \n\n#\n\n- [About Forking](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/about-forks).\
+        \ GitHub Writing."
+-   for-loop: "\n\nA for-loop is a way of going through an entire sequence of items,\
+        \ like a list. A for-loop \"iterates\" over a sequence, which means it does\
+        \ something to each item in that sequence. With for-loops we can carry out\
+        \ a command for multiple items in a sequence. \n\n\n\n- Check out the [for-loop](https://www.w3schools.com/python/python_for_loops.asp)\
+        \ description on w3schools.\n"
+-   FTP: '
+
+
+        FTP is a protocol used to share files from your computer (_a client_) to another
+        computer called a server, and back again over the internet. '
+-   Function: "\n\nFunctions are ways of doing things in Python. They take some input\
+        \ and do something with it, and can return a value. For example, a function\
+        \ can return the results of a calculation. If your function takes an argument,\
+        \ it will go inside the parentheses. \n\nFunctions are first defined then\
+        \ called to be executed. This allows you to first write the function but only\
+        \ call it (execute its code) when you need to in Python.\n\nExample: \n\n\
+        ```python\ndef multiply(a, b):\n    result = a * b\n    return \n\nmultiply(2,\
+        \ 3)\n```\n\nThe first code block defines the function `multiply()` which\
+        \ takes `a` & `b` as arguments. The function sets `result` to the caluclation\
+        \ of `a` x `b`. It then returns the value of result. Finally, the function\
+        \ is called with arguments `2` & `3`, which will be substituted for `a` and\
+        \ `b` in the function definition. \n\n\n\n- More in-depth exploration of [functions](https://www.programiz.com/python-programming/function)\
+        \ on Programiz.\n\n\n\n- Simple walk-through of [functions](https://www.w3schools.com/python/python_functions.asp)\
+        \ on w3schools.\n"
+-   Geocoding: '
+
+
+        is a spatial process that uses a *geographic address locator* to match addresses
+        with location coordinates and create a point layer. It turns a text file (e.g.
+        CSV) into a vector file (e.g. points layer).
+
+        '
+-   Git: "\n\nGit is software used for version control\u2014that is, tracking the\
+        \ state of files and changes you make to them over time. Git can be enabled\
+        \ in a folder, and then used to save the state of the contents in that folder\
+        \ at different points in the future, as designated by you.\n\nGit is also\
+        \ useful for collaboration, as a repository can be shared across computers,\
+        \ and its contents can be asynchonously developed and eventually merged with\
+        \ the main project. \n\nIn this workshop, you'll use Git on your local machines\
+        \ to track changes you make to a file. \n\n#\n\n- Perez-Riverol, Y. and colleagues.\
+        \ (2016) _[Ten Simple Rules for Taking Advantage of Git and GitHub](https://doi.org/10.1371/journal.pcbi.1004947)._\
+        \ PLOS Computational Biology.\n- Chacon, S. and Straub, B. [Pro Git](https://git-scm.com/book/en/v2).\
+        \ Published by Apress.\n\n#\n\n- [An intro to Git: What it is and how to use\
+        \ it](https://www.freecodecamp.org/news/what-is-git-and-how-to-use-it-c341b049ae61/)\n\
+        \n#\n\n- [Atlassian's Git cheat sheet](https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet)\
+        \ is a great resource, handy to have next to your computer as you're learning\
+        \ how to use Git.\n"
+-   GitHub: "\n\nGitHub is a online platform for hosting Git repositories. It functions\
+        \ for some, predominantly programmers, as a social network for sharing and\
+        \ collaborating on code-based projects. Users can share their own projects,\
+        \ as well as search for others, which they can then often work on and contribute\
+        \ to.\n\nDigital Humanists, librarians, and other academics are also finding\
+        \ ways Git and GitHub are useful in writing projects and teaching. \n\nGitHub\
+        \ also serves as a web-hosting platform, allowing users to create websites\
+        \ from their repositories.\n\n#\n\n- Pe-Than, E.P.P., Dabbish, L. and Herbsleb,\
+        \ J.D. (2019). [Collaborative Writing at Scale: A Case Study of Two Open-Text\
+        \ Projects Done on GitHub](https://ci.acm.org/2019/assets/proceedings/CI_2019_paper_65.pdf).Collective\
+        \ Intelligence.\n\n\n#\n\n- [Getting Started with GitHub](https://help.github.com/en/github/getting-started-with-github)\n\
+        - Miyake, K. (2016). [Create Your (FREE) Website Using Github and Jekyll](https://digitalfellows.commons.gc.cuny.edu/2016/03/21/create-your-free-website-using-github-and-jekyll/).\
+        \ Tagging the Tower blog.\n- Visconti, A. (2016). [Building a static website\
+        \ with Jekyll and GitHub Pages](https://programminghistorian.org/en/lessons/building-static-sites-with-jekyll-github-pages).\
+        \ Programming Historian."
+-   "GUI\_": "\n\n\"Graphical User Interface,\u201D pronounced \"gooey.\u201D It\u2019\
+        s a system of interactive visual components for computer software\u2026 basically,\
+        \ anything on a computer that isn't in the command line. All familiar elements\
+        \ of day-to-day computer tasks such as images, windows, prompts, buttons,\
+        \ and progress bars are part of the GUI. The way most people interact with\
+        \ computers. Some tasks can only be done in a GUI, while others can only be\
+        \ done in the command line.\n"
+-   Hegemony: "\n\nAntonio Gramsci's concept of hegemony refers to \u201Cthe ability\
+        \ of a dominant group to create [majority] consent and agreement [around a\
+        \ particular system of meanings] within a population without the use or threat\
+        \ of force\u201D (source: Kenneth Guest, *Cultural Anthropology: A Toolkit\
+        \ for a Global Age*, 2014, page 52). Hegemony is one way of understanding\
+        \ how dominant forms of knowledge and power produce and reinforce each other.\n"
+-   High Quality Data: "\n\nHigh quality data is often understood as valid, accurate,\
+        \ complete, consistent, and uniformed. This is often achieved through the\
+        \ cleaning process. \n\nMeasurements are valid when they conform to set constraints.\
+        \ They are accurate when they represent the correct values (often requiring\
+        \ cross-referencing trusted external sources). They are complete when they\
+        \ represent everything that might be known and are consistent when observations\
+        \ do not contradict each other. Measurements are uniform when the same unit\
+        \ of measure is used in all relevant measurements.  "
+-   HTML: '
+
+
+        HTML (Hypertext Markup Language) is a markup language used to write web-based
+        documents. It enables us to provide web browsers with information about the
+        _content_ of a document. We can, for example, indicate that some part of our
+        document is a paragraph, image, heading, or link. The browser uses this information
+        when displaying the document for users.'
+-   Human subjects: "\n\nA human subject refers to \"a living individual about whom\
+        \ an investigator (whether professional or student) conducting research obtains\
+        \ (1) data through intervention or interaction with the individual, or (2)\
+        \ identifiable private information\" (source: [HHS.gov](https://www.hhs.gov/ohrp/regulations-and-policy/regulations/45-cfr-46/index.html)).\
+        \ However, according to [the AoIR Ethics Working Committee's 2012 report](http://aoir.org/reports/ethics2.pdf),\
+        \ \"The definition of \u2018human subject\u2019 has become, unfortunately,\
+        \ a litmus test for whether or not one needs to undergo ethical review before\
+        \ conducting research... \u2018human subject\u2019 has never been a good fit\
+        \ for describing many internet-based research environments.\"\n"
+-   ID: '
+
+
+        ID is an attribute used in HTML and CSS to create unique identifiers. IDs
+        facilitate fine-grained styling of websites by allowing us to select and access
+        unique elements.'
+-   if-Statement: "\n\n\nIf-statements check whether a statement meets a certain condition,\
+        \ and are used to write code that \"makes decisions\". They start with `if`\
+        \ followed by a condition which is evaluated to be either true or false. If\
+        \ it's true, the block after the colon (`:`) is run. If it's false, the block\
+        \ under the `else:` is run. \n\n```python\nweather = \"sunny\"\n\nif weather\
+        \ == \"sunny\":\n    print(\"Bring your shades\")\nelif weather == \"rainy\"\
+        :\n\tprint(\"Bring your umbrella\")\nelse:\n    print(\"I don't know what\
+        \ you should bring! I'm just a little program...\")\n```\n\n\n\n- More detailed\
+        \ explanation of [if-statements and conditionals](https://realpython.com/python-conditional-statements/)\
+        \ on Real Python.\n\n\n\n- Quick explanation of [if-statements](https://www.w3schools.com/python/python_conditions.asp)\
+        \ from w3schools.\n"
+-   Impact approach: '
+
+
+        An impact approach to doing ethical research is based on the assumption that
+        all research has impacts and thus a researcher should be critical and intentional
+        with what sorts of impacts they aim for or expect to result, and take personal
+        responsibility for the effects of their research methods (source: [Annette
+        Markham 2016](http://annettemarkham.com/2016/05/okcupid-data-release-fiasco-its-time-to-rethink-ethics-education/)).
+        Markham focuses on three levels of impact: direct impacts on people, the ramifications
+        of (re)producing categories, and social, political and economic effects.
+
+        '
+-   Inferential Analysis: '
+
+
+        Inferential analysis are techniques geared towards testing a hypothesis about
+        a population, based on your data set, such as:
+
+
+        - Extrapolation
+
+        - P-Value calculation
+
+        '
+-   input(): "\n\nThe `input()` function asks the user for an input. It prompts the\
+        \ user to enter input through the keyboard and saves it. This function enables\
+        \ programs to respond to user input. For example, it can ask for the user's\
+        \ name and print the name The input function can take a prompt within the\
+        \ parenthesis, which it will use to prompt the user to enter the input. \n\
+        \nFor example: \n\n```pycon\n>>> name = input(\"Enter your name here: \")\n\
+        Enter your name here: Filipa\n>>> name\n'Filipa'\n```\n\n\n\n- Detailed article\
+        \ on [`input()`](https://stackabuse.com/getting-user-input-in-python/) from\
+        \ Stack Abuse.\n\n\n\n- Check out the [`input()`](https://www.w3schools.com/python/ref_func_input.asp)\
+        \ tutorial on w3schools. \n"
+-   Institutional Review Board (IRB): '
+
+
+        An institutional body (a designated group of people) that is intended to provide
+        oversight, administrative support, and educational training to ensure that
+        research with human subjects done by researchers of that institution complies
+        with federal and state regulations, and university or institutional policy.
+        Every university or research institution must, legally, have its own or an
+        affiliated IRB.
+
+        '
+-   integer: "\n\nAn integer is a data type, like string, list, boolean, and float.\
+        \ It signifies any value that is a whole number. You can check if a value\
+        \ is an integer with the `type()` function, passing the value as an argument\
+        \ within the parenthesis. \n\n"
+-   'Spatial join by attribute ': '
+
+
+        is based on adding the attributes from one layer to another based on a shared
+        attribute or variable.
+
+        '
+-   Spatial Join by location: '
+
+
+        is when you have two shapefiles that you want to combine based on where the
+        features are located on the map. For example if you have a map of US states
+        and you want to add information about its cities, you can run a spatial join
+        by location.
+
+        '
+-   JSON (file format): "\n\nJSON or JavaScript Object Notation, also uses a nesting\
+        \ structure, but with the addition of \"key/value\" pairs, like the firstName\
+        \ key which is tied to the `Smally` value (at least for the first cat!). JSON\
+        \ is popular with web applications that save and send data from your browser\
+        \ to web servers, because it uses the main language of web browsers, JavaScript,\
+        \ to work with data.\n\n```json\n{\n    \"Cats\": [ \n        {\n        \
+        \    \"firstName\": \"Smally\",\n            \"lastName\": \"McTiny\"\n  \
+        \      }, \n        {\n            \"firstName\": \"Kitty\",\n           \
+        \ \"lastName\": \"Kitty\"\n        },\n        {\n            \"firstName\"\
+        : \"Foots\",\n            \"lastName\":\"Smith\"\n        }, \n        {\n\
+        \            \"firstName\": \"Tiger\",\n            \"lastName\":\"Jaws\"\n\
+        \        } \n    ]\n} \n```"
+-   Jupyter Notebook: '
+
+
+        The Jupyter Notebook is an open-source web application that allows you to
+        create and share documents that contain live code, equations, visualizations
+        and narrative text.
+
+
+        #
+
+
+        - [Jupyter Notebook Documentation](https://jupyter.org/documentation)
+
+
+        #
+
+
+        - [Jupyter Notebook Tips and Tricks](https://www.dataquest.io/blog/jupyter-notebook-tips-tricks-shortcuts/)'
+-   Justice: '
+
+
+        A core principe in *the Belmont Report* that stipulates that researchers should
+        justly distribute the burdens and benefits of the research studey: "(1) to
+        each person an equal share, (2) to each person according to individual need,
+        (3) to each person according to individual effort, (4) to each person according
+        to societal contribution, and (5) to each person according to merit." A key
+        concern when applying this principle is the *selection of subjects*, that
+        is, the fair recruitment and selection of research subjects (source: [The
+        Belmont Report](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html#xbasic).
+
+        '
+-   Layers: '
+
+
+        Layers are "containers" of the data in QGIS. On the map view, layers can be
+        imagined as transparent film sheets that are laid one over another. With the
+        exception of raster layers, each layer contains an Attribute Table, that is,
+        a series of features that in turn have their own attributes. Vector layers
+        can only contain one type of vectors, be it: points, lines or polygons.
+
+        '
+-   Lemmatization: '
+
+
+        A process of collapsing words in an attempt to reduce the number of words,
+        and get a realistic understanding of the meaning of a text. Lemmatization
+        references the word and finds the appropriate root and can therefore take
+        longer than other processes of collapsing words. See "stemming" in this glossary
+        for another process of collapsing words in a corpus.'
+-   len(): "\n\n`len()` is a function that calculates the length of the object within\
+        \ the parenthesis. For a string, it will count the number of characters: `len(\"\
+        hello\")` will return `5`, and `len(\"hi there\")` will return `8`, because\
+        \ it counts blank spaces. For a list, `len()` will count the number of list\
+        \ items: \n\n```pycon\n>>> groceries = [\"berries\", \"bananas\", \"oat milk\"\
+        , \"eggs\", \"spinach\", \"bell peppers\", \"ice cream\", \"frozen pizza\"\
+        , \"floss\", \"hand soap\"]\n>>> len(groceries)\n10\n```\n\n\n\n- Read more\
+        \ about [`len()`](https://www.programiz.com/python-programming/methods/built-in/len)\
+        \ and more things it can calculate.\n\n\n\n- Check out [`len()`](https://www.w3schools.com/python/ref_func_len.asp)\
+        \ on w3schools.\n"
+-   Lexical Density: "\n\nThe number of unique words per total words; a good metric\
+        \ to approximate lexical diversity\u2014the range of vocabulary an author\
+        \ uses."
+-   Library: '
+
+
+        A Python library is a reusable piece of code / sets of instructions that you
+        use in your script.
+
+
+        '
+-   list: "\n\nA list is a data type, like string, integer, float, and Boolean. A\
+        \ list holds items in a sequence, separated by commas and contained within\
+        \ square brackets. They can hold different types of data, like strings, integers,\
+        \ floats, etc. Items within a list can be accessed by list indexing or slicing.\
+        \ \n\n\n\n- Read more about how to use [lists](https://www.programiz.com/python-programming/list)\
+        \ on Programiz. \n"
+-   list indexing: "\n\nList indexing is a foundational tool for working with lists.\
+        \ It allows one to access items from a list by specifying the item according\
+        \ to its location within the list. The item location is represented the number\
+        \ within brackets. In a list index, the count starts at 0, so the first item\
+        \ is accessed by `list[0]` and the second item by `list[1]`, the third item\
+        \ by `list[2]`, and so on. \n\n\n\n- Check out this article about [list indexing](https://towardsdatascience.com/the-basics-of-indexing-and-slicing-python-lists-2d12c90a94cf)\
+        \ on Medium, which also covers slicing lists.\n"
+-   lower(): "\n\n`lower()` is a string method for making all of the letters within\
+        \ a string into lowercase letters. It uses the dot syntax `.` for creating\
+        \ the expression. For example, \"HEllO\" can be transformed into lowercase\
+        \ by running `\"HELLO\".lower()`, which will return the string `'hello'`.\
+        \ \n\n\n\n- Read about `lower()` and related methods like `upper()`, `isupper()`\
+        \ and `islower()` on [Geeks for Geeks](https://www.geeksforgeeks.org/isupper-islower-lower-upper-python-applications/).\n\
+        \n\n\n- See how to use [`.lower()`](https://www.w3schools.com/python/ref_string_lower.asp)\
+        \ on w3schools.\n"
+-   Machine Learning: '
+
+
+        Machine Learning is the study of computer algorithms that improve automatically
+        through experience.
+
+
+        '
+-   Markdown: "\n\nMarkdown is the language used to format the plain text files in\
+        \ your Git-enabled repository. Its also called a markup language, like HTML.\
+        \ Both languages add markers to plain text to style and organize the text\
+        \ of a document.\n\nIn HTML:\n\n```html \n<h1> Heading 1 </h1>\n```\n\nIn\
+        \ Markdown:\n\n```md\n\n```\n\nWhereas you use HTML and CSS with WordPress,\
+        \ you use Markdown with Git and GitHub. Markdown has fewer options for marking\
+        \ text than HTML. It was designed to be human-readable, meaning easy to write\
+        \ and edit. \n\n#\n\n- Coll, S. (2017). [Markdown for Students and Academics](https://www.simondcoll.com/markdown-students-academics/).\n\
+        - Ovadia, S. (2014). [Internet Connection: Markdown for Librarians and Academics](https://academicworks.cuny.edu/cgi/viewcontent.cgi?article=1006&context=lg_pubs)\n\
+        \n#\n\n- [Mastering Markdown](https://guides.github.com/features/mastering-markdown/).\
+        \ GitHub Guides.\n\n#\n\n- Adam Pritchard's [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)\
+        \ is a great resource if you need a quick overview of what features are available\
+        \ in Markdown.\n- The Markdown Guide, a free and open-source reference guide\
+        \ to Markdown, features a [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet)\
+        \ on their website.\n"
+-   Markup: '
+
+
+        Markup languages allow you to format things, whether they''re documents, posters,
+        or websites. HTML is a markup language, as is LaTeX.
+
+
+        #
+
+
+        - [WP-Amelia, Mark-Up Languages](https://wpamelia.com/markup-languages/)
+
+        - [W3C HTML homepage](https://www.w3.org/html/)
+
+        '
+-   Matplotlib: '
+
+
+        Matplotlib is a comprehensive library for creating static, animated, and interactive
+        visualizations in Python.
+
+
+        #
+
+
+        - [Matplotlib User''s Guide](https://matplotlib.org/users/index.html)
+
+
+        '
+-   Merge conflict: "\n\nIf, when attempting to merge, there is a line that has been\
+        \ changed by both parties, you will experience a merge conflict. This means\
+        \ that Git needs your manual intervention to decide which of the two changes\
+        \ will be the canonical or accepted change. A merge conflict is resolved by\
+        \ editing the conflicting files with a text editor, then adding and committing\
+        \ to resolve the merge.  \n"
+-   Merging: "\n\nIf you've advanced the timeline of a repository by making commits,\
+        \ and someone else has advanced the timeline of a remote version of the repository,\
+        \ when you attempt to pull in the remote changes you will be prompted to merge\
+        \ the two timelines. In most cases this is an automatic process that reconciles\
+        \ the two timelines.  \n"
+-   Metadata: '
+
+
+        Any data that describes your book: title, subtitle, author bio, book description,
+        price, publication date, ISBN, etc.'
+-   Method: "\n\nA method in Python is similar to a function, in that it allows us\
+        \ to do things with data. However, a method is attached to what we call an\
+        \ *object*, which is a representation of data. Accordingly, a method operates\
+        \ as a function that is specifically available for that object. \n\nMethods\
+        \ are accessed through the dot syntax `.`.  For example, the method `lower()`\
+        \ can be attached to a string object like so: `\"HELLO\".lower()` and will\
+        \ return the string `'hello'`. \n\n\n\n- Read about [the difference between\
+        \ a method and a function](https://www.tutorialspoint.com/difference-between-method-and-function-in-python)\
+        \ on Tutorials Point.\n\n- If you know something about [classes](https://www.w3schools.com/python/python_classes.asp)\
+        \ and are ready to jump deeper into Object Oriented Programming, you can learn\
+        \ more about [methods and classes](https://data-flair.training/blogs/python-method/)\
+        \ on Data Flair. \n"
+-   Modules: "\n\nA module is a python file (like a script) that contains a number\
+        \ of functions and expressions that you want to include in your program. Programmers\
+        \ often import modules written by other programmers and use them like building\
+        \ blocks for their applications. \n\nIn order to use modules, you need to\
+        \ add them to your script with `import` and then indicate which function you\
+        \ want to use with the dot syntax `.`. For example, we might use the function\
+        \ `choice` from the [`random`](https://docs.python.org/3/library/random.html)\
+        \ module, to generate random numbers. \n\n```pycon\n>>> import random\n>>>\
+        \ numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]\n>>> random.choice(numbers)\n1\n>>>\
+        \ random.choice(numbers)\n3\n>>> random.choice(numbers)\n3\n>>> random.choice(numbers)\n\
+        1\n>>> random.choice(numbers)\n4\n>>> random.choice(numbers)\n9\n```\n\n\n\
+        \n- An in depth explanation of [modules](https://docs.python.org/3/tutorial/modules.html)\
+        \ from the Python docs. \n\n\n\n- A step-by-step tutorial on w3schools that\
+        \ demonstrates [how modules are composed](https://www.w3schools.com/python/python_modules.asp).\
+        \ \n"
+-   The National Commission for the Protection of Human Subjects of Biomedical and Behavioral Research: '
+
+
+        A commission created as a result of the National Research Act of 1974, "charged
+        with identifying the basic ethical principles that should underlie the conduct
+        of biomedical and behavioral research involving human subjects and developing
+        guidelines to assure that such research is conducted in accordance with those
+        principles" (source: [HHS.gov](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html).
+
+        '
+-   NLTK: '
+
+
+        The Natural Language Toolkit (NLTK) is platform for Python for working with
+        human language data.
+
+
+        #
+
+
+        - [The NLTK Documentation](http://www.nltk.org/)'
+-   Objects: "\n\nEven though you probably don't know it, you've been using objects\
+        \ in Python all along. Nearly everything in Python is made out of objects,\
+        \ which are representations of values. For example, the string `\"hello\"\
+        ` is an object. So is the variable `greeting` that stores `\"hello\"`. Integers,\
+        \ floats, and lists are also objects. \n\nTo help you do more complex things\
+        \ with objects, you can learn *object-oriented-programming*, which is an approach\
+        \ toward programming that centralizes objects. This approach deploys what\
+        \ we call *classes* to define and create new objects, as well as *inheritance*\
+        \ to build new objects from old ones. This is definitely intermediate stuff,\
+        \ so make sure you have a grasp on basic concepts like data types, variables,\
+        \ loops, and conditionals before moving onto object-oriented-programming.\
+        \ \n\n\n\n- [This thread](https://stackoverflow.com/questions/56310092/what-is-an-object-in-python)\
+        \ from Stack Overflow does a good job what objects are from a beginner's point\
+        \ of view. \n\n\n\n- If you want to get your feet wet with a little object-oriented-programming,\
+        \ check out this [objects and classes](https://www.learnpython.org/en/Classes_and_Objects)\
+        \ tutorial on w3schools.\n"
+-   Open Data Formats: '
+
+
+        Open data formats are file formats that are available to anyone, free of charge,
+        which allows for accessibility, future-proofing, and preservation. These file
+        formats also allow for easy reusability and aids research reproduction and
+        accountability. They are not limited by intellectual property rights or copyrights.
+        This is distinct from proprietary formats. Some examples of open data formats
+        are `.csv`, `.pdf`, and `.json`.
+
+
+        #
+
+
+        - Library of Congress [Recommended Formats Statement](https://www.loc.gov/preservation/resources/rfs/)
+
+        - Stanford University''s [best practices for file formats](https://library.stanford.edu/research/data-management-services/data-best-practices/best-practices-file-formats)
+
+        '
+-   Origin: "\n\nIn Git, the default remote repository. When you clone a remote repository\u2014\
+        that is, make a local reposotry based on it\u2014the remote repository is\
+        \ automatically added as \"origin.\"\n"
+-   part-of-speech (POS) tagging: '
+
+
+        A way to identify the category of words in a given text. For a list of POS
+        classification, see the [Penn Tree Bank Tag Set](https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html)
+
+
+        '
+-   "Path\_": "\n\nA list of folders on your system that are checked for programs\
+        \ to generate the list of commands available on the command line. For example,\
+        \ since the folder\_`/bin`\_is typically on the path, putting an executable\
+        \ program in that folder will make it available as a command.\n"
+-   Personhood: '
+
+
+        Personhood is "the quality or condition of being a person; [especially] personal
+        identity, selfhood" (Oxford English Dictionary online). When doing internet
+        or digital research, it is important to consider how a person''s data, avatar,
+        images, videos, audio files, social media and other forms of digital information
+        may be understood as an expression of their personhood (source: [the AoIR
+        Ethics Working Committee''s 2012 report](http://aoir.org/reports/ethics2.pdf).
+
+        '
+-   Phatic Language: '
+
+
+        Phatic language is language primarily for communicating social closeness.
+        Phatic words stand in contrast to semantic words, which contribute meaning
+        to the utterance.
+
+        '
+-   Policing the crisis: '
+
+
+        Stuart Hall et al.''s concept of "policing the crisis" refers to the unnatural
+        process by which certain actions (by certain people) become and continue to
+        be understood, reported, policed, and sanctioned as a type of "crime." The
+        police, the judicial system, and mainstream media "are actively and continuously
+        part of [this] whole process" (source: Stuart Hall et al., Policing the Crisis,
+        2013 [1978], page 54.
+
+        '
+-   Polygon: '
+
+
+        a figure with three or more sides. In GIS, it usually refers to complex areas
+        outlining lakes, city blocks, a set of buildings, or other complex features
+        of the map, that can be outlined using interconnected points. A polygon can
+        have an unlimited amount of points. The more points (or "higher the resolution"),
+        the smoother the polygon will look to the human eye.
+
+        '
+-   pop(): '
+
+
+        `pop()` is a method that removes the last item from a list.
+
+
+
+
+        - Check out these examples for using [`pop()`](https://www.w3schools.com/python/ref_list_pop.asp)
+        from w3schools.
+
+        '
+-   print(): '
+
+
+        `print()` is a function that "prints" or displays whatever is inside the parentheses
+        in the terminal window.
+
+
+        For example, running `print("Hello World!")` will output the string `''Hello
+        World''` to the terminal window.
+
+
+
+
+        - See the possibilities with [`print()`](https://www.w3schools.com/python/ref_func_print.asp)
+        on w3schools.
+
+        '
+-   Programming Language: '
+
+
+        Programming languages are used to transform data, by creating scripts that
+        organize an output of data based on a particular input of data. Examples of
+        programming languages include python and javascript.'
+-   Proprietary Data Formats: "\n\nProprietary data file formats are file formats\
+        \ that rely on dedicated, licensed softwares and/or systems. These file formats\
+        \ are often copyrighted, patented, or have other restrictions placed on them,\
+        \ and often require a fee or a paid-for software to open. These file formats\
+        \ are usually discouraged in research projects, especially those with intentions\
+        \ to share with a wider public(s) and audience. This is distinct from open\
+        \ data formats. Some examples of it include .xslx, .doc, and .3ds. \n\n#\n\
+        \n- Library of Congress [Recommended Formats Statement](https://www.loc.gov/preservation/resources/rfs/)\n\
+        - Stanford University's [best practices for file formats](https://library.stanford.edu/research/data-management-services/data-best-practices/best-practices-file-formats)"
+-   Pull Request: "\n\nA pull request is a set of proposed changes to a repository.\
+        \ If you wish to contribute to an open-source project, the most common method\
+        \ is by proposing changes through pull requests.  \n"
+-   Pull: "\n\nAccepting and taking changes that were made to a remote repository,\
+        \ possibly by someone else, and updating your local repository to match. \
+        \ \n"
+-   Push: "\n\nWhen you push your files, or use the command `git push master origin`,\
+        \ you are communicating with GitHub to update the connected project folder\
+        \ stored there. You are pushing the changes, say, to your syllabus.md file\
+        \ stored on their servers which you access via your gitHub.com. \n\n#\n\n\
+        - [Pushing commits to a remote repository](https://docs.github.com/en/github/using-git/pushing-commits-to-a-remote-repository).\
+        \ GitHub Writing."
+-   Qualitative Analysis: '
+
+
+        Qualitative analysis are techniques geared towards understanding a phenomenon,
+        rather than predicting and testing hypotheses, such as:
+
+
+        - Grounded Theory/Computational Grounded Theory
+
+        - Content Analysis
+
+        - Text Analysis
+
+
+        #
+
+
+        - [Computational Grounded Theory: A Methodological Framework](https://drive.google.com/file/d/0BxI6W5IIG74FeEtGbjQ0WF9uM0U/view)'
+-   random: "\n\nThe random module or random library allows one to generate random\
+        \ output. The module is useful for to choose a random element from a list,\
+        \ or number from a range, or between two potential values (like True or False).\
+        \ \n\n\n\n- For a thorough description of the [random module](https://docs.python.org/3/library/random.html),\
+        \ check out the official documentation.\n\n\n\n- For step-by-step demonstration\
+        \ of [how to use random](https://www.pythonforbeginners.com/random/how-to-use-the-random-module-in-python),\
+        \ check out this tutorial from Python For Beginners. \n"
+-   Raster: '
+
+
+        images of a specific location that represent visually continuous data such
+        as temperature and elevation at a given resolution. Higher resolutions mean
+        more precision but also larger file size. Raster layers have no Attribute
+        Table; the values are stored within the image and represented as different
+        hues or colors. Raster images can also be used for reference or aesthetic
+        purposes (e.g. satellite photos).
+
+        '
+-   '"Raw" Data': "\n\n\"Raw\" data is yet to be processed, meaning it has yet to\
+        \ be manipulated by a human or computer. Received or collected data could\
+        \ be in any number of formats, locations, etc.. It could be in any of the\
+        \ forms listed in the previous section.  \n\nBut \"raw\" data is a relative\
+        \ term, inasmuch as when one person finishes processing data and presents\
+        \ it as a finished product, another person may take that product and work\
+        \ on it further, and for them that data is \"raw\" data. \n\n#\n\n- Johanna\
+        \ Drucker's [Humanities Approaches to Graphical Display](http://www.digitalhumanities.org/dhq/vol/5/1/000091/000091.html)\n"
+-   Regular Expressions: '
+
+
+        A powerful way to match text in a document, with a sequence of characters
+        that define a search pattern.
+
+
+        #
+
+
+        - [Interactive tutorial for Regular Expressions](https://regexone.com/)'
+-   Remote: '
+
+
+        *remote* - An adjective describing a computer that is somewhere else. A "remote
+        machine" is a machine you do not have physical access to, but might have access
+        through a means such as the internet. In Git, a remote is a repository that
+        is not on your computer, but is connected to your local repository. You can
+        add new remotes with the `git remote add` command, and change them with the
+        `gitremote set-url` command.
+
+        '
+-   REPL: "\n\nREPL stands for Read, Eval, Print, Loop. It is also known as the Python\
+        \ Interpreter or Interactive Shell, and it refers to a Python environment\
+        \ that processes your code as soon as you press enter. First, it **Reads**\
+        \ your code, then **Evaluates** what you wrote, then **Prints** the result\
+        \ (if there is a result), and finally **Loops** back to the initial prompt,\
+        \ allowing the user to start the loop again. \n\nThe REPL is useful for testing\
+        \ code on the fly, seeing if it works or what will happen. Since the REPL\
+        \ doesn't save your data after each session, though, you need a text editor\
+        \ to write and save longer scripts. Think of the REPL as a sandbox or playpen\
+        \ for exploring Python commands and expressions in the moment. \n\nTo use\
+        \ the REPL, just type `python` into your interpreter. You'll know you're there\
+        \ when you see the three `>>>`. To get out of the REPL, press `control-d`\
+        \ or type `quit()`. \n\n\n\nSee this beginner's tutorial on the [REPL](https://pythonprogramminglanguage.com/repl/)\
+        \ from Learn Python.\n\n\n\nCheck out this intermediate article on the [REPL](https://codewith.mu/en/tutorials/1.0/repl)\
+        \ and what it can do on Code With Mu.\n"
+-   Repository: '
+
+
+        Git uses the term repository to refer to a folder that is being tracked. Colloquially,
+        this term is often shortened to "repo".
+
+
+
+
+        - [About Repositories](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-repositories).
+        Writing on GitHub.
+
+        '
+-   requests: "\n\nThe requests module or requests library allows users to make requests\
+        \ to web pages. It is a useful tool for web scraping, and though it's relatively\
+        \ easy to get started, the learning curve can be steep. \n\nTo use requests,\
+        \ import the module into your script, then set up a response object. In the\
+        \ parenthesis, include the URL of the webpage you want to scrape, enclosed\
+        \ by single quotes.\n\n```pycon\nimport requests\nx = requests.get('<websiteURL>')\n\
+        ```\n\n\n\n- Read the [official docs](https://requests.readthedocs.io/en/master/)\
+        \ for the requests module.\n\n\n\n- Follow the [quickstart tutorial](https://requests.readthedocs.io/en/master/user/quickstart/)\
+        \ on the official docs.\n"
+-   Resolution: '
+
+
+        the scale at which the data is aggregated and displayed. For raster data this
+        will be the size of the pixel. For vector data it is referring to the scale
+        or mapping unit (e.g. neighborhood level, city level, state level, etc).
+
+        '
+-   Respect for persons: '
+
+
+        A core principle in *the Belmont Report* that stipulates that "individuals
+        should be treated as autonomous agents, and second, that persons with diminished
+        autonomy are entitled to protection." A key concern when applying this principle
+        is *informed consent* (source: [The Belmont Report](https://www.hhs.gov/ohrp/regulations-and-policy/belmont-report/index.html#xbasic).
+
+        '
+-   Root: "\n\nThe root is the top-level directory of a [filesystem](filesystem.md).\
+        \ Staying with the tree metaphor to represent a hierarchical structure, if\
+        \ the root is the starting point, the folders are the tree\u2019s branches,\
+        \ and thee files are the leaves. Please note that \u201Croot\u201D is also\
+        \ often used as a synonym for the administrative user on a system. "
+-   Root Element: "\n\nThe root element is used in HTML to denote the outermost element\
+        \ that organizes all the content of an HTML document. For example, in the\
+        \ code below, `<html lang=\"en\">` denotes the opening tag of the root element\
+        \ and `</html>` denotes the closing tag of the root element. \n\n```html\n\
+        <!DOCTYPE html>\n<html lang=\"en\">\n\n  <head>\n      ...\n  </head>\n\n\
+        \  <body>\n      ...\n  </body>\n\n</html>\n```"
+-   Scripts: "\n\nA Python script is a file that contains Python code. The filename\
+        \ needs to have the extension `.py`. Generally, in order to run the file,\
+        \ the user needs to call the script from the Python interpreter. \n\n\n\n\
+        - Check out [how to run a Python script](https://www.geeksforgeeks.org/how-to-run-a-python-script/)\
+        \ on Geeks for Geeks.\n"
+-   'Shapefile ': '
+
+
+
+        There are two types of geographic data--vector data (points, lines, and polygons)
+        and raster data (pixels). The most common way that vector data is stored is
+        in the format of a shapefile. Therefore, a shapefile is a file type that stores
+        vector data.
+
+        '
+-   '"Situated ethics"': '
+
+
+        "Situated ethics," here, refers to the notion that a person''s understandings
+        of and commitments to ethics or morality are greatly linked to their own experiences,
+        positionalities, and political orientations. Note that this understanding
+        of "situated ethics" is an application of Donna Haraway''s idea of "situated
+        knowledges" (1988) to the arena of ethical perspectives.
+
+        '
+-   sort(): '
+
+
+        `stort()` is a method that sorts the items from a list in alphabetical order.
+
+
+
+
+        - Check out these examples for using [`sort()`](https://www.w3schools.com/python/ref_list_sort.asp)
+        from w3schools.
+
+        '
+-   Spatial Join: "\n\na GIS operation that affixes data from one feature layer's\
+        \ attribute table to another from a spatial perspective. Spatial joins begin\
+        \ by selecting a target feature and comparing it spatially to other feature\
+        \ layers. \n\nThere are two types of spatial joins--*spatial join by attribute*\
+        \ and *spatial join by location*. Both of them are ways that the mapping software\
+        \ will let you add data from one map layer or file to another map layer. A\
+        \ *spatial join by attribute* is used when you want to join non-spatial data,\
+        \ such as a text file, to spatial data, such as a shapefile. A *spatial join\
+        \ by location* is used when you want to join two layers of spatial data (e.g.\
+        \ a points layer to a polygon layer). \n"
+-   SQL: '
+
+
+        SQL stands for Structured Query Language, and is a programming language for
+        interacting with data in a relational database.
+
+        '
+-   SQLite: '
+
+
+        SQLite is one implementation of SQL, which requres less work, operates on
+        regular text files and does not require a server connection unlike other implementations
+        such as PostgreSQL and MySQL.
+
+        '
+-   Stemming: '
+
+
+        A process of collapsing words in an attempt to reduce the number of words,
+        and get a realistic understanding of the meaning of a text. Stemming cuts
+        off affixes to find the root (or the stem) of the word. See "lemmatization"
+        in this glossary for another process of collapsing words in a corpus.'
+-   Stop Words: '
+
+
+        Words that appear frequently in a language, often adding grammatical structure,
+        but little semantic content.'
+-   string: '
+
+
+        A data type in Python that represents a sequence of alphanumeric and/or special
+        characters enclosed within single or double quotes.
+
+
+        For example, the following are all strings:
+
+
+        `"hello world!"`
+
+        `"The answer is 3"`
+
+        `"!!!"`
+
+
+
+
+        - Read more about [strings](https://www.w3schools.com/python/python_strings.asp)
+        on w3schools.
+
+        '
+-   Surveillance: '
+
+
+        Surveillance refers to "the watch or guard kept over a person, etc., [especially]
+        over a suspected person, a prisoner, or the like; often, spying, supervision"
+        or "supervision for the purpose of direction or control" (source: Oxford English
+        Dictionary online). Surveillance, per my understanding, includes research
+        (including *"big data"* research) of people''s personal digital data that
+        is conducted without their informed consent, as well as businesses'' or governments''
+        uses of various programs and devices to record or listen to people''s behaviors,
+        data, voices etc.
+
+        '
+-   Syntax Errors: "\n\nAlong with traceback errors, syntax errors are a common type\
+        \ of error in Python code. It appears when Python is unable to understand\
+        \ a line of code, meaning that there is a mistake. Often, syntax errors point\
+        \ to typos, indentation, or incomplete expressions, like missing quotation\
+        \ marks or parentheses. \n\nWhen a syntax error occurs, the interpreter will\
+        \ display a caret pointing to the area where the error occured. It will also\
+        \ display the message: `SyntaxError: invalid syntax`. Take a close look at\
+        \ the display message to get more information about your error, and help you\
+        \ with debugging.\n\n\n\n- See a fuller description of [syntax errors](https://geek-university.com/python/syntax-and-logical-errors/)\
+        \ on Geek University. \n\n- To see [a comprehensive list of possible errors](https://www.tutorialsteacher.com/python/error-types-in-python),\
+        \ check out this resource on Tutorials Teacher.\n"
+-   Tag: '
+
+
+        Tags are used in HTML to apply elements. Tags are contained within `<   >`
+        symbols.  '
+-   Text Normalization: '
+
+
+        The process of taking a list of words and transforming it into a more uniform
+        sequence.'
+-   "Text editor\_": '
+
+
+        A program for creating and editing plain text files. Unlike word processors
+        such as LibreOffice and Word, which create complex documents in the form of
+        archives that include formatting information and other metadata, a plain text
+        editor creates a single file. Programmers tend to use plain text files because
+        computers can work with them easily. Sublime Text, Nano, and VI are examples
+        of text editors.
+
+        '
+-   Tidy Data: '
+
+
+        Tidy data are a way of processing and organizing data in to a data structure
+        that follows these rules:
+
+
+        1. Each variable is in a column.
+
+        2. Each observation is a row.
+
+        3. Each value is a cell.
+
+
+        #
+
+
+        - [Tidy Data](https://www.jstatsoft.org/article/view/v059i10)'
+-   Token: '
+
+
+        An instance of a type (see "type" in this glossary).'
+-   Tokenizing: '
+
+
+        A process of breaking text into individual linguistic units. This process
+        often involves removing punctuation and making all words lowercase. '
+-   Traceback Errors: "\n\nAlong with syntax errors, traceback errors are a common\
+        \ type of error in Python code. It appears during the execution of the code,\
+        \ when Python is unable to continue, meaning that there is a problem with\
+        \ the flow of your program. Often, traceback errors point to undefined variables\
+        \ or functions.\n\nWhen a traceback error occurs, the interpreter will give\
+        \ you a little more information about the error. If it's a name error, that\
+        \ means that something is not defined properly. If it's a type error, that\
+        \ means that an operation or function is of the wrong type. Take a close look\
+        \ at the display message to get more information about your error, and help\
+        \ you with debugging.\n\n\n\n- See a fuller description of [traceback errors](https://realpython.com/python-traceback/)\
+        \ on Real Python. \n\n- To see [a comprehensive list of possible errors](https://www.tutorialsteacher.com/python/error-types-in-python),\
+        \ check out this resource on Tutorials Teacher.\n"
+-   Tuples: '
+
+
+        A collection which is ordered and unchangeable. In Python tuples are written
+        with parenthesis.'
+-   type(): '
+
+
+        **Python**
+
+
+        `type()` is a function that evaluates the data type of the object within the
+        parenthesis. For a string `"hello world"`, it will return: `<str>`; for an
+        integer `5`, it will return `<int>` and so on.
+
+
+        **Text analysis**
+
+
+        In our text analysis workshop, `type` means unique vocabulary items in a corpus.
+        (Ex: "Whale" and "whale" are different *types*.)
+
+
+
+
+        - Read more about [`type()`](https://www.programiz.com/python-programming/methods/built-in/type)
+        as a Python command, and more things it can calculate.
+
+        '
+-   Universal design: '
+
+
+        Universal design refers to "the process of creating products that are usable
+        by people with the widest possible range of abilities, operating within the
+        widest possible range of situations" (source: [Shawn Lawton Henry, et al.
+        2014](https://dl.acm.org/citation.cfm?doid=2596695.2596719)).
+
+        '
+-   Variables: "\n\nA variable is a name that is assigned to a value, and it stores\
+        \ data for future use. Variable assignment uses a single `=`. The name given\
+        \ is on the left of the `=`, the value is on the right of the `=`.\t\n\nAssignment\
+        \ looks like this:\n\n```python\nx = 3\nname = \"Patrick\"\nname2 = \"Ignatz\"\
+        \ngrocery_list = [\"tomato\", \"limes\", \"chocolate\"]\n```\n\n\n\n- Learn\
+        \ more about [variables](https://www.w3schools.com/python/python_variables.asp)\
+        \ on w3schools.\n"
+-   Vector: '
+
+
+        A scalable point, line or polygon that can be easily created, edited, or deleted
+        using GIS. Does not have a specific resolution. In QGIS, vectors are contained
+        in vector layers, that can only contain a single type of vectors. Each vector
+        represents a single feature, although some features may be represented by
+        more than one vector (e.g. the vector of the United States includes the mainland
+        U.S. polygon but also polygons for Alaska and Hawaii).
+
+        '
+-   Version Control: "\n\nVersion control is a system that records changes to a file\
+        \ or set of files over time so that you can recall specific versions later.\
+        \ It allows you to revert selected files back to a previous state, revert\
+        \ the entire project back to a previous state, compare changes over time,\
+        \ see who last modified something that might be causing a problem, who introduced\
+        \ an issue and when, and more. \n\nUsing a version control software like Git\
+        \ generally means that if you screw things up or lose files, you can easily\
+        \ recover. In addition, you get all this for very little overhead.\n\n#\n\n\
+        - Bryan, J. (2017). _[Excuse me, do you have a moment to talk about version\
+        \ control?](https://doi.org/10.7287/peerj.preprints.3159v2)_ PeerJ Preprints.\n\
+        \n#\n\n- [Getting Started - About Version Control](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control).\
+        \ Git documentation. \n"
+-   Web Hosting: '
+
+
+        Web Hosting refers to servers that make HTML '
+-   while loops: "\n\nLike for loops, while loops are a way of going through items\
+        \ in a list. The difference is that while loops will continue to execute as\
+        \ long as a certain condition is true. To get out of the loop, use the break\
+        \ command, or type `control-c` or `quit()` in the interpreter. Otherwise,\
+        \ the loop will keep going.\n\n```python\nwhile True:\n    print(\"Oh no!\
+        \ I'm stuck...\")\n```\n\n\n\n- Check out this demonstration of [while loops](https://www.w3schools.com/python/python_while_loops.asp)\
+        \ on w3schools.\n"
+-   XML (file format): "\n\nXML or eXstensible Markup Language is a file format that\
+        \ uses a nested structure where the \"tags\" like `<Cat>` contain other tags\
+        \ inside them, like `<firstName>`. This format is good for organizing the\
+        \ layout of a document in a tree-like format, just like HTML, where we want\
+        \ to nest elements like a sentence within a paragraph, for example. XML does\
+        \ not carry any information about how to be displayed and can be used in a\
+        \ variety of presentation scenarios. \n\n```xml\n<Cats> \n    <Cat> \n   \
+        \     <firstName>Smally</firstName> \n        <lastName>McTiny</lastName>\
+        \ \n    </Cat> \n    <Cat> \n        <firstName>Kitty</firstName> \n     \
+        \   <lastName>Kitty</lastName> \n    </Cat> \n    <Cat> \n        <firstName>Foots</firstName>\
+        \ \n        <lastName>Smith</lastName> \n    </Cat> \n    <Cat> \n       \
+        \ <firstName>Tiger</firstName> \n        <lastName>Jaws</lastName> \n    </Cat>\
+        \ \n</Cats> \n```"

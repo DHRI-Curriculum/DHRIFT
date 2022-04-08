@@ -1,0 +1,3 @@
+# Discourse
+
+Discourses, per Michel Foucault's theorization, are competing ideologies (or individualized groups of statements), constructed by people and institutions in power over time, that become dominant amongst societies of people. Discourses produce knowledge in mediums that a society perceives as normative and generally does not question; in doing so, discourses pervasively shape how the people in that society think, act, and react (see Michel Foucault, _The Archaeology of Knowledge and the Discourse on Language_, 1969).

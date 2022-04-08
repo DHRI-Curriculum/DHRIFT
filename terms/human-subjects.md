@@ -1,0 +1,3 @@
+# Human subjects
+
+A human subject refers to "a living individual about whom an investigator (whether professional or student) conducting research obtains (1) data through intervention or interaction with the individual, or (2) identifiable private information" (source: [HHS.gov](https://www.hhs.gov/ohrp/regulations-and-policy/regulations/45-cfr-46/index.html)). However, according to [the AoIR Ethics Working Committee's 2012 report](http://aoir.org/reports/ethics2.pdf), "The definition of ‘human subject’ has become, unfortunately, a litmus test for whether or not one needs to undergo ethical review before conducting research... ‘human subject’ has never been a good fit for describing many internet-based research environments."

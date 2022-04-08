@@ -1,0 +1,3 @@
+# Accessibility
+
+Accessibility is "the quality or condition of being accessible (in various senses)," and "access" refers to "to obtain, acquire; to get hold of" or "to gain admission to" (source: Oxford English Dictionary online). "Accessibility" in design speak often refers to design for people with disabilities (see [Shawn Lawton Henry, et al. 2014](https://dl.acm.org/citation.cfm?doid=2596695.2596719)). This workshop employs the term "accessibility" to refer to access to those folks as well as to people in different international contexts and/or who speak different languages, and to methods of open or non-proprietary design and sharing.

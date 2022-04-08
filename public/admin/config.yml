@@ -1,0 +1,27 @@
+backend:
+  name: git-gateway
+  branch: main # Branch to update (optional; defaults to master)
+local_backend: true
+media_folder: public/images
+public_folder: /images/uploads
+collections:
+  - name: "workshops"
+    label: "workshops"
+    folder: "workshops"
+    extension: md
+    create: true
+    fields:
+    - {label: "Title", name: "title", widget: "string"}
+    - {label: "Excerpt", name: "excerpt", widget: "string"}
+    - {label: "Cover Image", name: "cover_image", widget: "image"}
+    - {label: "Content", name: "body", widget: "markdown"}
+  - name: "install-guides"
+    label: "install guides"
+    folder: "guides"
+    extension: md
+    create: true
+    fields:
+    - {label: "Title", name: "title", widget: "string"}
+    - {label: "Excerpt", name: "excerpt", widget: "string"}
+    - {label: "Cover Image", name: "cover_image", widget: "image"}
+    - {label: "Content", name: "body", widget: "markdown"}

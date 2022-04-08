@@ -1,0 +1,3 @@
+# Impact approach
+
+An impact approach to doing ethical research is based on the assumption that all research has impacts and thus a researcher should be critical and intentional with what sorts of impacts they aim for or expect to result, and take personal responsibility for the effects of their research methods (source: [Annette Markham 2016](http://annettemarkham.com/2016/05/okcupid-data-release-fiasco-its-time-to-rethink-ethics-education/)). Markham focuses on three levels of impact: direct impacts on people, the ramifications of (re)producing categories, and social, political and economic effects.
