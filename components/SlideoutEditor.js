@@ -8,17 +8,22 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function SlideoutEditor(props) {
     const [editorSlider, setEditorSlider] = useState(false);
-    const [code, setCode] = useState('');
-    const codeRef = useRef();
+    const [text, setText] = useState('');
 
     useEffect(() => {
-        codeRef.current = window.localStorage.getItem('code');
-    }, []);
+         setText(window.localStorage.getItem('code'));
+    }, [])
 
-    useEffect(() => {
-        window.localStorage.setItem('code', codeRef.current);
-        console.log(codeRef.current);
-    }, [codeRef.current]);
+    // useEffect(() => {
+    //     console.log(code);
+    // }, [code]);
+    
+    
+    const commitCode = (newText) => {
+        // setText(newText);
+        window.localStorage.setItem('code', newText);
+        console.log(window.localStorage.code);
+    }
 
 
     const handleEditorSlider = () => {
@@ -74,7 +79,7 @@ export default function SlideoutEditor(props) {
                                     color: 'white',
                                 }} />
                         </Button>
-                        <CodeEditorComponent minLines={10} code={codeRef.current} />
+                        <CodeEditorComponent minLines={10} codeOnChange={commitCode} defaultCode={text} />
                     </div>
                 </Slide>
             </div>

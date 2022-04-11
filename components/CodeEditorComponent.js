@@ -13,7 +13,7 @@ import { PyodideContext } from './PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import FileList from "./FileList";
 
-export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, ...props }) {
+export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
   const [code, setCode] = useState(defaultCode);
   const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
@@ -45,8 +45,13 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
 
   }, [])
   */
+
   const onChange = (newValue) => {
-    setCode(newValue);
+    if (codeOnChange) {
+      codeOnChange(newValue);
+    } else {
+      setCode(newValue);
+    }
   };
 
   const allSnippets = props.allSnippets;
@@ -114,13 +119,13 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
     runPyodide(code);
   }
 
-function closeOutput() {
-  setIsoutput(false);
-}
+  function closeOutput() {
+    setIsoutput(false);
+  }
 
-function closeError() {
-  setIsError(false);
-}
+  function closeError() {
+    setIsError(false);
+  }
 
   return (
     <div>
@@ -205,16 +210,16 @@ function closeError() {
           font: "1.3rem Inconsolata, monospace",
           whiteSpace: "pre-wrap",
         }}>
-          <CloseIcon
-            onClick={closeOutput}
-            style={{
-              float: "right",
-              fontSize: "20px",
-              color: "#32c259",
-              marginRight: "10px",
-              cursor: "pointer"
-            }}
-          />
+        <CloseIcon
+          onClick={closeOutput}
+          style={{
+            float: "right",
+            fontSize: "20px",
+            color: "#32c259",
+            marginRight: "10px",
+            cursor: "pointer"
+          }}
+        />
         {outputRef.current}
       </div>}
 
@@ -231,16 +236,16 @@ function closeError() {
           overflow: "auto",
           whiteSpace: "pre-wrap"
         }}>
-          <CloseIcon
-            onClick={closeError}
-            style={{
-              float: "right",
-              fontSize: "20px",
-              color: "#32c259",
-              marginRight: "10px",
-              cursor: "pointer"
-            }}
-          />
+        <CloseIcon
+          onClick={closeError}
+          style={{
+            float: "right",
+            fontSize: "20px",
+            color: "#32c259",
+            marginRight: "10px",
+            cursor: "pointer"
+          }}
+        />
         {String(error)}
       </div>}
     </div>
