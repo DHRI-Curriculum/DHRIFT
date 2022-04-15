@@ -11,18 +11,12 @@ export default function SlideoutEditor(props) {
     const [text, setText] = useState('');
 
     useEffect(() => {
-         setText(window.localStorage.getItem('code'));
+         setText(window.localStorage.getItem('code') || '');
     }, [])
 
-    // useEffect(() => {
-    //     console.log(code);
-    // }, [code]);
-    
-    
+
     const commitCode = (newText) => {
-        // setText(newText);
         window.localStorage.setItem('code', newText);
-        console.log(window.localStorage.code);
     }
 
 

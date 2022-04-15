@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import yaml from '../config.yml'
+import Image from 'next/image'
+import logo from '../public/images/logo.png';
 import { sortByDate } from '../utils'
 import { useEffect, UseState } from 'react'
 import dynamic from 'next/dynamic'
@@ -13,38 +16,43 @@ import BuildIcon from '@material-ui/icons/Build';
 
 const Workshop = dynamic(
   () => import('../components/Workshop'),
-   { loading: function loading() {return <p>...</p>} }
- )
+  { loading: function loading() { return <p>...</p> } }
+)
 
 export default function Home({ workshops }) {
   return (
     <Container
-    disableGutters={true}
-    maxWidth="xl"
+      disableGutters={true}
+      maxWidth="xl"
     >
-    <div className='front-page-bkg'>
-      <img src = '/images/gc_logo.png' className='gcLogo'/>
-      <div>
-      <h2 className='title'>DHRI Curriculum Website</h2>
-      <Typography>
-        <h2 className='lineUp'>Further Expanding Digital Humanities Communities of Practice</h2>
-        <br />
-        <div className='rectangle'></div>
-        <br />
-        <p className='intro-text'>The Digital Humanities Research Institute (DHRI) is an <b>intensive, community-oriented,
-          and foundational</b> approach to learning technical skills in service of humanities teaching and learning.</p>
-        <br />
-        <p className='intro-text'>The DHRI curriculum features workshops,
-          tutorials, glossaries, resources, reading materials, and more that have been developed
-          at The Graduate Center, City University of New York since 2016. Part of a 2019 grant from
-          the National Endowment for the Humanities&apos; (NEH) Office of Digital Humanities (ODH),
-          DHRI&apos;s curriculum, which was originally developed for in-person workshops, was revised
-          in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic.
-          While the curriculum has always been available openly on GitHub, this site creates a more
-          user-friendly and functional interface that is <b>open and free for public use</b>.</p>
+      <div className='frontpage card-page'>
+        <div className='frontpage-top'>
+        <Image
+          src={logo}
+          alt={yaml.organization + ' logo'}
+          width={300}
+          height={300}
+          className='frontpage-logo' />
+          <h2 className='title'>DHRI Curriculum Website</h2>
+          <Typography>
+            <h2 className='lineUp'>Further Expanding Digital Humanities Communities of Practice</h2>
+            <br />
+            <div className='rectangle'></div>
+            <br />
+            <p className='intro-text'>The Digital Humanities Research Institute (DHRI) is an <b>intensive, community-oriented,
+              and foundational</b> approach to learning technical skills in service of humanities teaching and learning.</p>
+            <br />
+            <p className='intro-text'>The DHRI curriculum features workshops,
+              tutorials, glossaries, resources, reading materials, and more that have been developed
+              at The Graduate Center, City University of New York since 2016. Part of a 2019 grant from
+              the National Endowment for the Humanities&apos; (NEH) Office of Digital Humanities (ODH),
+              DHRI&apos;s curriculum, which was originally developed for in-person workshops, was revised
+              in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic.
+              While the curriculum has always been available openly on GitHub, this site creates a more
+              user-friendly and functional interface that is <b>open and free for public use</b>.</p>
           </Typography>
-      </div>
-      {/* <div className="cv">
+        </div>
+        {/* <div className="cv">
         <p>The Digital Humanities Research Institute (DHRI) curriculum features workshops,
           tutorials, glossaries, resources, reading materials, and more that have been developed
           at The Graduate Center, City University of New York since 2016. Part of a 2019 grant from
@@ -67,15 +75,15 @@ export default function Home({ workshops }) {
           sustainable, and long-term research goals.</p>
         <p>Read more about our philosophy on the <a href='https://www.dhinstitutes.org/'>DHRI website</a>.</p>
       </div> */}
-      <br />
-      {/*<div className ='greybkg'>*/}
-      <div className='sectionTitle'><BuildIcon /> Workshops</div>
-      <div className='workshops'>
-        {workshops.map((workshop, index) => (
-          <Workshop key={index} workshop={workshop} />
-        ))}
+        <br />
+
+        <div className='sectionTitle'><BuildIcon /> Workshops</div>
+        <div className='workshops'>
+          {workshops.map((workshop, index) => (
+            <Workshop key={index} workshop={workshop} />
+          ))}
+        </div>
       </div>
-    </div>
     </Container>
   )
 }
@@ -84,41 +92,41 @@ export async function getStaticProps() {
   // Get files from the workshops dir
   const getFilesandProcess = (dir) => {
 
-      const dirents = fs.readdirSync(path.join(dir), { withFileTypes: true })
-      const dirFiles = dirents
-          .filter((file) => file.isFile())
-          .map((file) => file.name);
-      // Get slug and frontmatter from workshop
-      const markdownFiles = dirFiles.map((filename) => {
-          // Create slug
-          const slug = filename.replace('.md', '')
+    const dirents = fs.readdirSync(path.join(dir), { withFileTypes: true })
+    const dirFiles = dirents
+      .filter((file) => file.isFile())
+      .map((file) => file.name);
+    // Get slug and frontmatter from workshop
+    const markdownFiles = dirFiles.map((filename) => {
+      // Create slug
+      const slug = filename.replace('.md', '')
 
-          // Get frontmatter
-          const markdownWithMeta = fs.readFileSync(
-              path.join(dir, filename),
-              'utf-8',
-          )
+      // Get frontmatter
+      const markdownWithMeta = fs.readFileSync(
+        path.join(dir, filename),
+        'utf-8',
+      )
 
-          const matterResult = matter(markdownWithMeta)
-          const content = matterResult.content
-          return {
-              slug,
-              content: content,
-              ...matterResult.data,
-          }
+      const matterResult = matter(markdownWithMeta)
+      const content = matterResult.content
+      return {
+        slug,
+        content: content,
+        ...matterResult.data,
+      }
 
-      })
-      return markdownFiles
+    })
+    return markdownFiles
   }
   const workshopFiles = getFilesandProcess('workshops')
   const installFiles = getFilesandProcess('guides')
   const insightsFiles = getFilesandProcess('insights')
 
   return {
-      props: {
-          workshops: workshopFiles.sort(),
-          guides: installFiles.sort(),
-          insights: insightsFiles.sort(),
-      },
+    props: {
+      workshops: workshopFiles.sort(),
+      guides: installFiles.sort(),
+      insights: insightsFiles.sort(),
+    },
   }
 }
