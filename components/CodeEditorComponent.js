@@ -22,6 +22,7 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
+  const [runningCode, setRunningCode] = useState(false);
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   const {
@@ -73,6 +74,7 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
   }
 
   const runPyodide = async (code) => {
+    setRunningCode(true);
     setIsoutput(false);
     setIsError(false);
     setError(null);
@@ -80,23 +82,21 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
 
     // gets rid of user-defined variables
     pyodide.globals.clear();
-    await pyodide.loadPackage("matplotlib");
-    pyodide.runPython(
-      `
-import matplotlib
-matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
-`
-    );
+//     await pyodide.loadPackage("matplotlib");
+//     pyodide.runPython(
+//       `
+// import matplotlib
+// matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
+// `
+//     );
+// await pyodide.loadPackage("nltk");
     pyodide.globals.set('print', (s) => {
       outputRef.current = outputRef.current + String(s) + "\n";
     });
     pyodide.globals.set('input', (s) => {
       prompt(s);
     });
-    await pyodide.loadPackage("nltk");
     await pyodide.loadPackagesFromImports(code);
-
-
 
     filteredSnippets.forEach((snippet, index) => {
       pyodide.runPython(
@@ -111,8 +111,9 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
     }).catch((err) => {
       setIsError(true);
       setError(err);
+    }).finally(() => {
+      setRunningCode(false);
     });
-
   };
 
   function showValue() {
@@ -129,12 +130,12 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
 
   return (
     <div>
-      {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.19.1/full/pyodide.js" />
-        <Script src="https://cdn.jsdelivr.net/pyodide/v0.19.1/full/pyodide.asm.js"
+      {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
+        <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
           onLoad={() => {
             if (!isPyodideReady) {
               async function load() {
-                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.19.0/full/' })
+                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/' })
               }
               load().then(() => {
                 setIsPyodideReady(true)
@@ -146,7 +147,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
       <div className="editorContainer">
         <FileList snippets={filteredSnippets} />
         <div className="buttonsContainer">
-          {!isPyodideLoading && <Button
+          {(!isPyodideLoading && !runningCode) && <Button
             onClick={() => {
               showValue();
             }}
@@ -169,7 +170,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
               fontSize: "20px"
             }} />
             Run</Button>}
-          {isPyodideLoading && <CircularProgress
+          {(isPyodideLoading || runningCode) && <CircularProgress
             style={{
               marginLeft: "10px",
               marginTop: "10px"

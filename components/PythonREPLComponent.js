@@ -168,12 +168,12 @@ export default function PythonREPLComponent() {
     return (
         <div className="PythonREPL">
             <link href="https://cdn.jsdelivr.net/npm/jquery.terminal@2.27.1/css/jquery.terminal.css" rel="stylesheet"></link>
-            <Script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.js" />
-            <Script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.asm.js" 
+            <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
+            <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js" 
             onLoad={() => {
                 if (!isPyodideReady){
                 async function load() {
-                    globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.19.0/full/' })
+                    globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/' })
                 }
                 load().then(() => {
                     console.log("Pyodide version: " + pyodide.version);
