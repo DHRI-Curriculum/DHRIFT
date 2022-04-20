@@ -30,7 +30,8 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <CssBaseline />
       <ThemeProvider>
-        <Header props={pageProps} />
+        <Header 
+        props={pageProps} />
         <main className='container'>
         <PyodideProvider>
           <Component {...pageProps} />

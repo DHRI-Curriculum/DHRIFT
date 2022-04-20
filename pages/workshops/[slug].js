@@ -174,10 +174,10 @@ export default function WorkshopPage({
       maxWidth="xl"
       style={{
         display: 'flex',
-        marginTop: '1rem',
+        // marginTop: '1rem',
       }}
     >
-      <div className="content card-page">
+      <div className="card-page">
         <div className="workshop-container">
           {PaginationComponent(currentPage)}
           {currentContent}

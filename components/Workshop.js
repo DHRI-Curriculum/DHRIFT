@@ -29,7 +29,13 @@ export default function Workshop({ workshop }) {
   }
 
   return (
-    <Card sx={{ minWidth: 400 }} className='card'>
+    <Card 
+    // variant="outlined"
+    sx={{ 
+      minWidth: 400,
+      borderRadius: '0px',
+    
+    }} className='frontpage-card'>
       <Link href={`/workshops/${workshop.slug}`} passHref>
         <CardContent className='card-content'>
           {
