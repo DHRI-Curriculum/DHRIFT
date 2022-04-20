@@ -1,3 +1,4 @@
+/* css for site */
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
 @import 'https://fonts.googleapis.com/css?family=Lato:400,700';
 
@@ -29,8 +30,8 @@
 }
 
 body {
-  font-family: 'Lato', sans-serif !important;
-  font-size: 19px !important;
+  font-family: 'Lato', sans-serif;
+  font-size: 19px;
 }
 
 a {
