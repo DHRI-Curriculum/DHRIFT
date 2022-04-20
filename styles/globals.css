@@ -1,5 +1,6 @@
 /* css for site */
-@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
+
+@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
 @import 'https://fonts.googleapis.com/css?family=Lato:400,700';
 
 :root {
@@ -15,24 +16,21 @@
   --foreground: white;
 }
 
-
-* {
+#__next {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-#__next {
   min-height: 100vh;
   position: relative;
   background-color: var(--background);
   color: var(--foreground);
-}
-
-body {
   font-family: 'Lato', sans-serif;
   font-size: 19px;
 }
+
+#__next ul {
+  list-style: none;
+ }
 
 a {
   text-decoration: none;
