@@ -32,7 +32,6 @@ export default function Workshop({ workshop }) {
     <Card 
     // variant="outlined"
     sx={{ 
-      minWidth: 400,
       borderRadius: '0px',
     
     }} className='frontpage-card'>

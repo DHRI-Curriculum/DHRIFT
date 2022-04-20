@@ -81,11 +81,6 @@ strong {
   height: 100vh;
 }
 
-
-main.container {
-  /* padding-bottom: 242px; */
-}
-
 main.container>div {
   margin-bottom: 30px;
 }
@@ -332,11 +327,13 @@ header>.topBar {
 }
 
 .workshops {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(430px, 2fr));
-  gap: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
   margin-top: 30px;
-  /* margin-bottom: 30px; */
 }
 
 .overlay {
@@ -367,7 +364,9 @@ header>.topBar {
 }
 
 .frontpage-card {
-  min-height: 500px;
+  height: 500px;
+  flex-basis: 600px;
+  margin-bottom: 40px;
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
   /* box-shadow: 5px 5px var(--background); */
@@ -487,6 +486,18 @@ header>.topBar {
 
 .page-content {
   margin-bottom: 30px;
+}
+.page-content h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+.page-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.page-content p {
+  margin-bottom: 10px;
 }
 
 .image-container {
@@ -613,6 +624,11 @@ header>.topBar {
 
 .pagination {
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .drawer-left>div {

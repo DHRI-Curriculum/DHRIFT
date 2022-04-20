@@ -174,7 +174,6 @@ export default function WorkshopPage({
       maxWidth="xl"
       style={{
         display: 'flex',
-        // marginTop: '1rem',
       }}
     >
       <div className="card-page">
