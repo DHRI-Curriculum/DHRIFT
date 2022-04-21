@@ -21,57 +21,31 @@ export default function Home({ workshops }) {
       maxWidth="xl"
     >
       <div className='frontpage card-page'>
-        <div className='frontpage-top'>
-        <Image
-          src={logo}
-          alt={yaml.organization + ' logo'}
-          width={300}
-          height={300}
-          className='frontpage-logo' />
-          <h2 className='title'>DHRI Curriculum Website</h2>
-          <Typography>
-            <h2 className='lineUp'>Further Expanding Digital Humanities Communities of Practice</h2>
-            <br />
-            <div className='rectangle'></div>
-            <br />
-            <p className='intro-text'>The Digital Humanities Research Institute (DHRI) is an <b>intensive, community-oriented,
-              and foundational</b> approach to learning technical skills in service of humanities teaching and learning.</p>
-            <br />
-            <p className='intro-text'>The DHRI curriculum features workshops,
-              tutorials, glossaries, resources, reading materials, and more that have been developed
-              at The Graduate Center, City University of New York since 2016. Part of a 2019 grant from
-              the National Endowment for the Humanities&apos; (NEH) Office of Digital Humanities (ODH),
-              DHRI&apos;s curriculum, which was originally developed for in-person workshops, was revised
-              in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic.
-              While the curriculum has always been available openly on GitHub, this site creates a more
-              user-friendly and functional interface that is <b>open and free for public use</b>.</p>
+        <div>
+          <div className='frontpage-top'>
+          <Image
+            src={logo}
+            alt={yaml.organization + ' logo'}
+            width={300}
+            height={300}
+            className='frontpage-logo' />
+          <h2 className='title'>{yaml.event}</h2>
+          </div>
+          <Typography
+          >
+            <h2 className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
+            <div
+              style={{
+                margin: '10px',
+              }}
+              className='rectangle'></div>
+            <p
+              style={{
+                margin: '30px',
+              }}
+              className='intro-text'>{yaml.intro}</p>
           </Typography>
         </div>
-        {/* <div className="cv">
-        <p>The Digital Humanities Research Institute (DHRI) curriculum features workshops,
-          tutorials, glossaries, resources, reading materials, and more that have been developed
-          at The Graduate Center, City University of New York since 2016. Part of a 2019 grant from
-          the National Endowment for the Humanities (NEH) Office of Digital Humanities (ODH),
-          DHRI&apos;s curriculum, which was originally developed for in-person workshops, was revised
-          in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic.
-          While the curriculum has always been available openly on GitHub, this site creates a more
-          user-friendly and functional interface that is open and free for public use.</p>
-        <p>The DHRI curriculum focuses on technical skills and concepts upon which additional
-          technologies and tools rely. We call these foundational skills. Approximately one-third of
-          all workshops at the Institute could be described as foundational: they introduce concepts
-          such as the command line, version control & data collaboration, data literacy, and an
-          introduction to programming with Python. The materials and workshops on this site are
-          designed for users who are either unfamiliar with technology or could simply benefit from
-          filling in gaps in their knowledge. Workshops and tutorials here encourage the use of open
-          source technologies making them accessible to the widest possible audiences. We believe our
-          emphasis on foundational skills demonstrates our commitment to empowering humanities
-          researchers to become confident self-teachers and mentors in their own right who can make
-          informed decisions about their research materials and methods that will lead to successful,
-          sustainable, and long-term research goals.</p>
-        <p>Read more about our philosophy on the <a href='https://www.dhinstitutes.org/'>DHRI website</a>.</p>
-      </div> */}
-        <br />
-
         <div className='sectionTitle'><BuildIcon /> Workshops</div>
         <div className='workshops'>
           {workshops.map((workshop, index) => (

@@ -32,8 +32,9 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
     })[0]
 
     const style = {
-      // background: `${color1}`,
-      background: 'linear-gradient(to bottom, ' + color1 + ' 0%, ' + color1 + ' 50%, ' + color2 + ' 50%, ' + color2 + ' 100%)',
+      background: `${color1}`,
+      // background: 'linear-gradient(to bottom, ' + color1 + ' 0%, ' + color1 + ' 50%, ' + color2 + ' 50%, ' + color2 + ' 100%)',
+      
       minHeight: "140px",
       width: "100%",
       borderRadius: "10px 10px 10px 10px",
