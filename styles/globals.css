@@ -27,6 +27,11 @@
   font-size: 19px;
 }
 
+div {
+  line-height: 28.5px;
+
+}
+
 ul {
   padding-bottom: 10px;
 }
@@ -530,6 +535,7 @@ header>.topBar {
 /* frontpage  */
 .frontpage>h1 {
   font-size: 3rem;
+  margin-bottom: 20px;
 }
 
 .excerpt {
@@ -566,6 +572,7 @@ header>.topBar {
 .frontpage-item h2 {
   font-size: 2rem;
   text-transform: capitalize;
+  margin-bottom: 10px; 
 }
 
 .frontpage-item p {
