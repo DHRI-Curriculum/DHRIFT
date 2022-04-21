@@ -1,4 +1,5 @@
 import Header from '../components/Header'
+import '../styles/reset.css'
 import '../styles/globals.css'
 import '../node_modules/highlight.js/styles/obsidian.css'
 import React, { useEffect, useState } from 'react'

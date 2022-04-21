@@ -1,5 +1,5 @@
 /* css for site */
-
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
 @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
 @import 'https://fonts.googleapis.com/css?family=Lato:400,700';
 
@@ -28,9 +28,9 @@
   font-size: 19px;
 }
 
-#__next ul {
-  list-style: none;
- }
+ul {
+  padding-bottom: 10px;
+}
 
 a {
   text-decoration: none;
@@ -323,6 +323,7 @@ header>.topBar {
   gap: 30px;
   margin-top: 30px;
   width: 100%;
+  
 }
 
 .workshops {
@@ -359,7 +360,8 @@ header>.topBar {
 }
 
 .drawer-overlay {
-  top: -100px;
+  top: -114px;
+  font-size: 30px;
 }
 
 .frontpage-card {
@@ -368,7 +370,6 @@ header>.topBar {
   margin-bottom: 40px;
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
-  /* box-shadow: 5px 5px var(--background); */
   border: 1px solid #000000; 
 }
 

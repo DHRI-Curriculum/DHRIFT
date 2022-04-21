@@ -19,54 +19,34 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const BootstrapButton = styled(Button)(({ theme }) => ({
-  ...theme.typography.button,
-  padding: theme.spacing(1, 2),
-  margin: theme.spacing(1),
-  color: "green",
-}));
-
-
 export default function TemporaryDrawer({ files, category, onClick, onClose, open }) {
 
   const filesList = files.map((file, index) => {
     const color1 = randomColor({
-      luminosity: 'light',
+      // luminosity: 'light',
       count: 1,
     })[0]
     const color2 = randomColor({
-      luminosity: 'light',
+      // luminosity: 'dark',
       count: 1,
     })[0]
-    // render color as image
-    const renderColor = (color) => {
-      return `<svg width="100" height="100" style="background-color: ${color}"></svg>`
-    }
+
     const style = {
-      background: `${color1}`,
-      height: "140px",
+      // background: `${color1}`,
+      background: 'linear-gradient(to bottom, ' + color1 + ' 0%, ' + color1 + ' 50%, ' + color2 + ' 50%, ' + color2 + ' 100%)',
+      minHeight: "140px",
       width: "100%",
+      borderRadius: "10px 10px 10px 10px",
     }
     return (
 
       <Link href={`/${category}/${file.slug}`} passHref key={file.slug + index}>
         <CardContent className='drawer-over'>
-          {file.cover_image ?
-            <CardMedia
-              className='card-media'
-              title={file.title}
-              >
-                <Image
-                  src={file.cover_image}
-                  height={160}
-                  width={300}
-                />
-            </CardMedia>  
-               :
-            <div className='card-media' style={style}>
-              <div className='workshop-color' dangerouslySetInnerHTML={{ __html: renderColor(color1) }} />
-            </div>
-          }
+          <div className='card-media' style={style}>
+            <div className='workshop-color'
+
+            />
+          </div>
           <div className='drawer-over'>
             <Typography gutterBottom variant="h5" component="h2" className='overlay drawer-overlay'>
               {file.title}
@@ -104,6 +84,7 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
         className='paperWorkshops'>
         <Grid item md={3}
           className='paperGrid'
+          
         >
           {filesList}
         </Grid>
@@ -116,7 +97,6 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
   return (
     // icon and button to open top drawer 
     <React.Fragment>
-
       <a onClick={toggleDrawer('top', true)} className='drawer-click'>
         {category.charAt(0).toUpperCase() + category.slice(1)}
       </a>
