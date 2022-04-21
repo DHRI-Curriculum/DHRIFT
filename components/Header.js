@@ -110,7 +110,7 @@ export default function Header({ props }) {
                     </Link>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         <Link href='/' passHref>
-                            <h2 className='headerLink'>{yaml.organization} {yaml.event}</h2>
+                            <h2 className='headerLink'>{yaml.event}</h2>
                         </Link>
                     </Typography>
                     <ul className='links'>
