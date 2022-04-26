@@ -1,13 +1,12 @@
 import PythonREPLComponent from '../components/PythonREPLComponent';
-import CodeEditorComponent from '../components/CodeEditorComponent';
-import UploadtoStorage from '../components/UploadtoStorage';
-import FileList from '../components/FileList';
-import EditorWithTabs from '../components/EditorWithTabs';
-import JSInterpreter from '../components/JSInterpreterComponent';
+import CodeEditorComponent from '../components/Editor/CodeEditorComponent';
+import UploadtoStorage from '../components/Editor/UploadtoStorage';
+import FileList from '../components/Editor/FileList';
+import EditorWithTabs from '../components/Editor/EditorWithTabs';
+import JSInterpreter from '../components/Editor/JSInterpreterComponent';
 import { height } from '@mui/system';
 import TerminalComponent from '../components/TerminalComponent';
-import HTMLEditor from '../components/HTMLEditor';
-import fileList from '../components/FileList';
+import HTMLEditor from '../components/Editor/HTMLEditor';
 
 export default function Test() {
 
