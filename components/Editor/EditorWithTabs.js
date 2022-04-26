@@ -11,7 +11,7 @@ const EditorComponent = dynamic(
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { PyodideContext } from './PyodideProvider';
+import { PyodideContext } from '../PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';

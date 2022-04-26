@@ -9,7 +9,7 @@ const EditorComponent = dynamic(
 import Button from '@mui/material/Button';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
-import { PyodideContext } from './PyodideProvider';
+import { PyodideContext } from '../PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import FileList from "./FileList";
 

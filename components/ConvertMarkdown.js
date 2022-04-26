@@ -6,11 +6,11 @@ import 'highlight.js/styles/atom-one-dark.css'
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import CodeEditorComponent from './CodeEditorComponent';
+import CodeEditorComponent from './Editor/CodeEditorComponent';
 import PythonREPLComponent from './PythonREPLComponent';
-import JSInterpreterComponent from './JSInterpreterComponent';
+import JSInterpreterComponent from './Editor/JSInterpreterComponent';
 import TerminalComponent from './TerminalComponent';
-import EditorWithTabsComponent from './EditorWithTabs';
+import EditorWithTabsComponent from './Editor/EditorWithTabs';
 
 const Code = ({ className, children }) => {
     const [isShown, setIsShown] = useState(false);

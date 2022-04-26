@@ -12,6 +12,7 @@ import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
 import PyodideProvider from '../components/PyodideProvider'
 import { StyledEngineProvider } from '@mui/material/styles';
+import yaml from '../config.yml';
 
 function MyApp({ Component, pageProps }) {
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
@@ -19,7 +20,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>DHRI Curriculum</title>
+        <title>{yaml.event}</title>
 
         {process.env.NEXT_PUBLIC_GITHUB_ACTIONS == false && <><link rel="icon" href={base + "/images/favicon.ico"} sizes="32x32"></link>
           <link rel="icon" href={base + "/images/favicon.ico"} sizes="192x192"></link>
