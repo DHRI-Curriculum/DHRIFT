@@ -6,11 +6,11 @@ import 'highlight.js/styles/atom-one-dark.css'
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import CodeEditorComponent from './Editor/CodeEditorComponent';
 import PythonREPLComponent from './PythonREPLComponent';
-import JSInterpreterComponent from './Editor/JSInterpreterComponent';
 import TerminalComponent from './TerminalComponent';
 import EditorWithTabsComponent from './Editor/EditorWithTabs';
+import InterpreterComponent from './Editor/InterpreterComponent';
+import Download from './Download';
 
 const Code = ({ className, children }) => {
     const [isShown, setIsShown] = useState(false);
@@ -25,12 +25,12 @@ const Code = ({ className, children }) => {
             <div className="code-block"
                 onMouseEnter={() => setIsShown(true)}
                 onMouseLeave={() => setIsShown(false)}>
-                {isShown && (
-                    <div className='hljs'>
-                        {language && <span className="language">{getLang}</span>}
-                    </div>
-                )}
                 <pre className={className + ' ' + language}>
+                {isShown && (
+                    <>
+                        {language && <span className="language">{getLang}</span>}
+                        </>
+                )}
                     <code className={className}
                         dangerouslySetInnerHTML={{ __html: highlighted.value }}>
                     </code>
@@ -73,7 +73,7 @@ const CodeEditor = ({ children, ...props }) => {
             const codeText = children[0].props.children.join('');
             return (
                 <div>
-                    <CodeEditorComponent defaultCode={codeText} {...props}/>
+                    <InterpreterComponent language={props.language} defaultCode={codeText} {...props}/>
                 </div>
             )
         }
@@ -81,7 +81,7 @@ const CodeEditor = ({ children, ...props }) => {
     const codeText = children.join('');
     return (
         <div>
-            <CodeEditorComponent defaultCode={codeText} {...props}/>
+            <InterpreterComponent language={props.language} defaultCode={codeText} {...props}/>
         </div>
     );
 }
@@ -111,13 +111,6 @@ const Terminal = ({ className, children }) => {
     )
 }
 
-const JSInterpreter = ({ className, children }) => {
-    return (
-        <div>
-            <JSInterpreterComponent />
-        </div>
-    )
-}
 
 const Quiz = ({ className, children }) => {
     return (
@@ -129,7 +122,7 @@ const Quiz = ({ className, children }) => {
     )
 }
 
-export default function ConvertMarkdown(markdown, snippets) {
+export default function ConvertMarkdown(markdown, uploads, workshop) {
     return (
         compiler(markdown,
             {
@@ -149,14 +142,20 @@ export default function ConvertMarkdown(markdown, snippets) {
                     CodeEditor:{
                         component: CodeEditor,
                         props: {
-                            allSnippets: snippets,
+                            allUploads: uploads,
+                        }
+                    },
+                    Download:{
+                        component: Download,
+                        props: {
+                            workshop: workshop,
+                            allUploads: uploads,
                         }
                     },
                     Quiz,
                     PythonREPL,
                     Terminal,
-                    JSInterpreter,
-                    EditorWithTabs
+                    EditorWithTabs,
                 }
 
             })

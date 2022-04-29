@@ -337,12 +337,12 @@ export default function EditorWithTabsComponent({ defaultCode = "# Write your co
 
     return (
         <div className="container">
-            {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.js" />
-                <Script src="https://cdn.jsdelivr.net/pyodide/v0.19.0/full/pyodide.asm.js"
+            {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
+                <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
                     onLoad={() => {
                         if (!isPyodideReady) {
                             async function load() {
-                                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.19.0/full/' })
+                                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/' })
                             }
                             load().then(() => {
                                 setIsPyodideReady(true)

@@ -526,7 +526,7 @@ def add_one(x):
   print(x + 1)
 ```
  
- When creating a function, we begin by writing `def` before our chosen function name. The function name is typically descriptive in nature. We named the above function `add_one` following [Python naming conventions](https://www.python.org/dev/peps/pep-0008/#function-and-variable-names), as the function will be ADDING 1 to our inputted integer. We always need a closed parentheses `()` after our function name, which in this case, takes one argument (or input), which we will temporarily call `x` (we can name this parameter whatever we want, as long as we use the same name within the body of the function). Then, we end the first line with a `:`, return, and indent by 2 spaces to write code describing what this function should "do." In this case, we want the function to `print` the result of adding `1` to our input, or `x`. Remember, we need parentheses every time we print something!
+When creating a function, we begin by writing `def` before our chosen function name. The function name is typically descriptive in nature. We named the above function `add_one` following [Python naming conventions](https://www.python.org/dev/peps/pep-0008/#function-and-variable-names), as the function will be ADDING 1 to our inputted integer. We always need a closed parentheses `()` after our function name, which in this case, takes one argument (or input), which we will temporarily call `x` (we can name this parameter whatever we want, as long as we use the same name within the body of the function). Then, we end the first line with a `:`, return, and indent by 2 spaces to write code describing what this function should "do." In this case, we want the function to `print` the result of adding `1` to our input, or `x`. Remember, we need parentheses every time we print something!
 
 Next, if we want to call our function, we will need to actually pass in an argument to see a result. To do so, we write the following line of code below our function (making sure this next line _isn't_ indented):
 
@@ -572,7 +572,7 @@ Our functions do not have to be "mathematical" in nature. Let's say that I wante
 
 `greet()`
 
-<CodeEditor snippets='mobydick.txt, aesop.txt'></CodeEditor>
+<CodeEditor uploads='mobydick.txt, aesop.txt'></CodeEditor>
 
 First we define our `greet()` function, and add a line to print to the screen. Lastly, we call the function so it will run. You might have noticed that this time, we didn't pass in an argument! Note that a function doesn't have to take an input (or argument), or it can take several arguments! There is a lot of flexibility involved in writing your own functions, which you can craft carefully to do exactly what you want them to! Read more about some of the many things you can do with functions on the online web tutorial [W3Schools](https://www.w3schools.com/python/python_functions.asp).
 
@@ -659,7 +659,7 @@ For instance, add the following lines of code to the program below:
 - `print(books[1]) # Cruising Utopia`
 
 <CodeEditor>
-books = ['Gender Trouble', 'Cruising Utopia', 'Living a Feminist Life']`
+books = ['Gender Trouble', 'Cruising Utopia', 'Living a Feminist Life']
 print(books)
 </CodeEditor>
 

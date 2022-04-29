@@ -6,14 +6,15 @@ const EditorComponent = dynamic(
   () => import("./EditorComponent"),
   { ssr: false }
 );
-import Button from '@mui/material/Button';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+// import Button from '@mui/material/Button';
+// import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
 import { PyodideContext } from '../PyodideProvider';
-import CircularProgress from '@mui/material/CircularProgress';
-import FileList from "./FileList";
+// import CircularProgress from '@mui/material/CircularProgress';
+// import FileList from "./FileList";
+import EditorTopbar from "./EditorTopbar";
 
-export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
+export default function PythonEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
   const [code, setCode] = useState(defaultCode);
   const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
@@ -55,15 +56,11 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
     }
   };
 
-  const allSnippets = props.allSnippets;
+  const allSnippets = props.allUploads;
   // chosenSnippets is a string of files separated by commas, make it an array
-  const chosenSnippets = typeof props.snippets === 'string' ? props.snippets.split(',') : [];
-
+  const chosenSnippets = typeof props.uploads === 'string' ? props.uploads.split(',') : [];
   var filteredSnippets = [];
 
-  // for item in chosenSnippets
-  // if item in slug of item in allSnippets
-  // add item to filteredSnippets
   if (chosenSnippets != undefined) {
     chosenSnippets.forEach(snippet => {
       const currentFile = allSnippets.find(file => file.slug === snippet.trim());
@@ -145,60 +142,11 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           }}
         /></>}
       <div className="editorContainer">
-        <FileList snippets={filteredSnippets} />
-        <div className="buttonsContainer">
-          {(!isPyodideLoading && !runningCode) && <Button
-            onClick={() => {
-              showValue();
-            }}
-            variant="outlined"
-            style={{
-              margin: "10px",
-              width: "100px",
-              height: "25px",
-              backgroundColor: "#32c259",
-              color: "white",
-              fontSize: "20px",
-              borderRadius: "5px",
-              border: "none",
-              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-              outline: "none",
-              padding: "15px"
-            }}>
-            <PlayArrowIcon style={{
-              marginRight: "10px",
-              fontSize: "20px"
-            }} />
-            Run</Button>}
-          {(isPyodideLoading || runningCode) && <CircularProgress
-            style={{
-              marginLeft: "10px",
-              marginTop: "10px"
-            }}
-          />}
-          <Button
-            variant="text"
-            onClick={() => {
-              setCode(defaultCode);
-            }}
-            style={{
-              color: "#32c259",
-              fontSize: "16px",
-              borderRadius: "5px",
-              border: "none",
-              boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-              outline: "none",
-              padding: "15px",
-              float: "right"
-            }}>
-            Revert Code
-          </Button>
-        </div>
+        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)} snippets={filteredSnippets} run={showValue} language='Python' />
         <EditorComponent code={code} onChange={onChange} maxLines='Infinity' minLines={minLines} />
       </div>
 
       {isoutput && <div id='output'
-        // ref={outputRef}
         style={{
           margin: "10px",
           padding: "10px",

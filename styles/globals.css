@@ -34,6 +34,8 @@ div {
 
 ul {
   padding-bottom: 10px;
+  padding-left: 20px;
+  list-style-type: disc;
 }
 
 a {
@@ -57,6 +59,11 @@ code {
   word-wrap: break-word;
   width: 100%;
   overflow-x: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.hljs {
+  padding: 0;
 }
 
 kbd {
@@ -452,6 +459,7 @@ header>.topBar {
 }
 
 .card-page {
+  width: 100%;
   background-color: var(--background-page);
   display: block;
   padding: 15px 30px;

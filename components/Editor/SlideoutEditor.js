@@ -1,5 +1,5 @@
 import Slide from '@mui/material/Slide';
-import CodeEditorComponent from './CodeEditorComponent';
+import CodeEditorComponent from './PythonEditorComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -73,7 +73,7 @@ export default function SlideoutEditor(props) {
                                     color: 'white',
                                 }} />
                         </Button>
-                        <CodeEditorComponent minLines={10} codeOnChange={commitCode} defaultCode={text} />
+                        <CodeEditorComponent minLines={10} onChange={commitCode} defaultCode={text} />
                     </div>
                 </Slide>
             </div>

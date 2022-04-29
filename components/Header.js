@@ -27,8 +27,6 @@ const Drawer = dynamic(
 export default function Header({ props }) {
     const [propsAvailable, setPropsAvailable] = useState(false);
     const [allWorkshops, setAllWorkshops] = useState([]);
-    const [allGuides, setAllGuides] = useState([]);
-    const [allInsights, setAllInsights] = useState([]);
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
 
@@ -36,8 +34,6 @@ export default function Header({ props }) {
         if (props && props.workshops) {
             setPropsAvailable(true)
             setAllWorkshops(props.workshops)
-            setAllGuides(props.guides)
-            setAllInsights(props.insights)
         }
     }, [props.workshops])
 
@@ -116,20 +112,6 @@ export default function Header({ props }) {
                     <ul className='links'>
                         <li>
                             {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
-                        </li>
-                        <li>
-                            {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
-                        </li>
-                        <li>
-                            <li>
-                                {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
-                            </li>
-                        </li>
-                        <li>
-                            Resources
-                        </li>
-                        <li>
-                            <Link href='/Glossary' passHref>Glossary</Link>
                         </li>
                     </ul>
                     <IconButton sx={{ ml: 1 }}

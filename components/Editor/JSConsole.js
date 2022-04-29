@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useContext } from "react";
-
+import Script from 'next/script';
 import ReactHtmlParser from "react-html-parser";
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
@@ -16,7 +16,7 @@ import { Console, Hook, Unhook } from 'console-feed'
 import Button from '@mui/material/Button';
 
 
-export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
+export default function JSConsole({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
     defaultJS = '// Write Javascript Here' }) {
     const [code, setCode] = useState(defaultCode);
     const [css, setCss] = useState(defaultCSS);
@@ -138,6 +138,7 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
                         width: "100%",
                         height: "100%",
                         background: "white",
+                        display: "none",  
                     }}
                 >
                     <FrameContextConsumer>
@@ -183,13 +184,13 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
                     width: "100%",
                     height: "100%",
                     background: "rgba(0, 0, 0, 0.87)",
+                    overflowY: "auto",
                 }}
             >
                 {toShow && <Console logs={logs} variant="dark" />}
             </div>
         )
     }
-
 
     const HtmlPane = () => {
         return (
@@ -206,31 +207,18 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
 
     return (
         <div style={{ height: '80vh', width: '50vw' }}>
-            <Allotment minSize={90} vertical >
-                <Allotment.Pane minSize={100}>
-                    <Allotment>
-                        <Allotment.Pane minSize={40}>
-                            {HtmlPane()}
-                        </Allotment.Pane>
-                        <Allotment.Pane>
-                            {CssPane()}
-                        </Allotment.Pane>
-                    </Allotment>
+            <Allotment minSize={90} vertical>
+                <Allotment.Pane minSize={70}>
+                    {JavascriptPane()}
+                </Allotment.Pane>
+                <Allotment.Pane 
+                style={{
+                    overflowY: "auto",}}
+                >
+                    {ConsolePane()}
                 </Allotment.Pane>
                 <Allotment.Pane>
-                    <Allotment>
-                        <Allotment.Pane minSize={20}>
-                            {JavascriptPane()}
-                        </Allotment.Pane>
-                        <Allotment vertical>
-                            <Allotment.Pane>
-                                {FramePane()}
-                            </Allotment.Pane>
-                            <Allotment.Pane className={'JS-console'}>
-                                {ConsolePane()}
-                            </Allotment.Pane>
-                        </Allotment>
-                    </Allotment>
+                    {FramePane()}
                 </Allotment.Pane>
             </Allotment>
         </div>

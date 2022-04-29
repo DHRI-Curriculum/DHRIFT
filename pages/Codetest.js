@@ -1,9 +1,8 @@
 import PythonREPLComponent from '../components/PythonREPLComponent';
-import CodeEditorComponent from '../components/Editor/CodeEditorComponent';
-import UploadtoStorage from '../components/Editor/UploadtoStorage';
+import PythonEditorComponent from '../components/Editor/PythonEditorComponent';
+
 import FileList from '../components/Editor/FileList';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
-import JSInterpreter from '../components/Editor/JSInterpreterComponent';
 import { height } from '@mui/system';
 import TerminalComponent from '../components/TerminalComponent';
 import HTMLEditor from '../components/Editor/HTMLEditor';
