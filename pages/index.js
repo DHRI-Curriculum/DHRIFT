@@ -23,17 +23,26 @@ export default function Home({ workshops }) {
       <div className='frontpage card-page'>
         <div>
           <div className='frontpage-top'>
-          <Image
-            src={logo}
-            alt={yaml.organization + ' logo'}
-            width={300}
-            height={300}
-            className='frontpage-logo' />
-          <h2 className='title'>{yaml.event}</h2>
+            <Image
+              src={logo}
+              alt={yaml.organization + ' logo'}
+              width={300}
+              height={300}
+              className='frontpage-logo' />
+            <h2
+              style={{
+                fontFamily: 'Titillium Web',
+              }}
+              className='title'>{yaml.event}</h2>
           </div>
           <Typography
           >
-            <h2 className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
+            <h2
+              style={{
+                fontFamily: 'Titillium Web',
+                fontWeight: '400',
+              }}
+              className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
             <div
               style={{
                 margin: '10px',

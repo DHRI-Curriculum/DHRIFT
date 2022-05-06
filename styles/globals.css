@@ -1,6 +1,9 @@
 
 @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
 @import 'https://fonts.googleapis.com/css?family=Lato:400,700';
+/* import titillium-web */
+@import 'https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700';
+
 
 :root {
   /* default theme */
@@ -27,6 +30,13 @@
   font-size: 19px;
 }
 
+@media (min-width: 768px) {
+  .container {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
 div {
   line-height: 28.5px;
 
@@ -38,9 +48,30 @@ ul {
   list-style-type: disc;
 }
 
+ol {
+  padding-bottom: 10px;
+  padding-left: 20px;
+  list-style-type: decimal;
+}
+
 a {
   text-decoration: none;
   color: lightseagreen;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
 }
 
 .content pre {
@@ -187,7 +218,6 @@ header a {
   text-align: center;
   font-size: 36px;
   line-height: 42px;
-  font-weight: bold;
   letter-spacing: 1px;
 }
 
@@ -252,7 +282,7 @@ header {
   width: 100%;
   height: 100%;
   background-color: black;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .JS-console {
@@ -382,8 +412,8 @@ header>.topBar {
 }
 
 .frontpage-card {
-  height: 500px;
-  flex-basis: 600px;
+  min-height: 600px;
+  flex-basis: 500px;
   margin-bottom: 40px;
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
@@ -510,9 +540,9 @@ header>.topBar {
   margin-bottom: 20px;
 }
 .page-content h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin-bottom: 10px;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 .page-content p {
   margin-bottom: 10px;
@@ -532,6 +562,7 @@ header>.topBar {
 .markdown-image-container>div {
   position: unset !important;
   min-width: 50%;
+  max-width: 80%;
 }
 
 .markdown-image-container span {

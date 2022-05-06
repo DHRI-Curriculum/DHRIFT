@@ -91,7 +91,8 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
       outputRef.current = outputRef.current + String(s) + "\n";
     });
     pyodide.globals.set('input', (s) => {
-      prompt(s);
+      var response = prompt(s);
+      return response;
     });
     await pyodide.loadPackagesFromImports(code);
 
@@ -126,7 +127,12 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
   }
 
   return (
-    <div>
+    <div
+    style={{
+      marginBottom: '20px',
+      marginTop: '20px',
+    }}
+    >
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
           onLoad={() => {
@@ -147,17 +153,23 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
       </div>
 
       {isoutput && <div id='output'
+        // style={{
+        //   margin: "10px",
+        //   padding: "10px",
+        //   border: "1px solid #32c259",
+        //   borderRadius: "5px",
+        //   backgroundColor: "#f5f5f5",
+        //   color: "#32c259",
+        //   fontSize: "20px",
+        //   overflow: "auto",
+        //   font: "1.3rem Inconsolata, monospace",
+        //   whiteSpace: "pre-wrap",
         style={{
-          margin: "10px",
-          padding: "10px",
-          border: "1px solid #32c259",
-          borderRadius: "5px",
-          backgroundColor: "#f5f5f5",
-          color: "#32c259",
-          fontSize: "20px",
-          overflow: "auto",
+          backgroundColor: "#2d2d2d",
+          color: 'white',
+          padding: '10px',
+
           font: "1.3rem Inconsolata, monospace",
-          whiteSpace: "pre-wrap",
         }}>
         <CloseIcon
           onClick={closeOutput}
@@ -168,7 +180,14 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
             marginRight: "10px",
             cursor: "pointer"
           }}
-        />
+        /><span
+        style={{
+        // border: "1px solid #32c259",
+        // padding: "5px",
+        marginBottom: "10px",
+        display: "block",
+        }}
+        >Output</span> <br />
         {outputRef.current}
       </div>}
 

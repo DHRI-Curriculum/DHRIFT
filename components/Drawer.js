@@ -90,6 +90,12 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
           {filesList}
         </Grid>
       </Grid>
+
+      {/* <div className='paperWorkshops'>
+        <div className='paperGrid'>
+        {filesList}
+        </div>
+      </div> */}
     </Box>
 
 
@@ -102,7 +108,11 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
         {category.charAt(0).toUpperCase() + category.slice(1)}
       </a>
 
-      <Drawer anchor="top" open={state['top']} onClose={toggleDrawer('top', false)}>
+      <Drawer anchor="top" open={state['top']} 
+      style={{
+
+      }}
+      onClose={toggleDrawer('top', false)}>
         {list('top')}
       </Drawer>
     </React.Fragment>

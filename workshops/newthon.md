@@ -1039,7 +1039,7 @@ Okay. Let's make our little book application a little more robust. We are going 
 
 First, create a new list in the code editor with at least three books that are important to your research right now. Shorten the titles to one or two words if need be. Let's call this list our `library`. Remember the proper syntax for creating a list includes square brackets with commas separating the list items. Because the items are strings, they should also be inside quotes. For instance, your code might look something like:
 
-- `library = ["Orlando", "Confessions of the Fox", "These Waves of Girls"]`
+`library = ["Orlando", "Confessions of the Fox", "These Waves of Girls"]`
 
 <CodeEditor></CodeEditor>
 
