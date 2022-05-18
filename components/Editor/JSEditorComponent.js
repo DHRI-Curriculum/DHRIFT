@@ -15,8 +15,8 @@ import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
 
 
-export default function JSEditorComponent({defaultJS = '// Write Javascript Here', ...props }) {
-    const [javascript, setJavascript] = useState(defaultJS);
+export default function JSEditorComponent({defaultCode = '// Write Javascript Here', ...props }) {
+    const [javascript, setJavascript] = useState(defaultCode);
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef(null);
     const [error, setError] = useState(null);
@@ -160,7 +160,7 @@ export default function JSEditorComponent({defaultJS = '// Write Javascript Here
             <EditorTopbar spinnerNeeded={runningCode} 
             snippets={filteredSnippets} run={JSrun} language='JavaScript' />
             <EditorComponent code={javascript} 
-            onChange={onChangeJavascript} language={'javascript'} />
+            onChange={onChangeJavascript} language={'javascript'}  />
         </div>
             {isoutput && outputComponent()}
             {isError && errorComponent()}

@@ -6,7 +6,7 @@ import Image from 'next/image'
 import logo from '../public/images/logo.png';
 import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import BuildIcon from '@material-ui/icons/Build';
 
 const Workshop = dynamic(
