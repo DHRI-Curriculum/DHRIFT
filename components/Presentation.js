@@ -168,7 +168,9 @@ export default function Presentation(props) {
     return (
         <>
             <div>
-                <Button onClick={handleOpen}>
+                <Button 
+                className="presentation-button"
+                onClick={handleOpen}>
                     <SlideshowIcon />
                     Presentation Mode
                 </Button>
