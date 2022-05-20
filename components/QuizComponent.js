@@ -101,7 +101,7 @@ export default function QuizComponent({ className, children }) {
 
                     ))}
                 </FormControl>
-                <Button type="submit" variant="contained" color="primary" className='quizButton'
+                <Button type="submit" variant="contained" color="primary" className='brutalist-button quizButton'
                     id={`${componentUniqueId}-submit`}>
                     Check my answer
                 </Button>

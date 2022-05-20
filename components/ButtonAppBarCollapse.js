@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import HomeIcon from "@material-ui/icons/Home";
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 class ButtonAppBarCollapse extends React.Component {
@@ -38,7 +38,7 @@ class ButtonAppBarCollapse extends React.Component {
                         }
                     }}
                 >
-                    <HomeIcon />
+                    <MenuIcon />
                 </IconButton>
                 <Menu
                 sx={{

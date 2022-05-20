@@ -169,7 +169,7 @@ export default function Presentation(props) {
         <>
             <div>
                 <Button 
-                className="presentation-button"
+                className="brutalist-button"
                 onClick={handleOpen}>
                     <SlideshowIcon />
                     Presentation Mode

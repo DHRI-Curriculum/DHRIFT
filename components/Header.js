@@ -4,16 +4,13 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
-import { styled } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
 import Image from 'next/image'
 import logo from '../public/images/logo.png';
 import ButtonAppBarCollapse from "./ButtonAppBarCollapse";
-import { useTheme } from 'next-themes'
-import Switch from '@mui/material/Switch';
+import { useTheme } from 'next-themes';
 import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -77,7 +74,29 @@ export default function Header({ props }) {
                     }
                 }}
             >
-                <div>hello</div>
+                {/* mobile menu */}
+                {/* simple dropdown with text links to Workshops, Guides, Insights */}
+                <ul className='links'>
+                            <li>
+                                {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
+                            </li>
+                            <li>
+                                {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
+                            </li>
+                            <li>
+                                <li>
+                                    {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
+                                </li>
+                            </li>
+                            {/* <li>
+                            Resources
+                        </li> */}
+                            <li>
+                                <Link href='/Glossary' passHref>Glossary</Link>
+                            </li>
+                        </ul>
+               
+                
             </ButtonAppBarCollapse>
             <AppBar
                 position="static"

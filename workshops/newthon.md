@@ -119,13 +119,17 @@ $ python
 
 at the prompt and hit <kbd>enter</kbd>. This will start the Python REPL environment, and you can interact it with it just as you did with the math example above. You can get out of Python by hitting <kbd>control</kbd> + <kbd>d</kbd> (or <kbd>control</kbd> + <kbd>z</kbd> or <kbd>control</kbd> + <kbd>z</kbd> + <kbd>enter</kbd> if you're on a computer running Windows) or by typing `exit()`. You can get back in the REPL again by typing `python` at the regular `$` prompt. Just remember that you're in the Python REPL when you see `>>>`, and you're in bash or your terminal when you see the `$`.
 
+<Boxed color='#d5222c'>
 ## Challenge
 
 One operator (math symbol) we didn't learn is the exponent—e.g., "x raised to the power of..." If you were Guido van Rossum, the creator of Python, how would you define this operator?
+</Boxed>
 
+<Reveal color='#9abc4f'>
 ## Solution
 
 The exponent operator is two asterisks (`**`). For example, the number `3` to the power of `2` would be expressed as `3**2`.
+</Reveal>
 
 ## Evaluation
 

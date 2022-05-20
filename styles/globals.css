@@ -355,7 +355,7 @@ header a:hover {
   cursor: pointer;
 }
 
-.pagination > .MuiButtonBase-root, .presentation-button{
+.pagination > .MuiButtonBase-root, .brutalist-button{
   background-color: var(--background-page) !important;
   border: 2px solid #ef3b3a !important;
   padding:10px 40px !important;
@@ -363,7 +363,7 @@ header a:hover {
   /* font-size: 20px; */
 }
 
-.pagination > .MuiButtonBase-root:after, .presentation-button:after{
+.pagination > .MuiButtonBase-root:after, .brutalist-button:after{
   content:'';
   position:absolute;
   background-color:#ef3b3a;
@@ -374,12 +374,12 @@ header a:hover {
   z-index:-1;
 }
 
-.pagination > .MuiButtonBase-root:hover,.pagination > .MuiButtonBase-root:active, .presentation-button:hover, .presentation-button:active{
+.pagination > .MuiButtonBase-root:hover,.pagination > .MuiButtonBase-root:active, .brutalist-button:hover, .brutalist-button:active{
   color: var(--background-page);
   background-color:#ef3b3a !important;
   transition: all 0.3s ease;
 }
-.pagination > .MuiButtonBase-root:hover:after,.pagination > .MuiButtonBase-root:hover:active, .presentation-button:hover:after, .presentation-button:hover:active{
+.pagination > .MuiButtonBase-root:hover:after,.pagination > .MuiButtonBase-root:hover:active, .brutalist-button:hover:after, .brutalist-button:hover:active{
   background-color: var(--background-page);
   border:2px solid #ef3b3a !important;
   transition: all 0.3s ease;
@@ -400,7 +400,6 @@ header a:hover {
   gap: 30px;
   margin-top: 30px;
   width: 100%;
-
 }
 
 .workshops {
@@ -440,7 +439,6 @@ header a:hover {
   top: -114px;
   font-size: 30px;
 }
-
 
 .terminal {
   --size: 1.5;
@@ -732,8 +730,13 @@ header a:hover {
 
 .quizButton {
   margin-top: 20px !important;
-  background-color: #1976d2 !important;
-  padding: 10px !important;
+  border: 3px solid #d5222c;
+  box-shadow: #d5222c 8px 8px 0px; 
+}
+
+/* Boxes */
+.boxed h2{
+  margin-top: 0;
 }
 
 /* sidebar  */

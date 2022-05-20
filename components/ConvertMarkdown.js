@@ -72,7 +72,15 @@ const CodeEditor = ({ children, ...props }) => {
     if (children) {
         if (children.length > 0) {
             if (typeof children[0] === 'object') {
+                console.log('children', children)
                 const codeText = children[0].props.children.join('');
+                return (
+                    <div>
+                        <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
+                    </div>
+                )
+            }else{
+                const codeText = children.join('');
                 return (
                     <div>
                         <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
@@ -80,6 +88,7 @@ const CodeEditor = ({ children, ...props }) => {
                 )
             }
         } else {
+            console.log('HERE', children)
             const codeText = children.join('');
             return (
                 <div>
@@ -132,6 +141,42 @@ const Quiz = ({ className, children }) => {
     )
 }
 
+const Boxed = ({ children, ...props }) => {
+    var color = props.color || '#d5222c';
+    return (
+        <div className="boxed"
+        style= {{
+            padding: '1rem',
+            border: '3px solid ' + color,
+            boxShadow: color + ' 8px 8px 0px' 
+        }}>
+            {children}
+        </div>
+    )
+}
+
+const ClicktoReveal = ({ children, ...props }) => {
+    // use click hook to reveal
+    const [isShown, setIsShown] = useState(false);
+    var color = props.color || '#9abc4f';
+    const beforeReveal = (
+        <div>{children[0]} (click to reveal)</div>
+    )
+    return (
+        <div className="boxed"
+        style= {{
+            padding: '1rem',
+            border: '3px solid ' + color,
+            boxShadow: color + ' 8px 8px 0px',
+            marginTop: '2rem',
+            cursor: 'pointer'
+        }}
+        onClick={() => setIsShown(!isShown)}>
+            {isShown ? children : beforeReveal}
+        </div>
+    )
+}
+
 export default function ConvertMarkdown(markdown, uploads, workshop) {
     return (
         compiler(markdown,
@@ -166,7 +211,9 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                     PythonREPL,
                     Terminal,
                     EditorWithTabs,
-                    JSTerminal
+                    JSTerminal,
+                    Boxed,
+                    Reveal: ClicktoReveal,
                 }
 
             })
