@@ -80,15 +80,17 @@ NLTK uses the [Penn Tree Bank Tag Set](https://www.ling.upenn.edu/courses/Fall_2
 
 Even though in this workshop we will use the English language in the examples, NLTK does support many other languages, due to amazing contributions from the Python Text Analysis community. The support, however, varies according to the desired task. Not all functions and tools will be available for all the supported languages. The good news is that the available tools keep growing in quantity and quality.
 
-If you are planning to work with other languages than English, you will have to figure out what tools are available and how to use them. Unfortunately, it is not something that can be fully explained in a general workshop like this. Some times it is as easy as changing `stopwords.words("English")` (a command we will teach you later) to `stopwords.words("Spanish")`. Ocasionally, it will be harder than that. A search engine (Google, DuckDuckGo...) will be your best friend here.
+If you are planning to work with other languages than English, you will have to figure out what tools are available and how to use them. Unfortunately, it is not something that can be fully explained in a general workshop like this. Some times it is as easy as changing `stopwords.words("English")` (a command we will teach you later) to `stopwords.words("Spanish")`. Occasionally, it will be harder than that. A search engine (Google, DuckDuckGo...) will be your best friend here.
 
 ## Evaluation
 
 Which of the following sentences is correct:
 
+<Quiz>
 - A text is not data in itself, but can produce data if converted into numbers.
 - Part-of-Speech (POS) tagging can help identifying verbs, adjectives and nouns in a text.*
 - A corpus is any collection of texts, independently of being related to each other or not.
+</Quiz>
 
 ## Keywords
 
@@ -131,9 +133,12 @@ To read more about ethics and text analysis, see Lauren Klein's "[Distant Readin
 ## Evaluation
 
 Which one of the following sentences is correct:
+
+<Quiz>
 - Stop words are useless for text analysis, therefore the first step in any project is to remove them from the text.
 - In any type of data analysis, we usually want to cleanse the data in order to prepare it for the analysis. In text analysis, this process is called "text normalization" and can involve tasks such as removing undesired words and punctuation.*
 - Textual alterations can potentially change the original intended meaning. Therefore, we must always strive to work with the data exactly as it is in the source.
+</Quiz>
 
 ## Keywords
 
@@ -212,7 +217,7 @@ Notice that each of the texts already have a variable name. _Moby Dick_ is `text
 
 If you got any error messages, check the code and make sure you typed everything correctly. Even spaces before words matter!
 
-If you are sure you are running the code correctly, you probably have an installing issue, so you might have to go back to the instalation instructions to figure it out.
+If you are sure you are running the code correctly, you probably have an installing issue, so you might have to go back to the installation instructions to figure it out.
 
 ## Keywords
 
@@ -266,8 +271,11 @@ If you are interested in this type of analysis, take a look at the `common_conte
 ## Evaluation
 
 Which one of the following sentences is correct?
-- The similar method brings a list of words that are similiar in writing, but not necessarily in meaning, like "whale" and "while".
+
+<Quiz>
+- The similar method brings a list of words that are similar in writing, but not necessarily in meaning, like "whale" and "while".
 - Using the `concordance` method with a specific word, such as "whale", returns the words that surround "whale" in different sentences, helping us to get a glimpse of the contexts in which the word "whale" shows up.*
+</Quiz>
 
 ## Keywords
 
@@ -305,9 +313,12 @@ text2.dispersion_plot(["husband", "wife"])
 ## Evaluation
 
 Check all sentences below that are correct:
-- You can get a visual representation of ocurrences of a word with the `dispersion_plot` method.*
+
+<Quiz>
+- You can get a visual representation of occurrences of a word with the `dispersion_plot` method.*
 - The `dispersion_plot` method allows you to input a list of strings, as long as you split them with commas.*
 - Contrary to grammar rule, in a list of strings, the commas must come outside of the quotation marks.*
+</Quiz>
 
 # Types vs. Tokens
 
@@ -371,12 +382,13 @@ If you feel like you are done playing with the loop, time to move to the next se
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - "Whale", "WHALE", and "whale" are all different tokens of the same type.
 - The `lower()` method returns the lowercase form of all of the alphabetical characters in a string.*
 - The `isalpha()` method transforms integers in alphabetical strings.
 - The `append()` method adds an item to the end of the list.*
-
-## Token
+</Quiz>
 
 Do you remember the glossary terms from this section?
 
@@ -467,9 +479,12 @@ len(set(text2_slice)) / len(text2_slice)
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - The `len` method returns the length of the input, which can mean different things depending on its type. If it is a string, it will return the number of characters; if it is a list or dictionary, it will return the number of items.*
 - The lexical density measures the number of unique words per total word, and it is an objective measure of writing quality.
 - Comparing the lexical density between texts of different sizes can give a problematic result. A possible solution is to use list slice and compare parts of both texts of a similar size.*
+</Quiz>
 
 # Data Cleaning: Removing Stop Words
 
@@ -539,9 +554,12 @@ len(set(text1_stops))
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - Stop words are words that usually don't contribute with much semantic content, like prepositions, determiners, etc.*
 - To use stop words we need to import them from the nltk corpus, using the following code: `import stopwords from nltk.corpus`
 - List comprehensions are faster ways of iterating and creating lists when compared with for loops.*
+</Quiz>
 
 ## Keywords
 
@@ -626,8 +644,11 @@ sorted(set(text1_clean))[:30]
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - Stemming and lemmatizing are different forms of reducing word variations to their roots.*
 - `sorted(set(list_of_strings))` returns the unique items of `list_of_strings` in alphabetical order.*
+</Quiz>
 
 ## Keywords
 
@@ -663,7 +684,7 @@ print(porter_stemmer.stem('abandonedly'))
 print(porter_stemmer.stem('abandonment'))
 ```
 
-Still not perfect, but a bit better. So the question is, how to choose between stemming and lemmatizing? As many things in text analysis, that depends. The best way to go is experimenting, seeing the results and chosing the one that better fits your goals.
+Still not perfect, but a bit better. So the question is, how to choose between stemming and lemmatizing? As many things in text analysis, that depends. The best way to go is experimenting, seeing the results and choosing the one that better fits your goals.
 
 As a general rule, stemming is faster while lemmatizing is more accurate (but not always, as we just saw). For academics, usually the choice goes for the latter.
 
@@ -694,8 +715,11 @@ A very different list of words is produced. This list is shorter than the list p
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - Both Stemming and Lemmatizing are far from perfect, so they must be used with caution.*
 - There is no obvious best choice between Stemmers and Lemmatizers, so the best way to go is experimenting and seeing what results better fit your goals.*
+</Quiz>
 
 ## Keywords
 
@@ -787,7 +811,7 @@ Which one of the following sentences is correct:
 
 Now that we have seen and implemented a series of text analysis techniques, let's go to the Internet to find a new text. You could use something such as historic newspapers, or Supreme Court proceedings, or use any txt file on your computer. Here we will use [Project Gutenberg](http://www.gutenberg.org). Project Gutenberg is an archive of public domain written works, available in a wide variety of formats, including `.txt`. You can download these to your computer or access them via the url. We'll use the latter. We found _Don Quixote_ in the archive (see [here](http://www.gutenberg.org/files/996/996-0.txt)), and will work with that.
 
-The Python package `urllib` comes installed with Python, but is inactive by default, so we still need to import it to utilize the functions. Since we are only going to use the urlopen function, we will just import that one.
+The Python package `urllib` comes installed with Python, but is inactive by default, so we still need to import it to utilize the functions. Since we are only going to use the `urlopen` function, we will just import that one.
 
 In the next cell, type:
 
@@ -918,9 +942,12 @@ If you want to spice your challenge up, do the first three operations _in a sing
 ## Evaluation
 
 Check all sentences below that are correct:
+
+<Quiz>
 - `urlopen` can save the contents of a webpage into a variable.*
 - To use NLTK functions on a string, we can transform it into a NLTK Text object.*
 - NLTK let's you tokenize (split) a giant string into a list of substrings, considering punctuations and edge cases like `don't`.*
+</Quiz>
 
 ## Keywords
 
@@ -1003,9 +1030,11 @@ Your result should show that NN is the most common tag. We can look up what NN m
 
 Which of the following are correct?
 
+<Quiz>
 - POS tagging does not work well with stop words, therefore you should always clean your text from stop words before using it.
 - Tuples are like lists, but you can't change their value once created.*
 - `nltk.pos_tag` returns tuples of two values, the first being the word, and the second the tag.*
+</Quiz>
 
 ## Keywords
 
@@ -1014,3 +1043,139 @@ Do you remember the glossary terms from this section?
 - [part-of-speech (POS) tagging](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/part-of-speech.md)
 - [Dictionaries](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/dictionaries.md)
 - [Tuples](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/tuples.md)
+
+# Theory to Practice
+
+Congratulations! You are done with the Text Analysis workshop!  
+  
+As you may expect, this course was only the beginning of your journey. NLTK is a vast and ever expanding world. The possibilities are numerous, with exciting new things coming everyday.  
+  
+Our goal was to show some of those possibilities, and equip you with enough tools/knowledge/skills to be able to keep advancing. In this page we suggest you further readings and other tutorials for which we feel you might be ready. Don't be afraid to try! It is also useful to come back to this workshop with fresh eyes after a while. It will help you solidify some of the knowledge and make some things more clear.  
+  
+Have a happy journey!
+
+## Review your knowledge: 10 questions from the lessons
+
+__1. Check all sentences below that are correct: (Select all that apply)__
+
+<Quiz>
+- urlopen can save the contents of a webpage into a variable.*
+- To use NLTK functions on a string, we can transform it into a NLTK Text object.*
+- NLTK let’s you tokenize (split) a giant string into a list of substrings, considering punctuations and edge cases like don't.*
+</Quiz>
+
+Revisit lesson [Make Your Own Corpus (continued)](/workshops/text-analysis/?page=15) to learn more.
+
+__2. Which of the following are correct? (Select all that apply)__
+
+<Quiz>
+- Tuples are like lists, but you can’t change their value once created.*
+- nltk.pos_tag returns tuples of two values, the first being the word, and the second the tag.*
+- POS tagging does not work well with stop words, therefore you should always clean your text from stop words before using it.
+</Quiz>
+
+Revisit lesson [Part-of-Speech Tagging](/workshops/text-analysis/?page=16) to learn more.
+
+__3. Which of the following sentences is correct?__
+
+<Quiz>
+- A text is not data in itself, but can produce data if converted into numbers.
+- Part-of-Speech (POS) tagging can help identifying verbs, adjectives and nouns in a text.*
+- A corpus is any collection of texts, independently of being related to each other or not.
+</Quiz>
+
+Revisit lesson [Text as Data](/workshops/text-analysis/?page=2) to learn more.
+
+__4. Which one of the following sentences is correct?__
+
+<Quiz>
+- Stop words are useless for text analysis, therefore the first step in any project is to remove them from the text.
+- In any type of data analysis, we usually want to cleanse the data in order to prepare it for the analysis. In text analysis, this process is called "text normalization" and can involve tasks such as removing undesired words and punctuation.*
+- Textual alterations can potentially change the original intended meaning. Therefore, we must always strive to work with the data exactly as it is in the source.
+</Quiz>
+
+Revisit lesson [Cleaning and Normalizing](/workshops/text-analysis/?page=3) to learn more.
+
+__5. Which one of the following sentences is correct?__
+
+<Quiz>
+- The similar method brings a list of words that are similar in writing, but not necessarily in meaning, like "whale" and "while".
+- Using the `concordance` method with a specific word, such as "whale", returns the words that surround "whale" in different sentences, helping us to get a glimpse of the contexts in which the word "whale" shows up.*
+</Quiz>
+
+Revisit lesson [Searching for Words](/workshops/text-analysis/?page=5) to learn more.
+
+__6. Check all sentences below that are correct:__
+
+<Quiz>
+- You can get a visual representation of occurrences of a word with the `dispersion_plot` method.*
+- The `dispersion_plot` method allows you to input a list of strings, as long as you split them with commas.*
+- Contrary to grammar rule, in a list of strings, the commas must come outside of the quotation marks.*
+</Quiz>
+
+Revisit lesson [Positioning Words](/workshops/text-analysis/?page=6) to learn more.
+
+__7. Check all sentences below that are correct:__
+
+<Quiz>
+- "Whale", "WHALE", and "whale" are all different tokens of the same type.
+- The `lower()` method returns the lowercase form of all of the alphabetical characters in a string.*
+- The `isalpha()` method transforms integers in alphabetical strings.
+- The `append()` method adds an item to the end of the list.*
+</Quiz>
+
+Revisit lesson [Types vs Tokens](/workshops/text-analysis/?page=7) to learn more.
+
+__8. Check all sentences below that are correct:__
+
+<Quiz>
+- The `len` method returns the length of the input, which can mean different things depending on its type. If it is a string, it will return the number of characters; if it is a list or dictionary, it will return the number of items.*
+- The lexical density measures the number of unique words per total word, and it is an objective measure of writing quality.
+- Comparing the lexical density between texts of different sizes can give a problematic result. A possible solution is to use list slice and compare parts of both texts of a similar size.*
+</Quiz>
+
+Revisit lesson [Lexical Density](/workshops/text-analysis/?page=9) to learn more.
+
+__9. Check all sentences below that are correct:__
+
+<Quiz>
+- Stop words are words that usually don't contribute with much semantic content, like prepositions, determiners, etc.*
+- To use stop words we need to import them from the nltk corpus, using the following code: `import stopwords from nltk.corpus`
+- List comprehensions are faster ways of iterating and creating lists when compared with for loops.*
+</Quiz>
+
+Revisit lesson [Data Cleaning: Removing Stop Words](/workshops/text-analysis/?page=10) to learn more.
+
+__10. Check all sentences below that are correct:__
+
+<Quiz>
+- Stemming and lemmatizing are different forms of reducing word variations to their roots.*
+- `sorted(set(list_of_strings))` returns the unique items of `list_of_strings` in alphabetical order.*
+</Quiz>
+
+Revisit lesson [Data Cleaning: Lemmatizing Words](/workshops/text-analysis/?page=11) to learn more.
+
+## Suggested Further Readings
+
+- [A bit more advanced Jupyter Notebook tips and tricks](https://www.dataquest.io/blog/jupyter-notebook-tips-tricks-shortcuts/)
+- [The NLTK documentation](https://www.nltk.org/)
+
+
+## Other Tutorials
+
+- [Sentiment Analysis for Exploratory Data Analysis](https://programminghistorian.org/en/lessons/sentiment-analysis)
+- [A collection of Jupyter Notebooks on Mining the Social Web](https://github.com/mikhailklassen/Mining-the-Social-Web-3rd-Edition)
+- [Introduction to Stylometry](https://programminghistorian.org/en/lessons/introduction-to-stylometry-with-python)
+
+## Projects or Challenges to Try
+
+- [*Our Machine Learning workshop?*](https://github.com/DHRI-Curriculum/machine-learning)
+- [Exercises to practice working with strings](https://www.w3resource.com/python-exercises/string/)
+- [Work on your Regular Expressions skills](https://regexone.com/)
+
+## Discussion Questions
+
+- How can your research benefit from text analysis?
+- What are the limits of the kind of text analysis we just went throught? What is it good for? What is it not well suited to do?
+- What are the potential pitfalls for using massive data?
+- How can we use text analysis in teaching?
