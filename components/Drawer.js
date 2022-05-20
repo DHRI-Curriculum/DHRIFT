@@ -37,7 +37,8 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
       
       minHeight: "140px",
       width: "100%",
-      borderRadius: "10px 10px 10px 10px",
+      border: '#5d55a5 3px solid',
+      boxShadow: '#5d55a5 8px 8px 0px',
     }
     return (
 

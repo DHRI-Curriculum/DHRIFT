@@ -11,6 +11,7 @@ import TerminalComponent from './TerminalComponent';
 import EditorWithTabsComponent from './Editor/EditorWithTabs';
 import InterpreterComponent from './Editor/InterpreterComponent';
 import Download from './Download';
+import JSTerminal from './Editor/JSTerminal';
 
 const Code = ({ className, children }) => {
     const [isShown, setIsShown] = useState(false);
@@ -26,11 +27,11 @@ const Code = ({ className, children }) => {
                 onMouseEnter={() => setIsShown(true)}
                 onMouseLeave={() => setIsShown(false)}>
                 <pre className={className + ' ' + language}>
-                {isShown && (
-                    <>
-                        {language && <span className="language">{getLang}</span>}
+                    {isShown && (
+                        <>
+                            {language && <span className="language">{getLang}</span>}
                         </>
-                )}
+                    )}
                     <code className={className}
                         dangerouslySetInnerHTML={{ __html: highlighted.value }}>
                     </code>
@@ -68,22 +69,31 @@ const Imager = ({ className, ...props }) => {
 }
 
 const CodeEditor = ({ children, ...props }) => {
-    if (children.length > 0) {
-        if (typeof children[0] === 'object') {
-            const codeText = children[0].props.children.join('');
+    if (children) {
+        if (children.length > 0) {
+            if (typeof children[0] === 'object') {
+                const codeText = children[0].props.children.join('');
+                return (
+                    <div>
+                        <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
+                    </div>
+                )
+            }
+        } else {
+            const codeText = children.join('');
             return (
                 <div>
-                    <InterpreterComponent language={props.language} defaultCode={codeText} {...props}/>
+                    <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
                 </div>
             )
         }
-    }   
-    const codeText = children.join('');
-    return (
-        <div>
-            <InterpreterComponent language={props.language} defaultCode={codeText} {...props}/>
-        </div>
-    );
+    } else {
+        return (
+            <div>
+                <InterpreterComponent language={props.language} {...props} />
+            </div>
+        )
+    }
 }
 
 const EditorWithTabs = ({ className, children }) => {
@@ -139,13 +149,13 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                             className: 'image',
                         }
                     },
-                    CodeEditor:{
+                    CodeEditor: {
                         component: CodeEditor,
                         props: {
                             allUploads: uploads,
                         }
                     },
-                    Download:{
+                    Download: {
                         component: Download,
                         props: {
                             workshop: workshop,
@@ -156,6 +166,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                     PythonREPL,
                     Terminal,
                     EditorWithTabs,
+                    JSTerminal
                 }
 
             })
