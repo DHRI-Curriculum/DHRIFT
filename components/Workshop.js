@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image'
 
-export default function Workshop({ workshop }) {
+export default function Workshop({ workshop, index }) {
   const color1 = randomColor({
     luminosity: 'light',
     count: 1,
@@ -22,19 +22,27 @@ export default function Workshop({ workshop }) {
     return `<svg width="100" height="100" style="background-color: ${color}"></svg>`
   }
 
-
   const style = {
     background: `${color1}`,
     height: '140px',
   }
 
+  const themeColors = ['45b1c1', 'ef3b3a', 'ff9933', '9abc4f', '666666', 'd5222c'];
+
+  const getColor = (index) => {
+    return themeColors[index % themeColors.length]
+  }
+
   return (
     <Card 
-    // variant="outlined"
-    sx={{ 
+    // variant="outlined" 
+    className='frontpage-card'
+    sx={{
       borderRadius: '0px',
-    
-    }} className='frontpage-card'>
+      border: '#'+ getColor(index) +' 3px solid',
+      boxShadow: '#'+ getColor(index) +' 8px 8px 0px',
+    }}
+    >
       <Link href={`/workshops/${workshop.slug}`} passHref>
         <CardContent className='card-content'>
           {

@@ -15,6 +15,7 @@ const Workshop = dynamic(
 )
 
 export default function Home({ workshops }) {
+
   return (
     <Container
       disableGutters={true}
@@ -26,8 +27,8 @@ export default function Home({ workshops }) {
             <Image
               src={logo}
               alt={yaml.organization + ' logo'}
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               className='frontpage-logo' />
             <h2
               style={{
@@ -43,11 +44,7 @@ export default function Home({ workshops }) {
                 fontWeight: '400',
               }}
               className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
-            <div
-              style={{
-                margin: '10px',
-              }}
-              className='rectangle'></div>
+
             <p
               style={{
                 margin: '30px',
@@ -58,7 +55,7 @@ export default function Home({ workshops }) {
         <div className='sectionTitle'><BuildIcon /> Workshops</div>
         <div className='workshops'>
           {workshops.map((workshop, index) => (
-            <Workshop key={index} workshop={workshop} />
+            <Workshop key={index} workshop={workshop} index={index} />
           ))}
         </div>
       </div>

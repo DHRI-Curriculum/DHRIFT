@@ -60,10 +60,11 @@ a {
 }
 
 blockquote {
-  background: #f9f9f9;
+  background: var(--background);
   border-left: 10px solid #ccc;
   margin: 1.5em 10px;
   padding: 0.5em 10px;
+  color: var(--foreground)
 }
 
 blockquote:before {
@@ -138,7 +139,6 @@ img {
   /* border-radius: 10px; */
 }
 
-
 .line {
   width: 100%;
   height: 4rem;
@@ -211,6 +211,8 @@ img {
   color: var(--foreground);
   font-size: 22px;
   text-align: justify;
+  border: #e74c3c 3px solid;
+  box-shadow: #e74c3c 8px 8px 0px;
 }
 
 .sectionTitle {
@@ -223,12 +225,11 @@ img {
 
 .rectangle {
   width: 50%;
-  height: 12px;
+  height: 5px;
   background: darkgray;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 10px;
 }
 
 .workshopContainer {
@@ -246,7 +247,7 @@ header {
 }
 
 .topBar-container {
-  background-color: white;
+  background-color: var(--background-page);
   border: #5d55a5 3px solid;
   margin: 10px; 
   z-index: 1000;
@@ -276,7 +277,7 @@ header {
   align-items: center;
   justify-content: space-evenly;
   width: 90%;
-  color:rgb(35, 38, 39)
+  color: var(--foreground);
 }
 
 .headerLink {
@@ -285,6 +286,7 @@ header {
   margin-left: 20px;
   flex-shrink: 1;
   padding-right: 20px;
+  font-weight: bold;
 }
 
 @media(min-width: 899px) {
@@ -296,6 +298,7 @@ header {
 header a{
   color: var(--foreground);
   text-decoration: none;
+  font-weight: bold;
 }
 
 header a:hover {
@@ -353,7 +356,7 @@ header a:hover {
 }
 
 .pagination > .MuiButtonBase-root, .presentation-button{
-  background-color: white !important;
+  background-color: var(--background-page) !important;
   border: 2px solid #ef3b3a !important;
   padding:10px 40px !important;
   font-weight: bold;
@@ -372,12 +375,12 @@ header a:hover {
 }
 
 .pagination > .MuiButtonBase-root:hover,.pagination > .MuiButtonBase-root:active, .presentation-button:hover, .presentation-button:active{
-  color:white;
+  color: var(--background-page);
   background-color:#ef3b3a !important;
   transition: all 0.3s ease;
 }
 .pagination > .MuiButtonBase-root:hover:after,.pagination > .MuiButtonBase-root:hover:active, .presentation-button:hover:after, .presentation-button:hover:active{
-  background-color:white;
+  background-color: var(--background-page);
   border:2px solid #ef3b3a !important;
   transition: all 0.3s ease;
 }
@@ -438,14 +441,6 @@ header a:hover {
   font-size: 30px;
 }
 
-.frontpage-card {
-  min-height: 600px;
-  flex-basis: 500px;
-  margin-bottom: 40px;
-  background-color: var(--background-page) !important;
-  color: var(--foreground) !important;
-  border: 1px solid #000000;
-}
 
 .terminal {
   --size: 1.5;
@@ -483,6 +478,15 @@ header a:hover {
   margin-bottom: 20px;
 }
 
+/* frontpage cards */
+.frontpage-card {
+  min-height: 600px;
+  flex-basis: 500px;
+  margin-bottom: 40px;
+  background-color: var(--background-page) !important;
+  color: var(--foreground) !important;
+}
+
 .card-media {
   cursor: pointer;
 }
@@ -508,10 +512,6 @@ header a:hover {
   height: 50px;
 }
 
-.card:hover {
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
-  transition: .5s ease;
-}
 
 .card-content {
   cursor: pointer;
@@ -597,6 +597,7 @@ header a:hover {
 
 .page-content {
   margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 .page-content h1 {
@@ -643,7 +644,7 @@ header a:hover {
   height: unset !important;
 }
 
-/* frontpage  */
+/* workshop frontpage  */
 .frontpage>h1 {
   font-size: 3rem;
   margin-bottom: 20px;
@@ -676,8 +677,15 @@ header a:hover {
 }
 
 .frontpage-item {
-  border: 1px lightgrey solid;
+  /* border: 1px lightgrey solid; */
   padding: 10px;
+  border: 3px solid #ff9933;
+  box-shadow: #ff9933 8px 8px 0px;
+}
+
+.dependency{
+  border: 3px solid #d5222c;
+  box-shadow: #d5222c 8px 8px 0px;
 }
 
 .frontpage-item h2 {
