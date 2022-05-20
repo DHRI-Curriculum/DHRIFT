@@ -54,7 +54,7 @@ resources:
 
 # What are Git and GitHub?
 
-**Git** is software used for version control—that is, tracking the state of files and changes you make to them over time. Git can be enabled in a folder, and then used to save the state of the contents in that folder at different points in the future, as designated by you. In the language of Git, a folder is called a _repository_. In the context of this workshop, it refers to a folder that is being tracked by Git. Using Git, you can view a log of the changes you've made to the files in a repository and compare changes over time. We will explore these features in the current workshop. You can also revert back to previous versions, and create "branches" of a project to explore different futures. These are advanced features, which we will provide resources for you to explore later. Git is also useful for collaboration, as a repository can be shared across computers, and its contents can be asynchonously developed and eventually merged with the main project.
+**Git** is software used for version control—that is, tracking the state of files and changes you make to them over time. Git can be enabled in a folder, and then used to save the state of the contents in that folder at different points in the future, as designated by you. In the language of Git, a folder is called a _repository_. In the context of this workshop, it refers to a folder that is being tracked by Git. Using Git, you can view a log of the changes you've made to the files in a repository and compare changes over time. We will explore these features in the current workshop. You can also revert back to previous versions, and create "branches" of a project to explore different futures. These are advanced features, which we will provide resources for you to explore later. Git is also useful for collaboration, as a repository can be shared across computers, and its contents can be asynchronously developed and eventually merged with the main project.
 
 **GitHub** is an online platform for hosting Git repositories. It functions for some, predominantly programmers, as a social network for sharing and collaborating on code-based projects. Users can share their own projects, as well as search for others, which they can then often work on and contribute to. Digital Humanists, librarians, and other academics are also finding ways Git and GitHub are useful in writing projects and teaching. GitHub also serves as a web-hosting platform, allowing users to create websites from their repositories.
 
@@ -69,27 +69,36 @@ As we move forward it's important to make sure we're firm on the distinctions be
 
 ## Evaluation
 
-Which of the following best describes _version control_:
+Which of the following best describes _version control_: (select one)
+
+<Quiz>
 - a software installed on my local machine
 - the practice of tracking and organizing the state of a file over time, as it changes*
 - a language that can be read and rendered by some web-based platforms
 - a cloud-based software
+</Quiz>
 
-Which of the following best describe Git:
+Which of the following best describe Git: (select all that apply)
+
+<Quiz>
 - a software installed on my local machine*
 - the practice of tracking and organizing the state of a file over time, as it changes
-- a web-based plaform for storing and sharing files
+- a web-based platform for storing and sharing files
 - a version control software*
 - a cloud-based software
 - refers to project folders as "repositories"*
+</Quiz>
 
-Which best describes GitHub:
+Which best describes GitHub: (select all that apply)
+
+<Quiz>
 - a cloud-based software*
 - a software installed on my local machine
-- a web-based plaform for storing and sharing files*
+- a web-based platform for storing and sharing files*
 - a version control software
 - refers to project folders as "repositories"*
 - the practice of tracking and organizing the state of a file over time, as it changes
+</Quiz>
 
 ## Keywords
 
@@ -143,7 +152,7 @@ Git is also used in writing projects! _Version control_ makes tracking changes t
 
 Git and GitHub—together or independently—support multi-author publishing. Like we have done with the DHRI curriculum, you can have a shared project folder that multiple people are working from asynchronously, even on the same parts if they wanted, and then those different offshoots can be carefully folded back into the main project. A singular author can also create different offshoots on their own, allowing the writer to explore different ways forward. This, combined with version control, allows authors to easily return to and compare older drafts or retrieve sections previously discarded.
 
-We encourage you to explore these features after you gain a grasp on the fundamentals in the current workshop. You can find resources to do this on the [Theory to Practice](https://github.com/DHRI-Curriculum/git/blob/v2.0/theory-to-practice.md) page!
+We encourage you to explore these features after you gain a grasp on the fundamentals in the current workshop. You can find resources to do this on the [Theory to Practice](https://dhri-curriculum.github.io/Dhrift/workshops/git/?page=12) page!
 
 ### Versions Across Time
 
@@ -163,9 +172,9 @@ By looking at the file list, you also can not tell who the syllabus originally c
 
 Increasingly we see that faculty are sharing their syllabi on GitHub (example: [DLCL 204: Digital Humanities Across Borders](https://github.com/quinnanya/dlcl204)). Some are even using GitPages that apply a user-friendly interface to their repository to make it easier to access and navigate for their students (example: [Digital History](https://digitalhistory.github.io/)).
 
-GitHub offers a way of making a course publicly avaiable on the web, and sometimes easier or more intuitive to users than some learning management systems. Git helps track the changes over time.
+GitHub offers a way of making a course publicly available on the web, and sometimes easier or more intuitive to users than some learning management systems. Git helps track the changes over time.
 
-When the softwares are used together, Git and GitHub also support a collaborative appraoch to syllabi development. Copying another's project and modifying and remixing the content to meet your needs is a seamless and transparent process. Attribution of specific changes over time is a foundational function of how Git operates; GitHub explicitly renders attribution, making it easy to see who(s) did what. This is one of the attractions of using the platform.
+When the softwares are used together, Git and GitHub also support a collaborative approach to syllabi development. Copying another's project and modifying and remixing the content to meet your needs is a seamless and transparent process. Attribution of specific changes over time is a foundational function of how Git operates; GitHub explicitly renders attribution, making it easy to see who(s) did what. This is one of the attractions of using the platform.
 
 In a practical sense, you could search other syllabi on GitHub, and share yours so it could be searched by others. If someone finds a syllabus that includes parts they want to use, they could fork that syllabi to their GitHub account, and download the files to your local machine and edit them there. Any changes could then be added back to the repository on GitHub, thereby sharing your amendments publicly. On GitHub, attribution of who contributed what are transparent. Meanwhile, your amended version would be available for others to modify and re-share.
 
@@ -175,7 +184,9 @@ We will cover these features in-depth in a later lesson in this workshop.
 
 ## Evaluation
 
-What tasks could Git and/or GitHub offer support to?
+What tasks could Git and/or GitHub offer support to? (select all that apply)
+
+<Quiz>
 - Developing software*
 - Creating and sharing data sets*
 - Creating websites*
@@ -183,6 +194,7 @@ What tasks could Git and/or GitHub offer support to?
 - Collating online resources*
 - Keeping research notes*
 - Hosting syllabi and course materials*
+</Quiz>
 
 ## Keywords
 
@@ -196,7 +208,7 @@ During this workshop, you'll be communicating with GitHub from your local comput
 
 In addition to the command line, you'll be using your text editor and your browser. Before continuing, its important that we clearly distinguish between these three different spaces or environments:
 - Your plain text editor where you'll be writing your syllabus is on your local computer.
-- That syllabus is initiailly saved in a git-enabled repository on your local computer.
+- That syllabus is initially saved in a git-enabled repository on your local computer.
 - Your browser is where you'll be uploading your repository to GitHub, a cloud service.
 - Your terminal is where you'll be communicating with GitHub to send the repository and project files back and forth between the cloud (which you can view through the GitHub website) and your hard drive.
 
@@ -290,37 +302,58 @@ $ pwd
 ## Evaluation
 
 Which best describes where you are working when you're writing in your plain text editor:
+
+<Quiz>
 - on my local machine*
 - on the internet
+</Quiz>
 
 Which best describes where you are working when you're using your terminal to communicate with GitHub and share the files:
+
+<Quiz>
 - on my local machine*
 - on the internet
+</Quiz>
 
 Which best describes where your files are when you are viewing them in GitHub:
+
+<Quiz>
 - on my local machine
 - on the internet*
+</Quiz>
 
-Git-enabled repository means
+Git-enabled repository means: (select one)
+
+<Quiz>
 - none of the files on my local machine are being tracked
 - a specific file on my local machine is being tracked
 - a specific folder on my local machine is being tracked*
 - all the files on my local machine are being tracked
+</Quiz>
 
 Which command do you use to make a new folder?
+
+<Quiz>
 - `pwd`
 - `cd`
 - `mkdir`*
+</Quiz>
 
 Which command do you use to enter into a folder?
+
+<Quiz>
 - `pwd`
 - `cd`*
 - `mkdir`
+</Quiz>
 
 Which command do you use to check where you are?
+
+<Quiz>
 - `pwd`*
 - `cd`
 - `mkdir`
+</Quiz>
 
 # Setting Up Git
 
@@ -362,11 +395,14 @@ user.email=gitsuperstar@gmail.com
 
 ## Evaluation
 
-What are you doing when you set up git?
+What are you doing when you set up git? (select one)
+
+<Quiz>
 - You are creating a new version of the software on your local machine.
-- You are sending files from your local machnine to GitHub?
+- You are sending files from your local machine to GitHub?
 - You are introducing yourself to the software, so it knows who you are.*
 - You are creating a new version of a project folder on your local machine.
+</Quiz>
 
 # Creating a Syllabus File
 
@@ -395,7 +431,7 @@ Before version control is useful, we'll have to create a text file for Git to tr
 
 To create a plain text file, we're going to switch to our text editor, Visual Studio Code, to create and edit a file named `syllabus.md` and save it to our `git-practice` folder. The `.md` extension indicates that it is a Markdown file, which is a special file format we will dive into in the next section.  
 
-If you have not installed Visual Studio Code, review [the installation instructions here](https://github.com/DHRI-Curriculum/install/blob/v2.0/guides/visual-studio-code.md).
+If you have not installed Visual Studio Code, review [the installation instructions here](https://dhri-curriculum.github.io/Dhrift/guides/visual-studio-code/).
 
 In terminal, check to make sure you are in your `git-practice` folder. (_Hint_: use `pwd` to see what directory you are currently in.)
 
@@ -413,7 +449,7 @@ If Visual Studio Code does not open when you use the `code` command in your term
 
 We'll be typing our markdown into this file in the Visual Studio Code window. At any time, you can save your file by hitting <kbd>control</kbd> + <kbd>s</kbd> on Windows or <kbd>⌘</kbd> + <kbd>s</kbd> on macOS. Alternatively, you can click the `File` menu on the top right, then select `Save` from the dropdown menu.
 
-Saving frequently is advised. When we get to the version contol functionality of Git, only changes that are saved will be preserved when a version is created.
+Saving frequently is advised. When we get to the version control functionality of Git, only changes that are saved will be preserved when a version is created.
 
 # Creating Syllabus Content Using Markdown
 
@@ -456,7 +492,7 @@ To provide emphasis, place asterisks around some text:
 **This text will appear bold.**
 ```
 
-For emphasis, you need to mark where it should start and where it should end, so you need astrisks at the beginning and end of whatever text is being emphasized.
+For emphasis, you need to mark where it should start and where it should end, so you need asterisks at the beginning and end of whatever text is being emphasized.
 
 To create a bulleted list, put a hyphen at the beginning of each list item:
 
@@ -506,20 +542,26 @@ You can look at an example syllabus in raw text form [here](https://raw.githubus
 
 ## Evaluation
 
-Which best describes what you're doing when you initialize your project folder:
+Which best describes what you're doing when you initialize your project folder: (select all that apply)
+
+<Quiz>
 - You created a new version of your project folder
 - You told Git to pay attention to your project folder*
 - You told Git to set up its file structure within your project folder so it can track changes to your files.*
 - You use the command `mkdir` in your terminal
 - You use the command `git init` in your terminal*
+</Quiz>
 
-Which best describes Markdown:
+Which best describes Markdown: (select all that apply)
+
+<Quiz>
 - a software installed on my local machine
 - a language for formatting plain text files*
 - a language that can be read and rendered by some web-based platforms*
 - a version control software
 - a cloud-based software
 - refers to project folders as "repositories"
+</Quiz>
 
 ## Keywords
 
@@ -671,35 +713,50 @@ If you're ever stuck or "trapped" on the command line, try running through these
 
 ## Evaluation
 
-Which best describe the process of _staging_:
+Which best describe the process of _staging_: (select one)
+
+<Quiz>
 - you telling Git to take a snapshot of changes made to a file.
 - you telling Git which files with changes you want it to pay attention to.*
 - you telling git to pay attention to a folder storing files you want to make changes to.
 - the second part of a two-step process.
+</Quiz>
 
-Which best describes the process of _committing_:
+Which best describes the process of _committing_: (select all that apply)
+
+<Quiz>
 - you telling Git to take a snapshot of changes made to a file.*
 - you telling Git which files with changes you want it to pay attention to.
 - you telling git to pay attention to a folder storing files you want to make changes to.
 - the second part of a two-step process.*
+</Quiz>
 
-What happens if you _stage_ the files, but don't _commit_ them?
+What happens if you _stage_ the files, but don't _commit_ them? (select all that apply)
+
+<Quiz>
 - Git won't know what files you want to take a snapshot of
 - Git won't take a snapshot of the files.*
 - Git will take the snapshot of the files
 - You will have told Git what files you would like it to take a snapshot of.*
+</Quiz>
 
-What happens if you _commit_ the files, but don't _stage_ them?
+What happens if you _commit_ the files, but don't _stage_ them? (select all that apply)
+
+<Quiz>
 - Git won't know what files you want to take a snapshot of*
 - Git won't take a snapshot of the files.*
 - You will have told Git what files you would like it to take a snapshot of.
 - Git will take the snapshot of the files*
+</Quiz>
 
-Which best describes the `-m` flag used when committing changes to a file?
+Which best describes the `-m` flag used when committing changes to a file? (select all that apply)
+
+<Quiz>
 - a brief description of changes you made to your file*
 - Its just something Git needs so it doesn't break
 - future aids when you are trying to make sense of or recover changes you previously made to a file*
 - It's nonsense—who needs it?!
+</Quiz>
 
 ## Keywords
 
@@ -774,13 +831,13 @@ Use `git commit` via the command line to save the changes you've just made as a 
 
 So far, we have not done anything with GitHub or on the Internet. We have used Git, installed on our local machine, to save a version of file as it stands now. We could stop here if we only had an interest in using Git for version control. But if we also wanted to use GitHub to back up our files, or to share our project with a team or publicly, we want to upload, or push, that repository to GitHub on the Internet.
 
-Use `git push origin main` to upload, or _push_, that file to your repository on GitHub. After refreshing the webpage, your file should appear online. **The difference I noted above appears here.** Note the absense of the `-u` flag from the command. That flag was used the first time to establish the connection between the repository on your local machine and on GitHub. Now that that connection has been established, that flag is not needed.
+Use `git push origin main` to upload, or _push_, that file to your repository on GitHub. After refreshing the webpage, your file should appear online. **The difference I noted above appears here.** Note the absence of the `-u` flag from the command. That flag was used the first time to establish the connection between the repository on your local machine and on GitHub. Now that that connection has been established, that flag is not needed.
 
 ## Challenges
 
 1. Go through the process a few more times by adding additional readings and weeks of course material. Remember to commit changes intentionally so your commit messages make sense. Use `git log` to review your changes.
 
-2. Also try creating a new file and adding an assignment. Rewrite the assignment using Markdown, or edit and add in the markers. Go through the process of staging and commiting that file, and pushing it to your repository on GitHub.
+2. Also try creating a new file and adding an assignment. Rewrite the assignment using Markdown, or edit and add in the markers. Go through the process of staging and committing that file, and pushing it to your repository on GitHub.
 
 3. Test your understanding by thinking through the following questions:
 - Do you need to push the file to GitHub each time you commit changes to the file, or can you make several commits to a file and push them all to GitHub at once?
@@ -796,33 +853,45 @@ In response to _Challenge 3_:
 
 ## Evaluation
 
-Which best describes what you're doing when you use the command `git push`?
+Which best describes what you're doing when you use the command `git push`? (select one)
+
+<Quiz>
 - you telling Git to take a snapshot of changes made to a file.
 - you telling Git which files with changes you want it to pay attention to.
 - you telling git to pay attention to a folder storing files you want to make changes to.
 - you are copying the updated files with the changes to the repository on GitHub*
+</Quiz>
 
-How does the process of _pushing_ differ from the processes of _staging_ and _committing_ discussed in the previous lesson?
+How does the process of _pushing_ differ from the processes of _staging_ and _committing_ discussed in the previous lesson? (select one)
+
+<Quiz>
 - There is no fundamental difference between these processes.
 - Staging and Committing set up the files whereas pushing is the act of taking the snapshot.
 - Staging and committing the files is to communicate with GitHub on the Internet, pushing the changes happens on your local machine.
 - Staging and committing the files happens on your local machine, pushing the changes is to communicate with GitHub on the Internet.*
+</Quiz>
 
-What happens if you use `git push` without staging and committing files?
+What happens if you use `git push` without staging and committing files? (select all that apply)
+
+<Quiz>
 - Git won't know what files you want to take a snapshot of.*
 - Git won't take a snapshot of the files.*
 - Your computer won't know what changes to share with GitHub.*
 - Git will take the snapshot of the files
 - You will have successfully created a new version of the file.
 - You will have communicated with GitHub and shared a copy of the updated files.
+</Quiz>
 
-What happens if you _stage_ and _commit_ files, but not _push_ the changes?
+What happens if you _stage_ and _commit_ files, but not _push_ the changes? (select all that apply)
+
+<Quiz>
 - Git won't know what files you want to take a snapshot of.
 - Git won't take a snapshot of the files.
 - Your computer won't know what changes to share with GitHub.
 - Git will take the snapshot of the files*
 - You will have successfully created a new version of the file.*
 - You will have communicated with GitHub and shared a copy of the updated files.
+</Quiz>
 
 ## Keywords
 
@@ -833,7 +902,7 @@ Do you remember the glossary terms from this section?
 
 # Cloning and Forking
 
-GitHub was built for sharing and collaborating on projects. A key advantage of the platform is that you can find lots of bits of software that do many different things—such as code for plugins for WordPress or Leaflet. Increasingly, you might find syllabi or open writing projects. If a project is public, you can save a copy of it to your local machine, work on it, save your admendations and share it on your own GitHub account. Like we've already mentioned, GitHub usefully helps track attribution along the way.
+GitHub was built for sharing and collaborating on projects. A key advantage of the platform is that you can find lots of bits of software that do many different things—such as code for plugins for WordPress or Leaflet. Increasingly, you might find syllabi or open writing projects. If a project is public, you can save a copy of it to your local machine, work on it, save your amendations and share it on your own GitHub account. Like we've already mentioned, GitHub usefully helps track attribution along the way.
 
 Cloning and forking are the basic functions of this capability. Each are first explained below, and followed by an example and activity to further explain.
 
@@ -925,17 +994,23 @@ After you've made and saved the changes, you'll know you've completed step three
 
 ## Evaluation
 
-Which best describes _cloning_?
+Which best describes _cloning_? (select one)
+
+<Quiz>
 - Copying a repository from GitHub to your local machine.*
-- Copying a repository from your local machince to GitHub.
+- Copying a repository from your local machine to GitHub.
 - Copying a repository from someone else's GitHub account to your own.
 - Copying a repository from your account to someone else's account.
+</Quiz>
 
-Which best describes _forking_?
+Which best describes _forking_? (select one)
+
+<Quiz>
 - Copying a repository from GitHub to your local machine.
-- Copying a repository from your local machince to GitHub.
+- Copying a repository from your local machine to GitHub.
 - Copying a repository from someone else's GitHub account to your own.*
 - Copying a repository from your account to someone else's account.
+</Quiz>
 
 ## Keywords
 
@@ -944,3 +1019,134 @@ Do you remember the glossary terms from this section?
 - [Cloning](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/cloning.md)
 - [Forking](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/forking.md)
 - [Repository](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/repository.md)
+
+# Theory to Practice
+
+You made it to the end of this workshop—congratulations! You now know a little more about why using Git and GitHub in your scholarly practice might be advantageous, and what the challenges are. Below the quiz section you'll find a set of readings and tutorials to supplement the lessons outlined herein, and offer additional ways of advancing your use beyond the basics outlined here. There are also additional challenges to test your skills, as well as discussion questions to test your conceptual understanding of these tools. Enjoy!
+
+## Review your knowledge: 8 questions from the lessons
+
+__1. What tasks could Git and/or GitHub offer support to? (Select all that apply)__
+
+<Quiz>
+- Developing software*
+- Creating and sharing data sets*
+- Creating websites*
+- Writing articles and books*
+- Collating online resources*
+- Keeping research notes*
+- Hosting syllabi and course materials*
+</Quiz>
+
+Revisit lesson [What You Can Do with Git and GitHub](/workshops/git/?page=3) to learn more.
+
+__2. Which best describes what you're doing when you initialize your project folder: (select all that apply)__
+
+<Quiz>
+- You created a new version of your project folder
+- You told Git to pay attention to your project folder*
+- You told Git to set up its file structure within your project folder so it can track changes to your files.*
+- You use the command `mkdir` in your terminal
+- You use the command `git init` in your terminal*
+</Quiz>
+
+Revisit lesson [Creating Syllabus Content Using Markdown](/workshops/git/?page=7) to learn more.
+
+__3. What are you doing when you set up git? (select one)__
+
+<Quiz>
+- You are creating a new version of the software on your local machine.
+- You are sending files from your local machine to GitHub?
+- You are introducing yourself to the software, so it knows who you are.*
+- You are creating a new version of a project folder on your local machine.
+</Quiz>
+
+Revisit lesson [Setting Up Git](/workshops/git/?page=5 to learn more.
+
+__4. Which best describe the process of _staging_: (select one)__
+
+<Quiz>
+- you telling Git to take a snapshot of changes made to a file.
+- you telling Git which files with changes you want it to pay attention to.*
+- you telling git to pay attention to a folder storing files you want to make changes to.
+- the second part of a two-step process.
+</Quiz>
+
+Revisit lesson [Staging and Committing Changes](/workshops/git/?page=8) to learn more.
+
+__5. Which of the following best describes _version control_: (select one)__
+
+<Quiz>
+- a software installed on my local machine
+- the practice of tracking and organizing the state of a file over time, as it changes*
+- a language that can be read and rendered by some web-based platforms
+- a cloud-based software
+</Quiz>
+
+Revisit lesson [What are Git and GitHub?](/workshops/git/?page=2) to learn more.
+
+__6. Which best describes _cloning_? (select one)__
+
+<Quiz>
+- Copying a repository from GitHub to your local machine.*
+- Copying a repository from your local machine to GitHub.
+- Copying a repository from someone else's GitHub account to your own.
+- Copying a repository from your account to someone else's account.
+</Quiz>
+
+Revisit lesson [Cloning and Forking](workshops/git/?page=11) to learn more.
+
+__7. Which best describes where you are working when you're writing in your plain text editor:__
+
+<Quiz>
+- on my local machine*
+- on the internet
+</Quiz>
+
+Revisit lesson [Review of the Command Line](/workshops/git/?page=4) to learn more.
+
+__8. Which best describes what you're doing when you use the command `git push`? (select one)__
+
+<Quiz>
+- you telling Git to take a snapshot of changes made to a file.
+- you telling Git which files with changes you want it to pay attention to.
+- you telling git to pay attention to a folder storing files you want to make changes to.
+- you are copying the updated files with the changes to the repository on GitHub*
+</Quiz>
+
+Revisit lesson [Pushing to GitHub](/workshops/git/?page=10) to learn more.
+
+## Suggested Further Readings
+
+- Yasset Perez-Riverol et.al.'s ["Ten Simple Rules for Taking Advantage of Git and GitHub"](https://doi.org/10.1371/journal.pcbi.1004947) from _PLOS Computational Biology_ is an academic introduction to GitHub, with some rudimentary commands that we cover in our workshop as well. The article also details why and how GitHub works as a collaborative platform.
+- Jenny Bryan and Jim Hester's [Happy Git and GitHub for the UseR](https://happygitwithr.com/) is an online, open-access book on using Git and GitHub within the R programming environment. While most the book emphasizes this use case, the sections "Let's Git started", "IV Git fundamentals", "V Remote Setups", and "VI Daily Workflows" are great general resources for expanding your Git knowledge without facing a mountain of material to wade through.  
+- Scott Chacon and Ben Straub's whole book [_Pro Git_](https://git-scm.com/book/en/v2) is available in open-access format on Git's official website. It is a foundational (albeit long) text that details everything you may want or need to know about working with git on your computer. It also has a section on GitHub for those interested.
+- Ei Pa Pa Pe-Than, Laura Dabbish, and James D. Herbsleb has written the article ["Collaborative Writing at Scale: A Case Study of Two Open-Text Projects Done on GitHub"](https://ci.acm.org/2019/assets/proceedings/CI_2019_paper_65.pdf), which details how and why git's pull-based model can be used for collaborative writing at scale. In conclusion, they argue that the model helps contributors either _converge_ and work on perfecting one single project, or adopt and tailor an original project to their own needs.
+- Keith Miyake, former Digital Fellow at The Graduate Center, has written an introduction on how to [Create Your (FREE) Website Using Github and Jekyll](https://digitalfellows.commons.gc.cuny.edu/2016/03/21/create-your-free-website-using-github-and-jekyll/) on the Digital Fellow's blog _Tagging the Tower_, detailing GitHub's "pages" feature that allows you to publish your own advanced website. Using Jekyll, a specific command-line application, you can create essentially unhackable rudimentary websites that are free to host on GitHub.
+- On _Programming Historian_, Amanda Visconti has written ["Building a static website with Jekyll and GitHub Pages"](https://programminghistorian.org/en/lessons/building-static-sites-with-jekyll-github-pages) which is an introduction on using GitHub "pages" to create a website. Using Jekyll, a specific command-line application, you can create essentially unhackable rudimentary websites that are free to host on GitHub.
+- Simon Coll has provided some introductory remarks on why markdown is a good choice for academics in his blog post, [Markdown for Students and Academics](https://www.simondcoll.com/markdown-students-academics/).
+- [Steven Ovadia's "Internet Connection: Markdown for Librarians and Academics"](https://academicworks.cuny.edu/cgi/viewcontent.cgi?article=1006&context=lg_pubs) is a short article from _Behavioral & Social Sciences Librarian_ that details the use of markdown as a "method of divorcing content from formatting."
+- For those who want an introduction to Creative Commons, a concept introduced in our Git and GitHub introductory workshop, the [Official website for Creative Commons](https://creativecommons.org/) is a good place to start. They also have a [Creative Commons Wiki](https://wiki.creativecommons.org/wiki/Main_Page) which may be of interest.
+- The University of Rhode Island has created ["Open Licensing with Creative Commons: The Creative Commons Licenses"](https://uri.libguides.com/creativecommons/licenses), a good introduction to creative commons as a concept with many links to other websites.
+- J.R. Dingwall's open-access book [_Creative Commons: An Educator's Course Guide to Creative Commons_](https://openpress.usask.ca/creativecommons) is a good place to start for anyone interested in how the Creative Commons can empower the open education movement with "tools that help create better, more flexible and sustainable open educational resources (OER), practices, and policies," as he writes in Part V of the book, ["Creative Commons for Educators."](https://openpress.usask.ca/creativecommons/part/creative-commons-for-educators/)
+
+## Other Tutorials
+
+- FreeCodeCamp has an excellent introductory tutorial for how to use git on your computer, called ["An intro to Git: What it is and how to use it"](https://www.freecodecamp.org/news/what-is-git-and-how-to-use-it-c341b049ae61/).
+- Don't miss Github's official documentation around [Getting Started with GitHub](https://help.github.com/en/github/getting-started-with-github). It is detailed and provides more in-depth examples of how to interact with GitHub using your command line.
+
+## Projects or Challenges to Try
+
+- Fill in your syllabus repository further, adding not only to your syllabus.md file, but adding additional content such as assignments.
+- Create a website from your syllabus files using GitHub Pages or Jekyll.
+- Create an independent or collaborative reading group that tracks readings and notes using Git and GitHub. 
+- Use Git and GitHub to track, store, and share an independent or collaborative project folder. 
+- Use Git to track a project on your local machine. 
+- Find and/or modify an existing public project on GitHub.
+
+## Discussion Questions
+
+- What does your current version control workflow look like and what are the challenges it poses; or how could it be improved?
+- How can git support the work you are already doing? 
+- What additional opportunities does git and/or GitHub and/or Markdown create for your teaching, research or other scholarly work? 
+- What are the potential benefits and pitfalls of working in the open on the web via a platform like GitHub? 

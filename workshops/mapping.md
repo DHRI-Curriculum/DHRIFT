@@ -49,7 +49,7 @@ projects:
   - "[COVID Mapping Projects](https://digitalfellows.commons.gc.cuny.edu/2020/11/02/mapping-the-effects-of-covid-19/)"
 
 ethical considerations:
-  - Starting from figuring out how to represent a 3D reality on a 2D plane, there are countless subjective decisions that every mapmaker must make, whether they are conscious of it or not. Mapmakers need to decide what data to represent and what to leave out. They also need to decide how to aggregate, categorize, project, combine, and visualize the data. All of these decisions will influence the story that the map tells. Additionally, as a critical tool of Western colonialism and imperialism, maps wield great authority. As mapmakers, it's essential to be conscious of this history not to reproduce harmful power dynamics through mapmaking. Once something is visualized in the form of a map, it is often understood as a Truth representation of reality. Therefore, mapmakers have an important responsibility to be as honest and transparent as possible. Since the 1980's, there have been two emerging disciplines in academia—critical cartography and feminist GIS—that have brought to light many of the harmful applications of mapping. Rather than reject mapping, they have made significant contributions to the field of GIS and mapping, such as counter mapping, sketch mapping, participatory mapping, qualitative GIS and 3D body-mapping. See the Scholarly Resources provided to introduce you to some of the fundamental insights from critical cartography and feminist GIS that you can integrate into your mapping journey. The list also includes modern-day counter mapping projects.
+  - Starting from figuring out how to represent a 3D reality on a 2D plane, there are countless subjective decisions that every mapmaker must make, whether they are conscious of it or not. Mapmakers need to decide what data to represent and what to leave out. They also need to decide how to aggregate, categorize, project, combine, and visualize the data. All of these decisions will influence the story that the map tells. Additionally, as a critical tool of Western colonialism and imperialism, maps wield great authority. As mapmakers, it's essential to be conscious of this history not to reproduce harmful power dynamics through mapmaking. Once something is visualized in the form of a map, it is often understood as a Truthful representation of reality. Therefore, mapmakers have an important responsibility to be as honest and transparent as possible. Since the 1980's, there have been two emerging disciplines in academia—critical cartography and feminist GIS—that have brought to light many of the harmful applications of mapping. Rather than reject mapping, they have made significant contributions to the field of GIS and mapping, such as counter mapping, sketch mapping, participatory mapping, qualitative GIS and 3D body-mapping. See the Scholarly Resources provided to introduce you to some of the fundamental insights from critical cartography and feminist GIS that you can integrate into your mapping journey. The list also includes modern-day counter mapping projects.
 
 scholarly resources:
   - "Harley, J. B. (1989). [Deconstructing the map](https://quod.lib.umich.edu/p/passages/4761530.0003.008/--deconstructing-the-map?rgn=main;view=fulltext). _Cartographica: The international journal for geographic information and geovisualization_, 26(2), 1-20. This is a classic text by Brian Harley – one of the first Foucauldian analyses of mapping."
@@ -87,11 +87,14 @@ Voilà!
 
 ## Evaluation
 
-Vector data consists of?
+Vector data consists of? (check all that apply)
+
+<Quiz>
 - points*
 - pixels
 - lines*
 - polygons*
+</Quiz>
 
 ## Keywords
 Do you remember the glossary terms from this section?
@@ -208,8 +211,11 @@ Now that we have the concepts for what a spatial join means, we can move on to p
 ## Evaluation
 
 A spatial join by attribute is used when you want to join which combination of layers:
+
+<Quiz>
 - spatial data to non-spatial data*
 - spatial data to spatial data
+</Quiz>
 
 ## Keywords
 
@@ -272,7 +278,7 @@ A spatial join won't work unless the fields are the same [data type](https://git
 
 Now we are ready for our spatial join!
 
-1. In the layers panel, double click on the shapefile layer, "Neighborhood Tabulation Area".Then click on **Joins** and click on the **green plus sign**. A new dialog will appear on the screen. This is where you will configure your spatial join.
+1. In the layers panel, double click on the shapefile layer, "Neighborhood Tabulation Area". Then click on **Joins** and click on the **green plus sign**. A new dialog will appear on the screen. This is where you will configure your spatial join.
 2. Select `racebyneighborhood` for the **Join layer** option since that is the map layer you are joining to the neighborhood shapefile.
 3. Select `GeoID` for the **Join field** option.
 4. The **Target field** should be `ntacode`.
@@ -299,16 +305,23 @@ Mapping softwares typically offer two different types of spatial joins—join by
 
 ## Evaluation
 
-The *Data Source Manager* is used to:
+The *Data Source Manager* is used to: (select one)
+
+<Quiz>
 - import files into QGIS*
 - organize data files
 - stack map layers
 - export map layers
+</Quiz>
 
-What's needed to perform a *spatial join by attribute*:
+<br />
+What's needed to perform a *spatial join by attribute*? (check all that apply)
+
+<Quiz>
 - There must be a column in both datasets that matches and will serve as a key to link the two datasets.*
 - The columns that serve as a key must be the same data type.*
 - The text file must have precise location data, such as an address or latitude and longitude.
+</Quiz>
 
 ## Keywords
 - [Spatial join by attribute](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/joinbyattribute.md)
@@ -343,10 +356,13 @@ The last thing we have to do is **compress** the folder. ArcGIS Online will only
 
 ## Evaluation
 
-Why do we create a folder for the exported shapefile?
+Why do we create a folder for the exported shapefile? (check all that apply)
+
+<Quiz>
 - The export won't work without it.
 - Shapefiles are actually 4-6 files, so it's a way to keep them organized and prevent accidentally separating them.*
 - ArcGIS will only import compressed shapefiles, so we need to create a folder to compress or zip the file.*
+</Quiz>
 
 # Importing Data to ArcGIS Online
 
@@ -553,3 +569,72 @@ Now it's finally time to save and share your map!
 ![Screenshot detailing the steps in this section and where they are located in the ArcGIS Online interface](/images/mapping/savemap.png)
 
 Congratulations! You've made an informative and interactive map with two layers of spatial data, multiple pop-ups, and even multimedia with your pop-ups!
+
+# Theory to Practice
+
+## Review your knowledge: 4 questions from the lessons
+
+__1. A spatial join by attribute is used when you want to join which combination of layers: (Select one of the following)__
+
+<Quiz>
+- spatial data to non-spatial data*
+- spatial data to spatial data
+</Quiz>
+
+Revisit lesson [Combining Data Through a Spatial Join](/workshops/mapping/?page=7) to learn more.
+
+__2. Why do we create a folder for the exported shapefile? (Select all that apply)__
+
+<Quiz>
+- Shapefiles are actually 4-6 files, so it’s a way to keep them organized and prevent accidentally separating them.*
+- ArcGIS will only import compressed shapefiles, so we need to create a folder to compress or zip the file.*
+- The export won’t work without it.
+</Quiz>
+
+Revisit lesson [Exporting Data from QGIS](/workshops/mapping/?page=9) to learn more.
+
+__3. The Data Source Manager is used to: (Select one of the following)__
+
+<Quiz>
+- import files into QGIS*
+- organize data files
+- stack map layers
+- export map layers
+</Quiz>
+
+Revisit lesson [Performing a Spatial Join](/workshops/mapping/?page=8) to learn more.
+
+__4. Vector data consists of? (Select all that apply)__
+
+<Quiz>
+- points*
+- lines*
+- polygons*
+- pixels
+</Quiz>
+
+Revisit lesson [Introduction to Mapping](/workshops/mapping/?page=2) to learn more.
+
+## __Suggested Further Readings__
+
+- [Top Mapping Mistakes](https://digitalfellows.commons.gc.cuny.edu/2021/05/12/top-mapping-mistakes/)
+- [Which Color Scale to Use When Visualizing Data](https://blog.datawrapper.de/which-color-scale-to-use-in-data-vis/)
+
+## Other Tutorials
+
+- [Data literacies](https://curriculum.dhinstitutes.org/workshops/data-literacies/)
+
+## Projects or Challenges to Try
+
+- Try adding context to your interactive map by turning it into an [ESRI Story Map](https://storymaps.arcgis.com/stories/cea22a609a1d4cccb8d54c650b595bc4). Story maps are a free ESRI application for creating multi-media narratives. You can use the same map that you made in ESRI's ArcGIS Online program and import it into its Story Map application to add text, photos and video. You can even take the reader to different points around the map and give them information about each location.
+
+## Discussion Questions
+
+- In the workshop we learned that every map should begin with a simple and answerable research question. What else makes for a good mapping research question? Remember that maps can be exploratory so we don't need to fully answer the question. 
+- What makes a map ethical or unethical?
+- Think about the audience or audiences for your map. Do you think different audiences should warrant constructing the map in different ways? 
+
+## More Resources
+
+- [Finding data for mapping: tips and tricks](https://digitalfellows.commons.gc.cuny.edu/2018/11/24/finding-data-for-mapping-tips-and-tricks/)
+- [FlowingData](https://flowingdata.com/) for a compilation of cool maps and visualization tips

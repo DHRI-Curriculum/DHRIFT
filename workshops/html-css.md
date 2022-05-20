@@ -42,9 +42,9 @@ resources:
 
 ---
 
-# Introduction
+# Getting Started with HTML and CSS
 
-Websites seem like these magical things that appear when we open our web browser (i.e. Chrome, Firefox, Safari). We know that websites are hypertext, meaning that we can click between links, travelling from page to page until we find what we need. What may be less obvious about websites is that, fundamentally **websites are plain text documents**, usually written in HTML or another web-based markup language, such as XML or XHTML.  
+Websites seem like these magical things that appear when we open our web browser (i.e. Chrome, Firefox, Safari). We know that websites are hypertext, meaning that we can click between links, traveling from page to page until we find what we need. What may be less obvious about websites is that, fundamentally **websites are plain text documents**, usually written in HTML or another web-based markup language, such as XML or XHTML.  
   
 *Fun fact*: **More than 90% of all websites (whose markup language we know) use HTML**
 [(w3techs.com)](https://w3techs.com/technologies/details/ml-html/all/all).
@@ -65,13 +65,13 @@ Fundamentally, then, a script or program is a set of instructions given to the c
 
 ## Cascading Style Sheets (CSS)
 
-CSS is usually used in conjunction with HTML. HTML tells the browser what the different parts of a document _are_. CSS tells the browser what the parts of the document should _look like_. It is essentially a set of rules that are applied when rendering an HTML document. Its name—Cascading Style Sheets—refers to the fact that there is an order of precedence in how the browswer applies CSS rules to a document. More specific rules overwrite less specific rules.
+CSS is usually used in conjunction with HTML. HTML tells the browser what the different parts of a document _are_. CSS tells the browser what the parts of the document should _look like_. It is essentially a set of rules that are applied when rendering an HTML document. Its name—Cascading Style Sheets—refers to the fact that there is an order of precedence in how the browser applies CSS rules to a document. More specific rules overwrite less specific rules.
 
 ## Where Does the Internet Come In?
 
 Together, these languages can be used to write and style a website using a text editor (such as Visual Studio Code) directly from your computer. No internet access needed.
 
-However, internet access is necessary if you plan on making your website available to the public. At the end of this workshop, we will briefly discuss [how to get your website from your local computer onto the internet](19-public.md).
+However, internet access is necessary if you plan on making your website available to the public. At the end of this workshop, we will briefly discuss [how to get your website from your local computer onto the internet](https://dhri-curriculum.github.io/Dhrift/workshops/html-css/?page=20).
 
 In our activities during this workshop we will focus on building locally-hosted websites. These are websites that you can open on your web browser, however, they only exist on your own device and are only accessible to you. Locally-hosted websites are not yet on the internet. 
 
@@ -237,8 +237,11 @@ If you look back at the basic template in your `index.html` file, you'll see tha
 ## Evaluation
 
 Which one of the following statements is correct:
+
+<Quiz>
 - Elements have opening and closing tags.*
 - Tags have opening and closing elements.
+</Quiz>
 
 ## Keywords
 
@@ -303,8 +306,10 @@ The heading should appear at the top of the page, followed by the paragraph text
 
 If I wanted to indicate that "About" is a subheading in my page, which element should I use?
 
+<Quiz>
 - `<head>`
 - `<h2>`*
+</Quiz>
 
 # Links
 
@@ -369,8 +374,11 @@ When your pages are updated, you should be able to navigate from your "Home" pag
 ## Evaluation
 
 Which one of the following options is a relative link?
+
+<Quiz>
 - `<a href="https://www.nytimes.com/">The New York Times</a>`
 - `<a href="digitalProject.html">Digital Project</a>`*
+</Quiz>
 
 ## Keywords
 
@@ -425,8 +433,11 @@ Using the code above as a reference, add that image into your `index.html` file,
 ## Evaluation
 
 True or False: Does including "alt text" in websites improve their accessibility?
+
+<Quiz>
 - True*
 - False
+</Quiz>
 
 # Conventions
 
@@ -440,7 +451,7 @@ Here are a few examples:
 
 # Major Challenge: Create an Institute Website
 
-In this major challenge, we will begin creating an introductory page for your a Digital Humanities Institute in your home institution. Using the tags we've just reviewed, and two additional ones (see below), we will make a barebones website that provides information about a Digital Humanities Instutite that you might organize.  
+In this major challenge, we will begin creating an introductory page for your a Digital Humanities Institute in your home institution. Using the tags we've just reviewed, and two additional ones (see below), we will make a barebones website that provides information about a Digital Humanities Institute that you might organize.  
   
 The first step is to create a new folder called `website` in your `projects` folder on your desktop. Create an `index.html` as well as an `about.html` file inside that folder. These will be the landing page of your site, and a supplemental page that provides information about your Digital Humanities Institute's organizers.  
   
@@ -502,8 +513,11 @@ Examples of what CSS can help you determine include:
 ## Evaluation
 
 Is CSS a markup language or a programming language?
+
+<Quiz>
 - Markup Language*
 - Programming Language
+</Quiz>
 
 # Integrating CSS and HTML
 
@@ -637,8 +651,10 @@ Is the following code-snippet an example of inline styling or internal styling?
     </body>
 </html>
 ```
+<Quiz>
 - Inline Styling
 - Internal Styling*
+</Quiz>
 
 # Rule Sets
 
@@ -686,8 +702,11 @@ What are some other rules you might set for different HTML elements? Do a quick 
 ## Evaluation
 
 How do we associate a CSS file with an HTML page?
+
+<Quiz>
 - By including a link to the CSS file in the HTML page's `<head>` element.*
 - By putting the CSS file in the same folder as the HTML page.
+</Quiz>
 
 ## Keywords
 
@@ -797,7 +816,7 @@ Class selectors in CSS are denoted with a period in front of the class name you'
 
 ## ID Selectors
 
-...look like this in the CSS—the name of the selector preceeded by a hashmark (`#`) (also known as a pound sign or octothorpe):
+...look like this in the CSS—the name of the selector preceded by a hashmark (`#`) (also known as a pound sign or octothorpe):
 
 ```css
 #navbar {
@@ -846,7 +865,7 @@ color: blue;
 color: #000000;
 ```
 
-### Background Color
+## Background Color
 
 Sets the background color of an element.
 
@@ -855,7 +874,7 @@ background-color: pink
 background-color: #F601F6;
 ```
 
-### Text Align
+## Text Align
 
 Aligns text to the left, center, or right.
 
@@ -863,7 +882,7 @@ Aligns text to the left, center, or right.
 text-align: center;
 ```
 
-### Padding
+## Padding
 
 The space between contents and the "box" (`<div>`) surrounding it.
 
@@ -872,7 +891,7 @@ padding: 10px;
 padding-right: 10px
 ```
 
-### Margin
+## Margin
 
 The space between an element's box and the next element (or the edge of the page).
 
@@ -881,7 +900,7 @@ margin: 10px;
 margin-top: 10px;
 ```
 
-### Width and Height
+## Width and Height
 
 Sets the width or height of an element. Typically, don't set both of these.
 
@@ -890,7 +909,7 @@ width: 50%;
 height: 40px;
 ```
 
-### Float
+## Float
 
 Determines if text wraps around an element.
 
@@ -898,7 +917,7 @@ Determines if text wraps around an element.
 float: left;
 ```
 
-### Display
+## Display
 
 Determines if an element is treated as a block or inline element. Can also be set to `none`, which makes the element disappear.
 
@@ -908,7 +927,7 @@ display: block;
 display: none;
 ```
 
-### List Style
+## List Style
 
 Determines default styling on lists. Usually best to set it to `none`.
 
@@ -916,7 +935,7 @@ Determines default styling on lists. Usually best to set it to `none`.
 list-style-type: none;
 ```
 
-### Font Family
+## Font Family
 
 Sets the font. Usually best to copy this from [Google Fonts](https://fonts.google.com/) or another web font repository.
 
@@ -980,7 +999,7 @@ You'll also need a way of getting your website to your host. That's where FTP, o
 
 FTP is a protocol used to share files from your computer (_a client_) to another computer called a server, and back again over the Internet. This is something we do _all the time_, but we refer to it as "uploading" and "downloading."  
   
-Note: Though FTP stands for file transfer protocol, you are not really transfering or moving your files from your computer; instead they are _copied_ to the server. Fear not!  
+Note: Though FTP stands for file transfer protocol, you are not really transferring or moving your files from your computer; instead they are _copied_ to the server. Fear not!  
   
 In order to transfer your website files (also called your website's directory) to a server you will need:
 
@@ -1017,3 +1036,183 @@ Do you remember the glossary terms from this section?
 
 - [FTP](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/ftp.md)
 - [Web Hosting](https://github.com/DHRI-Curriculum/glossary/blob/v2.0/terms/webhosting.md)
+
+# Theory to Practice
+
+This workshop has provided an introduction to HTML and CSS. Through its discussion of tags, elements, and attributes, we have tried to cover the basic ways in which web pages are initially constructed in plaintext and then rendered on browsers. As we concieve of digital humanities projects, however, our visions quickly exceed the capacity of the commands that was covered in this workshop. Not only might we be interested in making information public on the internet, but we might also be interested in providing tools that facilitate interactivity and ease of use with the content that we are curating. Building these tools and incorporating them in our websites requires the additional knowledge of languages like Javascript, SQL, and [Python](http://www.github.com/DHRI-Curriculum/python), among many others. Digital humanities projects are often collaborative endeavors and bringing someone into the project who has these skills is an effective way to building well-designed websites.  
+  
+Another way to build more complex design and functionality into your websites is by using a Content Management System (CMS), which refers to a suite of tools that facilitates easy website development and hosting on the internet. Most modern-day websites require functionalities that strains the limits of HTML and CSS. Content Management Systems allow users without any familiarity with advanced web-design languages and concepts to quickly build websites that are visually appealing and contain a variety of features. CMS platforms often provide a variety of tools that users can simply click, drag, and input content to create websites. No coding required! Popular content management systems in the digital humanities include [Omeka](https://www.omeka.net/), [Scalar](https://scalar.me/anvc/scalar/), [Libguides](https://www.springshare.com/libguides/), and [Wordpress](https://wordpress.org/). These CMS have robust documentation and an active user community, both of which can help solve issues in website development. The suggested readings and tutorials provided below link to more information on selecting and using a CMS.
+
+## Review your knowledge: 10 questions from the lessons
+
+__1. True or False: Classes are used to create categories of related elements, IDs are used create unique identifiers. (Select one of the following)__
+
+<Quiz>
+- True*
+- False
+</Quiz>
+
+Revisit lesson [Classes and IDs](/workshops/html-css/?page=15) to learn more.
+
+__2. Which one of the following options is a relative link? (Select one of the following)__
+
+<Quiz>
+- `<a href="digitalProject.html">Digital Project</a>`*
+- `<a href="https://www.nytimes.com/">The New York Times</a>`
+</Quiz>
+
+Revisit lesson [Links](/workshops/html-css/?page=7) to learn more.
+
+__3. Is the following code-snippet an example of inline styling or internal styling?__
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Homepage</title>
+        <style>
+            h1 {
+              font-family: monospace;
+            }
+            p {
+             font-family: fantasy;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>
+            Online Library for All!
+        </h1>
+        <p>
+            Free books here!
+        </p>
+    </body>
+</html>
+```
+
+<Quiz>
+- `Inline styling`
+- `Internal styling`*
+</Quiz>
+
+Revisit lesson [Integrating CSS and HTML](/workshops/html-css/?page=12) to learn more.
+
+__4. If I wanted to indicate that "About" is a subheading in my page, which element should I use? (Select one of the following)__
+
+<Quiz>
+- `<h2>`*
+- `<head>`
+</Quiz>
+
+Revisit lesson [Paragraphs and Headings](/workshops/html-css/?page=6) to learn more.
+
+__5. Which one of these two HTML commands is also known as the “root element”? (Select one of the following)__
+
+<Quiz>
+- `<html lang="en">`
+- `<!DOCTYPE html>`*
+</Quiz>
+
+Revisit lesson [Basic Template for HTML](/workshops/html-css/?page=4) to learn more.
+
+__6. How do we associate a CSS file with an HTML page? (Select one of the following)__
+
+<Quiz>
+- By including a link to the CSS file in the HTML page’s <head> element.*
+- By putting the CSS file in the same folder as the HTML page.
+</Quiz>
+
+Revisit lesson [Rule Sets](/workshops/html-css/?page=13) to learn more.
+
+__7. Which one of the following statements is correct: (Select one of the following)__
+
+<Quiz>
+- Elements have opening and closing tags.*
+- Tags have opening and closing elements.
+</Quiz>
+
+Revisit lesson [Tags and Elements](/workshops/html-css/?page=5) to learn more.
+
+__8. True or False: Does including “alt text” in websites improve their accessibility? (Select one of the following)__
+
+<Quiz>
+- True*
+- False
+</Quiz>
+
+Revisit lesson [Images](/workshops/html-css/?page=8) to learn more.
+
+__9. Is CSS a markup language or a programming language? (Select one of the following)__
+
+<Quiz>
+- Markup Language*
+- Programming Language
+</Quiz>
+
+Revisit lesson [CSS Basics](/workshops/html-css/?page=11) to learn more.
+
+__10. True or False: The primary difference between markup languages and programming languages is that markup languages are used to determine the format, appearance, and purpose of content, whereas programming languages are used to transform data. (Select one of the following)__
+
+<Quiz>
+- True*
+- False
+</Quiz>
+
+Revisit lesson [Getting Started with HTML and CSS](/workshops/html-css/?page=2) to learn more.
+
+## Suggested Further Readings
+
+### Platforms
+
+- Digital Archives Research Collective, ["What is a CMS?"](https://darc.gcdiprojects.org/What_is_a_CMS%3F), _DARC Wiki_. This entry from the DARC wiki introduces the concept of Content Management Systems and raises a number of factors that influence which one is better suited for your project.
+
+- [“Choosing a Platform for Your Project Website”](http://digitalhumanities.berkeley.edu/blog/13/12/04/choosing-platform-your-project-website), _Digital Humanities at Berkeley_. This post provides a thicker description of Content Management Systems. It raises factors such as functionality, familiarity, community, support, and cost when choosing a particular platform on which to build a website.
+
+### Theories
+
+- Vincent Brown, [“Mapping a Slave Revolt: Visualizing Spatial History through the Archives of Slavery”](https://doi.org/10.1215/01642472-3315826) _Social Text_ 33, no. 4 125 (2015): 134–41. This is a scholarly article that provides insight into how websites are used as digital humanities research tools. In this article, Vincent Brown describes the [_Slave Revolt in Jamaica, 1760–1761: A Cartographic Narrative_](http://revolt.axismaps.com/) project, a digital archive and interactive map of Tacky's Rebellion. The article explores the potential of the digital in enabling a "rhetorical practice that can define, clarify, and advocate visions of the world that might otherwise go unarticulated."  
+
+- Elizabeth Maddock Dillon, [“By Design: Remapping the Colonial Archive”](https://doi.org/10.1215/01642472-3315838), _Social Text_ 33, no. 4 125 (2015): 142–147. This scholarly article also discusses the [_Slave Revolt in Jamaica, 1760–1761: A Cartographic Narrative_](http://revolt.axismaps.com/) project, a digital archive and interactive map of Tacky's Rebellion. Elizabeth Maddock Dillon argues for the centrality of the question of design in building websites. Dillon underscores the importance of thoughtful attention to the arrangement of imagery and text, the choice of iconography used to express information, and the form of data visualizations when creating online digital humanities projects.
+
+## Other Tutorials
+
+- [W3School HTML Tutorial](https://www.w3schools.com/html/default.asp) provides an indepth overview of HTML and introduces a number of commands and protocols not covered in our introductory workshop.  
+
+- [W3Schools CSS Tutorial](https://www.w3schools.com/css/default.asp) covers a lot more ground with CSS and provides very helpful "how to" guides for making menus and integrating with other websites.
+
+- [Omeka](https://www.omeka.net/) is a platform for building digital archives and digital exhibits. It is designed to help those without deep technical knowledge build simple interactive websites. Instead of using HTML and CSS, Omeka provides a [Graphical User Interface](https://en.wikipedia.org/wiki/Graphical_user_interface) for building websites. Omeka is a wonderful point of beginning to understand how a content management system works. Graduate Center Digital Fellow and digital archivist, Stefano Morello, has put together a very helpful workshop on [getting started with Omeka](https://github.com/GCDigitalFellows/omeka).
+
+- [Wordpress](https://wordpress.org/) is the most widely used content management service. Similar to Omeka, it provides a Graphical User Interface for building websites. However, unlike Omeka, Wordpress provides many additional functionalities that vary in their use, scale, and complexity. Wordpress can be used to make a variety of different kinds of websites, from course-websites to scholarly publications, and much more. The [Wordpress Turorial for Beginners](https://wordpress.com/learn/) provides a helpful introduction to this tool. 
+
+- [Github Pages](https://pages.github.com/) can be useful to more advanced users for hosting HTML/CSS files and publishing them directly on the internet. It draws on a Github repository to build static websites. Websites that are hosted on Github pages tend to have a URL that ends in `github.io`. The official Github documentation has a well written guide on [creating a Github Pages site](https://docs.github.com/en/github/working-with-github-pages/creating-a-github-pages-site).
+
+
+## Projects or Challenges to Try
+
+### Build a Course Website
+
+This project is designed to help you practice the HTML/CSS fundamentals covered in this workshop. The goal of this project will be to create a locally-hosted course website using HTML and CSS that contains the following:
+
+- Course Description 
+- Readings
+- Schedule of Classes
+- Assignments
+- Instructor's Contact Details and Office Hours
+- Menu that allows users to navigate the different sections of the website.
+
+You are free to decide how this information is presented and styled in your website. You could put all of the information in a single page. Alternatively, you might consider making different pages for each aspect of the course website. However, as you develop your website, be sure to cover the following key aspects of thoughtful website design:
+
+- All links should be correctly formatted and point in the right direction.
+- Include alt-text with all images.
+- Ensure that your use of color, font, and images facilitates ease of access for those with disabilities. 
+
+To begin, create a folder called "courseWebsite" in your working directory. This folder will contain your index.html file, any other HTML files you create for additional pages, any CSS files you use to style your website, as well as images that you would like to use in your Course Website. Now its time start using elements, attributes, classes, IDs, and all the other aspects of HTML and CSS to start building your website!
+
+If you are unsure of which HTML/CSS commands to use, check out the [HTML Cheat Sheet](http://www.simplehtmlguide.com/cheatsheet.php) and the [CSS Cheat Sheet](https://courses.cs.washington.edu/courses/cse154/15sp/cheat-sheets/css-cheat-sheet.pdf), which provides a quick reference guide.
+
+
+## Discussion Questions
+
+- In this workshop, we have focused on the fundamentals of HTML and CSS. The point was to provide an introduction to the workings of websites. In practice, however, the websites that we desire to build will have complex use cases. What are some websites that you imagine building? What kinds of interactive features would you like to have in your website?
+
+- Some websites provide information clearly and in an engaging manner. Others might inundate with a barrage of content that leaves one mystified. What would you say are some of the characteristics of well-designed websites? Which websites do you consider a joy to use? What design elements (such as font, color, layout, and menus) stand out to you as being particularly important in making good websites?   

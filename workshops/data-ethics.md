@@ -51,22 +51,22 @@ These quotes below offers a variety of perspectives to understanding research da
 
 > Material or information on which an argument, theory, test or hypothesis, or another research output is based.
 > 
-> — <cite>[Queensland University of Technology. Manual of Procedures and Policies. Section 2.8.3.](http://www.mopp.qut.edu.au/D/D_02_08.jsp)</cite>
+> — [Queensland University of Technology. Manual of Procedures and Policies. Section 2.8.3.](http://www.mopp.qut.edu.au/D/D_02_08.jsp)
 
 
 > What constitutes such data will be determined by the community of interest through the process of peer review and program management. This may include, but is not limited to: data, publications, samples, physical collections, software and models.
 > 
-> — <cite>[Marieke Guy](http://www.slideshare.net/MariekeGuy/bridging-the-gap-between-researchers-and-research-data-management)</cite>
+> — [Marieke Guy](http://www.slideshare.net/MariekeGuy/bridging-the-gap-between-researchers-and-research-data-management)
 
 
 > Research data is defined as the recorded factual material commonly accepted in the scientific community as necessary to validate research findings, but not any of the following: preliminary analyses, drafts of scientific papers, plans for future research, peer reviews, or communications with colleagues.
 > 
-> — <cite>[OMB-110, Subpart C, section 36, (d) (i)](http://www.whitehouse.gov/omb/circulars_a110/)</cite>
+> — [OMB-110, Subpart C, section 36, (d) (i)](http://www.whitehouse.gov/omb/circulars_a110/)
 
 
 > The short answer is that we can’t always trust empirical measures at face value: data is always biased, measurements always contain errors, systems always have confounders, and people always make assumptions
 > 
-> — <cite>[Angela Bassa](https://medium.com/@angebassa/data-alone-isnt-ground-truth-9e733079dfd4)</cite>
+> — [Angela Bassa](https://medium.com/@angebassa/data-alone-isnt-ground-truth-9e733079dfd4)
 
 
 Broadly, research data can be understood as **materials or information necessary to come to your conclusion** but what these materials and information is depends on your project.
@@ -102,12 +102,14 @@ Adapted from: [Georgia Tech](https://www.gatech.edu/)
 
 ## Evaluation
 
-Research data can be defined as:
+Research data can be defined as: (select all that apply)
 
+<Quiz>
 - materials or information necessary to come to my conclusion.*
 - the recorded factual material commonly accepted in the scientific community as necessary to validate research findings.*
 - method of collection and analysis.
 - objective and error-free.
+</Quiz>
 
 ## Challenge: Forms of Data
 
@@ -128,15 +130,15 @@ These are some (most!) of the shapes your research data might transform into.
 
 We begin without data. Then it is observed, or made, or imagined, or generated. After that, it goes through further transformations. Stages of data typically consist of a) collection of "raw" data, b) processing and/or transforming data, c) cleaning, d) analysis, and e) visualization. For example, we can consider the stages in the following way:
 
-- We start with formulating a research question(s) or hypotheses and set up a project to answer our question(s).
+1. We start with formulating a research question(s) or hypotheses and set up a project to answer our question(s).
     - E.g. What proportion of the artwork collected and/or hosted in the Met are by non cis-gender men artists and also in public domain?
-- In the process of setting up the project, we make decisions on what kind of data we think can help us to answer the question
+2. In the process of setting up the project, we make decisions on what kind of data we think can help us to answer the question.
     - E.g. I think I can get the data from the Met's [open access data set](https://media.githubusercontent.com/media/metmuseum/openaccess/master/MetObjects.csv). I will need to look at what variables exist in the dataset to find out if I can filter by gender and the variables that will correspond to copyrights.
-- After collecting our data we then consider and make decisions in the processes of cleaning.
+3. After collecting our data we then consider and make decisions in the processes of cleaning.
     - E.g. I have to transform some of the gender values and decide what to do with the missing fields.
-- We then run our preliminary analysis of the data.
+4. We then run our preliminary analysis of the data.
     - E.g. I can run an analysis of the subset of non cis-gender men and public domain media objects against the total number of media objects to find out the proportion.
-- At the end of our analysis, a decision is then made about how would we would present the data and its analysis.
+5. At the end of our analysis, a decision is then made about how would we would present the data and its analysis.
     - E.g. I can present the result in a pie chart.
 
 This is one cycle in which data goes from collection to transformation to visualization. This is also *not* the only way to go through the stages. For example, we could do a preliminary analysis first, such as running a correlation of variables, to explore what is missing before we begin the process of cleaning. Often, we also end up doing multiple iterations of cleaning and analysis, making decisions and choices to collapse particular variables or remove them entirely at each iterations. Making sure that we keep a clear documentation of our process will ensure that we are accountable to the data we have collected/are using and also ensure that our results can be replicated and reproduced if others choose to work on our "raw" data.
@@ -171,15 +173,21 @@ For a deeper discussion on data and labor, consider Catherine D'Ignazio and Laur
 
 ## Evaluation
 
-The stages of data is a single iteration process, i.e. there is a fixed stage progression from data collection to visualization.
+1. The stages of data is a single iteration process, i.e. there is a fixed stage progression from data collection to visualization.
+
+<Quiz>
 - True
 - False*
+</Quiz>
 
-Which of the following statements are true for "raw" data:
+2. Which of the following statements are true for "raw" data: (select all that apply)
+
+<Quiz>
 - is data that is yet to be processed.*
 - is data that is received and/or collected.*
 - is the same to every researcher/research team.
 - can only be collected from participants.
+</Quiz>
 
 ## Challenge: Raw Data and Labor
 
@@ -232,6 +240,7 @@ Processing data puts it into a state more readily available for analysis and mak
 ```
 
 ![Screenshot of XML cats file](/images/data-literacies/cats_XML.png)
+
 This file is viewed on an online [XML Viewer](https://www.xmlviewer.org/). If you would like to, you can either copy the code chunk above to try it out on [XML Viewer](https://www.xmlviewer.org) or [download the XML file](https://raw.githubusercontent.com/DHRI-Curriculum/data-literacies/v2.0/files/cats.xml) to try it out in other viewers. To save the file onto your local computer, **right click** on `Raw` button (top right-hand corner of the data set) and click `Save Link As...` to save the file onto your local computer.
 
 For example, after downloading the file, can you try to open this file in your browser? (Psst! Try right clicking on `cats.xml` in your local directory and choosing `Open with Other Application` in the drop down menu to select the browser of your choice.)
@@ -289,12 +298,13 @@ A small detour to discuss data formats. Open data formats are usually available 
 1. Open [this file](https://raw.githubusercontent.com/DHRI-Curriculum/data-literacies/v2.0/files/cats.csv) in a [text editor](https://github.com/DHRI-Curriculum/insights/blob/v2.0/pages/choosing-a-text-editor.md) (e.g. Visual Studio Code, TextEdit (macOS), NotePad (Windows) ), and then in an app like Excel. This is a CSV, an open, text-only, file format. To save the file onto your local computer, right click on `cats.csv` and click `Save Link As` to download the file to your local computer (it's the same cats.csv from above!)
 2. Now do the same with [this Excel file](https://github.com/DHRI-Curriculum/data-literacies/blob/v2.0/files/cats.xlsx?raw=true). Unlike the previous, this is a proprietary format!
 
-Sustainable formats are generally unencrypted, uncompressed, and follow an open standard.
+Sustainable formats are generally unencrypted, uncompressed, and follow an open standard. 
 
+<br />
 <table>
-    <caption>A small list of open formats (more information of each file format is linked in their entries):</caption>
+    <caption><strong>A small list of open multimedia formats (more information of each file format is linked in their entries):</strong></caption>
     <tr>
-        <th>Types of multimedia</th>
+        <th>Types</th>
         <th>Examples</th>
         <th>Common file extensions</th>
     </tr>
@@ -329,7 +339,7 @@ Sustainable formats are generally unencrypted, uncompressed, and follow an open 
         <td><a href="https://xiph.org/flac/index.html">FLAC</a> (Free Lossless Audio Codec)</td>
         <td>`.flac`</td>
     </tr>
-        <tr>
+    <tr>
         <td><a href="https://xiph.org/ogg/">ogg</a></td>
         <td>`.ogg`</td>
     </tr>
@@ -353,22 +363,27 @@ Sustainable formats are generally unencrypted, uncompressed, and follow an open 
     </tr>
     <tr>
         <th colspan="3"> For a list of file formats, consider the Library of Congress' list of <a href="https://www.loc.gov/preservation/digital/formats/fdd/browse_list.shtml#"> Sustainability of Digital Formats</a>.</th>
-    <tr>
+    </tr>
 </table>
 
 ## Evaluation
 
-Structured data can be:
+1. Structured data can be: (select all that apply)
+
+<Quiz>
 - a XML list.*
 - a Excel table.*
 - an email chain.
 - a collection of text files.
+</Quiz>
 
-We may choose to store our data in open data formats because they:
-- are sustainable.
-- allow for easy reusability.
-- are free-of-charge to use.
-- All of the above.*
+2. We may choose to store our data in open data formats because they: (select all that apply)
+
+<Quiz>
+- are sustainable.*
+- allow for easy reusability.*
+- are free-of-charge to use.*
+</Quiz>
 
 ## Challenge: Processed/Transformed
 
@@ -393,7 +408,7 @@ Do you remember the glossary terms from this section?
 
 # Side Note on Data Structures: Tidy Data
 
-There are different guidelines to the processing of data, one of which is the **[Tidy Data](https://www.jstatsoft.org/article/view/v059i10)** format, which follows these rules in structuring data:
+There are different guidelines to the processing of data, one of which is the [Tidy Data](https://www.jstatsoft.org/article/view/v059i10) format, which follows these rules in structuring data:
 
 1. Each variable is in a column.
 2. Each observation is a row.
@@ -434,11 +449,14 @@ While tiny data is a really popular method of structuring and organizing data, i
 
 ## Evaluation
 
-Tiny data format only allows one value per cell.
+1. Tiny data format only allows one value per cell.
+
+<Quiz>
 - True*
 - False
+</Quiz>
 
-Do you think you can explain the rules of tidy data structuring?
+2. Do you think you can explain the rules of tidy data structuring?
 
 ## Challenge: Tidy Data
 1. Looking at the `moSmall.csv` dataset, there are a couple of columns with nested information that don't follow the rules of tidy data. Can you identify at least two of the columns that demonstrates this?
@@ -472,7 +490,7 @@ Processed data, even in a table, is going to be full of errors:
 
 Cleaning data is the work of correcting the errors listed above, and moving towards high quality. This work can be done manually or programmatically.
 
-### Validity
+## Validity
 
 Measurements must be valid, in that they must conform to set constraints:
 
@@ -480,31 +498,34 @@ Measurements must be valid, in that they must conform to set constraints:
 2. Certain fields cannot be empty, or the whole observation must be thrown out.
 3. Uniqueness, for instance no two people should have the same social security number.
 
-### Accuracy
+## Accuracy
 
 Measurements must be accurate, in that they must represent the correct values. While an observation may be valid, it might at the same time be inaccurate. 123 Fake street is a valid, inaccurate street address.
 
 Unfortunately, accuracy is mostly achieved in the observation process. To be achieved in the cleaning process, an outside trusted source would have to be cross-referenced.
 
-### Completeness
+## Completeness
 
 Measurements must be complete, in that they must represent everything that might be known. This also is nearly impossible to achieve in the cleaning process! For instance in a survey, it would be necessary to re-interview someone whose previous answer to a question was left blank.
 
-### Consistency
+## Consistency
 
 Measurements must be consistent, in that different observations must not contradict each other. For instance, one person cannot be represented as both dead and still alive in different observations.
 
-### Uniformity
+## Uniformity
 
 Measurements must be uniform, in that the same unit of measure must be used in all relevant measurements. If one person's height is listed in meters and another in feet, one measurement must be converted.
 
 ## Evaluation
 
-Measurements are *accurate* when
+Measurements are *accurate* when: (select one)
+
+<Quiz>
 - observations do not contradict each other.
 - they represent the correct values.*
 - when they are unique responses (e.g. no duplication).
 - when the same unit of measure is used in all relevant measurements.
+</Quiz>
 
 ## Challenge: When Do We Stop Cleaning?
 
@@ -533,7 +554,7 @@ Measurements are *accurate* when
 
 Analysis can take many forms (just like the rest of this stuff!), but many techniques fall within a couple of categories:
 
-### Descriptive Analysis
+## Descriptive Analysis
 
 Techniques geared towards summarizing a data set, such as:
 
@@ -543,14 +564,14 @@ Techniques geared towards summarizing a data set, such as:
 - Average
 - Standard deviation
 
-### Inferential Analysis
+## Inferential Analysis
 
 Techniques geared towards testing a hypothesis about a population, based on your data set, such as:
 
 - Extrapolation
 - P-Value calculation
 
-### Qualitative Analysis
+## Qualitative Analysis
 
 Techniques geared towards understanding a phenomenon, rather than predicting and testing hypotheses, such as:
 
@@ -562,9 +583,12 @@ As we have discussed thus far, data are not neutral or objective. They are guide
 
 ## Evaluation
 
-Descriptive analysis help us summarize a data set.
+Descriptive analysis helps us summarize a data set.
+
+<Quiz>
 - True*
 - False
+</Quiz>
 
 ## Challenge: Analysis
 
@@ -577,7 +601,7 @@ Descriptive analysis help us summarize a data set.
 
 1. I may choose to leave out data that are perceived to be outliers, especially if they differ to much from the "normal" curve. I end up representing only those who fall within the "normal" curve which may not actually be an equitable representation.
 2. The interpretation of the results should align itself with the type of analyses that I ran. In addition, it should be guided in some capacity by previous work in this area to inform my understanding.
-3. Potential misuse that I am always concern with is the weaponziation of marginalized participants' words and thoughts. I think I remain somewhat uncomfortable with the unintended use of my research because I don't think I can ever consider every circumstances that the analysis can be misused or misquoted. When I was working on an oral history project, I have set up some layers of boundaries to prevent too easy of an access to audio files as an attempt at negotiating access and protection of my narrators.
+3. Potential misuse that I am always concern with is the weaponization of marginalized participants' words and thoughts. I think I remain somewhat uncomfortable with the unintended use of my research because I don't think I can ever consider every circumstances that the analysis can be misused or misquoted. When I was working on an oral history project, I have set up some layers of boundaries to prevent too easy of an access to audio files as an attempt at negotiating access and protection of my narrators.
 4. In chasing the next big thing, the original intentions for beginning the project might be lost. For me, making sure that my work is meaningful to my communities is important and the excitement of exploring a new tool can sometimes distract me from this intention. Running out of time and/or budget can also mean that the project may end abruptly, and relationships built could be strained in a haphazard wrap up. This brings me back to making sure that before the project begins to spend a significant amount of time on project planning to reduce the chances of this happening.
 
 ## Keywords
@@ -600,70 +624,70 @@ Visualizing your data helps you tell a story and construct a narrative that guid
          <th>When to Use</th>
         <th>Example of Visualization</th>
     </tr>
-    <tr height="300px">
+    <tr>
         <th rowspan="3">Comparisons</th>
          <td>Bar charts</td>
          <td>Comparison across distinct categories</td>
-        <td><img src="/images/data-literacies/D4PG_bar.png" alt="Bar Chart">From <a href="https://dataforgood.commons.gc.cuny.edu/report-on-covid-19s-impact-on-cuny-students/" target="_blank">The Data for Public Good</a> at the Graduate Center.</figcaption></td>
+        <td><img src="/images/data-literacies/D4PG_bar.png" alt="Bar Chart"><figcaption>From <a href="https://dataforgood.commons.gc.cuny.edu/report-on-covid-19s-impact-on-cuny-students/" target="_blank">The Data for Public Good</a> at the Graduate Center.</figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Histograms</td>
         <td>Comparison across continuous variable</td>
-        <td><img src="/images/data-literacies/PolicyViz_histogram.png" alt="Histogram"><figcaption>From <a href="https://policyviz.com/2018/11/27/histogram-design-decisions/" target="_blank">Policy Viz.</figcaption></td>
+        <td><img src="/images/data-literacies/PolicyViz_histogram.png" alt="Histogram"><figcaption>From <a href="https://policyviz.com/2018/11/27/histogram-design-decisions/" target="_blank">Policy Viz.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Scatter plots</td>
         <td>Useful to check for correlation (not causation!)</td>
-        <td><img src="/images/data-literacies/538_scatter.png" alt="Scatter plot"><figcaption>From <a href="https://fivethirtyeight.com/features/the-gops-primary-rules-might-doom-carson-and-cruz/" target="_blank">FiveThirtyEight.</figcaption></td>
+        <td><img src="/images/data-literacies/538_scatter.png" alt="Scatter plot"><figcaption>From <a href="https://fivethirtyeight.com/features/the-gops-primary-rules-might-doom-carson-and-cruz/" target="_blank">FiveThirtyEight.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <th rowspan="3">Time</th>
         <td>Stacked area charts</td>
         <td>Evolution of value across different groups</td>
-        <td><img src="/images/data-literacies/DatatoViz_stackedarea.png" alt="Stacked area chart"><figcaption>From <a href="https://www.data-to-viz.com/graph/stackedarea.html" target="_blank">From Data to Viz.</figcaption></td>
+        <td><img src="/images/data-literacies/DatatoViz_stackedarea.png" alt="Stacked area chart"><figcaption>From <a href="https://www.data-to-viz.com/graph/stackedarea.html" target="_blank">Data to Viz.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Sankey Diagrams</td>
         <td>Displaying flows of changes</td>
-        <td><img src="/images/data-literacies/DatatoViz_sankey.png" alt="Sankey"><figcaption>From <a href="https://www.data-to-viz.com/graph/sankey.html" target="_blank">From Data to Viz.</figcaption></td>
+        <td><img src="/images/data-literacies/DatatoViz_sankey.png" alt="Sankey"><figcaption>From <a href="https://www.data-to-viz.com/graph/sankey.html" target="_blank">Data to Viz.</a></figcaption></td>
     </tr>
-   <tr height="300px">
+   <tr>
         <td>Line graphs</td>
         <td>Tracking changes over time</td>
         <td><img src="/images/data-literacies/D4PG_line.jpg" alt="Line Graph"><figcaption>From <a href="https://dataforgood.commons.gc.cuny.edu/report-on-covid-19s-impact-on-cuny-students/" target="_blank">The Data for Public Good</a> at the Graduate Center.</figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <th rowspan="2">Small numbers/percentages</th>
         <td>Pie charts</td>
         <td>Demonstrate proportions between categories</td>
-        <td><img src="/images/data-literacies/DB_pie.jpg" alt="Pie chart"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</figcaption></td>
+        <td><img src="/images/data-literacies/DB_pie.jpg" alt="Pie chart"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Tree maps</td>
         <td>Demonstrate hierarchy and proportion</td>
-        <td><img src="/images/data-literacies/DataViz_treemap.png" alt="Tree map"><figcaption>From <a href="https://datavizcatalogue.com/methods/treemap.html" target="_blank">The Data Visualization Catalogue.</figcaption></td>
+        <td><img src="/images/data-literacies/DataViz_treemap.png" alt="Tree map"><figcaption>From <a href="https://datavizcatalogue.com/methods/treemap.html" target="_blank">The Data Visualization Catalogue.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <th rowspan="2">Survey responses</th>
         <td>Stacked bar charts</td>
         <td>Compares total amount across each group (e.g. plotting Likert scale)</td>
-        <td><img src="/images/data-literacies/DB_stackedbar.jpg" alt="Stacked bar charts"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</figcaption></td>
+        <td><img src="/images/data-literacies/DB_stackedbar.jpg" alt="Stacked bar charts"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Nested area graphs</td>
         <td>Visualize branching/nested questions</td>
-        <td><img src="/images/data-literacies/evergreen_nestedarea.jpg" alt="Nested area graph"><figcaption>From <a href="https://stephanieevergreen.com/nested-area-graph/" target="_blank">Evergreen Data.</figcaption></td>
+        <td><img src="/images/data-literacies/evergreen_nestedarea.jpg" alt="Nested area graph"><figcaption>From <a href="https://stephanieevergreen.com/nested-area-graph/" target="_blank">Evergreen Data.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <th rowspan="2">Place</th>
         <td>Choropleth maps</td>
         <td>Visualize values over a geographic area to demonstrate pattern</td>
-        <td><img src="/images/data-literacies/DB_choropleth.jpg" alt="Choropleth map"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</figcaption></td>
+        <td><img src="/images/data-literacies/DB_choropleth.jpg" alt="Choropleth map"><figcaption>From <a href="https://www.loc.gov/pictures/search/?q=%22lot%2011931%22%20NOT%20medal&st=grid&co=anedub&loclr=blogpic" target="_blank">The Library of Congress.</a></figcaption></td>
     </tr>
-    <tr height="300px">
+    <tr>
         <td>Hex(bin) or Tile maps</td>
         <td>Similar to Choropleth with the hexbin/tile representing regions equally rather than by geographic size</td>
-        <td><img src="/images/data-literacies/rgraph_hexbin.png" alt="Hexbin graph"><figcaption>From <a href="https://www.r-graph-gallery.com/328-hexbin-map-of-the-usa.html" target="_blank">R Graph Gallery.</figcaption></td>
+        <td><img src="/images/data-literacies/rgraph_hexbin.png" alt="Hexbin graph"><figcaption>From <a href="https://www.r-graph-gallery.com/328-hexbin-map-of-the-usa.html" target="_blank">R Graph Gallery.</a></figcaption></td>
     </tr>
     <tr>
         <th colspan="4"> Adapted from <a href="https://us.sagepub.com/en-us/nam/effective-data-visualization/book265203_"> Stephanie D. Evergreen (2019) Effective data visualization : The right chart for the right data</a>, <a href="https://datavizcatalogue.com/">The Data Visualization Catalogue</a>, and <a href="https://www.data-to-viz.com/">From Data to Viz</a></th>
@@ -705,16 +729,16 @@ You are interested in looking at the reactions to the democratic party president
 
 As you work through this activity, you can definitely choose to do so with your partner! And we highly encourage you to do so! Different perspectives can offer us different insights to our own gaps and help us in thinking through our decisions. Be prepared to discuss your thoughts and ideas when we "meet" for our sessions.
 
-### If You Would Like Some Guiding Questions
+## Some Guiding Questions
 
-- What are some reasons you might have for anonymizing (or not) your data?
+1. What are some reasons you might have for anonymizing (or not) your data?
     - Would your approach differ if the responses were anonymized v. not?
-- Would you remove the data in your initially downloaded corpus?
+2. Would you remove the data in your initially downloaded corpus?
     - How might you be aware of the differences in the corpus you downloaded v. the most current information?
-- Would the number of tweets generated impact your decisions?
-- How might where you are at in the stages of data (e.g. "raw" data v. "cleaned" data v. analysed) affect your choices?
+3. Would the number of tweets generated impact your decisions?
+4. How might where you are at in the stages of data (e.g. "raw" data v. "cleaned" data v. analysed) affect your choices?
 
-### Some Additional Exploration
+## Some Additional Exploration
 
 - If you were collecting and/or analyzing data on folx in power, such as looking at the data from [Tweets of Congress'](https://alexlitel.github.io/congresstweets/) project, would that change the way you consider your answers to the previous questions?
 - Current [ethical guidelines](https://safelab.socialwork.columbia.edu/content/ethics) from SAFE Lab at Columbia University have decided to alter the text of social media post to render it unsearchable. Why and when would you consider (or not) altering the collected tweets for publication? 
@@ -725,4 +749,102 @@ Data and ethics are contextually driven. As such, there isn’t always a risk-fr
 
 In addition, open access is not always the answer to concerns of reproducibility and/or ethical considerations. There are moments where the decision to not have a dataset or analysis openly accessible is valid. For example, when you are working with marginalized or vulnerable populations, concerns for causing more harm justifies restricting access. We may choose to control who has access to decrease the chances of misrepresentations (intentional or otherwise) or having results taken out of contexts.
 
-For a set of great questions to help you think through your data exploration and project planning, please check out Kristen Hackett's Tagging the Tower post, [_What to Consider when Planning a Digital Project_.](https://digitalfellows.commons.gc.cuny.edu/2019/10/30/what-to-consider-when-planning-a-digital-project/)
+For a set of great questions to help you think through your data exploration and project planning, please check out Kristen Hackett's Tagging the Tower post, [What to Consider when Planning a Digital Project.](https://digitalfellows.commons.gc.cuny.edu/2019/10/30/what-to-consider-when-planning-a-digital-project/)
+
+# Theory to Practice
+
+Now that you've gained an understanding of some of the considerations around data and ethics, let's think a bit further about how you may apply some of what we have discussed in your work.  Below the quiz segment you will find some additional readings that dives deeper into some of the topics that were covered in our lessons. If you would like, you can also consider exploring the "Projects or Challenges to Try" to see how you might apply what you've learnt.
+
+## Review your knowledge: 6 questions from the lessons
+
+__1. Structured data can be: (Select all that apply)__
+
+<Quiz>
+- a XML list.*
+- a Excel table.*
+- an email chain.
+- a collection of text files.
+</Quiz>
+
+Revisit lesson [Stages of Data: Processed/Transformed](/workshops/data-ethics/?page=5) to learn more.
+
+__2. Descriptive analysis help us summarize a data set. (Select one of the following)__
+
+<Quiz>
+- True*
+- False
+</Quiz>
+
+Revisit lesson [More Stages of Data: Analyzed](/workshops/data-ethics/?page=8) to learn more.
+
+__3. Measurements are accurate when: (Select one of the following)__
+
+<Quiz>
+- they represent the correct values.*
+- observations do not contradict each other.
+- when they are unique responses (e.g. no duplication).
+- when the same unit of measure is used in all relevant measurements.
+</Quiz>
+
+Revisit lesson [More Stages of Data: Cleaned](/workshops/data-ethics/?page=7) to learn more.
+
+__4. Research data can be defined as: (Select all that apply)__
+
+<Quiz>
+- materials or information necessary to come to my conclusion.*
+- the recorded factual material commonly accepted in the scientific community as necessary to validate research findings.*
+- method of collection and analysis.
+- objective and error-free.
+</Quiz>
+
+Revisit lesson [Data is Foundational](/workshops/data-ethics/?page=2) to learn more.
+
+__5. The stages of data is a single iteration process, i.e. there is a fixed stage progression from data collection to visualization. (Select one of the following)__
+
+<Quiz>
+- False*
+- True
+</Quiz>
+
+Revisit lesson [Stages of Data: Raw](/workshops/data-ethics/?page=4) to learn more.
+
+__6. Tiny data format only allows one value per cell. (Select one of the following)__
+
+<Quiz>
+- True*
+- False
+</Quiz>
+
+Revisit lesson [Side Note on Data Structures: Tidy Data](/workshops/data-ethics/?page=6) to learn more.
+
+## __Suggested Further Readings__
+
+## Data management
+
+- [Marieke Guy's data management presentation](https://www.slideshare.net/MariekeGuy/bridging-the-gap-between-researchers-and-research-data-management) discusses some ideas around planning for data management before, during, and after a project.
+- [Queensland University of Technology's Management of Research Data](http://www.mopp.qut.edu.au/D/D_02_08.jsp) provides some ideas around ownership, roles and responsibilities of data-driven projects. While this is specific to Queensland University of Technology, it is useful for understanding some of the different roles in a research project.
+- [The Graduate Center, CUNY's Data Management](https://libguides.gc.cuny.edu/c.php?g=159618&p=1045072) research guide provides resources and specific steps for CUNY faculty, staff, and students. 
+
+## Ethics and ("big" data) research
+
+- [The Council for Big Data, Ethics, and Society's Perspectives on Big Data, Ethics, and Society](https://bdes.datasociety.net/council-output/perspectives-on-big-data-ethics-and-society/) is a white paper that consolidates the council's discussions on big data, ethics, and society.
+- [Catherine D'Ignazio & Lauren F. Klein's Data Feminism](https://data-feminism.mitpress.mit.edu/) (scroll down the page to access the book chapters for free). It looks at "big" data from a feminist perspective, and discuss the importance of understanding long histories and socio-political contexts in research, as well as providing an overview of the field.
+- [Feminist Data's Manifest-No](https://www.manifestno.com) discusses the realities of "big" data and the fallacies of unequal harm and risk distribution, particularly towards marginalized communities.
+- [Mimi Onuoha's Missing Data Sets](https://github.com/MimiOnuoha/missing-datasets) looks at "blank spots that exist in spaces that are otherwise data-saturated," that usually affect those who are the most vulnerable.
+
+## Other Tutorials
+
+- [Computational social science with R](https://compsocialscience.github.io/summer-institute/curriculum) is a 2-week summer institute program that follows the [Bit By Bit: Social Research in Digital Age](https://www.bitbybitbook.com/en/1st-ed/preface/) format. The current repository (updated: Jul, 2020) contains the institute's workshops and materials. 
+- [The European Data Portal's tutorial on Open Data](https://www.europeandataportal.eu/elearning/en/module9/#/id/co-01) offers a guided insight to the importance of choosing the right format for open datasets.
+- [The Data Visualization Catalogue](https://datavizcatalogue.com/search.html) by Severino Ribecca provides a guide to data visualizations for different types of data and narratives.
+- [From Data to Viz](https://www.data-to-viz.com/) by From Data to Viz also provides a guide to data visualization for different types of data and narratives.
+
+## Projects or Challenges to Try
+
+- Consider a project where you are interested in the trend of Euro-American political views. You've decided to look at the [2018 European Social Survey](http://nesstar.ess.nsd.uib.no/webview/index.jsp?v=2&previousmode=table&regMod=corr&submode=variable&analysismode=table&study=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfStudy%2FESS9e02.0&gs=undefined&variable=http%3A%2F%2F129.177.90.83%3A80%2Fobj%2FfVariable%2FESS9e02.0_V93&mode=documentation&top=yes) and the U.S.-based [2018 General Social Survey](https://gssdataexplorer.norc.org/variables/vfilter?utf8=%E2%9C%93&user_search_id=&state_id=&search_type=&keyword=politic&doslider=0&yrmin=1972&yrmax=2018&years=2018&subjects=&ssearch=&commit=SEARCH). How would you approach the data? If you're interested in reporting on the trend of global political views, what do you have to consider when you join these data sets? What assumptions do you have to make? How would you collapse responses?
+
+## Discussion Questions
+
+- How does increased data literacy add to your project planning? 
+- How do you address your use of data and your ethics? For example,how might ethics play a part in the way you think about (a) data collection? (b) anonymity and confidentiality? (c) data and its relation to the communities it emerges from?
+- Consider your next project, what are some considerations from this workshop that you might bring into your project?

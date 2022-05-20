@@ -37,56 +37,9 @@ ethical considerations:
     - "'The command line' is laden with masculine and military metaphors, which is reflective of the history of computing and programming. As Wendy Hui Kyong Chun discusses in [On Software, or the Persistence of Visual Knowledge (2004)](https://doi.org/10.1162/1526381043320741), almost all computers (as in human computers) in the US during World War II were young women. Human computers received commands from analysts—predominantly men with the military—that they then had to interpret and act upon the machine. As Chun (p. 34) argued, 'computation depends on 'yes, sir' in response to short declarative sentences and imperatives that are in essence commands ... The command line is a mere operating system (OS) simulation.' If commands are the ways in which a user communicates with machines, the command line (of computers today) receives these commands as text that is typed in."
 ---
 
-# Introduction to the Command Line
+# Acknowledgements
 
-## Abstract
-
-If asked to show someone who has never seen a computer how to *do* something on your computer, many of us would explain what a screen and a cursor are, and then show how to point and click on icons. This approach relies on a graphical user interface, or GUI (pronounced "gooey!"). Today we're going to explore another way to make your computer do things: through the command line. Instead of pointing and clicking, we'll be typing in either git bash (Windows) or terminal (macOS) to tell the computer directly what task we'd like it to perform.
-<Terminal />
-## Learning Objectives
-<JSInterpreter/>
-
-- Learn common commands to create files (`touch` and `echo`)
-- Learn commands to create directories (`mkdir`)
-- Navigate our file structure using change directory (`cd`), print working directory (`pwd`), and list (`ls`)
-- Move content from one place to another using redirects (`>`) and pipes (`|`)
-- Explore a comma separated values (.csv) dataset using word and line counts, `head` and `tail`, and the concatenate command `cat`
-- Search text files using the `grep` command
-- Create and sort cheat sheets for the commands we learn
-
-## Estimated time
-
-3 hours
-
-## Prerequisites
-
-To complete the workshop, you will need:
-
-- [Visual Studio Code](https://github.com/DHRI-Curriculum/install/blob/v2.0/guides/visual-studio-code.md) (recommended) You can use any plain text editor but for our purposes, Visual Studio Code ("VS Code") will be used.
-- [Git Bash](https://github.com/DHRI-Curriculum/install/blob/v2.0/guides/git.md) (required) If you're using Windows, you will need to follow the instructions to install so that we can work in the cross-platform Unix command line for this session. If you're using macOS, however, you do not need to take any action. The built-in Terminal application has all the functionality we need.
-- [Julia Evans's Bite Size Command Line](https://jvns.ca/blog/2018/08/05/new-zine--bite-size-command-line/) (recommended) Julia Evans's comics explain in detail (while being fun!) some of the most central Unix command line tools. It's a great zine to have on your desk next to you for this workshop, and long after.
-- [Basic UNIX commands](http://mally.stanford.edu/~sr/computing/basic-unix.html) (recommended) This is another list of commonly used commands in the command line. It's useful, but can be a little overwhelming if you don't have any exposure to these things beforehand. Don't worry, we will cover the most important ones in our Introduction to Command Line workshop!
-
-## Contexts
-
-### Pre-reading suggestions
-
-- [Neal Stephenson's "In the Beginning... Was the Command Line"](http://cristal.inria.fr/~weis/info/commandline.html) is a useful piece to grasp the relationship between (and the affordances of) the command line and the GUI.
-- [Douglas Rushkoff's *Program or Be Programmed*](https://rushkoff.com/books/program-or-be-programmed/) offers some reflections on how using the command line allows one to communicate in a less mediated way with their machines and the importance of doing so in the current technoscape.
-
-### Projects that use these skills
-
-Mastering the command line will prove useful in a great number of projects. Most Python- and R-based projects will require you to have some knowledge of the command line. At a very basic level, you will be invoking a Python script and will be using values of command line arguments when creating and running your scripts.
-
-- The command line is useful for setting up installations of server-side software (or more advanced software-as-a-service software, sometimes acronymized as SaaS). [Omeka](http://www.omeka.org) is merely one example. The command line will allow you to navigate the file structure of your server. Commands like `ls`, `mkdir`, `rmdir`, `cd`, etc. are really important. For example, `grep` could help you find a plugin directory that you might have accidentally placed in the wrong location.
-- [Fair World 64: A Text-Based Game of the 1964–1965 World's Fair](https://academicworks.cuny.edu/gc_etds/3786/) A recent digital capstone project by Christofer Gass runs a Python script on the command line
-- [Awesome Bash](https://github.com/awesome-lists/awesome-bash) A curated list of useful Bash scripts and resources.
-
-### Ethical Considerations
-
-- "The command line" is laden with masculine and military metaphors, which is reflective of the history of computing and programming. As Wendy Hui Kyong Chun discusses in ["On Software, or the Persistence of Visual Knowledge" (2004)](https://doi.org/10.1162/1526381043320741), almost all computers (as in human computers) in the US during World War II were young women. Human computers received commands from analysts—predominantly men with the military—that they then had to interpret and act upon the machine. As Chun (p. 34) argued, "computation depends on 'yes, sir' in response to short declarative sentences and imperatives that are in essence commands ... The command line is a mere operating system (OS) simulation." If commands are the ways in which a user communicates with machines, the command line (of computers today) receives these commands as text that is typed in.
-
-## Acknowledgements
+TODO: Add acknowledgements to metadata
 
 - Current Author: [Stefano Morello](https://github.com/smorello87)
 - Past contributing Author: [Kelsey Chatlosh](https://github.com/kchatlosh)
@@ -142,7 +95,7 @@ A counterpoint to plain text is rich text (sometimes denoted by the Microsoft ri
 
 Plain text has two main properties in regard to rich text:
 
-> plain text is the underlying content stream to which formatting can be applied. Plain text is public, standardized, and universally readable.
+> Plain text is the underlying content stream to which formatting can be applied. Plain text is public, standardized, and universally readable.
 
 ## Choosing a Text Editor
 
@@ -160,14 +113,16 @@ You will have downloaded Visual Studio Code according to the [instructions](http
 
 ## Evaluation
 
-What is the difference between a plain text document and a rich text document? (Select all that apply)
+1. What is the difference between a plain text document and a rich text document? (Select all that apply)
 
+<Quiz>
 - Plain text contains no formatting, only line breaks and spacing.*
 - Plain text cannot be marked up.
 - Rich text is styled text, _i.e.,_ plain text completed by information such as font size, format, and colors.*
-- One can't determine whether there is a difference betweeen the two without looking at their content.
+- One can't determine whether there is a difference between the two without looking at their content.
+</Quiz>
 
-What is the Command Line? How is it different from your text editor?
+2. What is the Command Line? How is it different from your text editor?
 
 # Why is the Command Line Useful?
 
@@ -201,7 +156,7 @@ If you're using macOS:
 
 4. When the Terminal pops up, you will likely see either a window with black text over white background or colored text over a black background.
 
-    ![Terminal in macOS](/images/command-line/osx_term.png)
+![Terminal in macOS](/images/command-line/osx_term.png)
 
 Please note: You can change the color of your Terminal or BashShell background and text by selecting `Shell` from the top menu bar, then selecting a theme from the menu under `New Window`.
 
@@ -237,11 +192,11 @@ In the following lessons, we will refer to the command prompt using a `$`. Just 
 
 Before we get started, I wanted to give you a couple of tips of things to keep in mind.
 
-First, go slow at first and check your spelling! One of the biggest things you can do to make sure your code runs correctly and you can use the command line successfully is to make sure you check your spelling! _Keep this in mind!_ If at first something doesn't work, check your spelling! Unlike in human reading, where letters operate simultaneously as atomistic symbols and as complex contingencies (check [Johanna Drucker](https://genius.com/Johanna-drucker-from-a-to-screen-annotated) on the alphabet), in coding, each character has a discrete function including (especially!) spaces.
+1. Go slow at first and check your spelling! One of the biggest things you can do to make sure your code runs correctly and you can use the command line successfully is to make sure you check your spelling! _Keep this in mind!_ If at first something doesn't work, check your spelling! Unlike in human reading, where letters operate simultaneously as atomistic symbols and as complex contingencies (check [Johanna Drucker](https://genius.com/Johanna-drucker-from-a-to-screen-annotated) on the alphabet), in coding, each character has a discrete function including (especially!) spaces.
 
-Second, keep in mind that the command line and file systems on macOS and Unix are usually pre-configured as cAsE-pReSeRvInG—so capitalizations also matter when typing commands and file and folder names.
+2. Keep in mind that the command line and file systems on macOS and Unix are usually pre-configured as cAsE-pReSeRvInG—so capitalizations also matter when typing commands and file and folder names.
 
-Third, while copying and pasting from this handy tutorial may be tempting to avoid spelling errors and other things, we encourage you not to! Typing out each command will help you remember them and how they work.
+3. While copying and pasting from this handy tutorial may be tempting to avoid spelling errors and other things, we encourage you not to! Typing out each command will help you remember them and how they work.
 
 Now, we are ready to get started.
 
@@ -342,13 +297,16 @@ Go ahead and use pointing and clicking to navigate to your working directory—y
 
 ## Evaluation
 
-What command do you run if you are trying to identify where in the filesystem you are currently located/working?
+1. What command do you run if you are trying to identify where in the filesystem you are currently located/working?
+
+<Quiz>
 - $ `ls`
 - $ `pwd`*
 - $ `cd`
 - $ `whoami`
+</Quiz>
 
-When and why would you want to use the command line as opposed to your operating system's GUI?
+2. When and why would you want to use the command line as opposed to your operating system's GUI?
 
 ## Keywords
 
@@ -435,10 +393,13 @@ Try and create a sub-folder and file on your own!
 ## Evaluation
 
 What does the <kbd>up arrow</kbd> command do?
+
+<Quiz>
 - It quits the Terminal/GitBash.
 - It undoes my last command.
 - It inserts my last command.*
 - It shows me what folder I am working in.
+</Quiz>
 
 # Creating a Cheat Sheet
 
@@ -534,14 +495,17 @@ Once you're done, check the contents of the file on the command line with the `c
 
 ## Evaluation
 
-What does effect does the following command produce?
+What does effect does the following command produce? (select one)
 ```console
 $ echo "Hello! My Name is Mark!" > introduction.txt
 ```
+
+<Quiz>
 - It adds the line "Hello! My Name is Mark!" to the existing content of the `introduction.txt` file.
 - It checks whether the content of the `introduction.txt` file contains the line "Hello! My Name is Mark!"
 - It replaces the content of the `introduction.txt` file with the line "Hello! My Name is Mark!"*
 - None of the above.
+</Quiz>
 
 # Pipes
 
@@ -577,11 +541,13 @@ $ cat cheat-sheet.txt | sort > new-cheat-sheet.txt
 
 ## Evaluation
 
-What do pipes allow you to do?
+What do pipes allow you to do? (select all that apply)
 
+<Quiz>
 - Pipes let you take the output of one command and use it as the input for another.*
 - Pipes allow you to combine multiple commands in a single line.*
 - Pipes let you work on multiple files at the same time.
+</Quiz>
 
 # Exploring Text Data
 
@@ -680,11 +646,13 @@ Type `cat nypl_items.csv | uniq > new_nypl_items.csv` to create a new version of
 
 ## Evaluation
 
-What do command line flags allow you to do?
+What do command line flags allow you to do? (select one)
 
+<Quiz>
 - Flags allow you to earmark the file you are working on.
 - Flags are useful to create a new version of the file you are working on, while preserving the old version for future access.
 - Flags are a common way to specify options for command line programs.*
+</Quiz>
 
 ## Keywords
 
@@ -737,12 +705,14 @@ If you want to get a little more milage out of the `grep` command, refer to [thi
 
 ## Evaluation
 
-Let's think about the `grep` command.
+Let's think about the `grep` command. Select all that pertain to the command.
 
+<Quiz>
 - It searches the given file for lines containing a match to the given strings or words.*
 - It can be combined with other commands, so as to produce a search that matches their output.*
 - It produces a new file with the lines containing the strings or words you are searching.
 - It delete the strings or words you are searching from a file.
+</Quiz>
 
 # What We Have Learned
 
@@ -760,3 +730,113 @@ In this session, we learned:
 And we made a [cheat sheet](https://curriculum.dhinstitutes.org/workshops/command-line/lessons/?page=8) for reference!
 
 When we started, we reviewed what text is—whether plain or enriched. We learned that text editors that don't fix formatting of font, color, and size, do allow for more flexible manipulation and multi-program use. If text is allowed to be a string of characters (and not specific characters chosen for their compliance with a designer's intention), that text can be fed through programs and altered with automated regularity. Text editors are different software than Bash (or Terminal), which is a text-based shell that allows you to interact directly with your operating system giving direct input and receiving output.
+
+# Theory to Practice
+
+You've made it through your introduction to the command line! By now, you have experienced some of the power of communicating with your computer using text commands. The basic steps you learned today will help as you'll further your digital skills. For example, you might work with the command line interface to set up your [version control with git](https://github.com/DHRI-Curriculum/git) or you'll have your text editor open while [writing python scripts](https://github.com/DHRI-Curriculum/python) or building basic websites with [HTML and CSS](https://github.com/DHRI-Curriculum/html-css). Having a grasp of command line basics will not only make you more familiar with how your computer and basic programming work, but it will also give you access to tools and communities that will expand your research.
+
+## Review your knowledge: 7 questions from the lessons
+
+__1. What does the <kbd>up</kbd> arrow command do? (Select one of the following)__
+
+<Quiz>
+- It inserts my last command.*
+- It quits the Terminal/GitBash.
+- It undoes my last command.
+- It shows me what folder I am working in.
+</Quiz>
+
+Revisit lesson [Creating Files and Folders](/workshops/command-line/?page=9) to learn more.
+
+__2. What do command line flags allow you to do? (Select one of the following)__
+
+<Quiz>
+- Flags are a common way to specify options for command line programs.*
+- Flags allow you to earmark the file you are working on.
+- Flags are useful to create a new version of the file you are working on, while preserving the old version for future access.
+</Quiz>
+
+Revisit lesson [Exploring Text Data](/workshops/command-line/?page=12) to learn more.
+
+__3. What effect does the following command produce?__
+
+```console
+$ echo "Hello! My Name is Mark!" > introduction.txt
+```
+
+(Select one of the following)
+
+<Quiz>
+- It replaces the content of the introduction.txt file with the line “Hello! My Name is Mark!”*
+- It adds the line “Hello! My Name is Mark!” to the existing content of the introduction.txt file.
+- It checks whether the content of the introduction.txt file contains the line “Hello! My Name is Mark!”
+- None of the above.
+</Quiz>
+
+Revisit lesson [Creating a Cheat Sheet](/workshops/command-line/?page=10) to learn more.
+
+__4. What do pipes allow you to do? (Select all that apply)__
+
+<Quiz>
+- Pipes let you take the output of one command and use it as the input for another.*
+- Pipes allow you to combine multiple commands in a single line.*
+- Pipes let you work on multiple files at the same time.
+</Quiz>
+
+Revisit lesson [Pipes](/workshops/command-line/?page=11) to learn more.
+
+__5. What command do you run if you are trying to identify where in the filesystem you are currently located/working? (Select all that apply)__
+
+<Quiz>
+- `$ pwd`*
+- `$ ls`
+- `$ cd`
+- `$ whoami`
+</Quiz>
+
+Revisit lesson [Navigation](/workshops/command-line/?page=8) to learn more.
+
+__6. Let's think about the `grep` command. Select all that pertain to the command.__
+
+<Quiz>
+- It searches the given file for lines containing a match to the given strings or words.*
+- It can be combined with other commands, so as to produce a search that matches their output.*
+- It produces a new file with the lines containing the strings or words you are searching.
+- It delete the strings or words you are searching from a file.
+</Quiz>
+
+Revisit lesson [Searching Text Data](/workshops/command-line/?page=14) to learn more.
+
+__7. What is the difference between a plain text document and a rich text document? (Select all that apply)__
+
+<Quiz>
+- Plain text contains no formatting, only line breaks and spacing.*
+- Rich text is styled text, i.e., plain text completed by information such as font size, format, and colors.*
+- Plain text cannot be marked up.
+- One can’t determine whether there is a difference between the two without looking at their content.
+</Quiz>
+
+Revisit lesson [Text Editors](/workshops/command-line/?page=4) to learn more.
+
+## Suggested Further Readings
+
+- Are you wondering how (else) the command line can be deployed for your scholarship? [Dennis Tenen and Grant Wythoff's "Sustainable Authorship in Plain Text using Pandoc and Markdown"](https://programminghistorian.org/en/lessons/sustainable-authorship-in-plain-text-using-pandoc-and-markdown) have some answers for you.
+- [Stephen Ramsay](https://www.unl.edu/english/stephen-ramsay) is a scholar that has thought at length about the way the command line is (or can be!) embedded in a researcher's praxis. If you're interested in reading his work, here are two of his finest essays: ["Life on the Command Line"](https://files.zotero.net/eyJleHBpcmVzIjoxNTkyNjY1MDk3LCJoYXNoIjoiODFkNDJmZmU1ZjU3YzRmMDE2YTQ1ZmQwY2YzOTUwYmIiLCJjb250ZW50VHlwZSI6InRleHRcL2h0bWwiLCJjaGFyc2V0IjoidXRmLTgiLCJ6aXAiOjF9/07826342b83ea870f846cfa48f1b0eb8d3d51b78ceb1b05b1e014467d7241904/life-on-the-command-line.html) and ["Programming with Humanists: Reflections on Raising an Army of Hacker-Scholars in the Digital Humanities"](https://www.openbookpublishers.com/htmlreader/DHP/chap09.html)
+
+## Other Tutorials
+
+- [*Data Science at the Command Line*](https://www.datascienceatthecommandline.com/) is an open access e-book by Jeroen Janssens, a hands-on guide that can help you become a more efficient and productive data scientist through the use of the command line.
+- [BashGuide](http://mywiki.wooledge.org/BashGuide) offers some good practice techniques for taking your BASH skills to a higher level by teaching you write some simple scripts.
+
+## Projects or Challenges to Try
+
+- [More command line challenges](https://github.com/DHRI-Curriculum/command-line/blob/main/sections/15-challenges.md) devised by the GCDI team are available here.
+- When working with digital tools, it's usually a good idea to familiarize with their documentation. Here's the [Bash Reference Manual](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html), where you can find Bash features for beginners and advanced users.
+- [Pandoc](https://programminghistorian.org/en/lessons/sustainable-authorship-in-plain-text-using-pandoc-and-markdown) is an online software that allows users to convert file types through the command-line (from markdown to PDF, for example).
+- [youtube-dl](https://ytdl-org.github.io/youtube-dl/index.html) is a command-line exercise to download videos from YouTube.com. It requires the Python interpreter.
+- Feeling super brave? You might want to give [MALLET (MAchine Learning for LanguagE Toolkit)](http://mallet.cs.umass.edu/) a shot! MALLET is a "a Java-based package for statistical natural language processing, document classification, clustering, topic modeling, information extraction, and other machine learning applications to text." It includes tools for document classification, sequence tagging, topic modeling, and numerical optimization.
+
+## Discussion Questions
+
+- What are some of the operations that using the command line, as opposed as your GUI, allows you to perform?
+- What has learning to use the command line taught you about your machine?
