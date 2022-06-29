@@ -10,7 +10,7 @@ import randomColor from '../node_modules/randomcolor'
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import Image from 'next/image'
+import Image from 'next/future/image'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,

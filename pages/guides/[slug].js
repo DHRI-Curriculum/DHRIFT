@@ -10,7 +10,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import hljs from 'highlight.js';
 import Sidebar from '../../components/Sidebar'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 

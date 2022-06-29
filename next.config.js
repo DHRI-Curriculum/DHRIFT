@@ -33,6 +33,11 @@ const nextConfig = {
     basePath: isGitHub ? '/' + repoName : '',
     assetPrefix: isGitHub ? '/' + repoName + '/' : '',
     images: imagesConfig(build, isGitHub),
+    experimental: {
+        images: {
+          allowFutureImage: true,
+        },
+      },
 }
 
 console.log(nextConfig);

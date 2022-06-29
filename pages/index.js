@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import yaml from '../config.yml'
-import Image from 'next/image'
+import Image from 'next/future/image'
 import logo from '../public/images/logo.png';
 import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
