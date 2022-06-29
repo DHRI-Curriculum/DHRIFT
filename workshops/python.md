@@ -194,13 +194,17 @@ __1)__ Writing `type("12")` will return the type of `string`. While `12` is an i
 
 These are all valid ways of thinking about functions. We'll be learning more about functions in later sections.
 
+<Boxed>
 ## Challenge
 
 Open your web browser, and google the phrase "python function." Skim through the first few results. What words do you recognize, and which ones look unfamiliar? What do you think the unfamiliar ones mean? Try to rephrase some of this new language, and guess what they mean in your own words.
+</Boxed>
 
+<Reveal>
 ## Solution
 
 When you google "python function," you may see some phrases that look unfamiliar, like "return value" or "pass parameters." These are advanced terms for inputting and outputting data from a function. It's important to become familiar with the Python's terminology about functions, as it will be helpful later on when you start working with these components.
+</Reveal>
 
 ## Evaluation
 
