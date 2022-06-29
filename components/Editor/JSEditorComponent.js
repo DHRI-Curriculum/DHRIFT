@@ -10,7 +10,7 @@ const Frame = dynamic(
     { ssr: false }
 );
 import "allotment/dist/style.css";
-import { Javascript } from "@mui/icons-material";
+import JavascriptIcon from "@mui/icons-material/Javascript";
 import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
 

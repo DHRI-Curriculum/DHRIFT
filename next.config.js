@@ -15,13 +15,13 @@ console.log(`Running in ${isGitHub ? "GitHub Actions" : "local"} mode`);
 const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
-            loader: 'imgix',
+            loader: 'akamai',
             path: '/' + repoName + '/',
         }
     } 
     else if (build) {
         return {
-            loader: 'imgix',
+            loader: 'akamai',
             path: '/',
         }
     }

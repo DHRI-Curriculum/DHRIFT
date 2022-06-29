@@ -211,8 +211,9 @@ img {
   color: var(--foreground);
   font-size: 22px;
   text-align: justify;
-  border: #e74c3c 3px solid;
-  box-shadow: #e74c3c 8px 8px 0px;
+  /* border: #e74c3c 3px solid;
+  box-shadow: #e74c3c 8px 8px 0px; */
+  padding: 20px;
 }
 
 .sectionTitle {
@@ -677,13 +678,13 @@ header a:hover {
 .frontpage-item {
   /* border: 1px lightgrey solid; */
   padding: 10px;
-  border: 3px solid #ff9933;
-  box-shadow: #ff9933 8px 8px 0px;
+  /* border: 3px solid #ff9933;
+  box-shadow: #ff9933 8px 8px 0px; */
 }
 
 .dependency{
-  border: 3px solid #d5222c;
-  box-shadow: #d5222c 8px 8px 0px;
+  /* border: 3px solid #d5222c;
+  box-shadow: #d5222c 8px 8px 0px; */
 }
 
 .frontpage-item h2 {
@@ -750,13 +751,16 @@ table, th, td {
 /* sidebar  */
 @media(max-width: 2100px) {
   .drawer-left.permanent {
-    display: none;
+    display: none !important;
   }
 }
 
 @media(min-width: 2100px) {
   .sidebar-button {
     display: none !important;
+  }
+  .drawer-left.permanent {
+    position: absolute !important;
   }
 }
 

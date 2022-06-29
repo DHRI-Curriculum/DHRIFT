@@ -64,6 +64,7 @@ export default function Header({ props }) {
         >
             <CssBaseline />
             <ButtonAppBarCollapse
+                className='topBar-container'
                 sx={{
                     display: {
                         xs: 'block',
@@ -77,26 +78,30 @@ export default function Header({ props }) {
                 {/* mobile menu */}
                 {/* simple dropdown with text links to Workshops, Guides, Insights */}
                 <ul className='links'>
-                            <li>
-                                {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
-                            </li>
-                            <li>
-                                {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
-                            </li>
-                            <li>
-                                <li>
-                                    {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
-                                </li>
-                            </li>
-                            {/* <li>
+                    <li>
+                        {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
+                    </li>
+                    <li>
+                        {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
+                    </li>
+                    <li>
+                        <li>
+                            {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
+                        </li>
+                    </li>
+                    {/* <li>
                             Resources
                         </li> */}
-                            <li>
-                                <Link href='/Glossary' passHref>Glossary</Link>
-                            </li>
-                        </ul>
-               
-                
+                    <li>
+                        <Link href='/Glossary' passHref>Glossary</Link>
+                    </li>
+                </ul>
+                <IconButton sx={{ ml: 1 }}
+                    id="dark-mode-toggle"
+                    onClick={(e) => themeToggle(e)}
+                    color="inherit">
+                    {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
+                </IconButton>
             </ButtonAppBarCollapse>
             <AppBar
                 position="static"
@@ -123,28 +128,28 @@ export default function Header({ props }) {
                     {/* <div
                         id='logo-container'
                     > */}
-                        <Link href='/'
-                            passHref>
-                            <Image
-                                src={logo}
-                                alt={yaml.organization + ' logo'}
-                                width={100}
-                                height={100}
-                                className='logo' />
-                        </Link>
+                    <Link href='/'
+                        passHref>
+                        <Image
+                            src={logo}
+                            alt={yaml.organization + ' logo'}
+                            width={100}
+                            height={100}
+                            className='logo' />
+                    </Link>
                     {/* </div> */}
                     <div
                         id='nav-container'
                     >
-                    <Typography variant="h6" component="div"
-                        sx={{
-                            flexGrow: 1,
-                            flexShrink: 0,
-                        }}>
-                        <Link href='/' passHref>
-                            <h2 className='headerLink'>{yaml.event}</h2>
-                        </Link>
-                    </Typography>
+                        <Typography variant="h6" component="div"
+                            sx={{
+                                flexGrow: 1,
+                                flexShrink: 0,
+                            }}>
+                            <Link href='/' passHref>
+                                <h2 className='headerLink'>{yaml.event}</h2>
+                            </Link>
+                        </Typography>
                         <ul className='links'>
                             <li>
                                 {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
@@ -164,13 +169,13 @@ export default function Header({ props }) {
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>
                         </ul>
-                    <IconButton sx={{ ml: 1 }}
-                        id="dark-mode-toggle"
-                        onClick={(e) => themeToggle(e)}
-                        color="inherit">
-                        {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                    </IconButton>
-                            </div>
+                        <IconButton sx={{ ml: 1 }}
+                            id="dark-mode-toggle"
+                            onClick={(e) => themeToggle(e)}
+                            color="inherit">
+                            {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
+                        </IconButton>
+                    </div>
                     {/* <Button color="inherit">Login</Button> */}
                 </Toolbar>
             </AppBar>

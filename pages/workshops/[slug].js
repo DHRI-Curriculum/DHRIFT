@@ -89,7 +89,7 @@ export default function WorkshopPage({
   const [currentHeader, setCurrentHeader] = useState(null);
 
 
-      
+
 
   // list of page titles and highlight current page
   useEffect(() => {

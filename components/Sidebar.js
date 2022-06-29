@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Drawer from '@mui/material/Drawer';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import TocIcon from '@mui/icons-material/Toc';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';

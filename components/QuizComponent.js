@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import parse from 'html-react-parser';
 
 // evaluate quiz questions

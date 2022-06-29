@@ -173,7 +173,6 @@ export default function FrontPage(currentFile, allFiles) {
         <p>{excerpt}</p></div>}
       {!formatted && <Masonry columns={{ sm: 1, md: 2 }} spacing={2}>
         {formedDeps}
-        {/* {formedAuthor} */}
         {formattedObjects}
       </Masonry>}
     </div>
