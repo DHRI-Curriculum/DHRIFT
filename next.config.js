@@ -30,8 +30,8 @@ const imagesConfig = function(build, isGitHub) {
 const nextConfig = {
     // reactStrictMode: true,
     trailingSlash: true,
-    // basePath: isGitHub ? '/' + repoName : '',
-    // assetPrefix: isGitHub ? '/' + repoName + '/' : '',
+    basePath: isGitHub ? '/' + repoName : '',
+    assetPrefix: isGitHub ? '/' + repoName + '/' : '',
     images: imagesConfig(build, isGitHub),
 }
 
