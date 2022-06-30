@@ -3,7 +3,6 @@ import path from 'path'
 import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
-import logo from '../public/images/logo.png';
 import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -25,7 +24,7 @@ export default function Home({ workshops }) {
         <div>
           <div className='frontpage-top'>
             <Image
-              src={logo}
+              src={'/images/logo.png'}
               alt={yaml.organization + ' logo'}
               width={200}
               height={200}
