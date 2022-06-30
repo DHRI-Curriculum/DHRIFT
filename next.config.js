@@ -16,7 +16,7 @@ const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
             loader: 'akamai',
-            path: '/' + repoName + '/',
+            path: '/' + repoName,
         }
     } 
     else if (build) {
