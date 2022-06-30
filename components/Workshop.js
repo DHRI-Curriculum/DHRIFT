@@ -3,7 +3,7 @@ import randomColor from '../node_modules/randomcolor'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 export default function Workshop({ workshop, index }) {
   const color1 = randomColor({

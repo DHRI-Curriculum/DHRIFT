@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import hljs from 'highlight.js';
-import Image from 'next/future/image'
+import Image from 'next/image'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 

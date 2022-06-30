@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import QuizComponent from './QuizComponent';
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark.css'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import PythonREPLComponent from './PythonREPLComponent';
