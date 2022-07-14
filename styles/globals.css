@@ -739,7 +739,9 @@ table, th, td {
 
 .quizButton {
   margin-top: 20px !important;
-  border: 3px solid #d5222c;
+  padding: 5px !important;
+  border: 2px solid #d5222c !important;
+  background: white;
   box-shadow: #d5222c 8px 8px 0px; 
 }
 

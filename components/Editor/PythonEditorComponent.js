@@ -14,7 +14,7 @@ import { PyodideContext } from '../PyodideProvider';
 // import FileList from "./FileList";
 import EditorTopbar from "./EditorTopbar";
 
-export default function PythonEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
+export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
   const [code, setCode] = useState(defaultCode);
   const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
@@ -58,9 +58,13 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
 
   const allSnippets = props.allUploads;
   // chosenSnippets is a string of files separated by commas, make it an array
-  const chosenSnippets = typeof props.uploads === 'string' ? props.uploads.split(',') : [];
+  const chosenSnippets = typeof props.snippets === 'string' ? props.snippets.split(',') : [];
+
   var filteredSnippets = [];
 
+  // for item in chosenSnippets
+  // if item in slug of item in allSnippets
+  // add item to filteredSnippets
   if (chosenSnippets != undefined) {
     chosenSnippets.forEach(snippet => {
       const currentFile = allSnippets.find(file => file.slug === snippet.trim());
@@ -127,12 +131,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
   }
 
   return (
-    <div
-    style={{
-      marginBottom: '20px',
-      marginTop: '20px',
-    }}
-    >
+    <div>
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
           onLoad={() => {
@@ -148,28 +147,25 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           }}
         /></>}
       <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)} snippets={filteredSnippets} run={showValue} language='Python' />
+        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)} 
+        snippets={filteredSnippets} run={showValue} 
+        defaultCode={defaultCode} setCode={setCode}
+        language='Python' />
         <EditorComponent code={code} onChange={onChange} maxLines='Infinity' minLines={minLines} />
       </div>
 
       {isoutput && <div id='output'
-        // style={{
-        //   margin: "10px",
-        //   padding: "10px",
-        //   border: "1px solid #32c259",
-        //   borderRadius: "5px",
-        //   backgroundColor: "#f5f5f5",
-        //   color: "#32c259",
-        //   fontSize: "20px",
-        //   overflow: "auto",
-        //   font: "1.3rem Inconsolata, monospace",
-        //   whiteSpace: "pre-wrap",
         style={{
-          backgroundColor: "#2d2d2d",
-          color: 'white',
-          padding: '10px',
-
+          margin: "10px",
+          padding: "10px",
+          border: "1px solid #32c259",
+          borderRadius: "5px",
+          backgroundColor: "#f5f5f5",
+          color: "#32c259",
+          fontSize: "20px",
+          overflow: "auto",
           font: "1.3rem Inconsolata, monospace",
+          whiteSpace: "pre-wrap",
         }}>
         <CloseIcon
           onClick={closeOutput}
@@ -180,14 +176,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
             marginRight: "10px",
             cursor: "pointer"
           }}
-        /><span
-        style={{
-        // border: "1px solid #32c259",
-        // padding: "5px",
-        marginBottom: "10px",
-        display: "block",
-        }}
-        >Output</span> <br />
+        />
         {outputRef.current}
       </div>}
 

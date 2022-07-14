@@ -49,7 +49,8 @@ export default function EditorTopbar(props) {
                 <Button
                     variant="text"
                     onClick={() => {
-                        setCode(defaultCode);
+                        console.log(props);
+                        props.setCode(props.defaultCode);
                     }}
                     style={{
                         color: "#32c259",

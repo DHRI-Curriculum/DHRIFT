@@ -40,6 +40,9 @@ wrap: true,
             tabSize: 2,
           }}
           onLoad={editorInstance => {
+            setTimeout(() => {
+              editorInstance.resize();   
+          }, 20);
             document.addEventListener("mouseup", e => (
               editorInstance.resize()
             ));

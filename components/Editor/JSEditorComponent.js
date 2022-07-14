@@ -10,13 +10,12 @@ const Frame = dynamic(
     { ssr: false }
 );
 import "allotment/dist/style.css";
-import JavascriptIcon from "@mui/icons-material/Javascript";
 import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
 
 
-export default function JSEditorComponent({defaultCode = '// Write Javascript Here', ...props }) {
-    const [javascript, setJavascript] = useState(defaultCode);
+export default function JSEditorComponent({ defaultCode = '// Write Javascript Here', ...props }) {
+    const [code, setCode] = useState(defaultCode);
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef(null);
     const [error, setError] = useState(null);
@@ -44,11 +43,11 @@ export default function JSEditorComponent({defaultCode = '// Write Javascript He
 
     function closeOutput() {
         setIsoutput(false);
-      }
-    
-      function closeError() {
+    }
+
+    function closeError() {
         setIsError(false);
-      }
+    }
 
     const outputComponent = () => {
         return (
@@ -136,9 +135,14 @@ export default function JSEditorComponent({defaultCode = '// Write Javascript He
         setIsoutput(false);
         setRunningCode(true);
         outputRef.current = "";
-        console.log(javascript);
         try {
-            var result = eval(javascript);
+            // capture console.log output 
+            console.oldLog = console.log;
+            console.log = function (value) {
+                console.oldLog(value);
+                return value;
+            };
+            var result = eval(code);
             writeln(result);
             forceUpdate();
             setIsoutput(true);
@@ -147,21 +151,27 @@ export default function JSEditorComponent({defaultCode = '// Write Javascript He
             setIsError(true);
         }
         if (str != undefined) { outputRef.current += str; }
+        // restore console.log
+        console.log = console.oldLog;
         setRunningCode(false);
     }
 
     const onChangeJavascript = (newValue) => {
-        setJavascript(newValue);
+        setCode(newValue);
     };
 
     return (
         <>
-        <div className="editorContainer" style={{ height: '250px', width: '100%' }}>
-            <EditorTopbar spinnerNeeded={runningCode} 
-            snippets={filteredSnippets} run={JSrun} language='JavaScript' />
-            <EditorComponent code={javascript} 
-            onChange={onChangeJavascript} language={'javascript'}  />
-        </div>
+            <div className="editorContainer" style={{ height: '250px', width: '100%' }}>
+                <EditorTopbar spinnerNeeded={runningCode}
+                    snippets={filteredSnippets} 
+                    run={JSrun} language='JavaScript'
+                    defaultCode={defaultCode}
+                    setCode={setCode}
+                    />
+                <EditorComponent code={code}
+                    onChange={onChangeJavascript} language={'javascript'} />
+            </div>
             {isoutput && outputComponent()}
             {isError && errorComponent()}
         </>
