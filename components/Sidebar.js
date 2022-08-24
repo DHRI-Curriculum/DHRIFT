@@ -62,7 +62,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                                         cursor: currentPage === index + 1 ? 'default' : 'pointer'
                                     }}
                                     onClick={() => handlePageChange(event, index + 1)}
-                                    primary={page} />
+                                    primary={index + 1 + ". " + page} />
                             </ListItem>
                         ))}
                     </List>
@@ -98,12 +98,10 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                                 <ListItemText
                                     style={{
                                         color: currentPage === index + 1 ? 'black' : 'white',
-                                        // fontSize: '2rem',
-                                        // fontWeight: 'bold',
                                         cursor: currentPage === index + 1 ? 'default' : 'pointer'
                                     }}
                                     onClick={() => handlePageChange(event, index + 1)}
-                                    primary={page} />
+                                    primary={index + 1 + ". " + page} />
                             </ListItem>
                         ))}
                     </List>
