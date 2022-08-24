@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <CssBaseline />
       <ThemeProvider>
-        <StyledEngineProvider injectFirst>
+        <StyledEngineProvider>
           <Header
             props={pageProps} />
           <main className='container'>
