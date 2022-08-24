@@ -1,17 +1,18 @@
 import Slide from '@mui/material/Slide';
-import CodeEditorComponent from './PythonEditorComponent';
+// import CodeEditorComponent from './PythonEditorComponent';
+import InterpreterComponent from './InterpreterComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState, useEffect, useRef } from 'react';
-
+import yaml from '../../config.yml'
 
 export default function SlideoutEditor(props) {
     const [editorSlider, setEditorSlider] = useState(false);
     const [text, setText] = useState('');
 
     useEffect(() => {
-         setText(window.localStorage.getItem('code') || '');
+        setText(window.localStorage.getItem('code') || '');
     }, [])
 
 
@@ -23,7 +24,7 @@ export default function SlideoutEditor(props) {
     const handleEditorSlider = () => {
         setEditorSlider(!editorSlider);
     }
-
+    if (yaml.slideout.enabled) {
         return (
             <div>
                 <div
@@ -73,9 +74,14 @@ export default function SlideoutEditor(props) {
                                     color: 'white',
                                 }} />
                         </Button>
-                        <CodeEditorComponent minLines={10} onChange={commitCode} defaultCode={text} />
+                        {/* <CodeEditorComponent minLines={10} onChange={commitCode} defaultCode={text}
+                        language={yaml.slideout.language} /> */}
+                        <InterpreterComponent language={ yaml.slideout.language } onChange={commitCode} defaultCode={text} {...props} />
                     </div>
                 </Slide>
             </div>
         )
+    }else{
+        return null;
     }
+}

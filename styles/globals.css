@@ -1,9 +1,4 @@
-@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
-@import 'https://fonts.googleapis.com/css?family=Lato:400,700';
-
-@import 'https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700';
-
-
+/* necessary comment */
 :root {
   /* default theme */
   --background: rgb(231, 235, 240);
@@ -59,6 +54,25 @@ a {
   color: #45b1c1;
 }
 
+em {
+  font-style: italic;
+}
+
+/* scrollbar  */
+
+*::-webkit-scrollbar {
+  width: 1em;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+background-color: darkgrey;
+outline: 1px solid slategrey;
+}
+
 blockquote {
   background: var(--background);
   border-left: 10px solid #ccc;
@@ -92,9 +106,17 @@ code {
   word-wrap: break-word;
   width: 100%;
   overflow-x: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
+
+/* code {
+  background-color: #f5f5f5;
+  color: #da1039;
+  font-size: .875em;
+  font-weight: 400;
+  padding: 0.25em 0.5em 0.25em;
+} */
 
 .hljs {
   padding: 0;
@@ -211,8 +233,8 @@ img {
   color: var(--foreground);
   font-size: 22px;
   text-align: justify;
-  /* border: #e74c3c 3px solid;
-  box-shadow: #e74c3c 8px 8px 0px; */
+  border: #e74c3c 3px solid;
+  box-shadow: #e74c3c 8px 8px 0px;
   padding: 20px;
 }
 
@@ -245,6 +267,7 @@ header {
   flex-direction: row;
   justify-content: space-evenly;
   margin-bottom: 40px;
+  background-color: white !important;
 }
 
 .topBar-container {
@@ -459,9 +482,9 @@ header a:hover {
   flex-direction: column;
   align-items: left;
   width: 100%;
-  height: 100%;
   background-color: black;
-  /* margin-bottom: 20px; */
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .JS-console {
@@ -601,13 +624,30 @@ header a:hover {
 
 .page-content h1 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  padding: 10px !important;
+  border: #5d55a5;
+  border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px; 
 }
 
 .page-content h2 {
   font-size: 1.6rem;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   margin-top: 30px;
+  padding: 10px !important;
+  border: #5d55a5;
+  border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px;
+}
+
+.page-content h3 {
+  font-size: 1.4rem;
+  margin-top: 30px;
+  padding: 5px !important;
+  margin-bottom: 10px;
 }
 
 .page-content p {
@@ -731,6 +771,8 @@ table, th, td {
 .quiz {
   background-color: var(--background);
   padding: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .quiz label {
@@ -741,8 +783,14 @@ table, th, td {
   margin-top: 20px !important;
   padding: 5px !important;
   border: 2px solid #d5222c !important;
-  background: white;
-  box-shadow: #d5222c 8px 8px 0px; 
+  border-radius: 0% !important;
+  background: var(--background-page) !important;
+  box-shadow: #d5222c 8px 8px 0px !important;
+  color: #000000 !important;
+}
+
+.quizButton:hover {
+  box-shadow: none !important;
 }
 
 /* Boxes */

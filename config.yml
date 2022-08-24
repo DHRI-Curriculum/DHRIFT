@@ -12,3 +12,6 @@ Digital Humanities (ODH), DHRI's curriculum, which was originally developed for 
 was revised in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic. 
 While the curriculum has always been available openly on GitHub, this site creates a more 
 user-friendly and functional interface that is open and free for public use."
+slideout: 
+  enabled: true
+  language: python

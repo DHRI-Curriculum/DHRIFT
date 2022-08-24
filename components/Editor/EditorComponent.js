@@ -7,9 +7,10 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools"
 import { useRef } from "react";
 
-export default function CodeEditorComponent({code, onChange, maxLines=null, minLines=4, language="python", debounce=null, height='100%', width='100%'}) {
+export default function CodeEditorComponent({code, onChange, maxLines=null, minLines=4, debounce=null, width='100%', ...props}) {
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
+  const height = props.height || '250px';
+  const language = props.language.toLowerCase() || 'python';
     return (
     <AceEditor
     className="editor"
@@ -21,7 +22,7 @@ export default function CodeEditorComponent({code, onChange, maxLines=null, minL
           value={code}
           fontSize={22}
           width="auto"
-          height="100%"
+          height="height"
           minLines={minLines}
           maxLines={maxLines}
           showPrintMargin={false}
