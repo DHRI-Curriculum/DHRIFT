@@ -34,6 +34,7 @@
     "javascript-terminal": "^1.1.1",
     "jquery": "^3.6.0",
     "jquery.terminal": "^2.31.1",
+    "js-beautify": "^1.14.6",
     "js-yaml": "^4.1.0",
     "jszip": "^3.9.1",
     "markdown-to-jsx": "^7.1.7",

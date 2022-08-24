@@ -12,6 +12,12 @@ import EditorWithTabsComponent from './Editor/EditorWithTabs';
 import InterpreterComponent from './Editor/InterpreterComponent';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
+import HTMLEditorComponent from './Editor/HTMLEditorComponent';
+import { renderToStaticMarkup } from 'react-dom/server';
+import he from 'he';
+var beautify = require('js-beautify');
+var beautifyHTML = require('js-beautify').html;
+
 
 const Code = ({ className, children }) => {
     const [isShown, setIsShown] = useState(false);
@@ -27,11 +33,11 @@ const Code = ({ className, children }) => {
                 onMouseEnter={() => setIsShown(true)}
                 onMouseLeave={() => setIsShown(false)}>
                 <pre className={className + ' ' + language}>
-                    {isShown && (
+                    {/* {isShown && (
                         <>
                             {language && <span className="language">{getLang}</span>}
                         </>
-                    )}
+                    )} */}
                     <code className={className}
                         dangerouslySetInnerHTML={{ __html: highlighted.value }}>
                     </code>
@@ -69,33 +75,28 @@ const Imager = ({ className, ...props }) => {
 }
 
 const CodeEditor = ({ children, ...props }) => {
+    var codeText
     if (children) {
         if (children.length > 0) {
             if (typeof children[0] === 'object') {
-                console.log('children', children)
-                const codeText = children[0].props.children.join('');
-                return (
-                    <div>
-                        <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
-                    </div>
-                )
-            }else{
-                const codeText = children.join('');
-                return (
-                    <div>
-                        <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
-                    </div>
-                )
+                codeText = children[0].props.children.join('');
             }
-        } else {
-            console.log('HERE', children)
-            const codeText = children.join('');
+            else {
+                codeText = children.join('');
+            }
             return (
                 <div>
                     <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
                 </div>
             )
+        } else {
+            codeText = children.join('');
         }
+        return (
+            <div>
+                <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
+            </div>
+        )
     } else {
         return (
             <div>
@@ -141,38 +142,37 @@ const Quiz = ({ className, children }) => {
     )
 }
 
-const Boxed = ({ children, ...props }) => {
-    var color = props.color || '#d5222c';
-    return (
-        <div className="boxed"
-        style= {{
-            padding: '1rem',
-            border: '3px solid ' + color,
-            boxShadow: color + ' 8px 8px 0px' 
-        }}>
-            {children}
-        </div>
-    )
-}
+const HTMLEditor = ({ className, children }) => {
+    var html, css;
+    for (var i = 0; i < children.length; i++) {
+        if (children[i].type === 'html') {
+            // react components converted to a string
+            html = renderToStaticMarkup(children[i].props.children);
+            html = beautifyHTML(html, { indent_size: 2 });
+        }
+        if (children[i].type === 'javascript') {
+            var javascript = [];
+            // javascript = renderToStaticMarkup(children[i].props.children.join(''));
+            // for line in children[i].props.children {
+            for (var j = 0; j < children[i].props.children.length; j++) {
+                // render as pure text instead of react components
+                var line = renderToStaticMarkup(children[i].props.children[j]);
+                line = line.replace(/<\/?code>/g, '');
+                line = he.decode(line);
+                if (line !== undefined) {
+                    javascript.push(line);
+                }
+            }
+            javascript = beautify.js(javascript.join(''), { indent_size: 2 });
 
-const ClicktoReveal = ({ children, ...props }) => {
-    // use click hook to reveal
-    const [isShown, setIsShown] = useState(false);
-    var color = props.color || '#9abc4f';
-    const beforeReveal = (
-        <div>{children[0]} (click to reveal)</div>
-    )
+        }
+        if (children[i].type === 'css') {
+            css = renderToStaticMarkup(children[i].props.children.join(''));
+        }
+    }
     return (
-        <div className="boxed"
-        style= {{
-            padding: '1rem',
-            border: '3px solid ' + color,
-            boxShadow: color + ' 8px 8px 0px',
-            marginTop: '2rem',
-            cursor: 'pointer'
-        }}
-        onClick={() => setIsShown(!isShown)}>
-            {isShown ? children : beforeReveal}
+        <div>
+            <HTMLEditorComponent defaultCode={html} defaultJS={javascript} defaultCSS={css} />
         </div>
     )
 }
@@ -212,11 +212,9 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                     Terminal,
                     EditorWithTabs,
                     JSTerminal,
-                    Boxed,
-                    Reveal: ClicktoReveal,
+                    HTMLEditor
                 }
 
             })
-
     );
 }

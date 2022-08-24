@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState, useContext } from "react";
-
-import ReactHtmlParser from "react-html-parser";
+import React, { useRef, useEffect, useState, useContext } from "react";
+import ReactHtmlParser, { Options } from "react-html-parser";
+// import convertHtmlToReact from '@hedgedoc/html-to-react';
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
     () => import("./EditorComponent"),
@@ -12,39 +12,48 @@ const Frame = dynamic(
 );
 import { FrameContextConsumer } from "react-frame-component";
 import "allotment/dist/style.css";
-import { Console, Hook, Unhook } from 'console-feed'
-import Button from '@mui/material/Button';
+import { Console, Hook, Unhook } from 'console-feed';
+import { html } from "js-beautify";
+import { ReactDOM } from "react";
 
 
-export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
-    defaultJS = '// Write Javascript Here' }) {
-    const [code, setCode] = useState(defaultCode);
-    const [css, setCss] = useState(defaultCSS);
-    const [javascript, setJavascript] = useState(defaultJS);
+export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
+    defaultJS = '// Write Javascript Here' }, includeFrames = '[html, css, javascript]') {
     const [output, setOutput] = useState([]);
     const [frameKey, setFrameKey] = useState(Math.random());
+    const [outputKey, setOutputKey] = useState(Math.random());
     const [frameReady, setFrameReady] = useState(false);
     const [frameDoc, setFrameDoc] = useState(null);
     const [frameWindow, setFrameWindow] = useState(null);
-    const [consoleOutput, setConsoleOutput] = useState([]);
     const [logs, setLogs] = useState([]);
     const [contentRef, setContentRef] = useState(null);
     const [toShow, setToShow] = useState(false);
-
+    const [initialContent, setInitialContent] = useState('<!DOCTYPE html><html><head></head><body><div id="mountHere"></div></body></html>');
+    const frameScripts = useRef([]);
+    const javascript = useRef(defaultJS);
+    const code = useRef(defaultCode);
+    const css = useRef(defaultCSS);
     const consoleRef = useRef(null);
-    
+
+
+    const consoleHook = () => {
+        setTimeout(() => {
+            setToShow(true);
+        }, 20);
+        Hook(
+            consoleRef.current,
+            (log) => setLogs((currLogs) => [...currLogs, log]),
+            false
+        )
+        return () => Unhook(consoleRef.current);
+    }
+
     useEffect(() => {
         if (frameReady) {
-            setTimeout(() => {
-                setToShow(true);}, 20);
-            Hook(
-                consoleRef.current,
-                (log) => setLogs((currLogs) => [...currLogs, log]),
-                false
-            )
-            return () => Unhook(consoleRef.current);
+            consoleHook();
+            runAll();
         }
-    }, [frameReady])
+    }, [frameReady]);
 
 
     // all this below can be wrapped into useAllotment hook or smth like that
@@ -71,19 +80,46 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
     }
     // end of hook
 
+    const transform = (node, index) => {
+        if (node.type == 'script') {
+            var data, scriptContent;
+            if (node.children[0] && node.children[0].data) {
+                data = node.children[0].data;
+            }
+            // use AJAX to get script src and then add to frameScripts
+            if (node.attribs && node.attribs.src) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', node.attribs.src, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            scriptContent = xhr.responseText;
+                            frameScripts.current.push(scriptContent);
+                        }
+                    }
+                }
+                xhr.send();
+            }
+        }
+    };
+
+    const options = {
+        transform,
+    };
+
     const doParsing = (code) => {
-        const result = ReactHtmlParser(code);
+        const result = ReactHtmlParser(code, options);
         setOutput(result);
     };
 
     const onChangeHTML = (newValue) => {
-        setCode(newValue);
-        doParsing(newValue);
+        code.current = newValue;
+        runAll();
     };
 
     const outputComponent = (output) => {
         return (
-            <div>
+            <div key={outputKey}>
                 {output.map((item, index) => {
                     if (typeof item === 'string') {
                         return
@@ -96,27 +132,42 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
         )
     }
 
-    const onChangeCss = (newValue) => {
-        setCss(newValue);
-    };
-
     const frameEval = (allCode) => {
         if (frameWindow) {
             try {
-                frameWindow.eval(allCode);
-            }catch(e){
+                const codeToEval = frameScripts.current.join('\n') + '\n' + allCode;
+                frameWindow.eval(codeToEval);
+
+            } catch (e) {
                 frameWindow.console.error(e);
             }
         }
     }
 
-    const onChangeJavascript = (newValue) => {
-        setJavascript(newValue);
-        frameEval(newValue);
+    const onChangeCss = (newValue) => {
+        css.current = newValue;
+        setTimeout(() => {
+            runAll();
+        }, 1000);
     };
 
+    const onChangeJavascript = (newValue) => {
+        javascript.current = newValue;
+        runAll();
+    };
+
+    const runAll = () => {
+        if (frameWindow && frameDoc) {
+            setOutputKey(Math.random());
+            doParsing(code.current);
+            setTimeout(() => {
+                frameEval(javascript.current);
+            }, 2000);
+        }
+    }
+
     const iFrameStyle = <style>
-        {css}
+        {css.current}
     </style>;
 
     const frameHead = [iFrameStyle];
@@ -132,7 +183,7 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
                     ref={contentRef}
                     key={frameKey}
                     head={frameHead}
-                    initialContent='<!DOCTYPE html><html><head></head><body><div id="mountHere"></div></body></html>'
+                    initialContent={initialContent}
                     mountTarget='#mountHere'
                     style={{
                         width: "100%",
@@ -147,22 +198,7 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
                                 setFrameWindow(window);
                                 setFrameDoc(document);
                                 setFrameReady(true);
-
                                 consoleRef.current = window.console;
-
-                                // window.console = {
-                                    // log: (...args) => {
-                                    //     setConsoleOutput(args);
-                                    // }
-                                //     error: (...args) => {
-                                //         console.log(args);
-                                // }}}
-                                // window.console.error = (...args) => {
-                                //     window.console.log(...args);
-                                // }
-
-
-
                                 return (
                                     <>
                                         {outputComponent(output)}
@@ -193,37 +229,39 @@ export default function HTMLEditor({ defaultCode = "<!-- Write your HTML here --
 
     const HtmlPane = () => {
         return (
-            <EditorComponent code={code} onChange={onChangeHTML} language={'html'} />)
+            <EditorComponent code={code.current} onChange={onChangeHTML} language={'html'} debounce={1000} />)
     }
     const CssPane = () => {
-        return (<EditorComponent code={css} onChange={onChangeCss} language={'css'} />)
+        return (<EditorComponent code={css.current} onChange={onChangeCss} language={'css'} />)
     }
     const JavascriptPane = () => {
-        return (<EditorComponent code={javascript} onChange={onChangeJavascript} language={'javascript'} debounce={1000} />)
+        return (<EditorComponent code={javascript.current} onChange={onChangeJavascript} language={'javascript'} debounce={1000} />)
     }
 
     const panes = [HtmlPane, CssPane, JavascriptPane, FramePane, ConsolePane];
 
+
     return (
-        <div style={{ height: '80vh', width: '50vw' }}>
-            <Allotment minSize={90} vertical >
+        <div style={{ height: '80vh', width: '100%' }}>
+            <Allotment minSize={90} >
                 <Allotment.Pane minSize={100}>
-                    <Allotment>
-                        <Allotment.Pane minSize={40}>
+                    <Allotment vertical>
+                        <Allotment.Pane minSize={20}>
                             {HtmlPane()}
                         </Allotment.Pane>
-                        <Allotment.Pane>
+                        <Allotment.Pane minSize={10}>
                             {CssPane()}
+                        </Allotment.Pane>
+                        <Allotment.Pane >
+                            {JavascriptPane()}
                         </Allotment.Pane>
                     </Allotment>
                 </Allotment.Pane>
                 <Allotment.Pane>
                     <Allotment>
-                        <Allotment.Pane minSize={20}>
-                            {JavascriptPane()}
-                        </Allotment.Pane>
                         <Allotment vertical>
-                            <Allotment.Pane>
+                            <Allotment.Pane minSize={140}
+                            >
                                 {FramePane()}
                             </Allotment.Pane>
                             <Allotment.Pane className={'JS-console'}>
