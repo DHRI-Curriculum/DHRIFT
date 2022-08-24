@@ -4,7 +4,6 @@ import matter from 'gray-matter'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
-import FrontPage from '../../components/FrontPage'
 import Sidebar from '../../components/Sidebar'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -12,6 +11,8 @@ import Presentation from '../../components/Presentation';
 import SlideoutEditor from '../../components/Editor/SlideoutEditor'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import yaml from '../../config.yml'
+import Skeleton from '@mui/material/Skeleton';
 
 
 export default function WorkshopPage({
@@ -180,7 +181,21 @@ export default function WorkshopPage({
       <div className="card-page">
         <div className="workshop-container">
           {PaginationComponent(currentPage)}
-          {currentContent}
+          {currentContentLoaded ? (
+            currentContent
+          ) : (
+
+            <div className='skeleton-container'
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <Skeleton variant="rect" width={'100%'} height={'50px'} />
+              {
+                Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+            </div>
+          )}
           {PaginationComponent(currentPage)}
           <SlideoutEditor />
         </div>
