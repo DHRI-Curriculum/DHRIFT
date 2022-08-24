@@ -4,6 +4,7 @@ import matter from 'gray-matter'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
+import FrontPage from '../../components/FrontPage';
 import Sidebar from '../../components/Sidebar'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -86,6 +87,7 @@ export default function WorkshopPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState(htmlContent(content));
   const [currentContent, setCurrentContent] = useState([]);
+  const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
   const [currentHeader, setCurrentHeader] = useState(null);
 
@@ -106,12 +108,15 @@ export default function WorkshopPage({
   useEffect(() => {
     setPages(htmlContent(content));
     setCurrentPage(1);
-    setCurrentContent(frontPageContent);
     const urlParams = new URLSearchParams(window.location.search);
     const page = Number(urlParams.get('page'));
     if (page) {
       setCurrentPage((page));
       setCurrentContent(pages[page - 1]);
+      setCurrentContentLoaded(true);
+    } else {
+      setCurrentContent(pages[0]);
+      setCurrentContentLoaded(true);
     }
   }, [slug]);
 
