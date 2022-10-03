@@ -267,7 +267,7 @@ header {
   flex-direction: row;
   justify-content: space-evenly;
   margin-bottom: 40px;
-  background-color: white !important;
+  background-color: var(--background-page) !important;
 }
 
 .topBar-container {
@@ -821,7 +821,9 @@ table, th, td {
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
-  z-index: 1;
+  z-index: 12;
+  position: sticky;
+  top: 5px;
 }
 
 .drawer-left> .MuiPaper-root {
