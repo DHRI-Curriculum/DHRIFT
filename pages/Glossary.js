@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import marked from 'marked'
+import {marked} from 'marked'
 import { useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -41,6 +41,7 @@ export default function Glossary({ glossary }) {
     termsAndDefs.forEach(termAndDefinition => {
         let term = termAndDefinition[0]
         let definition = marked(termAndDefinition[1])
+        // let definition = termAndDefinition[1]
         // regularize first letter
         let firstLetter = term.charAt(0).toUpperCase()
         let termAndDefinitionArray = { term: term, definition: definition }
@@ -108,6 +109,7 @@ export default function Glossary({ glossary }) {
             if (termAndDefinition) {
                 const term = termAndDefinition[0]
                 const definition = marked(termAndDefinition[1])
+                // const definition = termAndDefinition[1]
                 setCurrentGlossaryPage(
                     <div className="glossary-page">
                         <h2>{term}</h2>
