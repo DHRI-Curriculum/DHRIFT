@@ -109,7 +109,7 @@ Note the way you interact with Python at the prompt. After entering an expressio
 
 The REPL is useful for quick tests and, later, can be used for exploring and debugging your programs interactively. As mentioned, you might consider it a kind of playground for testing and experimenting with Python expressions.
 
-<Download files='10_index.html, 10_script.js, 10_styles.css, 10_poem.html, 10_poem.css, 10_poem.js, poem.json'> <br/>
+<!-- <Download files='10_index.html, 10_script.js, 10_styles.css, 10_poem.html, 10_poem.css, 10_poem.js, poem.json'> <br/> -->
 
 ## Opening the REPL in the Terminal
 
