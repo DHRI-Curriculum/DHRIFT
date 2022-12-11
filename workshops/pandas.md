@@ -36,6 +36,9 @@ dependencies:
         jupyter-notebooks:
             excerpt: (recommended) This workshop uses Jupyter Notebooks to process the Python commands in a clear and visual way. Anyone who wants to follow along in the workshop on data analysis with Python and Pandas should read this very short introduction to how to use Notebooks.
 
+authors:
+    current: 'Rebecca Krisel'
+
 readings:
     - "[A Beginner’s Tutorial to Jupyter Notebooks](https://towardsdatascience.com/a-beginners-tutorial-to-jupyter-notebooks-1b2f8705888a)"
     - "[Short Introduction to Jupyter Notebooks](https://curriculum.dhinstitutes.org/insights/short-introduction-to-jupyter-notebooks/)"
