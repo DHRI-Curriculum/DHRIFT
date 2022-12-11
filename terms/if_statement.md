@@ -1,4 +1,3 @@
-
 # if-Statement
 
 If-statements check whether a statement meets a certain condition, and are used to write code that "makes decisions". They start with `if` followed by a condition which is evaluated to be either true or false. If it's true, the block after the colon (`:`) is run. If it's false, the block under the `else:` is run. 

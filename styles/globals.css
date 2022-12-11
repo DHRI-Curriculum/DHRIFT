@@ -882,3 +882,10 @@ footer {
 .funding-text {
   color: #333
 }
+
+/* Glossary */
+
+/* hide .definition first h1  */
+.definition h1:first-child {
+  display: none;
+}

@@ -149,7 +149,7 @@ export default function FrontPage(currentFile, allFiles) {
                   )
                 }
                 return (
-                  <div>
+                  <div key={key}>
                     {Object.keys(item).map(key => {
                       const term = ConvertMarkdown(item[key])
                       return (

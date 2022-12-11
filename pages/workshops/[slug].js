@@ -26,6 +26,7 @@ export default function WorkshopPage({
 
   const router = useRouter()
   const { slug } = router.query
+  console.log(slug)
   const currentFile = workshops.find((workshop) => workshop.slug === slug)
   const title = currentFile.title
   const content = currentFile.content

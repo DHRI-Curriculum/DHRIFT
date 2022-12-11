@@ -109,6 +109,8 @@ Note the way you interact with Python at the prompt. After entering an expressio
 
 The REPL is useful for quick tests and, later, can be used for exploring and debugging your programs interactively. As mentioned, you might consider it a kind of playground for testing and experimenting with Python expressions.
 
+<!-- <Download files='10_index.html, 10_script.js, 10_styles.css, 10_poem.html, 10_poem.css, 10_poem.js, poem.json'> <br/> -->
+
 ## Opening the REPL in the Terminal
 
 Although we have provided you with an emulated REPL environment to work with here in your browser, you can also begin an interactive session locally in your own computer's terminal or command prompt. If you have Python installed, you simply need to open your terminal and type:

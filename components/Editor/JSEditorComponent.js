@@ -125,7 +125,6 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
     }
 
     var writeln = function (str) {
-        if (!str) str = "";
         outputRef.current += JSoutput(str) + "\n";
     }
 
@@ -136,13 +135,23 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
         setRunningCode(true);
         outputRef.current = "";
         try {
+            var logged = [];
+            // store logged values in logged array
+            var log = function (value) {
+                logged.push(value);
+
+            };
             // capture console.log output 
             console.oldLog = console.log;
-            console.log = function (value) {
-                console.oldLog(value);
-                return value;
-            };
+            console.log = log;
+           
             var result = eval(code);
+
+            writeln('Console.log:');
+            for (var i = 0; i < logged.length; i++) {
+                writeln(logged[i]);
+            }
+            writeln('Returned:');
             writeln(result);
             forceUpdate();
             setIsoutput(true);
@@ -162,7 +171,7 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
 
     return (
         <>
-            <div className="editorContainer" style={{ height: '250px', width: '100%' }}>
+            <div className="editorContainer" style={{ width: '100%' }}>
                 <EditorTopbar spinnerNeeded={runningCode}
                     snippets={filteredSnippets} 
                     run={JSrun} language='JavaScript'
@@ -170,7 +179,9 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
                     setCode={setCode}
                     />
                 <EditorComponent code={code}
-                    onChange={onChangeJavascript} language={'javascript'} />
+                    onChange={onChangeJavascript} language={'javascript'}
+                    {...props}
+                    />
             </div>
             {isoutput && outputComponent()}
             {isError && errorComponent()}
