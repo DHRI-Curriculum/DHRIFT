@@ -63,7 +63,7 @@ We will go deeper into Jupyter Notebook in the following section. For now, let�
 
 [Download](https://drive.google.com/drive/folders/17cAPHux4ileepqNce_5FdYoQaopK3wO5?usp=sharing) the “refugee-arrivals-by-destination” CSV file and save it in the “pandas_workshop” folder on your Desktop. 
 
-We’ve also saved all of the code for this section in a [Jupyter Notebook file](https://github.com/GCDigitalFellows/intro-pandas-dri-2022/blob/main/PandasWorkshop.ipynb). You should download it and save it in your “pandas_workshop” folder on your Desktop. In this file you will find all of the workshop commands and the expected outputs. If you ever feel stuck or can’t seem to be able to advance in the workshop, you can open this file and see how we did it. 
+We’ve also saved all of the code for this section in a [Jupyter Notebook file](https://drive.google.com/drive/folders/1wWfkCOdx_ynex7W9Q_hh-WvSdM2wy3kB?usp=sharing). You should download it and save it in your “pandas_workshop” folder on your Desktop. In this file you will find all of the workshop commands and the expected outputs. If you ever feel stuck or can’t seem to be able to advance in the workshop, you can open this file and see how we did it. 
 
 For the best possible experience, we suggest/encourage you to:
 
