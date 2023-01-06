@@ -6,10 +6,11 @@ const withMDX = require('@next/mdx')({
 
 const isGitHub = process.env.GITHUB_ACTIONS === "true";
 console.log(`Running in ${isGitHub ? "GitHub Actions" : "local"} mode`);
+var repoName;
 if (isGitHub) {
-    var repoName = process.env.GITHUB_REPOSITORY.split('/')[1];
+    repoName = process.env.GITHUB_REPOSITORY.split('/')[1];
 }else{
-    var repoName = 'dhrift';
+    repoName = 'dhrift';
 }
 console.log(`Repo name: ${repoName}`);
 const build = process.env.NODE_ENV === "production";
