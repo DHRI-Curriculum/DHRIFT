@@ -1,4 +1,4 @@
-import ReactTerminal from 'react-terminal-component';
+// import ReactTerminal from 'react-terminal-component';
 import {
   EmulatorState, OutputFactory, CommandMapping,
   EnvironmentVariables, FileSystem, History,
@@ -15,21 +15,21 @@ export default function TerminalComponent() {
         })
       });
 
-      return(
-          <ReactTerminal
-          theme={{
-            background: '#141313',
-            promptSymbolColor: '#6effe6',
-            commandColor: '#fcfcfc',
-            outputColor: '#fcfcfc',
-            errorOutputColor: '#ff89bd',
-            fontSize: '1.1rem',
-            spacing: '1%',
-            fontFamily: 'monospace',
-            width: '100%',
-            minHeight: '5vh',
-            padding: '10px',
-          }}
-        emulatorState={customState}/>
-      )
+      // return(
+      //     <ReactTerminal
+      //     theme={{
+      //       background: '#141313',
+      //       promptSymbolColor: '#6effe6',
+      //       commandColor: '#fcfcfc',
+      //       outputColor: '#fcfcfc',
+      //       errorOutputColor: '#ff89bd',
+      //       fontSize: '1.1rem',
+      //       spacing: '1%',
+      //       fontFamily: 'monospace',
+      //       width: '100%',
+      //       minHeight: '5vh',
+      //       padding: '10px',
+      //     }}
+      //   emulatorState={customState}/>
+      // )
 }

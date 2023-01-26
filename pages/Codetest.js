@@ -5,7 +5,7 @@ import FileList from '../components/Editor/FileList';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
 import { height } from '@mui/system';
 import TerminalComponent from '../components/TerminalComponent';
-import HTMLEditor from '../components/Editor/HTMLEditorComponent';
+// import HTMLEditor from '../components/Editor/HTMLEditorComponent';
 
 export default function Test() {
 

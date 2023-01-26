@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import ReactHtmlParser, { Options } from "react-html-parser";
+// import ReactHtmlParser, { Options } from "react-html-parser";
 // import convertHtmlToReact from '@hedgedoc/html-to-react';
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
@@ -108,7 +108,7 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     };
 
     const doParsing = (code) => {
-        const result = ReactHtmlParser(code, options);
+        // const result = ReactHtmlParser(code, options);
         setOutput(result);
     };
 
