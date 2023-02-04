@@ -124,7 +124,11 @@ export default function WorkshopPage({
 
   // if pages changes, set current content to the first page
   useEffect(() => {
+    if(currentPage){
+      setCurrentContent(pages[currentPage - 1]);
+    }else{
     setCurrentContent(pages[0]);
+    }
   }, [pages])
 
   useEffect(() => {

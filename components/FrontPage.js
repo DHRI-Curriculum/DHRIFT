@@ -11,7 +11,6 @@ export default function FrontPage(currentFile, allFiles) {
   const insights = allFiles.insights
   const authors = allFiles.authors
 
-
   const formattedDependencies = Object.keys(dependencies).map(key => {
     const items = dependencies[key]
     const addLinktoItems = Object.keys(items).map(key => {
