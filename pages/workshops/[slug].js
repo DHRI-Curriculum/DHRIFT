@@ -26,7 +26,6 @@ export default function WorkshopPage({
 
   const router = useRouter()
   const { slug } = router.query
-  console.log(slug)
   const currentFile = workshops.find((workshop) => workshop.slug === slug)
   const title = currentFile.title
   const content = currentFile.content
@@ -84,15 +83,14 @@ export default function WorkshopPage({
     )
   }
 
+
   // set defaults 
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState(htmlContent(content));
-  const [currentContent, setCurrentContent] = useState([]);
+  const [currentContent, setCurrentContent] = useState(pages[0]);
   const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
   const [currentHeader, setCurrentHeader] = useState(null);
-
-
 
 
   // list of page titles and highlight current page
@@ -116,11 +114,18 @@ export default function WorkshopPage({
       setCurrentContent(pages[page - 1]);
       setCurrentContentLoaded(true);
     } else {
-      setCurrentContent(pages[0]);
+      console.log('no page')
+      setPages(htmlContent(content));
+      setCurrentPage(1);
+      console.log("content: ", content)
       setCurrentContentLoaded(true);
     }
   }, [slug]);
 
+  // if pages changes, set current content to the first page
+  useEffect(() => {
+    setCurrentContent(pages[0]);
+  }, [pages])
 
   useEffect(() => {
     // check if current content has changed and get the current h1
