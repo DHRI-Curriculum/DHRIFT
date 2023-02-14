@@ -16,6 +16,26 @@ import yaml from '../../config.yml'
 import Skeleton from '@mui/material/Skeleton';
 
 
+// This code exports a React functional component WorkshopPage, which displays workshop information as a multi-page presentation. The component receives data for workshops, guides, insights, authors, and uploads as its props.
+
+// The component uses the Next.js useRouter hook to access the URL query parameters and extract the slug of the workshop being displayed. The component then uses this slug to find the relevant workshop information from the workshops prop.
+
+// The component defines the following state variables:
+
+// currentPage: the current page number of the presentation.
+// pages: an array of React elements, each representing a page of the presentation.
+// currentContent: the React element representing the current page of the presentation.
+// currentContentLoaded: a flag indicating whether the current content has finished loading.
+// pageTitles: an array of strings, each representing the title of a page of the presentation.
+// currentHeader: the header of the current page of the presentation.
+
+// The component uses the useEffect hook to:
+// initialize the pageTitles and currentHeader state variables based on the contents of the pages array.
+// reset the presentation state when the URL slug changes.
+// update the currentContent when the pages array changes.
+// The component also contains logic for navigating between pages and switching between presentation mode and editor mode. The component renders a Container component, Button components for navigation, a SlideoutEditor component for editing, and a Skeleton component for loading animations.
+
+
 export default function WorkshopPage({
   workshops,
   guides,
@@ -114,15 +134,13 @@ export default function WorkshopPage({
       setCurrentContent(pages[page - 1]);
       setCurrentContentLoaded(true);
     } else {
-      console.log('no page')
       setPages(htmlContent(content));
       setCurrentPage(1);
-      console.log("content: ", content)
       setCurrentContentLoaded(true);
     }
   }, [slug]);
 
-  // if pages changes, set current content to the first page
+  // if pages changes, change current content
   useEffect(() => {
     if(currentPage){
       setCurrentContent(pages[currentPage - 1]);
@@ -137,7 +155,6 @@ export default function WorkshopPage({
       setCurrentHeader(currentContent.props);
     }
   }, [currentContent])
-
 
   const PaginationComponent = (currentPage) => {
     return (
@@ -188,7 +205,7 @@ export default function WorkshopPage({
 
   return (
     <Container
-      maxWidth="xl"
+      maxWidth="lg"
       style={{
         display: 'flex',
       }}

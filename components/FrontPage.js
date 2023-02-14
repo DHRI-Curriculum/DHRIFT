@@ -82,7 +82,6 @@ export default function FrontPage(currentFile, allFiles) {
 
   const formattedObjects = allObjects.
     filter(item => item !== null).map(obj => {
-
       return (
         <div className="frontpage-item" key={obj.title}>
           <h2>{obj.title}</h2>
@@ -99,6 +98,7 @@ export default function FrontPage(currentFile, allFiles) {
                 )
                 }
               if (obj.title === 'authors') {
+
                 const author = authors.find(author => author.title === item)
                 let authorPath = `/authors/${author.slug}`
                 let authorStatus = key.charAt(0).toUpperCase() + key.slice(1)

@@ -23,11 +23,11 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
 
   const filesList = files.map((file, index) => {
     const color1 = randomColor({
-      // luminosity: 'light',
+      luminosity: 'light',
       count: 1,
     })[0]
     const color2 = randomColor({
-      // luminosity: 'dark',
+      luminosity: 'light',
       count: 1,
     })[0]
 
@@ -83,7 +83,7 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Grid container
-        className='paperWorkshops'>
+        className='drawerWorkshops'>
         <Grid item md={3}
           className='paperGrid'
           
@@ -91,12 +91,6 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
           {filesList}
         </Grid>
       </Grid>
-
-      {/* <div className='paperWorkshops'>
-        <div className='paperGrid'>
-        {filesList}
-        </div>
-      </div> */}
     </Box>
 
 

@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
         <StyledEngineProvider>
           <Header
             props={pageProps} />
-          <main className='container'>
+          <main >
             <PyodideProvider>
               <Component {...pageProps} />
             </PyodideProvider>

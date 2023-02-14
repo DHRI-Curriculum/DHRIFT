@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import BuildIcon from '@material-ui/icons/Build';
+import Masonry from '@mui/lab/Masonry';
 
 const Workshop = dynamic(
   () => import('../components/Workshop'),
@@ -16,10 +17,7 @@ const Workshop = dynamic(
 export default function Home({ workshops }) {
 
   return (
-    <Container
-      disableGutters={true}
-      maxWidth="xl"
-    >
+    <div>
       <div className='frontpage card-page'>
         <div>
           <div className='frontpage-top'>
@@ -44,21 +42,21 @@ export default function Home({ workshops }) {
               }}
               className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
 
-            <p
-              style={{
-                margin: '30px',
-              }}
-              className='intro-text'>{yaml.intro}</p>
+            <p className='intro-text'>{yaml.intro}</p>
           </Typography>
         </div>
+        <div className='workshops-container'>
         <div className='sectionTitle'><BuildIcon /> Workshops</div>
         <div className='workshops'>
+        <Masonry columns={{ sm: 2, md: 3 }} spacing={2}>
           {workshops.map((workshop, index) => (
             <Workshop key={index} workshop={workshop} index={index} />
           ))}
+        </Masonry>
+        </div>
         </div>
       </div>
-    </Container>
+    </div>
   )
 }
 

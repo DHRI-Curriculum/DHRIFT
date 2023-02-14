@@ -2,8 +2,7 @@ import Link from 'next/link'
 import randomColor from '../node_modules/randomcolor'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Image from 'next/image'
+
 
 export default function Workshop({ workshop, index }) {
   const color1 = randomColor({
@@ -32,52 +31,27 @@ export default function Workshop({ workshop, index }) {
   }
 
   return (
-    <Card 
-    // variant="outlined" 
-    className='frontpage-card'
-    sx={{
-      borderRadius: '0px',
-      border: '#'+ getColor(index) +' 3px solid',
-      boxShadow: '#'+ getColor(index) +' 8px 8px 0px',
-    }}
-    >
+    <Card
+      // variant="outlined" 
+      className='frontpage-card'>
       <Link href={`/workshops/${workshop.slug}`} passHref>
         <CardContent className='card-content'>
-          {
-            workshop.cover_image ?
-              <div>
-                <CardMedia
-                  className='card-media'
-                  title={workshop.title}
-                >
-                  <div className='frontpage-image-container' >
-                    <Image
-                      src={workshop.cover_image}
-                      className='card-image'
-                      layout='fill'
-                      object-fit='cover'
-                      object-position='center'
-                    />
-                  </div>
-                </CardMedia>
-                <h1 className='overlay'>{workshop.title}</h1>
-                <div className='workshop-info'>
-                  {workshop.excerpt}
-                </div>
-              </div> :
-              <div>
-                <div className='card-media' style={style}>
-                  <div className='workshop-color' dangerouslySetInnerHTML={{ __html: renderColor(color1) }} />
-                </div>
-                <h1 className='overlay'>{workshop.title}</h1>
-                <div className='workshop-info-other'>
-                  {workshop.excerpt}
-                </div>
-              </div>
-          }
-          {/* <Button size="small" color="primary">
-              Start »
-            </Button> */}
+          <div>
+            <h1 className='overlay'>{workshop.title}</h1>
+            <div className='workshop-info'>
+              <ul className='objectives'>
+              {workshop['learning objectives'].map((objective, index) => {
+                if (typeof (objective) === 'object') return null 
+                if (index > 1) return null
+                return (
+                  <li key={index} className='objective'>
+                    {objective}
+                  </li>
+                )
+              })}
+              </ul>
+            </div>
+          </div>
 
         </CardContent>
       </Link>
