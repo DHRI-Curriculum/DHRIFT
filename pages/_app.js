@@ -47,7 +47,6 @@ function MyApp({ Component, pageProps }) {
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      <BackToTop />
       <Footer />
     </>
   )
