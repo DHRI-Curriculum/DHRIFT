@@ -511,6 +511,7 @@ header a:hover {
   letter-spacing: 1px;
   border-radius: 0%;
   transition: all 0.5s ease;
+  min-width: 280px;
 }
 
 .frontpage-card h1 {
