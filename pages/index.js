@@ -48,7 +48,7 @@ export default function Home({ workshops }) {
         <div className='workshops-container'>
         <div className='sectionTitle'><BuildIcon /> Workshops</div>
         <div className='workshops'>
-        <Masonry columns={{ xs: 1, sm: 1, md: 3, md: 3 }} spacing={1}>
+        <Masonry columns={{ xs: 1, sm: 1, md: 3, md: 3 }} spacing={4}>
           {workshops.map((workshop, index) => (
             <Workshop key={index} workshop={workshop} index={index} />
           ))}
