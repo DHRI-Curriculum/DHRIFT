@@ -372,7 +372,6 @@ header a:hover {
   border-radius: 0 !important;
   padding: 10px 40px !important;
   font-weight: bold !important;
-  /* font-size: 20px; */
 }
 
 .pagination>.MuiButtonBase-root:after,
@@ -530,15 +529,6 @@ header a:hover {
   rgb(93, 85, 165) 20px -20px, 
   rgb(255, 255, 255) 30px -30px 0px -3px, 
   rgb(69, 177, 193) 30px -30px;
-
-  box: rgb(69, 177, 193) 0px 0px 0px 2px, 
-  rgb(239, 59, 58) 10px -10px 0px -3px, 
-  rgb(255, 153, 51) 10px -10px, 
-  rgb(154, 188, 79) 20px -20px 0px -3px, 
-  rgb(102, 102, 102) 20px -20px, 
-  rgb(255, 255, 255) 30px -30px 0px -3px, 
-  rgb(213, 34, 44) 30px -30px;
-
   transition: all 0.5s ease;  
 }
 
@@ -843,7 +833,16 @@ td {
   z-index: 12;
   position: sticky;
   top: 5px;
+  /* background-color: var(--background-page) !important;
+  color: var(--foreground) !important;
+  border: 2px solid rgb(69, 177, 193) !important;
+  box-shadow: rgb(69, 177, 193) 8px 8px 0px;
+  border-radius: 0 !important;
+  padding: 10px 40px !important;
+  font-weight: bold !important; */
 }
+
+
 
 .drawer-left>.MuiPaper-root {
   z-index: 1;
