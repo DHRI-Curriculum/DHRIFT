@@ -14,3 +14,4 @@ npm run dev
 # Build for prod and export static website
 npm run build
 ```
+https://dhri-curriculum.github.io/DHRIFT/
