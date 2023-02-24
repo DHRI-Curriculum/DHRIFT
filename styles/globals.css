@@ -157,9 +157,7 @@ img {
 .lineUp {
   animation: 2s anim-lineUp ease-out;
   color: var(--foreground);
-  text-align: center;
   font-size: 28px;
-  text-indent: 40px;
 }
 
 @keyframes anim-lineUp {
@@ -198,55 +196,184 @@ img {
   flex-direction: row;
   align-content: center;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  margin-left: 100px;
   margin-bottom: 20px;
+  margin-top: 30px;
   flex-grow: 1;
+}
+
+.titleContainer {
+  margin-right: 50px;
 }
 
 .frontpage-logo {
   flex-basis: 300px;
+  flex-grow: 1;
 }
 
 .title {
   color: var(--foreground);
-  text-align: center;
   font-size: 36px;
   line-height: 42px;
   letter-spacing: 1px;
-  margin-left: 100px;
 }
 
-.intro-text {
+.intro {
   background-color: rgb(213, 255, 129);
   color: black;
   font-size: 22px;
   text-align: justify;
-  padding: 80px;
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   margin-top: 30px;
+}
 
+.intro-text {
+  font-size: 18px;
 }
 
 .sectionTitle {
   color: black;
   font-size: 28px;
-  text-align: center;
   font-weight: bold;
+  margin-bottom: 20px;
+  width: auto;
+}
+
+
+.workshops-container {
+  padding-left: 100px;
+  background-color: #f0f0f0ef;
+  padding-top: 30px;
+}
+
+/* frontpage cards */
+.workshops {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 30px;
+}
+
+.frontpage-card {
+  background-color: var(--background-page) !important;
+  color: var(--foreground) !important;
+  border: 4px solid #000;
+  letter-spacing: 1px;
+  border-radius: 0%;
+  transition: all 0.5s ease;
+  margin-right: 20px;
   margin-bottom: 20px;
 }
 
-.rectangle {
-  width: 50%;
-  height: 5px;
-  background: darkgray;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.overlay {
+  margin-top: 5px;
+  /* width: 100%; */
+  color: var(--foreground);
+  line-height: 40px;
+  /* text-align: center; */
+  cursor: pointer;
 }
 
-.workshopContainer {
+.frontpage-card h1 {
+  padding: 10px;
+  font-size: 2rem;
+}
+
+.frontpage-card:hover {
+  transform: translateY(-40px);
+  overflow: visible;
+  z-index: 1;
+  box-shadow: rgb(102, 102, 102) 0px 0px 0px 2px,
+    rgb(255, 255, 255) 10px -10px 0px -3px,
+    rgb(239, 59, 58) 10px -10px,
+    rgb(255, 255, 255) 20px -20px 0px -3px,
+    rgb(93, 85, 165) 20px -20px,
+    rgb(255, 255, 255) 30px -30px 0px -3px,
+    rgb(69, 177, 193) 30px -30px;
+  transition: all 0.5s ease;
+}
+
+.frontpage-card .workshop-info {
+  transition: all 0.2s ease;
+}
+
+.frontpage-card:hover .workshop-info {
+  background-color: var(--background-page);
+}
+
+.card-media {
+  cursor: pointer;
+}
+
+.card-content {
+  cursor: pointer;
+  padding: 0;
+  padding-bottom: 0% !important;
+  position: relative;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  align-items: center;
+
+}
+
+.card-content>h2 {
+  font-size: 2rem;
+}
+
+.card-content>p {
+  margin: 10px;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: var(--foreground);
+}
+
+.workshop-info {
+  padding: 10px;
+}
+
+.objectives {
+  color: var(--foreground);
+  list-style: none;
+  padding-bottom: 0%;
+}
+
+.objectives li {
+  margin: 10px;
+}
+
+.card-page {
+  overflow-anchor: revert;
+  width: 100%;
+  background-color: var(--background-page);
+  display: block;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+.hero {
+  width: 50%;
+  justify-self: center;
+  align-self: center;
+  margin: 10px;
+}
+
+.workshop-container {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
 }
 
 header {
@@ -421,7 +548,8 @@ header a:hover {
   grid-template-columns: 300px 300px 300px 300px;
   justify-content: space-around;
   gap: 30px;
-  margin-top: 30px;
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
   width: 100%;
 }
 
@@ -474,138 +602,6 @@ header a:hover {
 .PythonREPL {
   border: #29343f 1px solid;
   margin-bottom: 20px;
-}
-
-/* frontpage cards */
-
-.workshops-container {
-  background-color: #f0f0f0ef;
-
-  padding-top: 30px;
-}
-
-.workshops {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 30px;
-}
-
-.overlay {
-  margin-top: 5px;
-  width: 100%;
-  color: var(--foreground);
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.frontpage-card {
-  background-color: var(--background-page) !important;
-  color: var(--foreground) !important;
-  border: 4px solid #000;
-  letter-spacing: 1px;
-  border-radius: 0%;
-  transition: all 0.5s ease;
-  min-width: 280px;
-}
-
-.frontpage-card h1 {
-  padding: 10px;
-  font-size: 2rem;
-}
-
-.frontpage-card:hover {
-  transform: translateY(-40px);
-  overflow: visible;
-  z-index: 1;
-  box-shadow: rgb(102, 102, 102) 0px 0px 0px 2px, 
-  rgb(255, 255, 255) 10px -10px 0px -3px, 
-  rgb(239, 59, 58) 10px -10px, 
-  rgb(255, 255, 255) 20px -20px 0px -3px, 
-  rgb(93, 85, 165) 20px -20px, 
-  rgb(255, 255, 255) 30px -30px 0px -3px, 
-  rgb(69, 177, 193) 30px -30px;
-  transition: all 0.5s ease;  
-}
-
-.frontpage-card .workshop-info {
-  transition: all 0.2s ease;
-}
-
-.frontpage-card:hover .workshop-info {
-  background-color: var(--background-page);
-}
-
-.frontpage-card:hover .card-content {
-  /* max-height: 4000px; */
-}
-
-.card-media {
-  cursor: pointer;
-}
-
-.card-content {
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-}
-
-.card-content>h2 {
-  font-size: 2rem;
-}
-
-.card-content>p {
-  margin: 10px;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.43;
-  color: var(--foreground);
-}
-
-.workshop-info {
-  padding: 10px;
-}
-
-.objectives {
-  color: var(--foreground);
-  list-style: none;
-}
-
-.objectives li {
-  margin: 10px;
-}
-
-.card-page {
-  overflow-anchor: revert;
-  width: 100%;
-  background-color: var(--background-page);
-  display: block;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.2s;
-}
-
-.hero {
-  width: 50%;
-  justify-self: center;
-  align-self: center;
-  margin: 10px;
-}
-
-.workshop-container {
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px;
 }
 
 .content h1,

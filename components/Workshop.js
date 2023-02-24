@@ -36,7 +36,7 @@ export default function Workshop({ workshop, index }) {
       className='frontpage-card'>
       <Link href={`/workshops/${workshop.slug}`} passHref>
         <CardContent className='card-content'>
-          <div>
+          {/* <div className=''> */}
             <h1 className='overlay'>{workshop.title}</h1>
             <div className='workshop-info'>
               <ul className='objectives'>
@@ -51,7 +51,7 @@ export default function Workshop({ workshop, index }) {
               })}
               </ul>
             </div>
-          </div>
+          {/* </div> */}
 
         </CardContent>
       </Link>

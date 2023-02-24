@@ -2,12 +2,14 @@ organization: CUNY Graduate Center
 location:
   city: New York
   state: NY
-event: DHRIFT
+event: Digital Humanities Research Infrastructure For Teaching
 intro: "The Digital Humanities Research Institute (DHRI) is an intensive, community-oriented, 
 and foundational approach to learning technical skills in service of humanities teaching and 
 learning. The DHRI curriculum features workshops, tutorials, glossaries, resources, reading 
 materials, and more that have been developed at The Graduate Center, City University of New York 
-since 2016. Part of a 2019 grant from the National Endowment for the Humanities' (NEH) Office of 
+since 2016.
+
+Part of a 2019 grant from the National Endowment for the Humanities' (NEH) Office of 
 Digital Humanities (ODH), DHRI's curriculum, which was originally developed for in-person workshops, 
 was revised in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic. 
 While the curriculum has always been available openly on GitHub, this site creates a more 
