@@ -17,7 +17,7 @@ const Workshop = dynamic(
 export default function Home({ workshops }) {
 
   return (
-    <div>
+    <div className='container'>
       <div className='frontpage'>
         <div>
           <div className='frontpage-top'>
