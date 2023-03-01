@@ -227,12 +227,14 @@ img {
   padding-left: 5%;
   padding-top: 30px;
   padding-bottom: 30px;
+  padding-right: 5%;
   margin-top: 30px;
+
 }
 
 .intro-text {
   font-size: 18px;
-  max-width: 80%;
+
 }
 
 .sectionTitle {
@@ -246,6 +248,7 @@ img {
 
 .workshops-container {
   padding-left: 5%;
+  padding-right: 5%;
   background-color: #f0f0f0ef;
   padding-top: 30px;
 }
@@ -258,7 +261,7 @@ img {
   justify-content: flex-start;
   align-items: flex-start;
   margin-top: 30px;
-  max-width: 80%;
+  /* max-width: 80%; */
 }
 
 .frontpage-card {
@@ -277,7 +280,6 @@ img {
   /* width: 100%; */
   color: var(--foreground);
   line-height: 40px;
-  /* text-align: center; */
   cursor: pointer;
 }
 
@@ -289,7 +291,7 @@ img {
 .frontpage-card:hover {
   transform: translatex(40px);
   overflow: visible;
-  z-index: 1;
+  z-index: 0;
   box-shadow: rgb(102, 102, 102) 0px 0px 0px 2px,
     rgb(255, 255, 255) 10px -10px 0px -3px,
     rgb(239, 59, 58) 10px -10px,
