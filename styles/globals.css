@@ -265,6 +265,7 @@ img {
 }
 
 .frontpage-card {
+  width: 100%;
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
   border: 4px solid #000;
