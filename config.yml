@@ -33,4 +33,4 @@ schedule:
     time: 9:00am
     title: "Introduction to Git and GitHub"
     description: "This workshop will introduce you to Git and GitHub, a version control system 
-    and a web-based hosting service for software development projects.
+    and a web-based hosting service for software development projects."
