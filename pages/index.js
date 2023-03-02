@@ -4,10 +4,8 @@ import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Schedule from '../components/Schedule'
 import BuildIcon from '@material-ui/icons/Build';
-import Masonry from '@mui/lab/Masonry';
 
 const Workshop = dynamic(
   () => import('../components/Workshop'),
@@ -42,7 +40,7 @@ export default function Home({ workshops }) {
               className='frontpage-logo' />
           </div>
           <div className='intro'>
-          <div className='sectionTitle'>Description</div>
+            <div className='sectionTitle'>Description</div>
             <p className='intro-text'>{yaml.intro}</p>
           </div>
         </div>
@@ -53,6 +51,9 @@ export default function Home({ workshops }) {
               <Workshop key={index} workshop={workshop} index={index} />
             ))}
           </div>
+        </div>
+        <div className='schedule-container'>
+          <Schedule schedule={yaml.schedule} />
         </div>
       </div>
     </div>
