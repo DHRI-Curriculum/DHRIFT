@@ -79,6 +79,10 @@ With that said, let's get started!
 
 One of the most basic ways to interact with Python is through an "interactive session."  This is a special space that allows us to run little one-line bits of Python, experimenting and exploring what it can do, without having to save it. Think of this interactive space as a playground. Later on, we will be working with Python in a more robust way, executing longer Python scripts.
 
+<Info>
+Hello!
+</Info>
+
 An interactive session, otherwise known as the __REPL__ (Read-Evaluate-Print Loop), is a basic environment that takes single user inputs, executes them, and returns the results to the user. A typical REPL environment in the terminal looks as follows:
 
 ```pycon

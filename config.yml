@@ -15,7 +15,7 @@ was revised in Summer 2020 to better meet the needs of virtual instruction due t
 While the curriculum has always been available openly on GitHub, this site creates a more 
 user-friendly and functional interface that is open and free for public use."
 slideout: 
-  enabled: true
+  enabled: false
   language: python
 schedule:
   - date: 2023-03-02

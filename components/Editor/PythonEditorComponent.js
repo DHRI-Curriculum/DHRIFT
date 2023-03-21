@@ -1,5 +1,5 @@
 // import Editor from "@monaco-editor/react";
-import { useRef, useEffect, useState, useContext, useReducer } from "react";
+import { useRef, useEffect, useState, useContext, useReducer, Fragment } from "react";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
@@ -13,8 +13,10 @@ import { PyodideContext } from '../PyodideProvider';
 // import CircularProgress from '@mui/material/CircularProgress';
 // import FileList from "./FileList";
 import EditorTopbar from "./EditorTopbar";
+import PythonSideREPLComponent from '../PythonSideRepl';
 
 export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
+
   const [code, setCode] = useState(defaultCode);
   const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
@@ -23,6 +25,7 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
+  const [print, setPrint] = useState(null);
   const [runningCode, setRunningCode] = useState(false);
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -83,16 +86,25 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
 
     // gets rid of user-defined variables
     pyodide.globals.clear();
-//     await pyodide.loadPackage("matplotlib");
-//     pyodide.runPython(
-//       `
-// import matplotlib
-// matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
-// `
-//     );
-// await pyodide.loadPackage("nltk");
+    //     await pyodide.loadPackage("matplotlib");
+    //     pyodide.runPython(
+    //       `
+    // import matplotlib
+    // matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
+    // `
+    //     );
+    // await pyodide.loadPackage("nltk");
+    
+    let printList = [];
     pyodide.globals.set('print', (s) => {
-      outputRef.current = outputRef.current + String(s) + "\n";
+      // outputRef.current = outputRef.current + String(s) + "\n";
+      // printRef.current = String(s) + "\n";
+      // add print statements together and then setPrint with the whole thing
+
+      setPrint(String(s));
+      // printList.push(String(s) + "\n");
+      // console.log(printList);
+      // setPrint(printList.join(''));
     });
     pyodide.globals.set('input', (s) => {
       var response = prompt(s);
@@ -106,6 +118,7 @@ export default function CodeEditorComponent({ defaultCode = "# Write your code h
 file${index + 1} = ${JSON.stringify(snippet.content)}
             `);
     });
+    
     return await pyodide.runPythonAsync(code).then(result => {
       setIsoutput(true);
       outputRef.current = outputRef.current + '\n' + result;
@@ -130,8 +143,10 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
     setIsError(false);
   }
 
+  const height = props.height ? props.height : '100%';
+
   return (
-    <div>
+    <Fragment>
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
           onLoad={() => {
@@ -147,14 +162,16 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           }}
         /></>}
       <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)} 
-        snippets={filteredSnippets} run={showValue} 
-        defaultCode={defaultCode} setCode={setCode}
-        language='Python' />
-        <EditorComponent code={code} onChange={onChange} maxLines='Infinity' minLines={minLines} />
+        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)}
+          snippets={filteredSnippets} run={showValue}
+          defaultCode={defaultCode} setCode={setCode}
+          language='Python' 
+          {...props}
+          />
+        <EditorComponent code={code} onChange={onChange} maxLines='Infinity' minLines={minLines} height={height} />
       </div>
 
-      {isoutput && <div id='output'
+      {/* {isoutput && <div id='output'
         style={{
           margin: "10px",
           padding: "10px",
@@ -178,7 +195,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           }}
         />
         {outputRef.current}
-      </div>}
+      </div>} */}
 
       {isError && <div id="error"
         style={{
@@ -205,6 +222,12 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
         />
         {String(error)}
       </div>}
-    </div>
+      <PythonSideREPLComponent
+        print={print}
+        setPrint={setPrint}
+        {...props}
+      />
+
+    </Fragment>
   )
 }
