@@ -67,7 +67,6 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                             {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' }  }}
                         />
                             <ListItemSecondaryAction onClick={handleClick}>
-                        {/* describe below  */}
                         { open ? <ExpandLess 
                         onClick={handleClick}
                         sx={{
@@ -157,7 +156,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                 <nav className='sidenav'>
                     <List>
                         {newPages.map((page, index) => (
-                            <CollapsibleList pages={page} />
+                            <CollapsibleList pages={page} key={index} />
                         ))}
                     </List>
                 </nav>
@@ -185,7 +184,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                     className='sidenav'>
                    <List>
                         {newPages.map((page, index) => (
-                            <CollapsibleList pages={page} />
+                            <CollapsibleList pages={page} key={index} />
                         ))}
                     </List>
                 </nav>
