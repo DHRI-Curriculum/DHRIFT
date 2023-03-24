@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef } from "react";
+import { useEffect, useContext, useState, useRef, useDebugValue } from "react";
 import Script from 'next/script'
 import { PyodideContext } from './PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -43,9 +43,16 @@ export default function PythonSideREPLComponent(props) {
                   return to_js([res], depth=1)
                 def clear_console():
                   pyconsole.buffer = []
+                # if print is called in python, it will print to the terminal
+                def print(*args, **kwargs):
+                  builtins.print(*args, **kwargs)
+                  sys.stdout.flush()
             `,
-      namespace
+      {globals: namespace}
     );
+    let print = namespace.get("print");
+    
+
     let repr_shorten = namespace.get("repr_shorten");
     let banner = null;
     let await_fut = namespace.get("await_fut");
@@ -163,17 +170,24 @@ export default function PythonSideREPLComponent(props) {
       setIsPyodideLoading(false)
       main();
     }
-  }, [hasLoadPyodideBeenCalled, setIsPyodideLoading, isPyodideReady])
+  }, [isPyodideReady])
 
   useEffect(() => {
     if (props.print !== undefined && theTerminal !== null) {
       theTerminal.clear();
-      setTimeout(() => {
-        theTerminal.echo(props.print);
-        props.setPrint(undefined);
-      }, 100)
+      console.log(props.print)
+      theTerminal.echo(props.print);
+      props.setPrint(undefined);
+
     }
   }, [props.print])
+
+  useEffect(() => {
+    if (props.askToRun !== false && theTerminal !== null && props.print === undefined) {
+      theTerminal.clear();
+    }
+  }, [props.askToRun, theTerminal, props.print])
+
 
   return (
     <div className="PythonSideREPL">
@@ -181,12 +195,12 @@ export default function PythonSideREPLComponent(props) {
         <h1>Shell</h1>
       </div>
       <link href="https://cdn.jsdelivr.net/npm/jquery.terminal@2.27.1/css/jquery.terminal.css" rel="stylesheet"></link>
-      <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
-      <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
+      <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />
+      <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.asm.js"
         onLoad={() => {
           if (!isPyodideReady) {
             async function load() {
-              globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/' })
+              globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
             }
             load().then(() => {
               console.log("Pyodide version: " + pyodide.version);

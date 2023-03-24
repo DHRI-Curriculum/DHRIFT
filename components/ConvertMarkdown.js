@@ -13,6 +13,7 @@ import InterpreterComponent from './Editor/InterpreterComponent';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
 import Info from './Info';
+import Secret from './Secret';
 import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
@@ -186,7 +187,7 @@ const InfoAlert = ({ className, children }) => {
     )
 }
 
-export default function ConvertMarkdown(markdown, uploads, workshop) {
+export default function ConvertMarkdown(markdown, uploads, workshop, setCode, setEditorOpen, setAskToRun) {
     return (
         compiler(markdown,
             {
@@ -207,7 +208,13 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                         component: CodeEditor,
                         props: {
                             allUploads: uploads,
+                            // language is given or python is default
+                            language: 'python',
+                            setCode: setCode,
+                            setEditorOpen: setEditorOpen,
+                            setAskToRun: setAskToRun,
                         }
+                        
                     },
                     Download: {
                         component: Download,
@@ -228,6 +235,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                     EditorWithTabs,
                     JSTerminal,
                     HTMLEditor,
+                    Secret,
                 }
 
             })

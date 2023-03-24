@@ -8,7 +8,7 @@ import Schedule from '../components/Schedule'
 import BuildIcon from '@material-ui/icons/Build';
 
 const Workshop = dynamic(
-  () => import('../components/Workshop'),
+  () => import('../components/MenuItem'),
   { loading: function loading() { return <p>...</p> } }
 )
 
@@ -44,17 +44,17 @@ export default function Home({ workshops }) {
             <p className='intro-text'>{yaml.intro}</p>
           </div>
         </div>
-        <div className='workshops-container'>
+        <div className='schedule-container'>
+          <Schedule schedule={yaml.schedule} />
+        </div>
+        {/* <div className='workshops-container'>
           <div className='sectionTitle'><BuildIcon /> Workshops</div>
           <div className='workshops'>
             {workshops.map((workshop, index) => (
               <Workshop key={index} workshop={workshop} index={index} />
             ))}
           </div>
-        </div>
-        <div className='schedule-container'>
-          <Schedule schedule={yaml.schedule} />
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -186,6 +186,10 @@ Using the Python REPL, find __1)__ the type of `("12")`, and __2)__ the type of 
 
 <PythonREPL/>
 
+<Secret>
+Test!
+</Secret>
+
 ## Solution
 
 __1)__ Writing `type("12")` will return the type of `string`. While `12` is an integer, enclosing a number within quotation marks will result in a type of `string`. __2)__ Writing `type(["dog", 13, 3.0])` will result in a `list`. Individually, while `"dog` is a string, `13` is an integer, and `3.0` is a float, putting these elements together in brackets results in a `list` object being returned. As you can see, a `list` can contain items of different types.

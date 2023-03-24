@@ -62,9 +62,16 @@ export default function WorkshopPage({
       uploads
     })
 
+
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [code, setCode] = useState('');
+
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
+
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshops, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
@@ -75,7 +82,7 @@ export default function WorkshopPage({
         allPages.push([curr]);
       } else if (curr.type === 'h2') {
         allPages.push([curr]);
-      }else{
+      } else {
         allPages[allPages.length - 1].push(curr);
       }
       return acc;
@@ -115,7 +122,6 @@ export default function WorkshopPage({
   const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
   const [currentHeader, setCurrentHeader] = useState(null);
-  const [editorOpen, setEditorOpen] = useState(false);
 
 
   // list of page titles and highlight current page
@@ -254,14 +260,18 @@ export default function WorkshopPage({
               </div>
             )}
             {PaginationComponent(currentPage)}
-            <SlideoutEditor />
+
           </div>
         </div>
       </Main>
       <DrawerEditor
         drawerWidth={drawerWidth}
         open={editorOpen}
-        setOpen={setEditorOpen}
+        setEditorOpen={setEditorOpen}
+        text={code}
+        setText={setCode}
+        askToRun={askToRun}
+        setAskToRun={setAskToRun}
       />
     </Container>
   );

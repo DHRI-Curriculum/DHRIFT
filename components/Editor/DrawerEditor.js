@@ -1,4 +1,5 @@
-import InterpreterComponent from './InterpreterComponent';
+// import InterpreterComponent from './InterpreterComponent';
+import CodeEditorComponent from './PythonEditorComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
@@ -7,16 +8,19 @@ import { useState, useEffect, useRef, Fragment } from 'react';
 import yaml from '../../config.yml'
 
 export default function DrawerEditor(props) {
+
     // props.editorOpen and props.setEditorOpen are passed in from the parent component
-    const [text, setText] = useState('');
+   
+    const text = props.text;  // this is the text in the editor
+    const setText = props.setText;  // this is the function to set the text in the editor
 
     const open = props.open;  // this is the state of the drawer
-    const setOpen = props.setOpen;  // this is the function to set the state of the drawer
+    const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
     const [show, setShow] = useState(false);
 
-    useEffect(() => {
-        setText(window.localStorage.getItem('code') || '');
-    }, [])
+    // useEffect(() => {
+    //     setText(window.localStorage.getItem('code') || '');
+    // }, [])
 
     const handleOpenClose = () => {
         setOpen(!open);
@@ -30,23 +34,30 @@ export default function DrawerEditor(props) {
         }
     }
 
+    useEffect(() => {
+        if (open) {
+            setShow(true);
+        }
+    }, [open])
+
+
     const commitCode = (newText) => {
-        window.localStorage.setItem('code', newText);
+        // window.localStorage.setItem('code', newText);
     }
 
     return (
         <Fragment>
             <div className='editor-button-container'>
-            <Button
-                aria-label="open drawer"
-                className={'editor-button'}
-                onClick={handleOpenClose}
-                style={{
-                    color: "#32c259",
-                }}
-            >
-                <CodeIcon />
-            </Button>
+                <Button
+                    aria-label="open drawer"
+                    className={'editor-button'}
+                    onClick={handleOpenClose}
+                    style={{
+                        color: "#32c259",
+                    }}
+                >
+                    <CodeIcon />
+                </Button>
             </div>
             <Drawer
                 variant="persistent"
@@ -57,7 +68,6 @@ export default function DrawerEditor(props) {
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}
-
                 // if small, then drawer is 100% width, otherwise some portion
                 sx={{
                     width: { xs: '100%', sm: '100%', md: '35%' },
@@ -67,18 +77,8 @@ export default function DrawerEditor(props) {
                 }}
 
             >
-                {/* <div className='drawer-header'>
-                    <Button
-                        color="primary"
-                        aria-label="open drawer"
-                        className={'sidebar-button'}
-                        onClick={handleOpenClose}
-                    >
-                        <CodeIcon />
-                    </Button>
-                </div> */}
                 <div className='drawer-editor'>
-                    <InterpreterComponent language={yaml.slideout.language}
+                    <CodeEditorComponent language={yaml.slideout.language}
                         onChange={commitCode}
                         defaultCode={text}
                         handleOpenClose={handleOpenClose}
