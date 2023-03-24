@@ -28,7 +28,7 @@ export default function CodeRunBox(props) {
                     props.setAskToRun(true);
                 }}
             >
-                Run Code >>
+                Run Code
             </button>
         </div>
 
