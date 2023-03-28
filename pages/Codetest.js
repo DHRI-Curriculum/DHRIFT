@@ -1,10 +1,11 @@
 import PythonREPLComponent from '../components/PythonREPLComponent';
 import PythonEditorComponent from '../components/Editor/PythonEditorComponent';
 
-import FileList from '../components/Editor/FileList';
+// import FileList from '../components/Editor/FileList';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
 import { height } from '@mui/system';
 import TerminalComponent from '../components/TerminalComponent';
+import RRunner from '../components/Editor/RRunner';
 // import HTMLEditor from '../components/Editor/HTMLEditorComponent';
 
 export default function Test() {
@@ -53,6 +54,9 @@ export default function Test() {
             </div>
             <div>
                 {/* <FileList files='mobydick.txt'/> */}
+            </div>
+            <div>
+                <RRunner />
             </div>
         </div>
     )

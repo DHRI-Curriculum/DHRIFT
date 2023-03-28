@@ -9,7 +9,7 @@ export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
     return (
         <>
-            <FileList snippets={props.snippets} />
+           {props.snippets && <FileList snippets={props.snippets} />}
             <div className="buttonsContainer">
                                 <Button
                     color="primary"
