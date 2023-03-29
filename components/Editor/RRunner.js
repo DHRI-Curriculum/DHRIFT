@@ -41,13 +41,6 @@ export default function RRunner(props) {
         }
     }
 
-    // useEffect(() => {
-    //     if (isRReady && !isRLoading) {
-    //         runRCode();
-    //         setIsRLoading(true);
-    //     }
-    // }, [isRReady]);
-
     // when the page is loaded, initialize webR and run the code.
     useEffect(() => {
         const webR = new WebR();
