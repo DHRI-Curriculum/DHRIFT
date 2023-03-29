@@ -12,6 +12,8 @@ import EditorWithTabsComponent from './Editor/EditorWithTabs';
 import InterpreterComponent from './Editor/InterpreterComponent';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
+import Info from './Info';
+import Secret from './Secret';
 import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
@@ -177,7 +179,15 @@ const HTMLEditor = ({ className, children }) => {
     )
 }
 
-export default function ConvertMarkdown(markdown, uploads, workshop) {
+const InfoAlert = ({ className, children }) => {
+    return (
+        <div className="info-alert">
+            <Info text={children} /> 
+        </div>
+    )
+}
+
+export default function ConvertMarkdown(markdown, uploads, workshop, setCode, setEditorOpen, setAskToRun) {
     return (
         compiler(markdown,
             {
@@ -198,7 +208,13 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                         component: CodeEditor,
                         props: {
                             allUploads: uploads,
+                            // language is given or python is default
+                            language: 'python',
+                            setCode: setCode,
+                            setEditorOpen: setEditorOpen,
+                            setAskToRun: setAskToRun,
                         }
+                        
                     },
                     Download: {
                         component: Download,
@@ -207,12 +223,19 @@ export default function ConvertMarkdown(markdown, uploads, workshop) {
                             allUploads: uploads,
                         }
                     },
+                    Info: {
+                        component: InfoAlert,
+                        props: {
+                            className: 'info-alert',
+                        }
+                    },
                     Quiz,
                     PythonREPL,
                     Terminal,
                     EditorWithTabs,
                     JSTerminal,
-                    HTMLEditor
+                    HTMLEditor,
+                    Secret,
                 }
 
             })

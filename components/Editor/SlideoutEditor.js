@@ -1,6 +1,6 @@
 import Slide from '@mui/material/Slide';
-// import CodeEditorComponent from './PythonEditorComponent';
-import InterpreterComponent from './InterpreterComponent';
+import CodeEditorComponent from './PythonEditorComponent';
+// import InterpreterComponent from './InterpreterComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -76,7 +76,7 @@ export default function SlideoutEditor(props) {
                         </Button>
                         {/* <CodeEditorComponent minLines={10} onChange={commitCode} defaultCode={text}
                         language={yaml.slideout.language} /> */}
-                        <InterpreterComponent language={ yaml.slideout.language } onChange={commitCode} defaultCode={text} {...props} />
+                        {/* <InterpreterComponent language={ yaml.slideout.language } onChange={commitCode} defaultCode={text} {...props} /> */}
                     </div>
                 </Slide>
             </div>

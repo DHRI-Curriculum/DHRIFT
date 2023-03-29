@@ -14,27 +14,28 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import yaml from '../../config.yml'
 import Skeleton from '@mui/material/Skeleton';
+import DrawerEditor from '../../components/Editor/DrawerEditor'
+import { styled, useTheme } from '@mui/material/styles';
 
+const drawerWidth = '-30%';
 
-// This code exports a React functional component WorkshopPage, which displays workshop information as a multi-page presentation. The component receives data for workshops, guides, insights, authors, and uploads as its props.
-
-// The component uses the Next.js useRouter hook to access the URL query parameters and extract the slug of the workshop being displayed. The component then uses this slug to find the relevant workshop information from the workshops prop.
-
-// The component defines the following state variables:
-
-// currentPage: the current page number of the presentation.
-// pages: an array of React elements, each representing a page of the presentation.
-// currentContent: the React element representing the current page of the presentation.
-// currentContentLoaded: a flag indicating whether the current content has finished loading.
-// pageTitles: an array of strings, each representing the title of a page of the presentation.
-// currentHeader: the header of the current page of the presentation.
-
-// The component uses the useEffect hook to:
-// initialize the pageTitles and currentHeader state variables based on the contents of the pages array.
-// reset the presentation state when the URL slug changes.
-// update the currentContent when the pages array changes.
-// The component also contains logic for navigating between pages and switching between presentation mode and editor mode. The component renders a Container component, Button components for navigation, a SlideoutEditor component for editing, and a Skeleton component for loading animations.
-
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginRight: 0,
+    }),
+  }),
+);
 
 export default function WorkshopPage({
   workshops,
@@ -61,9 +62,16 @@ export default function WorkshopPage({
       uploads
     })
 
+
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [code, setCode] = useState('');
+
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
+
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshops, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
@@ -72,12 +80,15 @@ export default function WorkshopPage({
         return acc;
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
+      } else if (curr.type === 'h2') {
+        allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
       return acc;
     }, []);
     allPages.unshift(frontPageContent);
+
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
         // if page classname is 'frontpage' then render frontpage
@@ -115,10 +126,25 @@ export default function WorkshopPage({
 
   // list of page titles and highlight current page
   useEffect(() => {
+    let mostRecentH1 = null;
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
       // if it's the frontpage vs not
       index === 0 ? header = "Introduction" : header = page.props.children[0].props.children.props.children[0]
+      let tag = page.props.children[0].props.children.type;
+      let parent = undefined;
+      if (tag === 'h1') {
+        mostRecentH1 = header;
+      }
+      if (tag === 'h2') {
+        parent = mostRecentH1;
+      }
+      header = {
+        title: header,
+        index: index + 1,
+        active: index + 1 === currentPage ? true : false,
+        parent: parent
+      }
       return (header)
     })
     setPageTitles(pageTitlesGet)
@@ -142,10 +168,10 @@ export default function WorkshopPage({
 
   // if pages changes, change current content
   useEffect(() => {
-    if(currentPage){
+    if (currentPage) {
       setCurrentContent(pages[currentPage - 1]);
-    }else{
-    setCurrentContent(pages[0]);
+    } else {
+      setCurrentContent(pages[0]);
     }
   }, [pages])
 
@@ -160,7 +186,7 @@ export default function WorkshopPage({
     return (
       <div className='pagination'>
         <Button
-          className='previous-page'
+          className='brutalist-button'
           onClick={() => handlePageChange(event, Number(currentPage) - 1)}
           disabled={currentPage === 1}
         >
@@ -179,7 +205,7 @@ export default function WorkshopPage({
           title={title}
         />
         <Button
-          className='next-page'
+          className='brutalist-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
           disabled={currentPage === pages.length}
         >
@@ -205,33 +231,48 @@ export default function WorkshopPage({
 
   return (
     <Container
-      maxWidth="lg"
+      // maxWidth="lg"
       style={{
         display: 'flex',
       }}
     >
-      <div className="card-page">
-        <div className="workshop-container">
-          {PaginationComponent(currentPage)}
-          {currentContentLoaded ? (
-            currentContent
-          ) : (
+      <Main open={editorOpen}
+        sx={{
+          width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
+        }}
+      >
+        {PaginationComponent(currentPage)}
+        <div className="card-page">
+          <div className="workshop-container">
+            {currentContentLoaded ? (
+              currentContent
+            ) : (
 
-            <div className='skeleton-container'
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-            >
-              <Skeleton variant="rect" width={'100%'} height={'50px'} />
-              {
-                Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-            </div>
-          )}
-          {PaginationComponent(currentPage)}
-          <SlideoutEditor />
+              <div className='skeleton-container'
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                {
+                  Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+              </div>
+            )}
+            {PaginationComponent(currentPage)}
+
+          </div>
         </div>
-      </div>
+      </Main>
+      <DrawerEditor
+        drawerWidth={drawerWidth}
+        open={editorOpen}
+        setEditorOpen={setEditorOpen}
+        text={code}
+        setText={setCode}
+        askToRun={askToRun}
+        setAskToRun={setAskToRun}
+      />
     </Container>
   );
 }

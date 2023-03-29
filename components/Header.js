@@ -137,7 +137,6 @@ export default function Header({ props }) {
                             height={100}
                             className='logo' />
                     </Link>
-                    {/* </div> */}
                     <div
                         id='nav-container'
                     >
@@ -162,9 +161,6 @@ export default function Header({ props }) {
                                     {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
                                 </li>
                             </li>
-                            {/* <li>
-                            Resources
-                        </li> */}
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>

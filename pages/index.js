@@ -4,59 +4,57 @@ import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Schedule from '../components/Schedule'
 import BuildIcon from '@material-ui/icons/Build';
-import Masonry from '@mui/lab/Masonry';
 
 const Workshop = dynamic(
-  () => import('../components/Workshop'),
+  () => import('../components/MenuItem'),
   { loading: function loading() { return <p>...</p> } }
 )
 
 export default function Home({ workshops }) {
 
   return (
-    <div>
-      <div className='frontpage card-page'>
+    <div className='container'>
+      <div className='frontpage'>
         <div>
           <div className='frontpage-top'>
+            <div className='titleContainer'>
+              <h2
+                style={{
+                  fontFamily: 'Titillium Web',
+                }}
+                className='title'>{yaml.event}</h2>
+              <h2
+                style={{
+                  fontFamily: 'Titillium Web',
+                  fontWeight: '400',
+                }}
+                className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
+            </div>
             <Image
               src={'/images/logo.png'}
               alt={yaml.organization + ' logo'}
               width={200}
               height={200}
               className='frontpage-logo' />
-            <h2
-              style={{
-                fontFamily: 'Titillium Web',
-              }}
-              className='title'>{yaml.event}</h2>
           </div>
-          <Typography
-          >
-            <h2
-              style={{
-                fontFamily: 'Titillium Web',
-                fontWeight: '400',
-              }}
-              className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
-
+          <div className='intro'>
+            <div className='sectionTitle'>Description</div>
             <p className='intro-text'>{yaml.intro}</p>
-          </Typography>
+          </div>
         </div>
-        <div className='workshops-container'>
-        <div className='sectionTitle'><BuildIcon /> Workshops</div>
-        <div className='workshops'>
-        <Masonry  
-                columns={{ xs: 1, sm: 1, md: 3, md: 3, lg:3, xl:4 }}
-        spacing={4}>
-          {workshops.map((workshop, index) => (
-            <Workshop key={index} workshop={workshop} index={index} />
-          ))}
-        </Masonry>
+        <div className='schedule-container'>
+          <Schedule schedule={yaml.schedule} />
         </div>
-        </div>
+        {/* <div className='workshops-container'>
+          <div className='sectionTitle'><BuildIcon /> Workshops</div>
+          <div className='workshops'>
+            {workshops.map((workshop, index) => (
+              <Workshop key={index} workshop={workshop} index={index} />
+            ))}
+          </div>
+        </div> */}
       </div>
     </div>
   )
