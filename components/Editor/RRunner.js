@@ -41,6 +41,7 @@ export default function RRunner(props) {
         }
     }
 
+    
     // when the page is loaded, initialize webR and run the code.
     useEffect(() => {
         const webR = new WebR();
