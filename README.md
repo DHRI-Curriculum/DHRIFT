@@ -1,6 +1,6 @@
 # DHRI Curriculum Static
 
-Static site for DHRI workshops using next.js. 
+Static site for DHRIFT using next.js. 
 
 ## Usage
 
