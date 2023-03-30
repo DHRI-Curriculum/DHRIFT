@@ -7,16 +7,19 @@ intro: "The Digital Humanities Research Institute (DHRI) is an intensive, commun
 and foundational approach to learning technical skills in service of humanities teaching and 
 learning. The DHRI curriculum features workshops, tutorials, glossaries, resources, reading 
 materials, and more that have been developed at The Graduate Center, City University of New York 
-since 2016.
+since 2016. 
+
 
 Part of a 2019 grant from the National Endowment for the Humanities' (NEH) Office of 
 Digital Humanities (ODH), DHRI's curriculum, which was originally developed for in-person workshops, 
 was revised in Summer 2020 to better meet the needs of virtual instruction due to the covid-19 pandemic. 
 While the curriculum has always been available openly on GitHub, this site creates a more 
 user-friendly and functional interface that is open and free for public use."
-slideout: 
-  enabled: false
-  language: python
+register: 
+  required: true
+  url: 'https://dhri.cuny.edu/'
+  text: 'Register for the DHRI'
+
 schedule:
   - date: 2023-03-02
     time: 9:00am
@@ -26,6 +29,7 @@ schedule:
   - date: 2023-03-02
     time: 11:00am
     title: "Introduction to the Command Line"
+    workshop: true
     description: "This workshop will introduce you to the command line, a text-based interface 
     for interacting with your computer. We will cover basic commands, file management, and 
     navigating the file system."

@@ -71,7 +71,7 @@ export default function FrontPage(currentFile, allFiles) {
     const item = currentFile[key]
     // if object name is 'dependencies' or 'workshops' or 'insights' or 'installations' or 'excerpt' or 'title' or 'cover_image', don't add to list
     if (key === 'dependencies' || key === 'workshops' || key === 'insights' || key === 'installations' || key === 'excerpt' || key === 'title' || key === 'cover_image' || key === 'content' || key === 'slug'
-      || key === 'path' || key === 'itemPath') {
+      || key === 'path' || key === 'itemPath' || key === 'programming_language') {
       return null
     }
     return {

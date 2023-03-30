@@ -9,6 +9,7 @@ import yaml from '../../config.yml'
 
 export default function DrawerEditor(props) {
 
+    const language = props.language;  // this is the language of the editor
     // props.editorOpen and props.setEditorOpen are passed in from the parent component
    
     const text = props.text;  // this is the text in the editor
@@ -78,7 +79,7 @@ export default function DrawerEditor(props) {
 
             >
                 <div className='drawer-editor'>
-                    <CodeEditorComponent language={yaml.slideout.language}
+                    <CodeEditorComponent language={language}
                         onChange={commitCode}
                         defaultCode={text}
                         handleOpenClose={handleOpenClose}

@@ -36,7 +36,7 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
 
   const list = (anchor) => (
     <Box
-      className="drawer-list"
+      className="drawer"
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}

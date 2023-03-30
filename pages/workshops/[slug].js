@@ -186,7 +186,7 @@ export default function WorkshopPage({
     return (
       <div className='pagination'>
         <Button
-          className='brutalist-button'
+          className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) - 1)}
           disabled={currentPage === 1}
         >
@@ -205,7 +205,7 @@ export default function WorkshopPage({
           title={title}
         />
         <Button
-          className='brutalist-button'
+          className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
           disabled={currentPage === pages.length}
         >
@@ -264,6 +264,7 @@ export default function WorkshopPage({
           </div>
         </div>
       </Main>
+      {currentFile.programming_language &&
       <DrawerEditor
         drawerWidth={drawerWidth}
         open={editorOpen}
@@ -272,7 +273,8 @@ export default function WorkshopPage({
         setText={setCode}
         askToRun={askToRun}
         setAskToRun={setAskToRun}
-      />
+        language={currentFile.programming_language}
+      />}
     </Container>
   );
 }

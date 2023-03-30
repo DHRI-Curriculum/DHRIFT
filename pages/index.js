@@ -3,9 +3,10 @@ import path from 'path'
 import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
+import Markdown, { compiler } from 'markdown-to-jsx';
 import dynamic from 'next/dynamic'
 import Schedule from '../components/Schedule'
-import BuildIcon from '@material-ui/icons/Build';
+import Button from '@material-ui/core/Button';
 
 const Workshop = dynamic(
   () => import('../components/MenuItem'),
@@ -39,14 +40,45 @@ export default function Home({ workshops }) {
               height={200}
               className='frontpage-logo' />
           </div>
-          <div className='intro'>
-            <div className='sectionTitle'>Description</div>
-            <p className='intro-text'>{yaml.intro}</p>
+          <div className='registration'>
+            {yaml.register?.required && (
+              <p>
+                {yaml.register.text}
+                <Button
+                  style={{
+                    // backgroundColor: '#f50057',
+                    // color: 'white',
+                    fontFamily: 'Titillium Web',
+                    fontWeight: '400',
+                    fontSize: '1.2rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0rem',
+                    marginLeft: '1rem',
+                    border: '2px solid #ef3b3a',
+                    boxShadow: '#ef3b3a 8px 8px 0px'
+                  }}
+                  href={yaml.register.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='registerButton'
+                >
+                  Register
+                </Button>
+              </p>
+            )}
           </div>
+          {yaml.intro &&
+            <div className='intro'>
+              <div className='sectionTitle'>Description</div>
+              <p className='intro-text'><Markdown>{yaml.intro}</Markdown></p>
+            </div>
+          }
         </div>
-        <div className='schedule-container'>
-          <Schedule schedule={yaml.schedule} />
-        </div>
+        {yaml.schedule &&
+          <div className='schedule-container'>
+            <Schedule schedule={yaml.schedule} />
+          </div>
+        }
         {/* <div className='workshops-container'>
           <div className='sectionTitle'><BuildIcon /> Workshops</div>
           <div className='workshops'>

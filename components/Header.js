@@ -153,14 +153,14 @@ export default function Header({ props }) {
                             <li>
                                 {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
                             </li>
-                            <li>
+                            {/* <li>
                                 {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
                             </li>
                             <li>
                                 <li>
                                     {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
                                 </li>
-                            </li>
+                            </li> */}
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>

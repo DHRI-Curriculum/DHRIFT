@@ -219,8 +219,17 @@ img {
   letter-spacing: 1px;
 }
 
+.registration {
+  margin-left: 5%;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  /* margin-top: 10px; */
+  margin-bottom: 10px;
+}
+
 .intro {
-  background-color: rgb(213, 255, 129);
+  background-color: var(--background-page);
   color: black;
   font-size: 22px;
   text-align: justify;
@@ -229,12 +238,19 @@ img {
   padding-bottom: 30px;
   padding-right: 5%;
   margin-top: 30px;
-
+  margin-bottom: 30px;
+  border: #5d55a5;
+  border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px;
 }
 
 .intro-text {
   font-size: 18px;
+}
 
+.intro-text p {
+  margin-bottom: 20px;
 }
 
 .sectionTitle {
@@ -253,10 +269,45 @@ img {
   padding-top: 30px;
 }
 
+.drawer {
+  background-color: #a3a9af;
+}
+
+.drawer-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: space-between;
+  height: 100vh;
+  width: 60%;
+  margin: auto;
+  padding: 30px;
+}
+
+.drawer-click {
+  cursor: pointer;
+}
+
+.drawer-over {
+  position: relative;
+}
+
+.drawer-over:hover {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+  transition: .5s ease;
+}
+
+.drawer-overlay {
+  position: absolute;
+  top: -114px;
+  font-size: 30px;
+}
+
 /* frontpage cards */
 .workshops {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
@@ -265,7 +316,7 @@ img {
 }
 
 .menu-card {
-  max-width: 800px;
+  max-width: 300px;
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
   border: 4px solid #000;
@@ -314,7 +365,7 @@ img {
   padding-bottom: 0% !important;
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 
 }
@@ -370,7 +421,6 @@ img {
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px;
 }
 
 /* schedule accordion */
@@ -530,7 +580,7 @@ header a:hover {
   text-align: center;
 }
 
-.code-run-box{
+.code-run-box {
   font-size: 1.6rem;
   margin-bottom: 30px;
   margin-top: 30px;
@@ -541,7 +591,7 @@ header a:hover {
   box-shadow: #5d55a5 8px 8px 0px;
 }
 
-.code-run-box-button{
+.code-run-box-button {
   font-size: 1.1rem;
   margin-bottom: 10px;
   padding: 10px;
@@ -549,7 +599,7 @@ header a:hover {
   border: 2px solid #5d55a5;
   background: var(--background-page);
   box-shadow: #5d55a5 8px 8px 0px;
-  cursor: pointer; 
+  cursor: pointer;
   font-weight: bold !important;
 }
 
@@ -557,25 +607,15 @@ header a:hover {
 .brutalist-button {
   background-color: var(--background-page) !important;
   color: var(--foreground) !important;
-  border: 2px solid #ef3b3a !important;
+  /* border: 2px solid #ef3b3a !important;
   
   border-radius: 0 !important;
-  padding: 10px 40px !important;
+  padding: 10px 40px !important; */
   font-weight: bold !important;
-  box-shadow: #d5222c 8px 8px 0px; 
+  /* box-shadow: #d5222c 8px 8px 0px;  */
 }
 
-.pagination>.MuiButtonBase-root:after,
-.brutalist-button:after {
-  content: '';
-  position: absolute;
-  background-color: #ef3b3a;
-  top: 8px;
-  left: 8px;
-  right: -8px;
-  bottom: -8px;
-  z-index: -1;
-}
+
 
 .pagination>.MuiButtonBase-root:hover,
 .pagination>.MuiButtonBase-root:active,
@@ -599,41 +639,11 @@ header a:hover {
   color: gray !important;
 }
 
-.drawer-list {
-  background-color: #a3a9af;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 1000px;
-  width: 100%;
-  padding: 30px;
-}
-
-.drawer-click {
-  cursor: pointer;
-}
-
-.drawer-over {
-  position: relative;
-}
-
-.drawer-over:hover {
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
-  transition: .5s ease;
-}
-
-.drawer-overlay {
-  position: absolute;
-  top: -114px;
-  font-size: 30px;
-}
-
 .visually-hidden {
   display: none;
 }
 
-.drawer-header {
-}
+.drawer-header {}
 
 .editorContainer {
   display: flex;
@@ -645,13 +655,13 @@ header a:hover {
   /* margin-top: 30px; */
 }
 
-.drawer-editor{
+.drawer-editor {
   display: flex;
   flex-direction: column;
   height: 100% !important;
 }
 
-.editor-button-container{
+.editor-button-container {
   /* on the far right  */
   position: fixed !important;
   right: 0;
@@ -661,7 +671,8 @@ header a:hover {
   z-index: 100;
   background-color: #000;
 }
-.editor-button{
+
+.editor-button {
   color: white;
 }
 
@@ -701,7 +712,7 @@ header a:hover {
   background: rgb(39, 40, 34);
 }
 
-.repl-header{
+.repl-header {
   background-color: #29343f;
   color: white;
   padding: 10px;
@@ -796,6 +807,11 @@ header a:hover {
   font-size: 3rem;
   margin-bottom: 20px;
   margin-top: 30px;
+  padding: 10px !important;
+  border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px;
+
 }
 
 .excerpt {
@@ -827,8 +843,9 @@ header a:hover {
 .frontpage-item {
   /* border: 1px lightgrey solid; */
   padding: 10px;
-  /* border: 3px solid #ff9933;
-  box-shadow: #ff9933 8px 8px 0px; */
+  border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px;
 }
 
 .dependency {
@@ -840,6 +857,10 @@ header a:hover {
   font-size: 2rem;
   text-transform: capitalize;
   margin-bottom: 10px;
+  /* border: 2px solid #5d55a5 !important;
+  background: var(--background-page) !important;
+  box-shadow: #5d55a5 8px 8px 0px;
+  padding: 10px !important; */
 }
 
 .frontpage-item p {
@@ -945,8 +966,8 @@ td {
   font-weight: bold !important; */
 }
 
-.info-alert > div{
-font-size: larger;
+.info-alert>div {
+  font-size: larger;
   padding: 5px;
   border: 2px solid #ffe100;
   border-radius: 0%;
@@ -959,11 +980,12 @@ font-size: larger;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
 .MuiAlert-icon {
   color: var(--foreground) !important;
 }
 
-    
+
 .drawer-left>.MuiPaper-root {
   z-index: 1;
   background-color: #5d55a5;
@@ -984,6 +1006,7 @@ nav.sidenav {
 .sidebar-item {
   cursor: pointer;
 }
+
 .sidebar-item span {
   font-size: 1.2rem;
 }
@@ -991,6 +1014,7 @@ nav.sidenav {
 .sidebar-subitem {
   margin-left: 40px;
 }
+
 .sidebar-subitem span {
   font-size: 1rem;
 }

@@ -78,8 +78,10 @@ In our activities during this workshop we will focus on building locally-hosted 
 ## Evaluation
 
 True or False: The primary difference between markup languages and programming languages is that markup languages are used to determine the format, appearance, and purpose of content, whereas programming languages are used to transform data.
+<Quiz>
 - True*
 - False
+</Quiz>
 
 ## Keywords
 

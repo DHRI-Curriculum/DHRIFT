@@ -7,7 +7,6 @@ import { useRef, useEffect, useState, useContext, useReducer } from 'react';
 
 
 export default function InterpreterComponent(props) {
-
     if (props.language && props.language.toLowerCase() === 'python') {
         return (
             <CodeRunBox
