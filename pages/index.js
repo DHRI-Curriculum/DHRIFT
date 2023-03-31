@@ -5,7 +5,8 @@ import yaml from '../config.yml'
 import Image from 'next/image'
 import Markdown, { compiler } from 'markdown-to-jsx';
 import dynamic from 'next/dynamic'
-import Schedule from '../components/Schedule'
+import Schedule from '../components/Schedule';
+import BuildIcon from '@material-ui/icons/Build';
 import Button from '@material-ui/core/Button';
 
 const Workshop = dynamic(
@@ -76,17 +77,17 @@ export default function Home({ workshops }) {
         </div>
         {yaml.schedule &&
           <div className='schedule-container'>
-            <Schedule schedule={yaml.schedule} />
+            <Schedule schedule={yaml.schedule} workshops={workshops} />
           </div>
         }
-        {/* <div className='workshops-container'>
+        {yaml.show_workshops && <div className='workshops-container'>
           <div className='sectionTitle'><BuildIcon /> Workshops</div>
           <div className='workshops'>
             {workshops.map((workshop, index) => (
               <Workshop key={index} workshop={workshop} index={index} />
             ))}
           </div>
-        </div> */}
+        </div>}
       </div>
     </div>
   )

@@ -150,10 +150,10 @@ export default function Header({ props }) {
                             </Link>
                         </Typography>
                         <ul className='links'>
-                            <li>
+                            {/* <li>
                                 {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
                             </li>
-                            {/* <li>
+                            <li>
                                 {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
                             </li>
                             <li>
@@ -161,6 +161,9 @@ export default function Header({ props }) {
                                     {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
                                 </li>
                             </li> */}
+                            <li>
+                                <Link href='/workshops/all' passHref>Workshops</Link>
+                            </li>
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>
