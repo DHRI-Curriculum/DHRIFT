@@ -1,6 +1,6 @@
 ---
 title: 'Short Introduction to Jupyter Notebooks'
-excerpt: 'Jupyter Notebooks!'
+description: 'Jupyter Notebooks!'
 cover_image: '/images/img3.jpg'
 ---
 

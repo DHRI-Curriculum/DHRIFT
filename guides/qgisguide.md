@@ -1,6 +1,6 @@
 ---
 title: 'Installing QGIS'
-excerpt: 'QGIS!'
+description: 'QGIS!'
 cover_image: '/images/img4.jpg'
 ---
 

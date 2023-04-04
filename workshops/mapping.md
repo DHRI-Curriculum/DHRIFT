@@ -1,6 +1,6 @@
 ---
 title: 'Mapping Workshop'
-excerpt: 'In the past decade, interactive maps have become one of the most popular ways to visualize and explore spatial data. Responding to the demand, mapping companies such as ESRI have developed a suite of tools for both creating and contextualizing interactive maps. While extremely helpful, some of the ESRI products are prohibitively expensive for many individuals. This workshop will use a combination of the public version of ESRI Online, which is free, and the free, open-source mapping software QGIS to build an interactive map. By the end of this workshop you will know the basics for making an interactive map that can be shared and embedded in a website. No mapping experience is necessary.'
+description: 'In the past decade, interactive maps have become one of the most popular ways to visualize and explore spatial data. Responding to the demand, mapping companies such as ESRI have developed a suite of tools for both creating and contextualizing interactive maps. While extremely helpful, some of the ESRI products are prohibitively expensive for many individuals. This workshop will use a combination of the public version of ESRI Online, which is free, and the free, open-source mapping software QGIS to build an interactive map. By the end of this workshop you will know the basics for making an interactive map that can be shared and embedded in a website. No mapping experience is necessary.'
 cover_image: '/images/workshops/img5.jpg'
 
 learning objectives:
@@ -21,11 +21,11 @@ estimated time:
 dependencies:
   workshop prerequisites:
     data-ethics:
-      excerpt: "(Recommended) In order to have a better understanding of the data formats we handle in this workshop, if you don't already have a foundational understanding of data formats and types, you can start by walking through our Data Ethics workshop."
+      description: "(Recommended) In order to have a better understanding of the data formats we handle in this workshop, if you don't already have a foundational understanding of data formats and types, you can start by walking through our Data Ethics workshop."
       recommended: true
   installations:
       qgisguide: 
-        excerpt: "(Required) To complete this workshop you will need to install QGIS. Step by step installation instructions are available here."
+        description: "(Required) To complete this workshop you will need to install QGIS. Step by step installation instructions are available here."
         required: true
 
 before getting started:

@@ -1,8 +1,13 @@
 organization: CUNY Graduate Center
-location:
-  city: New York
-  state: NY
+location: New York, NY
+google_maps: https://goo.gl/maps/zKuZb6KqEHZqaEMv6
 event: Digital Humanities Research Infrastructure For Teaching
+date: 2023-03-02
+end_date: 2023-03-04
+
+url: 'https://dhri.cuny.edu/'
+logo: 'https://dhri.cuny.edu/assets/images/dhri-logo.png'
+
 intro: "The Digital Humanities Research Institute (DHRI) is an intensive, community-oriented, 
 and foundational approach to learning technical skills in service of humanities teaching and 
 learning. The DHRI curriculum features workshops, tutorials, glossaries, resources, reading 
@@ -17,9 +22,11 @@ While the curriculum has always been available openly on GitHub, this site creat
 user-friendly and functional interface that is open and free for public use."
 
 motto: "Test motto"
+
 register: 
   required: true
   url: 'https://dhri.cuny.edu/'
+  show_button: true
   text: 'Register for the DHRI'
 
 show_workshops: true

@@ -59,6 +59,7 @@ em {
 
 *::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background: #363636;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -158,6 +159,7 @@ img {
   animation: 2s anim-lineUp ease-out;
   color: var(--foreground);
   font-size: 28px;
+  margin-bottom: 10px;
 }
 
 @keyframes anim-lineUp {
@@ -195,10 +197,9 @@ img {
   display: flex;
   flex-direction: row;
   align-content: center;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   margin-left: 5%;
-  margin-bottom: 20px;
   margin-top: 30px;
   flex-grow: 1;
 }
@@ -226,6 +227,7 @@ img {
   text-decoration: none;
   /* margin-top: 10px; */
   margin-bottom: 10px;
+  color: var(--foreground) !important;
 }
 
 .intro {
@@ -254,13 +256,16 @@ img {
 }
 
 .sectionTitle {
-  color: var(--foreground);
+  color: black;
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
   width: auto;
 }
 
+.intro .sectionTitle {
+  color: var(--foreground);
+}
 
 .workshops-container {
   padding-left: 5%;
@@ -324,7 +329,7 @@ img {
   letter-spacing: 1px;
   border-radius: 0%;
   transition: all 0.5s ease;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .drawer-list .menu-card {
@@ -448,7 +453,7 @@ img {
   color: var(--foreground) !important;
   border: 4px solid #000;
   letter-spacing: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 30px !important;
 }
 
 .accordion-summary {
@@ -465,16 +470,16 @@ img {
 
 .accordion-details {
   font-size: 1.2rem;
-  color: #333;
+  color: var(--foreground);
   border: none;
-  background-color: #fff;
+  background-color: var(--background-page);
   margin-bottom: 1rem;
 }
 
 .accordion-details h2 {
   font-size: 1.3rem;
   font-weight: bold;
-  color: #333;
+  color: var(--foreground);
   margin-bottom: 1rem;
   margin-top: 1rem;
 }
@@ -815,7 +820,7 @@ header a:hover {
   padding: 10px !important;
 }
 
-.excerpt {
+.description {
   margin-bottom: 20px;
 }
 

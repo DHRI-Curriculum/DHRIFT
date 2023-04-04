@@ -34,16 +34,32 @@ const imagesConfig = function(build, isGitHub) {
 }
 
 const nextConfig = {
-    // reactStrictMode: true,
     trailingSlash: true,
     basePath: isGitHub ? '/' + repoName : '',
     assetPrefix: isGitHub ? '/' + repoName + '/' : '',
     images: imagesConfig(build, isGitHub),
+    // async headers() {
+    //     return [
+    //         {
+    //             source: '/(.*)',
+    //             headers: [
+    //                 {
+    //                     key: 'Cross-Origin-Opener-Policy',
+    //                     value: 'same-origin',
+    //                 },
+    //                 {
+    //                     key: 'Cross-Origin-Embedder-Policy',
+    //                     value: 'require-corp',
+    //                 },
+    //             ],
+    //         },
+    //     ]
+    // }
 }
 
 console.log(nextConfig);
+
 module.exports = withPlugins([
-    [withMDX],
     [withYAML],
-],
-    nextConfig)
+    [withMDX],
+], nextConfig);

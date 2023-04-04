@@ -1,6 +1,6 @@
 ---
 title: 'Patrick Smyth'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Patrick Smyth </p>

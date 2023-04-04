@@ -3,7 +3,7 @@ import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
 
 export default function FrontPage(currentFile, allFiles) {
-  const excerpt = currentFile.excerpt
+  const description = currentFile.description
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
   const workshops = allFiles.workshops
@@ -25,7 +25,7 @@ export default function FrontPage(currentFile, allFiles) {
       const allItems = {
         [key]: {
           title: which.title,
-          excerpt: item.excerpt,
+          description: item.description,
           required: item.required,
           recommended: item.recommended,
           link: which ? `/${which.itemPath}` : '#'
@@ -49,15 +49,15 @@ export default function FrontPage(currentFile, allFiles) {
         <ul>
           {dep.items.map(item => {
             const workshopObject = item.allItems[Object.keys(item.allItems)[0]]
-            // convert workshopObject.excerpt to html 
-            const workshopHtmlExcerpt = ConvertMarkdown(workshopObject.excerpt)
+            // convert workshopObject.description to html 
+            const workshopHtmldescription = ConvertMarkdown(workshopObject.description)
             const required = workshopObject.required
             const recommended = workshopObject.recommended
             const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
             return (
               <li key={workshopObject} className={requiredOrRecommended}>
                 <Link href={workshopObject.link}>{item.title}</Link>
-                <p>{workshopHtmlExcerpt}</p>
+                <p>{workshopHtmldescription}</p>
               </li>
             )
           })}
@@ -69,8 +69,8 @@ export default function FrontPage(currentFile, allFiles) {
   // all objects in currentFile
   const allObjects = Object.keys(currentFile).map(key => {
     const item = currentFile[key]
-    // if object name is 'dependencies' or 'workshops' or 'insights' or 'installations' or 'excerpt' or 'title' or 'cover_image', don't add to list
-    if (key === 'dependencies' || key === 'workshops' || key === 'insights' || key === 'installations' || key === 'excerpt' || key === 'title' || key === 'cover_image' || key === 'content' || key === 'slug'
+    // if object name is 'dependencies' or 'workshops' or 'insights' or 'installations' or 'description' or 'title' or 'cover_image', don't add to list
+    if (key === 'dependencies' || key === 'workshops' || key === 'insights' || key === 'installations' || key === 'description' || key === 'title' || key === 'cover_image' || key === 'content' || key === 'slug'
       || key === 'path' || key === 'itemPath' || key === 'programming_language') {
       return null
     }
@@ -130,7 +130,7 @@ export default function FrontPage(currentFile, allFiles) {
               }
               if (typeof item === 'object') {
                 if (item.link) {
-                  const itemHtml = ConvertMarkdown(item.excerpt)
+                  const itemHtml = ConvertMarkdown(item.description)
                   return (
                     <li key={key}>
                       <a href={item.link}>{key}</a>
@@ -138,8 +138,8 @@ export default function FrontPage(currentFile, allFiles) {
                     </li>
                   )
                 }
-                if (item.excerpt) {
-                  const itemHtml = ConvertMarkdown(item.excerpt)
+                if (item.description) {
+                  const itemHtml = ConvertMarkdown(item.description)
                   return (
                     <li key={key} className='authors-list'>
                       {key}
@@ -168,8 +168,8 @@ export default function FrontPage(currentFile, allFiles) {
   return (
     <div className="frontpage">
       <h1>{title}</h1>
-      {excerpt && <div className="excerpt">
-        <p>{excerpt}</p></div>}
+      {description && <div className="description">
+        <p>{description}</p></div>}
       {!formatted && <Masonry columns={{ sm: 1, md: 2 }} spacing={2}>
         {formedDeps}
         {formattedObjects}

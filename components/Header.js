@@ -146,7 +146,8 @@ export default function Header({ props }) {
                                 flexShrink: 0,
                             }}>
                             <Link href='/' passHref>
-                                <h2 className='headerLink'>{yaml.event}</h2>
+                                {/* truncate to 80 characters */}
+                                <h2 className='headerLink'>{yaml.event.length > 80 ? yaml.event.substring(0, 80) + '...' : yaml.event}</h2>
                             </Link>
                         </Typography>
                         <ul className='links'>
@@ -175,7 +176,6 @@ export default function Header({ props }) {
                             {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
                         </IconButton>
                     </div>
-                    {/* <Button color="inherit">Login</Button> */}
                 </Toolbar>
             </AppBar>
         </Box>

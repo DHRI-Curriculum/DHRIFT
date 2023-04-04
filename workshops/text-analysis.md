@@ -1,6 +1,6 @@
 ---
 title: 'Text Analysis Workshop'
-excerpt: 'Digital technologies have made vast amounts of text available to researchers, and this same technological moment has provided us with the capacity to analyze that text faster than humanly possible. The first step in that analysis is to transform texts designed for human consumption into a form a computer can analyze. Using Python and the Natural Language ToolKit (commonly called NLTK), this workshop introduces strategies to turn qualitative texts into quantitative objects. Through that process, we will present a variety of strategies for simple analysis of text-based data.'
+description: 'Digital technologies have made vast amounts of text available to researchers, and this same technological moment has provided us with the capacity to analyze that text faster than humanly possible. The first step in that analysis is to transform texts designed for human consumption into a form a computer can analyze. Using Python and the Natural Language ToolKit (commonly called NLTK), this workshop introduces strategies to turn qualitative texts into quantitative objects. Through that process, we will present a variety of strategies for simple analysis of text-based data.'
 cover_image: '/images/workshops/img7.jpg'
 
 learning objectives:
@@ -19,21 +19,21 @@ estimated time:
 dependencies:
     workshop prerequisites:
         python:
-            excerpt: (required) This workshop relies heavily on concepts from the Python workshop, and having a basic understanding of how to use the commands discussed in the workshop will be central for anyone who wants to learn about text analysis with Python and NLTK.
+            description: (required) This workshop relies heavily on concepts from the Python workshop, and having a basic understanding of how to use the commands discussed in the workshop will be central for anyone who wants to learn about text analysis with Python and NLTK.
             required: true
         command-line:
-            excerpt: (recommended) This workshop makes some reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about text analysis with Python and NLTK.
+            description: (recommended) This workshop makes some reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about text analysis with Python and NLTK.
             recommended: true
     installations:
         pythonguide: 
-            excerpt: (Required) You can use any installation of Python (but make sure it is of version 3). For our purposes, Anaconda will provide everything necessary for all the workshops that are part of the DHRI curriculum.
+            description: (Required) You can use any installation of Python (but make sure it is of version 3). For our purposes, Anaconda will provide everything necessary for all the workshops that are part of the DHRI curriculum.
             required: true
         nltk:
-            excerpt: (required) You will need to install the NLTK package into your Python packages for the purposes of this workshop. This guide will help you along the way.
+            description: (required) You will need to install the NLTK package into your Python packages for the purposes of this workshop. This guide will help you along the way.
             required: true
     insights:
         jupyter-notebooks:
-            excerpt: (recommended) This workshop uses Jupyter Notebooks to process the Python commands in a clear and visual way. Anyone who wants to follow along in the workshop on text analysis with Python and NLTK should read this very short introduction to how to use Notebooks.
+            description: (recommended) This workshop uses Jupyter Notebooks to process the Python commands in a clear and visual way. Anyone who wants to follow along in the workshop on text analysis with Python and NLTK should read this very short introduction to how to use Notebooks.
 
 readings:
     - "[A Beginner’s Tutorial to Jupyter Notebooks](https://towardsdatascience.com/a-beginners-tutorial-to-jupyter-notebooks-1b2f8705888a)"

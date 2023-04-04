@@ -1,6 +1,6 @@
 ---
 title: 'Kalle Westerling'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Kalle Westerling </p>

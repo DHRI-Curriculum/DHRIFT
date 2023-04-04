@@ -9,7 +9,6 @@ import Sidebar from '../../components/Sidebar'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Presentation from '../../components/Presentation';
-import SlideoutEditor from '../../components/Editor/SlideoutEditor'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import yaml from '../../config.yml'

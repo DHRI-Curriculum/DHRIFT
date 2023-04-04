@@ -46,11 +46,11 @@ export default function CodeEditorComponent({ defaultCode, minLines, codeOnChang
       runPyodide(startingCode);
     }
     props.setAskToRun(false);
-     
+
   }, [props.askToRun])
 
 
-   
+
   /*useEffect(() => {
     nltoolkit = await fetch('https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt.zip')
       .then(nltoolkit =>
@@ -87,8 +87,34 @@ export default function CodeEditorComponent({ defaultCode, minLines, codeOnChang
     })
   }
 
-  let printList = [];
+  const printPlot =
+    `
+import js
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import io, base64
+# get values from inputs
+mu = int(1)
+sigma = int(2)
+# generate an interval
+x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
+# calculate PDF for each value in the x given mu and sigma and plot a line
+plt.plot(x, stats.norm.pdf(x, mu, sigma))
+# create buffer for an image
+buf = io.BytesIO()
+# copy the plot into the buffer
+plt.savefig(buf, format='png')
+buf.seek(0)
+# encode the image as Base64 string
+img_str = 'data:image/png;base64,' + base64.b64encode(buf.read()).decode('UTF-8')
+# show the image
+img_tag = js.document.getElementById('fig')
+img_tag.src = img_str
+buf.close()
+    `
 
+  let printList = [];
   const runPyodide = async (code) => {
     setRunningCode(true);
     setIsoutput(false);
@@ -101,6 +127,8 @@ export default function CodeEditorComponent({ defaultCode, minLines, codeOnChang
 
 
     await pyodide.loadPackagesFromImports(code);
+    await pyodide.loadPackagesFromImports(printPlot);
+    // pyodide.globals.generate_plot_img = printPlot;  
 
     filteredSnippets.forEach((snippet, index) => {
       pyodide.runPython(
@@ -117,11 +145,17 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
       var response = prompt(s);
       return response;
     });
+    namespace.set("log", (s) => {
+      console.log(s);
+    });
+    namespace.set("generate_plot_img", () => {
+      pyodide.runPython(printPlot);
+    });
 
 
-    return await pyodide.runPythonAsync(code, 
-      {globals: namespace}
-      ).then(result => {
+    return await pyodide.runPythonAsync(code,
+      { globals: namespace }
+    ).then(result => {
       setIsoutput(true);
       outputRef.current = outputRef.current + '\n' + result;
       setPrint(printList.join('\n'));
@@ -235,6 +269,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
         setPrint={setPrint}
         {...props}
       />
+      <div id="fig" style={{ width: "100%", height: "100%" }}></div>
 
     </Fragment>
   )

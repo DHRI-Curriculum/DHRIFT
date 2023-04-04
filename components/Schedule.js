@@ -72,7 +72,12 @@ export default function Schedule({ schedule, workshops }) {
                       <h2>{event.title}
                       {event.slug && 
                       <LaunchIcon className="launch-icon" 
-                      onClick={() => window.open(`/workshops/${event.slug}`)} />
+                      onClick={() => window.open(`/workshops/${event.slug}`)} 
+                      style={{ 
+                        cursor: 'pointer',
+                        paddingTop: '5px',
+                       }}
+                      />
                       }
                       </h2>
                       <p>{event.time}</p>

@@ -1,6 +1,6 @@
 ---
 title: 'Jojo Karlin'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Jojo Karlin </p>

@@ -1,6 +1,6 @@
 ---
 title: 'Kelsey Chatlosh'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Kelsey Chatlosh </p>

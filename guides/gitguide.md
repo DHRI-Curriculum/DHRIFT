@@ -1,6 +1,6 @@
 ---
 title: 'Installing Git'
-excerpt: 'Git!'
+description: 'Git!'
 cover_image: '/images/img4.jpg'
 ---
 
