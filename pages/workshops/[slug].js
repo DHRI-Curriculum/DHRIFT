@@ -50,12 +50,6 @@ export default function WorkshopPage({
   
   const router = useRouter()
   const { slug } = router.query
-  // if no slug, return index page
-  if (!slug) return (
-    <div className='container'>
-      test
-      </div>
-  )
   
   const currentFile = workshops.find((workshop) => workshop.slug === slug)
   const title = currentFile.title
