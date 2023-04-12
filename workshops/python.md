@@ -29,12 +29,17 @@ dependencies:
             recommended: true
 
 authors:
-    current: 'Kalle Westerling'
-    past: 'Lisa Rhody'
+    - 'Kalle Westerling'
+    - 'Di Yoong'
+    - 'Lisa Rhody'
+    - 'Jojo Karlin'
+    - 'Stephen Zweibel'
+    - 'Patrick Smyth'
 
 editors:
-    current: 'Di Yoong'
-    past: 'Stephen Zweibel'
+    - 'Di Yoong'
+    - 'Lisa Rhody' 
+    - 'Stephen Zweibel'
 
 readings:
     - Want to learn programming, but not convinced that the Python language is the right language? Check out [Five Reasons Why Learning Python Is The Best Decision](https://medium.com/datadriveninvestor/)

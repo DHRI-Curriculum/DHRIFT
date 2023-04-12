@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default function FrontPage(currentFile, allFiles) {
   const description = currentFile.description
@@ -20,7 +22,7 @@ export default function FrontPage(currentFile, allFiles) {
       const insight = insights.find(insight => insight.slug === key)
       const guide = installGuides.find(guide => guide.slug === key)
       // const author = authors.find(author => author.slug === key)
-      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (author ? author : null))))
+      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (authors ? authors : null))))
 
       const allItems = {
         [key]: {
@@ -97,29 +99,35 @@ export default function FrontPage(currentFile, allFiles) {
                   </li>
                 )
                 }
-              if (obj.title === 'authors') {
 
+              if (obj.title === 'authors') {
                 const author = authors.find(author => author.title === item)
-                let authorPath = `/authors/${author.slug}`
-                let authorStatus = key.charAt(0).toUpperCase() + key.slice(1)
+                const authorPath = author ? `/authors/${author.slug}` : '#'
+                const authorList = {
+                  key: item,
+                  value: authorPath
+                }
                 return (
-                  <li key={key} className='authors-list'>
-                    <Link href={authorPath}>{item}</Link>
-                    <li>{authorStatus}</li>
+                  <li key={key} className = 'authors-list'>
+                    <Link href = {authorList.value}>{authorList.key}</Link>
                   </li>
                 )
               }
+
               if (obj.title === 'editors') {
                 const editor = authors.find(author => author.title === item)
-                let editorPath = `/authors/${editor.slug}`
-                let editorStatus = key.charAt(0).toUpperCase() + key.slice(1)
+                const editorPath = editor ? `/authors/${editor.slug}` : '#'
+                const editorList = {
+                  key: item,
+                  value: editorPath
+                }
                 return (
-                  <li key={key} className='authors-list'>
-                    <Link href={editorPath}>{item}</Link>
-                    <li>{editorStatus}</li>
+                  <li key={key} className = 'authors-list'>
+                    <Link href = {editorList.value}>{editorList.key}</Link>
                   </li>
                 )
               }
+                
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
