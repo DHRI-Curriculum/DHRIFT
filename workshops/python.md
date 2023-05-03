@@ -10,8 +10,14 @@ learning objectives:
     - Become familiar with core programming concepts, including variables, loops, and conditionals.
     - Engage with error output and use the internet and documentation to independently research language features.
     - Learn how to find and import code from external sources to solve more complex problems.
+    
+facilitators: 
+    name: 'Stephen Zweibel'
+    description: 'Here is a short bio.'
+
 estimated time:
     - 3 - 4 hours
+
 dependencies: 
     workshop prerequisites: 
         command-line: 
@@ -29,12 +35,17 @@ dependencies:
             recommended: true
 
 authors:
-    current: 'Kalle Westerling'
-    past: 'Lisa Rhody'
+    - 'Kalle Westerling'
+    - 'Di Yoong'
+    - 'Lisa Rhody'
+    - 'Jojo Karlin'
+    - 'Stephen Zweibel'
+    - 'Patrick Smyth'
 
 editors:
-    current: 'Di Yoong'
-    past: 'Stephen Zweibel'
+    - 'Di Yoong'
+    - 'Lisa Rhody' 
+    - 'Stephen Zweibel'
 
 readings:
     - Want to learn programming, but not convinced that the Python language is the right language? Check out [Five Reasons Why Learning Python Is The Best Decision](https://medium.com/datadriveninvestor/)

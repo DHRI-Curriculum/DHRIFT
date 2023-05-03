@@ -86,13 +86,13 @@ export default function AuthorPage({
   }, [content]);
 
   return (
-    <Container
-      disableGutters = {true}
+    <Container 
+      disableGutters = {false}
       maxWidth="xl"
       style={{ display: 'flex',
-    marginTop: '1rem', }}
+      marginTop: '4rem', }}
     >
-      <div className="content card-page">
+      <div className="content card-page page-content h1">
         <div className="workshop-container">
           {currentContent}
         </div>

@@ -3,7 +3,7 @@ title: 'Kalle Westerling'
 description: 'Authors!'
 ---
 
-# <p style="text-align: center;"> Kalle Westerling </p>
+# Kalle Westerling
 
 ![Kalle Westerling](/images/authors/kalle-westerling.png)
 

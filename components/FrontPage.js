@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Facilitator from './Facilitator';
+import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
 
 export default function FrontPage(currentFile, allFiles) {
   const description = currentFile.description
@@ -11,6 +16,21 @@ export default function FrontPage(currentFile, allFiles) {
   const insights = allFiles.insights
   const authors = allFiles.authors
 
+  // facilitator dialog box state
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    console.log('open', open);
+  }, [open]);
+
   const formattedDependencies = Object.keys(dependencies).map(key => {
     const items = dependencies[key]
     const addLinktoItems = Object.keys(items).map(key => {
@@ -20,7 +40,7 @@ export default function FrontPage(currentFile, allFiles) {
       const insight = insights.find(insight => insight.slug === key)
       const guide = installGuides.find(guide => guide.slug === key)
       // const author = authors.find(author => author.slug === key)
-      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (author ? author : null))))
+      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (authors ? authors : null))))
 
       const allItems = {
         [key]: {
@@ -97,29 +117,65 @@ export default function FrontPage(currentFile, allFiles) {
                   </li>
                 )
                 }
-              if (obj.title === 'authors') {
+              
+                if (obj.title === 'facilitators') {  
+                  const facilitator = authors.find(author => author.title === item);
+                  const facilitatorPath = facilitator ? `/authors/${facilitator.slug}` : '#';
+                  const facilitatorList = {
+                    name: item,
+                    value: facilitatorPath
+                  };
+                  console.log('facilitatorList', facilitatorList.name)
+                  
+                  let bio = '';
+                  if (key === 'description') {
+                    bio = item;
+                    console.log('bio', bio);
+                  };
 
+                  return (
+                    <li key={key}>
+                      <Button onClick={handleClickOpen}>
+                        {facilitatorList.name}
+                      </Button>
+                      <Facilitator
+                        name={facilitatorList.name}
+                        bio={bio}
+                        open={open}
+                        handleClose={handleClose}
+                      />
+                    </li>
+                  );
+                }
+
+              if (obj.title === 'authors') {
                 const author = authors.find(author => author.title === item)
-                let authorPath = `/authors/${author.slug}`
-                let authorStatus = key.charAt(0).toUpperCase() + key.slice(1)
+                const authorPath = author ? `/authors/${author.slug}` : '#'
+                const authorList = {
+                  key: item,
+                  value: authorPath
+                }
                 return (
-                  <li key={key} className='authors-list'>
-                    <Link href={authorPath}>{item}</Link>
-                    <li>{authorStatus}</li>
+                  <li key={key} className = 'authors-list'>
+                    <Link href = {authorList.value}>{authorList.key}</Link>
                   </li>
                 )
               }
+
               if (obj.title === 'editors') {
                 const editor = authors.find(author => author.title === item)
-                let editorPath = `/authors/${editor.slug}`
-                let editorStatus = key.charAt(0).toUpperCase() + key.slice(1)
+                const editorPath = editor ? `/authors/${editor.slug}` : '#'
+                const editorList = {
+                  key: item,
+                  value: editorPath
+                }
                 return (
-                  <li key={key} className='authors-list'>
-                    <Link href={editorPath}>{item}</Link>
-                    <li>{editorStatus}</li>
+                  <li key={key} className = 'authors-list'>
+                    <Link href = {editorList.value}>{editorList.key}</Link>
                   </li>
                 )
               }
+                
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
