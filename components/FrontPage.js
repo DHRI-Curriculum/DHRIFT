@@ -3,6 +3,9 @@ import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Facilitator from './Facilitator';
+import Button from '@mui/material/Button';
+import { useState, useEffect } from 'react';
 
 export default function FrontPage(currentFile, allFiles) {
   const description = currentFile.description
@@ -12,6 +15,21 @@ export default function FrontPage(currentFile, allFiles) {
   const installGuides = allFiles.guides
   const insights = allFiles.insights
   const authors = allFiles.authors
+
+  // facilitator dialog box state
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    console.log('open', open);
+  }, [open]);
 
   const formattedDependencies = Object.keys(dependencies).map(key => {
     const items = dependencies[key]
@@ -98,6 +116,36 @@ export default function FrontPage(currentFile, allFiles) {
                     <p>{description}</p>
                   </li>
                 )
+                }
+              
+                if (obj.title === 'facilitators') {  
+                  const facilitator = authors.find(author => author.title === item);
+                  const facilitatorPath = facilitator ? `/authors/${facilitator.slug}` : '#';
+                  const facilitatorList = {
+                    name: item,
+                    value: facilitatorPath
+                  };
+                  console.log('facilitatorList', facilitatorList.name)
+                  
+                  let bio = '';
+                  if (key === 'description') {
+                    bio = item;
+                    console.log('bio', bio);
+                  };
+
+                  return (
+                    <li key={key}>
+                      <Button onClick={handleClickOpen}>
+                        {facilitatorList.name}
+                      </Button>
+                      <Facilitator
+                        name={facilitatorList.name}
+                        bio={bio}
+                        open={open}
+                        handleClose={handleClose}
+                      />
+                    </li>
+                  );
                 }
 
               if (obj.title === 'authors') {

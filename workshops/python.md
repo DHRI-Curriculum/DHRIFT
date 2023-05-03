@@ -10,8 +10,14 @@ learning objectives:
     - Become familiar with core programming concepts, including variables, loops, and conditionals.
     - Engage with error output and use the internet and documentation to independently research language features.
     - Learn how to find and import code from external sources to solve more complex problems.
+    
+facilitators: 
+    name: 'Stephen Zweibel'
+    description: 'Here is a short bio.'
+
 estimated time:
     - 3 - 4 hours
+
 dependencies: 
     workshop prerequisites: 
         command-line: 
