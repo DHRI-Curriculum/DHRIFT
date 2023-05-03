@@ -3,11 +3,11 @@ import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Facilitator from './Facilitator';
+import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 
-export default function FrontPage(currentFile, allFiles) {
+export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFacilitatorOpen) {
   const description = currentFile.description
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
@@ -16,20 +16,14 @@ export default function FrontPage(currentFile, allFiles) {
   const insights = allFiles.insights
   const authors = allFiles.authors
 
-  // facilitator dialog box state
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleOpen = () => {
+    setFacilitatorOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setFacilitatorOpen(false);
   };
-
-  useEffect(() => {
-    console.log('open', open);
-  }, [open]);
+  console.log("facilitatorOpen", facilitatorOpen);
 
   const formattedDependencies = Object.keys(dependencies).map(key => {
     const items = dependencies[key]
@@ -61,30 +55,33 @@ export default function FrontPage(currentFile, allFiles) {
       items: addLinktoItems
     }
   })
-  
-  const formedDeps = formattedDependencies.map(dep => {
-    return (
-      <div className='frontpage-item dependency' key={dep.title}>
-        <h2>{dep.title}</h2>
-        <ul>
-          {dep.items.map(item => {
-            const workshopObject = item.allItems[Object.keys(item.allItems)[0]]
-            // convert workshopObject.description to html 
-            const workshopHtmldescription = ConvertMarkdown(workshopObject.description)
-            const required = workshopObject.required
-            const recommended = workshopObject.recommended
-            const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
-            return (
-              <li key={workshopObject} className={requiredOrRecommended}>
-                <Link href={workshopObject.link}>{item.title}</Link>
-                <p>{workshopHtmldescription}</p>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-    )
-  })
+
+  const formedDeps =
+    formattedDependencies.map(dep => {
+      return (
+        <div className='frontpage-item dependency' key={dep.title}>
+          <h2>{dep.title}</h2>
+          <ul>
+            {dep.items.map(item => {
+              const workshopObject = item.allItems[Object.keys(item.allItems)[0]]
+              // convert workshopObject.description to html 
+              const workshopHtmldescription = ConvertMarkdown(workshopObject.description)
+              const required = workshopObject.required
+              const recommended = workshopObject.recommended
+              const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
+              return (
+                <li key={workshopObject} className={requiredOrRecommended}>
+                  <Link href={workshopObject.link}>{item.title}</Link>
+                  <p>{workshopHtmldescription}</p>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )
+    })
+
+
 
   // all objects in currentFile
   const allObjects = Object.keys(currentFile).map(key => {
@@ -116,37 +113,30 @@ export default function FrontPage(currentFile, allFiles) {
                     <p>{description}</p>
                   </li>
                 )
-                }
-              
-                if (obj.title === 'facilitators') {  
-                  const facilitator = authors.find(author => author.title === item);
-                  const facilitatorPath = facilitator ? `/authors/${facilitator.slug}` : '#';
-                  const facilitatorList = {
-                    name: item,
-                    value: facilitatorPath
-                  };
-                  console.log('facilitatorList', facilitatorList.name)
-                  
-                  let bio = '';
-                  if (key === 'description') {
-                    bio = item;
-                    console.log('bio', bio);
-                  };
+              }
 
-                  return (
-                    <li key={key}>
-                      <Button onClick={handleClickOpen}>
-                        {facilitatorList.name}
-                      </Button>
-                      <Facilitator
-                        name={facilitatorList.name}
-                        bio={bio}
-                        open={open}
-                        handleClose={handleClose}
-                      />
-                    </li>
-                  );
-                }
+              if (obj.title === 'facilitators') {
+                const facilitator = authors.find(author => author.title === item);
+                const facilitatorPath = facilitator ? `/authors/${facilitator.slug}` : '#';
+                const facilitatorList = {
+                  name: item,
+                  value: facilitatorPath
+                };
+
+                let bio = '';
+                if (key === 'description') {
+                  bio = item;
+                  console.log('bio', bio);
+                };
+
+                return (
+                  <li key={facilitatorList.name}>
+                    <Button onClick={handleOpen}>
+                      {facilitatorList.name}
+                    </Button>
+                  </li>
+                );
+              }
 
               if (obj.title === 'authors') {
                 const author = authors.find(author => author.title === item)
@@ -156,8 +146,8 @@ export default function FrontPage(currentFile, allFiles) {
                   value: authorPath
                 }
                 return (
-                  <li key={key} className = 'authors-list'>
-                    <Link href = {authorList.value}>{authorList.key}</Link>
+                  <li key={key} className='authors-list'>
+                    <Link href={authorList.value}>{authorList.key}</Link>
                   </li>
                 )
               }
@@ -170,12 +160,12 @@ export default function FrontPage(currentFile, allFiles) {
                   value: editorPath
                 }
                 return (
-                  <li key={key} className = 'authors-list'>
-                    <Link href = {editorList.value}>{editorList.key}</Link>
+                  <li key={key} className='authors-list'>
+                    <Link href={editorList.value}>{editorList.key}</Link>
                   </li>
                 )
               }
-                
+
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
@@ -209,7 +199,8 @@ export default function FrontPage(currentFile, allFiles) {
                       const term = ConvertMarkdown(item[key])
                       return (
                         <p key={key} className='frontpage-list'>{term}</p>
-                      )})}
+                      )
+                    })}
                   </div>
                 )
               }
@@ -230,7 +221,16 @@ export default function FrontPage(currentFile, allFiles) {
         {formedDeps}
         {formattedObjects}
       </Masonry>}
+<ClassFacilitator
+name={'facilitatorList.name'}
+bio={'bio'}
+facilitatorOpen={facilitatorOpen}
+handleClose={handleClose}
+/>
     </div>
+
   )
 }
+
+export const MemoizedFrontpage = memo(FrontPage);
 

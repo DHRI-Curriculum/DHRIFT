@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import {
   Dialog,
@@ -9,16 +9,20 @@ import {
   Button,
 } from "@mui/material";
 
-export default function Facilitator({ name, bio, open, handleClose }) {
-  console.log("Facilitator component rendered")
-  console.log(bio)
-  const handleCloseDialog = () => {
-    handleClose(false);
-  };
+export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClose }) {
+  
+// check if rerendered
+  console.log("Facilitator rendered", name, facilitatorOpen);
+
+
+  useEffect(() => {
+    console.log("facOpen", facilitatorOpen);
+  }, [facilitatorOpen]);
+  
+
   return (
     <div>
-      {console.log("Facilitator", name, open, handleClose)}
-      <Dialog open={open} onClose={handleCloseDialog}>
+      <Dialog open={facilitatorOpen} onClose={handleClose}>
         <DialogTitle>Facilitator</DialogTitle>
         <DialogContent>
           <Typography>Name: {name}</Typography>
