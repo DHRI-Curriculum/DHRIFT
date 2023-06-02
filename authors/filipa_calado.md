@@ -1,6 +1,6 @@
 ---
 title: 'Filipa Calado'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Filipa Calado </p>

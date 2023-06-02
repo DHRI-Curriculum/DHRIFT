@@ -1,6 +1,6 @@
 ---
 title: 'Param Ajmera'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Param Ajmera </p>

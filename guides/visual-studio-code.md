@@ -1,6 +1,6 @@
 ---
 title: 'Installing VSCode'
-excerpt: 'VS Code!'
+description: 'VS Code!'
 cover_image: '/images/img4.jpg'
 ---
 

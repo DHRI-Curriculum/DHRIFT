@@ -213,6 +213,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, setCode, se
                             setCode: setCode,
                             setEditorOpen: setEditorOpen,
                             setAskToRun: setAskToRun,
+                            workshop: workshop,
                         }
                         
                     },

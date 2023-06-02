@@ -1,6 +1,6 @@
 ---
 title: 'Installing Python'
-excerpt: 'Python!'
+description: 'Python!'
 cover_image: '/images/img4.jpg'
 ---
 

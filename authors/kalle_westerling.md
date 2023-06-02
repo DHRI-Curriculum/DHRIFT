@@ -1,9 +1,9 @@
 ---
 title: 'Kalle Westerling'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
-# <p style="text-align: center;"> Kalle Westerling </p>
+# Kalle Westerling
 
 ![Kalle Westerling](/images/authors/kalle-westerling.png)
 

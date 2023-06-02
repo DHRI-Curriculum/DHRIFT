@@ -1,6 +1,6 @@
 ---
 title: 'Stefano Morello'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Stefano Morello </p>

@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import LaunchIcon from '@mui/icons-material/Launch';
 
+export default function Schedule({ schedule, workshops }) {
 
-export default function Schedule({ schedule }) {
   const [activeAccordion, setActiveAccordion] = useState(schedule[0].date);
-
   const formattedDate = (date) => {
 
     const dateObj = new Date(date);
@@ -17,6 +17,10 @@ export default function Schedule({ schedule }) {
   // group events by date
   const eventsByDate = schedule.reduce((acc, event) => {
     const date = formattedDate(event.date);
+    if(event.workshop !== undefined) {
+      // search for the workshop in the workshops array by slug 
+      event.slug =  workshops.find((workshop) => workshop.slug === event.workshop).slug;
+    }
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -59,13 +63,23 @@ export default function Schedule({ schedule }) {
               onChange={(event) => handleAccordionChange(event, date)}
             >
               <AccordionSummary expandIcon={<ExpandMore />}>
-                <h2 className="accordion-summary">{date}</h2>
+                <h3 className="accordion-summary">{date}</h3>
               </AccordionSummary>
               <AccordionDetails>
                 <div className="accordion-details">
                   {eventsByDate[date].map((event, index) => (
                     <div key={index}>
-                      <h2>{event.title}</h2>
+                      <h2>{event.title}
+                      {event.slug && 
+                      <LaunchIcon className="launch-icon" 
+                      onClick={() => window.open(`/workshops/${event.slug}`)} 
+                      style={{ 
+                        cursor: 'pointer',
+                        paddingTop: '5px',
+                       }}
+                      />
+                      }
+                      </h2>
                       <p>{event.time}</p>
                       <p>{event.description}</p>
                     </div>

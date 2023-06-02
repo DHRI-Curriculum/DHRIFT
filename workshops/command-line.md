@@ -1,6 +1,6 @@
 ---
 title: 'Command Line Workshop'
-excerpt: 'If asked to show someone who has never seen a computer how to do something on your computer, many of us would explain what a screen and a cursor are, and then show how to point and click on icons. This approach relies on a graphical user interface, or GUI (pronounced “gooey!”). Today we’re going to explore another way to make your computer do things: through the command line. Instead of pointing and clicking, we’ll be typing in either git bash (Windows) or terminal (macOS) to tell the computer directly what task we’d like it to perform.'
+description: 'If asked to show someone who has never seen a computer how to do something on your computer, many of us would explain what a screen and a cursor are, and then show how to point and click on icons. This approach relies on a graphical user interface, or GUI (pronounced “gooey!”). Today we’re going to explore another way to make your computer do things: through the command line. Instead of pointing and clicking, we’ll be typing in either git bash (Windows) or terminal (macOS) to tell the computer directly what task we’d like it to perform.'
 cover_image: '/images/workshops/img2.jpg'
 learning objectives: 
     - description: 'The goals of this workshop are to:'
@@ -12,13 +12,13 @@ learning objectives:
     - Search text files using the `grep` command
     - Create and sort cheat sheets for the commands we learn
 estimated time: 
-    excerpt: 3 hours
+    description: 3 hours
 dependencies:
     workshop prerequisites:
             visual-studio-code: 
-                excerpt: (Recommended) You can use any plain text editor, but for our purposes Visual Studio Code ("VS Code") will be used.
+                description: (Recommended) You can use any plain text editor, but for our purposes Visual Studio Code ("VS Code") will be used.
             gitguide:
-                excerpt: (Required) If you're using Windows, you will need to follow the instructions to install so that we can work in the cross-platform Unix command line for this session. If you're using macOS, however, you do not need to take any action. The built-in Terminal application has all the functionality we need.
+                description: (Required) If you're using Windows, you will need to follow the instructions to install so that we can work in the cross-platform Unix command line for this session. If you're using macOS, however, you do not need to take any action. The built-in Terminal application has all the functionality we need.
 
         
 readings:

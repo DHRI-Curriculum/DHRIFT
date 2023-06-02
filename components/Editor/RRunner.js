@@ -1,16 +1,14 @@
 import { useRef, useEffect, useState, useContext, useReducer, Fragment } from 'react';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
-
 const EditorComponent = dynamic(() => import('./EditorComponent'), { ssr: false });
-import CloseIcon from '@mui/icons-material/Close';
 import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
 
 // Explicitly set the webR base URL to the webR npm package directory
 const webR = new WebR({
     baseUrl: './node_modules/@r-wasm/webr/dist/',
-  });
+});
 
 
 export default function RRunner(props) {
@@ -30,8 +28,10 @@ export default function RRunner(props) {
         await webR.init();
         const rnorm = await webR.evalR('rnorm(5,1,1)');
         try {
+            console.log('rnorm', rnorm);
             const result = await rnorm.toArray();
             setResult(result);
+            console.log(result);
         }
         catch (e) {
             setError(e);
@@ -44,12 +44,7 @@ export default function RRunner(props) {
     
     // when the page is loaded, initialize webR and run the code.
     useEffect(() => {
-        const webR = new WebR();
-         webR.init().then(() => {
-            setIsRReady(true);
-            setIsRLoading(false);
             runRCode();
-        });
     }, []);
 
 
@@ -80,7 +75,7 @@ export default function RRunner(props) {
                   }}
             /></>} */}
 
-           
+
             <div className="editorContainer">
                 <EditorTopbar spinnerNeeded={(isRLoading && !isRReady) ? true : false}
                     setCode={props.setCode}

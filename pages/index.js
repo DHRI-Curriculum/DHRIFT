@@ -3,9 +3,12 @@ import path from 'path'
 import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
+import Markdown, { compiler } from 'markdown-to-jsx';
 import dynamic from 'next/dynamic'
-import Schedule from '../components/Schedule'
+import Schedule from '../components/Schedule';
 import BuildIcon from '@material-ui/icons/Build';
+import Button from '@material-ui/core/Button';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Workshop = dynamic(
   () => import('../components/MenuItem'),
@@ -13,6 +16,22 @@ const Workshop = dynamic(
 )
 
 export default function Home({ workshops }) {
+
+  const formattedDate = (date) => {
+    const dateObj = new Date(date);
+    const modifiedDate = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * -60000)
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    return modifiedDate.toLocaleDateString('en-US', options);
+  };
+
+  let date = null
+  if (yaml.date) {
+    if (yaml.date === yaml.end_date) {
+      date = formattedDate(yaml.date)
+    } else {
+      date = formattedDate(yaml.date) + ' - ' + formattedDate(yaml.end_date)
+    }
+  }
 
   return (
     <div className='container'>
@@ -30,7 +49,21 @@ export default function Home({ workshops }) {
                   fontFamily: 'Titillium Web',
                   fontWeight: '400',
                 }}
-                className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2>
+                className='lineUp'>
+                {date}
+              </h2>
+              <p>{yaml.organization}</p>
+              <p>{yaml.location}
+              {yaml.google_maps && <LocationOnIcon
+              onClick={() => window.open(yaml.google_maps, '_blank')}
+              style={{ 
+                cursor: 'pointer',
+                paddingTop: '5px',
+              }}  />}
+              
+
+
+              </p>
             </div>
             <Image
               src={'/images/logo.png'}
@@ -39,22 +72,52 @@ export default function Home({ workshops }) {
               height={200}
               className='frontpage-logo' />
           </div>
-          <div className='intro'>
-            <div className='sectionTitle'>Description</div>
-            <p className='intro-text'>{yaml.intro}</p>
+          <div className='registration'>
+            {yaml.register?.required && (
+              <p>
+                {yaml.register.text}
+                {yaml.register.show_button && <Button
+                  style={{
+                    color: 'var(--foreground)',
+                    fontFamily: 'Titillium Web',
+                    fontWeight: '400',
+                    fontSize: '1.2rem',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0rem',
+                    marginLeft: '1rem',
+                    border: '2px solid #ef3b3a',
+                    boxShadow: '#ef3b3a 8px 8px 0px'
+                  }}
+                  href={yaml.register.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='registerButton'
+                >
+                  Register
+                </Button>}
+              </p>
+            )}
           </div>
+          {yaml.intro &&
+            <div className='intro'>
+              <div className='sectionTitle'>Description</div>
+              <p className='intro-text'><Markdown>{yaml.intro}</Markdown></p>
+            </div>
+          }
         </div>
-        <div className='schedule-container'>
-          <Schedule schedule={yaml.schedule} />
-        </div>
-        {/* <div className='workshops-container'>
+        {yaml.schedule &&
+          <div className='schedule-container'>
+            <Schedule schedule={yaml.schedule} workshops={workshops} />
+          </div>
+        }
+        {yaml.show_workshops && <div className='workshops-container'>
           <div className='sectionTitle'><BuildIcon /> Workshops</div>
           <div className='workshops'>
             {workshops.map((workshop, index) => (
               <Workshop key={index} workshop={workshop} index={index} />
             ))}
           </div>
-        </div> */}
+        </div>}
       </div>
     </div>
   )

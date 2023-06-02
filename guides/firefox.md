@@ -1,6 +1,6 @@
 ---
 title: 'Installing Firefox'
-excerpt: 'Firefox!'
+description: 'Firefox!'
 cover_image: '/images/img4.jpg'
 ---
 

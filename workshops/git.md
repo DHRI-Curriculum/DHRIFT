@@ -1,6 +1,6 @@
 ---
 title: 'Introduction to Git and GitHub'
-excerpt: 'Git and GitHub are powerful tools for collaborative and individual projects. Git is a version control software that aids with tracking changes made to a set of files over time. GitHub is a web-based platform for storing and sharing project files online. This session begins with a conceptual overview of both tools, including an introduction to fundamental concepts such as version control and practical applications like developing a syllabus or collaborative writing. This session then covers initializing Git repositories, committing changes, pushing to GitHub, cloning repositories to your local machine, and forking repositories from other accounts on GitHub.'
+description: 'Git and GitHub are powerful tools for collaborative and individual projects. Git is a version control software that aids with tracking changes made to a set of files over time. GitHub is a web-based platform for storing and sharing project files online. This session begins with a conceptual overview of both tools, including an introduction to fundamental concepts such as version control and practical applications like developing a syllabus or collaborative writing. This session then covers initializing Git repositories, committing changes, pushing to GitHub, cloning repositories to your local machine, and forking repositories from other accounts on GitHub.'
 cover_image: '/images/workshops/img4.jpg'
 
 learning objectives:
@@ -20,10 +20,10 @@ estimated time:
 dependencies: 
     workshop prerequisites: 
         command-line: 
-            excerpt: Introduction to the Command Line (Required) This workshop makes reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about git and GitHub.
+            description: Introduction to the Command Line (Required) This workshop makes reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about git and GitHub.
             required: true
         visual-studio-code: 
-            excerpt: (Recommended) You can use any plain text editor, but for our purposes Visual Studio Code ("VS Code") will be used.
+            description: (Recommended) You can use any plain text editor, but for our purposes Visual Studio Code ("VS Code") will be used.
 
 before getting started:
   - "[Create an account on GitHub](https://github.com/join) (required) You need to have a GitHub account for the purposes of this workshop. It is free to sign up via the link."

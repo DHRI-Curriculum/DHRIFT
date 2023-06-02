@@ -1,6 +1,6 @@
 ---
 title: 'Installing NLTK'
-excerpt: 'NLTK!'
+description: 'NLTK!'
 cover_image: '/images/img4.jpg'
 ---
 

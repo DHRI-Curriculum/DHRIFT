@@ -1,6 +1,6 @@
 ---
 title: 'Lisa Rhody'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Lisa Rhody </p>

@@ -1,6 +1,6 @@
 ---
 title: 'Di Yoong'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Di Yoong </p>

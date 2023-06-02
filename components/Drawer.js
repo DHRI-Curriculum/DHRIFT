@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import Link from 'next/link'
 import CardContent from '@mui/material/CardContent';
@@ -19,6 +18,19 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
     )
   })
 
+  // remove workshops after the fifth 
+  filesList.splice(5)
+  // add a 'see all' button to the bottom of the drawer
+  filesList.push(
+    <Card
+      className='menu-card'>
+      <Link href={`/workshops`} passHref>
+        <CardContent className='card-content'>
+          <h1 className='overlay'>See All Workshops</h1>
+        </CardContent>
+      </Link>
+    </Card>
+  )
 
   const [state, setState] = React.useState({
     top: false,
@@ -36,7 +48,7 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
 
   const list = (anchor) => (
     <Box
-      className="drawer-list"
+      className="drawer"
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}

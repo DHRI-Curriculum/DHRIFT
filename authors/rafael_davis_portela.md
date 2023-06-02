@@ -1,6 +1,6 @@
 ---
 title: 'Rafael Davis Portela'
-excerpt: 'Authors!'
+description: 'Authors!'
 ---
 
 # <p style="text-align: center;"> Rafael Davis Portela </p>
