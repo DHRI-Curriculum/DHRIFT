@@ -5,7 +5,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
-import { useState, useEffect, useRef, memo } from 'react';
 
 export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFacilitatorOpen) {
   const description = currentFile.description
@@ -231,6 +230,4 @@ handleClose={handleClose}
 
   )
 }
-
-export const MemoizedFrontpage = memo(FrontPage);
 
