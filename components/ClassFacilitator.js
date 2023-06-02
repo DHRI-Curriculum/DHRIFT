@@ -10,13 +10,8 @@ import {
 } from "@mui/material";
 
 export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClose }) {
-  
-// check if rerendered
-  console.log("Facilitator rendered", name, facilitatorOpen);
-
 
   useEffect(() => {
-    console.log("facOpen", facilitatorOpen);
   }, [facilitatorOpen]);
   
 
