@@ -14,7 +14,6 @@ export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClo
   useEffect(() => {
   }, [facilitatorOpen]);
   
-
   return (
     <div>
       <Dialog open={facilitatorOpen} onClose={handleClose}>
