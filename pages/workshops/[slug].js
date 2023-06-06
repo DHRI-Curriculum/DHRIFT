@@ -42,7 +42,8 @@ export default function WorkshopPage({
   guides,
   insights,
   authors,
-  uploads
+  uploads,
+  facilitators,
 }) {
 
   const router = useRouter()
@@ -61,7 +62,8 @@ export default function WorkshopPage({
       guides,
       insights,
       authors,
-      uploads
+      uploads,
+      facilitators,
     }, facilitatorOpen, setFacilitatorOpen)
 
 
@@ -285,7 +287,7 @@ export default function WorkshopPage({
           />}
         <ClassFacilitator
         // You'll have to make state variables in the slug and pass them down
-          name={'hello'}
+          name={facilitators}
           bio={'bio'}
           facilitatorOpen={facilitatorOpen}
           handleClose={ () => setFacilitatorOpen(false)}

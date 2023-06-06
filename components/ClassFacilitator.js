@@ -13,7 +13,7 @@ export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClo
   
 // check if rerendered
   console.log("Facilitator rendered", name, facilitatorOpen);
-
+  console.log("name", name);
 
   useEffect(() => {
     console.log("facOpen", facilitatorOpen);

@@ -122,6 +122,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                   name: item,
                   value: facilitatorPath
                 };
+                console.log('facilitatorList', facilitatorList)
 
                 let bio = '';
                 if (key === 'description') {
