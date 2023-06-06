@@ -5,7 +5,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
-import { useState, useEffect, useRef, memo } from 'react';
 
 export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFacilitatorOpen) {
   const description = currentFile.description
@@ -23,7 +22,6 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
   const handleClose = () => {
     setFacilitatorOpen(false);
   };
-  console.log("facilitatorOpen", facilitatorOpen);
 
   const formattedDependencies = Object.keys(dependencies).map(key => {
     const items = dependencies[key]
@@ -127,7 +125,6 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                 let bio = '';
                 if (key === 'description') {
                   bio = item;
-                  console.log('bio', bio);
                 };
 
                 return (
@@ -222,16 +219,14 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
         {formedDeps}
         {formattedObjects}
       </Masonry>}
-<ClassFacilitator
-name={'facilitatorList.name'}
-bio={'bio'}
-facilitatorOpen={facilitatorOpen}
-handleClose={handleClose}
-/>
+      <ClassFacilitator
+        name={'facilitatorList.name'}
+        bio={'bio'}
+        facilitatorOpen={facilitatorOpen}
+        handleClose={handleClose}
+      />
     </div>
 
   )
 }
-
-export const MemoizedFrontpage = memo(FrontPage);
 

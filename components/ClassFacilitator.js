@@ -16,7 +16,6 @@ export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClo
   console.log("name", name);
 
   useEffect(() => {
-    console.log("facOpen", facilitatorOpen);
   }, [facilitatorOpen]);
   
 

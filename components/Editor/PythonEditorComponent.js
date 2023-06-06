@@ -15,7 +15,6 @@ export default function CodeEditorComponent({ defaultCode, minLines, codeOnChang
 
   const startingCode = props.text;
   const [code, setCodeState] = useState(startingCode);
-  const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
   const [pyodideObject, setPyodideObject] = useState(null);
   const [isoutput, setIsoutput] = useState(false);
@@ -188,6 +187,7 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.asm.js"
           onLoad={() => {
+            let getPython = async () => {
             if (!isPyodideReady) {
               async function load() {
                 globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
@@ -197,10 +197,22 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
                 setPyodideLoaded(true);
               })
             }
+          }
+          try {
+            getPython();
+          } catch (err) {
+            console.log(err);
+            // wait 2 seconds and try again
+            setTimeout(() => {
+              getPython();
+            }, 2000); 
+
+          }
+
           }}
         /></>}
       <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)}
+        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady ) || runningCode)}
           snippets={filteredSnippets} run={showValue}
           defaultCode={startingCode} setCode={setCodeState}
           language='Python'
@@ -212,32 +224,6 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           minLines={minLines}
           height={height} />
       </div>
-
-      {/* {isoutput && <div id='output'
-        style={{
-          margin: "10px",
-          padding: "10px",
-          border: "1px solid #32c259",
-          borderRadius: "5px",
-          backgroundColor: "#f5f5f5",
-          color: "#32c259",
-          fontSize: "20px",
-          overflow: "auto",
-          font: "1.3rem Inconsolata, monospace",
-          whiteSpace: "pre-wrap",
-        }}>
-        <CloseIcon
-          onClick={closeOutput}
-          style={{
-            float: "right",
-            fontSize: "20px",
-            color: "#32c259",
-            marginRight: "10px",
-            cursor: "pointer"
-          }}
-        />
-        {outputRef.current}
-      </div>} */}
 
       {isError && <div id="error"
         style={{
@@ -269,7 +255,11 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
         setPrint={setPrint}
         {...props}
       />
-      <div id="fig" style={{ width: "100%", height: "100%" }}></div>
+      <div id="fig" style={{ 
+        width: "100%", 
+        height: "100%",
+        display: "none"
+        }}></div>
 
     </Fragment>
   )
