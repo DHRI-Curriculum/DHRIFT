@@ -26,13 +26,6 @@ dependencies:
         data-ethics: 
             description: Data Ethics (Recommended) This workshop will give you a basis for thinking through the ethical considerations of your programming projects.
             recommended: true
-    installations:
-        pythonguide: 
-            description: You can use any installation of Python (but make sure it is of version 3). For our purposes, Anaconda will provide everything necessary for all the workshops that are part of the DHRI curriculum.
-            recommended: true
-        visual-studio-code: 
-            description: (Recommended) You can use any plain text editor, but for our purposes Visual Studio Code ("VS Code") will be used.
-            recommended: true
 
 authors:
     - 'Kalle Westerling'

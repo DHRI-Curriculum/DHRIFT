@@ -10,15 +10,10 @@ import {
 } from "@mui/material";
 
 export default function ClassFacilitator({ name, bio, facilitatorOpen, handleClose }) {
-  
-// check if rerendered
-  console.log("Facilitator rendered", name, facilitatorOpen);
-  console.log("name", name);
 
   useEffect(() => {
   }, [facilitatorOpen]);
   
-
   return (
     <div>
       <Dialog open={facilitatorOpen} onClose={handleClose}>
