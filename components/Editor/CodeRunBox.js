@@ -11,8 +11,10 @@ export default function CodeRunBox(props) {
     const highlighted = hljs.highlight(props.defaultCode, { language: props.language, ignoreIllegals: true });
     const getLang = hljs.getLanguage(highlighted.language).name
 
-    return (
-        <div className='code-run-box'>
+    var returnedComponent = null;
+    if(highlighted && highlighted.value) {
+        returnedComponent = (
+            <div className='code-run-box'>
             <div className='code-run-box-code'>
                 <pre className='hljs'>
                     <code className='code-run-box-code'
@@ -31,6 +33,22 @@ export default function CodeRunBox(props) {
                 Run Code
             </button>
         </div>
+        )
+            }
+        else {
+            returnedComponent = (
+                <button
+                className='code-run-box-button'
+                onClick={() => {
+                    setCode(props.defaultCode);
+                    setEditorOpen(true);
+                    props.setAskToRun(true);
+                }}
+            >
+                Open Editor
+            </button>
+            )
+        }
 
-    )
+    return returnedComponent;
 }
