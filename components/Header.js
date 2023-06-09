@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import dynamic from 'next/dynamic';
 import Image from 'next/image'
-import logo from '../public/images/logo.png';
+// import logo from '../public/images/logos/logo.png';
 import ButtonAppBarCollapse from "./ButtonAppBarCollapse";
 import { useTheme } from 'next-themes';
 import IconButton from '@mui/material/IconButton';
@@ -131,7 +131,7 @@ export default function Header({ props }) {
                     <Link href='/'
                         passHref>
                         <Image
-                            src={'/images/logo.png'}
+                            src={'/images/logos/logo.png'}
                             alt={yaml.organization + ' logo'}
                             width={100}
                             height={100}
