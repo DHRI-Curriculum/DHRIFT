@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import path from 'path'
+import Image from 'next/image'
 
 export default function Footer() {
     return (
@@ -8,16 +9,32 @@ export default function Footer() {
         >
             <div className="funderImages">
                 <div>
-                    <a href="http://www.neh.gov/" target="_blank" rel="noreferrer"><img src="//static.dhinstitutes.org/curriculum/website/images/logos/neh.png" className="img-fluid" alt='NEH'/></a>
+                    <a href="http://www.neh.gov/" target="_blank" rel="noreferrer"><Image 
+                    src={'/images/logos/neh.png'}
+                    width={'446'}
+                            height={'108'}
+                    className="img-fluid" alt='NEH'/></a>
                 </div>
                 <div>
-                    <a href="https://gcdi.commons.gc.cuny.edu/" target="_blank" rel="noreferrer"><img src="//static.dhinstitutes.org/curriculum/website/images/logos/gcdi.png" className="img-fluid" alt='GCDI'/></a>
+                    <a href="https://gcdi.commons.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image 
+                    src={"/images/logos/gcdi.png"} 
+                    width={'446'}
+                            height={'108'}
+                    className="img-fluid" alt='GCDI'/></a>
                 </div>
+                {/* <div>
+                    <a href="http://www.cuny.edu/" target="_blank" rel="noreferrer"><Image 
+                    src={"/images/logos/cuny.png"} 
+                    width={'446'}
+                            height={'108'}
+                    className="img-fluid" alt='CUNY'/></a>
+                </div> */}
                 <div>
-                    <a href="http://www.cuny.edu/" target="_blank" rel="noreferrer"><img src="//static.dhinstitutes.org/curriculum/website/images/logos/cuny.png" className="img-fluid" alt='CUNY'/></a>
-                </div>
-                <div>
-                    <a href="http://www.gc.cuny.edu/" target="_blank" rel="noreferrer"><img src="//static.dhinstitutes.org/curriculum/website/images/logos/gc.png" className="img-fluid" alt='GC'/></a>
+                    <a href="http://www.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image 
+                    src={"/images/logos/gc_logo.png"} 
+                    width={'446'}
+                            height={'108'}
+                    className="img-fluid" alt='GC'/></a>
                 </div>
             </div>
 

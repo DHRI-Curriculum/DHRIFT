@@ -66,7 +66,7 @@ export default function Home({ workshops }) {
               </p>
             </div>
             <Image
-              src={'/images/logo.png'}
+              src={'/images/logos/logo.png'}
               alt={yaml.organization + ' logo'}
               width={200}
               height={200}
