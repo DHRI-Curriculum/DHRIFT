@@ -6,9 +6,11 @@ import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
 
 // Explicitly set the webR base URL to the webR npm package directory
-const webR = new WebR({
-    baseUrl: './node_modules/@r-wasm/webr/dist/',
-});
+const webR = new WebR(
+//     {
+//     baseUrl: '../node_modules/@r-wasm/webr/dist/',
+// }
+);
 
 
 export default function RRunner(props) {
