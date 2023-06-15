@@ -209,8 +209,9 @@ img {
 }
 
 .frontpage-logo {
-  flex-basis: 300px;
+  flex-basis: 200px;
   flex-grow: 1;
+  max-width: 250px;
 }
 
 .title {
@@ -561,9 +562,11 @@ header a:hover {
 
 .logo {
   cursor: pointer;
-  position: absolute;
+  /* position: absolute;
   top: 0;
-  left: 50;
+  left: 50; */
+  width: 100px;
+  height: 100px;
 }
 
 @media(max-width: 1200px) {

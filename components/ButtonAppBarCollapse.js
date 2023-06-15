@@ -1,6 +1,6 @@
 import React from "react";
-import Menu from "@material-ui/core/Menu";
-import IconButton from "@material-ui/core/IconButton";
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
 import MenuIcon from '@mui/icons-material/Menu';
 
 

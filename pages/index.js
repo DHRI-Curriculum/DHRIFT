@@ -4,10 +4,11 @@ import matter from 'gray-matter'
 import yaml from '../config.yml'
 import Image from 'next/image'
 import Markdown, { compiler } from 'markdown-to-jsx';
+import logo from '../public/images/logos/logo.png'
 import dynamic from 'next/dynamic'
 import Schedule from '../components/Schedule';
-import BuildIcon from '@material-ui/icons/Build';
-import Button from '@material-ui/core/Button';
+import BuildIcon from '@mui/icons-material/Build';
+import Button from '@mui/material/Button';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Workshop = dynamic(
@@ -60,16 +61,13 @@ export default function Home({ workshops }) {
                 cursor: 'pointer',
                 paddingTop: '5px',
               }}  />}
-              
-
-
               </p>
             </div>
+
             <Image
-              src={'/images/logos/logo.png'}
+              src={logo}
               alt={yaml.organization + ' logo'}
-              width={200}
-              height={200}
+              
               className='frontpage-logo' />
           </div>
           <div className='registration'>
