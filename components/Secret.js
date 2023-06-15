@@ -6,18 +6,12 @@ import React from 'react';
 import { Button } from '@mui/material/';
 import { ArrowDropDown } from '@mui/material/';
 
-// const useStyles = makeStyles((theme) => ({
-//   button: {
-//     margin: theme.spacing(1),
-//   },
-// }));
 
 export default function HiddenText(props) {
   const [show, setShow] = React.useState(false);
 
   const text = props.children[0]
 
-  const classes = useStyles();
 
   return (
     <div>
@@ -25,7 +19,7 @@ export default function HiddenText(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes.button}
+        className='secretButton'
         endIcon={<ArrowDropDown />}
         onClick={() => setShow(!show)}
       >
