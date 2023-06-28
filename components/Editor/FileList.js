@@ -11,9 +11,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText'
 import Button from '@mui/material/Button';
-import DownloadIcon from '@mui/icons-material/Download';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material//Download';
+import EditIcon from '@mui/icons-material//Edit';
+import DeleteIcon from '@mui/icons-material//Delete';
 import { useState, useEffect } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 

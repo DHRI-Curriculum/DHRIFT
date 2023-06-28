@@ -1,21 +1,17 @@
 import PythonREPLComponent from '../components/PythonREPLComponent';
-import PythonEditorComponent from '../components/Editor/PythonEditorComponent';
-
-// import FileList from '../components/Editor/FileList';
+import CodeEditorComponent from '../components/Editor/PythonEditorComponent';
+import UploadtoStorage from '../components/UploadtoStorage';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
+import JSInterpreter from '../components/Editor/InterpreterComponent';
 import { height } from '@mui/system';
-import TerminalComponent from '../components/TerminalComponent';
-import RRunner from '../components/Editor/RRunner';
-// import HTMLEditor from '../components/Editor/HTMLEditorComponent';
-import Script from 'next/script';
+import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
+import fileList from '../components/Editor/FileList';
+import JSTerminal from '../components/Editor/JSTerminal';
 
 export default function Test() {
 
     return (
-
         <div>
-            <Script src='../coi-service.js' />
-
             <div
                 dangerouslySetInnerHTML={
                     {
@@ -59,22 +55,8 @@ export default function Test() {
             <div>
                 {/* <FileList files='mobydick.txt'/> */}
             </div>
-            <div>
-                <RRunner />
-            </div>
-            <div>
-                {/* an iframe of a webvm instance */}
-                <iframe src='https://www.zweibel.net/webvm'
-                style={{
-                    width: '600px',
-                    height: '600px'
-                }}
-                sandbox='allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-top-navigation allow-downloads allow-pointer-lock allow-orientation-lock allow-presentation allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation'
-                allow='cross-origin-isolated'
-
-                />
-                 
-            </div>
+            <JSTerminal />
         </div>
-    )    
+    )
+
 }

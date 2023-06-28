@@ -3,8 +3,8 @@ import Script from 'next/script';
 import React, { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import SlideshowIcon from '@mui/icons-material/Slideshow';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import SlideshowIcon from '@mui/icons-material//Slideshow';
+import CancelPresentationIcon from '@mui/icons-material//CancelPresentation';
 import * as jQuery from 'jquery';
 import { useRouter } from 'next/router'
 

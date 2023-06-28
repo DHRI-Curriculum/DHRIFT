@@ -12,7 +12,7 @@ collections:
     create: true
     fields:
     - {label: "Title", name: "title", widget: "string"}
-    - {label: "description", name: "description", widget: "string"}
+    - {label: "Excerpt", name: "excerpt", widget: "string"}
     - {label: "Cover Image", name: "cover_image", widget: "image"}
     - {label: "Content", name: "body", widget: "markdown"}
   - name: "install-guides"
@@ -22,6 +22,6 @@ collections:
     create: true
     fields:
     - {label: "Title", name: "title", widget: "string"}
-    - {label: "description", name: "description", widget: "string"}
+    - {label: "Excerpt", name: "excerpt", widget: "string"}
     - {label: "Cover Image", name: "cover_image", widget: "image"}
     - {label: "Content", name: "body", widget: "markdown"}

@@ -1,17 +1,15 @@
-import Header from '../components/Header'
-// import '../styles/reset.css'
-// import '../styles/imports.css'
+import Header from '../components/Header';
 import { StyledEngineProvider } from '@mui/material/styles';
-import '../styles/globals.css'
-import '../node_modules/highlight.js/styles/obsidian.css'
-import React, { useEffect, useState } from 'react'
-import Head from 'next/head'
+import '../styles/globals.css';
+import '../node_modules/highlight.js/styles/obsidian.css';
+import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import CssBaseline from '@mui/material/CssBaseline';
-import BackToTop from '../components/ScrollTop'
-import dynamic from 'next/dynamic'
+import BackToTop from '../components/ScrollTop';
+import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
-import PyodideProvider from '../components/PyodideProvider'
+import PyodideProvider from '../components/PyodideProvider';
 import yaml from '../config.yml';
 
 function MyApp({ Component, pageProps }) {
@@ -22,7 +20,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <title>{yaml.event}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossOrigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"></link>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"></link>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"></link>
@@ -40,14 +38,15 @@ function MyApp({ Component, pageProps }) {
         <StyledEngineProvider>
           <Header
             props={pageProps} />
-          <main >
+          <main className='container'>
             <PyodideProvider>
               <Component {...pageProps} />
             </PyodideProvider>
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      <Footer />
+      <BackToTop />
+      {/* <Footer /> */}
     </>
   )
 }

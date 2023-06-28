@@ -8,17 +8,9 @@ import "ace-builds/src-noconflict/ext-language_tools"
 import { useRef } from "react";
 
 export default function CodeEditorComponent({ code, onChange, maxLines = null, minLines = 4, debounce = null, width = '100%', ...props }) {
-
-  
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   const height = props.height || '250px';
-  var language = 'python';
-  if (props.language && props.language.toLowerCase() === 'python') {
-    language = 'python';
-  } else if (props.language && props.language.toLowerCase() === 'javascript') {
-    language = 'javascript';
-  }
-
+  const language = props.language.toLowerCase() || 'python';
   return (
     <AceEditor
       className="editor"
@@ -30,8 +22,9 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
       value={code}
       fontSize={22}
       width="auto"
-      minLines={15}
-      maxLines='infinity'
+      height={height}
+      minLines={minLines}
+      maxLines={maxLines}
       showPrintMargin={false}
       showGutter={true}
       highlightActiveLine={true}

@@ -2,26 +2,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import FileList from "./FileList";
 import Button from '@mui/material/Button';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import CodeIcon from '@mui/icons-material/Code';
 
 
 export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
     return (
         <>
-           {props.snippets && <FileList snippets={props.snippets} />}
+            <FileList snippets={props.snippets} />
             <div className="buttonsContainer">
-                                <Button
-                    color="primary"
-                    aria-label="open drawer"
-                    onClick={props.handleOpenClose}
-                >
-                    <CodeIcon
-                        style={{
-                            color: "#32c259",
-                        }}
-                    />
-                </Button>
                 {(!spinnerNeeded) && <Button
                     onClick={() => {
                         props.run();
@@ -51,11 +39,17 @@ export default function EditorTopbar(props) {
                         marginTop: "10px"
                     }}
                 />}
-
-
-                {/* <Button
+                <span
+                    style={{
+                        marginLeft: "10px",
+                        marginTop: "10px",
+                        color: "#32c259",
+                    }}
+                >{props.language}</span>
+                <Button
                     variant="text"
                     onClick={() => {
+                        console.log(props);
                         props.setCode(props.defaultCode);
                     }}
                     style={{
@@ -69,7 +63,7 @@ export default function EditorTopbar(props) {
                         float: "right"
                     }}>
                     Revert Code
-                </Button> */}
+                </Button>
             </div>
         </>
     )

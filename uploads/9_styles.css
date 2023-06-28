@@ -1,0 +1,31 @@
+body {
+    background-color: rgb(118, 92, 120);
+}
+
+h1 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+p {
+    font-size: 30px;
+}
+
+.formatText {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    white-space: pre-line;
+}
+
+#joke {
+    border: 5px solid rgb(16, 29, 55);
+    background-color: rgb(118, 125, 158);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin: 0 auto;
+    color: rgb(255, 230, 204);
+}

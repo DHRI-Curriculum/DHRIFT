@@ -4,16 +4,18 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
+import { styled } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
 import Image from 'next/image'
-// import logo from '../public/images/logos/logo.png';
 import ButtonAppBarCollapse from "./ButtonAppBarCollapse";
 import { useTheme } from 'next-themes';
+import Switch from '@mui/material/Switch';
 import IconButton from '@mui/material/IconButton';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
+import Brightness7Icon from '@mui/icons-material//Brightness7';
+import DarkModeIcon from '@mui/icons-material//DarkMode';
 
 
 const Drawer = dynamic(
@@ -64,7 +66,6 @@ export default function Header({ props }) {
         >
             <CssBaseline />
             <ButtonAppBarCollapse
-                className='topBar-container'
                 sx={{
                     display: {
                         xs: 'block',
@@ -75,33 +76,7 @@ export default function Header({ props }) {
                     }
                 }}
             >
-                {/* mobile menu */}
-                {/* simple dropdown with text links to Workshops, Guides, Insights */}
-                <ul className='links'>
-                    <li>
-                        {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
-                    </li>
-                    <li>
-                        {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
-                    </li>
-                    <li>
-                        <li>
-                            {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
-                        </li>
-                    </li>
-                    {/* <li>
-                            Resources
-                        </li> */}
-                    <li>
-                        <Link href='/Glossary' passHref>Glossary</Link>
-                    </li>
-                </ul>
-                <IconButton sx={{ ml: 1 }}
-                    id="dark-mode-toggle"
-                    onClick={(e) => themeToggle(e)}
-                    color="inherit">
-                    {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                </IconButton>
+                <div>hello</div>
             </ButtonAppBarCollapse>
             <AppBar
                 position="static"
@@ -128,54 +103,36 @@ export default function Header({ props }) {
                     {/* <div
                         id='logo-container'
                     > */}
-                    <Link href='/'
-                        passHref>
-                        <Image
+                        <Link href='/'
+                            passHref>
+                            <Image
                             src={'/images/logos/logo.png'}
                             alt={yaml.organization + ' logo'}
                             width={100}
                             height={100}
                             className='logo' />
-                    </Link>
+                        </Link>
+                    {/* </div> */}
                     <div
                         id='nav-container'
                     >
-                        <Typography variant="h6" component="div"
-                            sx={{
-                                flexGrow: 1,
-                                flexShrink: 0,
-                            }}>
-                            <Link href='/' passHref>
-                                {/* truncate to 80 characters */}
-                                <h2 className='headerLink'>{yaml.event.length > 80 ? yaml.event.substring(0, 80) + '...' : yaml.event}</h2>
-                            </Link>
-                        </Typography>
-                        <ul className='links'>
-                            {/* <li>
-                                {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
-                            </li>
-                            <li>
-                                {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
-                            </li>
-                            <li>
-                                <li>
-                                    {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
-                                </li>
-                            </li> */}
-                            <li>
-                                <Link href='/workshops/all' passHref>Workshops</Link>
-                            </li>
-                            <li>
-                                <Link href='/Glossary' passHref>Glossary</Link>
-                            </li>
-                        </ul>
-                        <IconButton sx={{ ml: 1 }}
-                            id="dark-mode-toggle"
-                            onClick={(e) => themeToggle(e)}
-                            color="inherit">
-                            {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                        </IconButton>
-                    </div>
+                    <Typography variant="h6" component="div"
+                        sx={{
+                            flexGrow: 1,
+                            flexShrink: 0,
+                        }}>
+                        <Link href='/' passHref>
+                            <h2 className='headerLink'>{yaml.event}</h2>
+                        </Link>
+                    </Typography>
+                    <IconButton sx={{ ml: 1 }}
+                        id="dark-mode-toggle"
+                        onClick={(e) => themeToggle(e)}
+                        color="inherit">
+                        {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
+                    </IconButton>
+                            </div>
+                    {/* <Button color="inherit">Login</Button> */}
                 </Toolbar>
             </AppBar>
         </Box>

@@ -1,0 +1,127 @@
+{
+    "lines": [
+[
+    {"text": "What", "info": "Anaphora: The repetition of a word or phrase at the beginning of (usually successive) lines. For example, the use of What in the first four lines."},
+    {"text": "hurrying"},
+    {"text": "human"},
+    {"text": "tides,"},
+    {"text": "or"},
+    {"text": "day"},
+    {"text": "or"},
+    {"text": "night!"}
+],
+[
+    {"text": "What"},
+    {"text": "passions,"},
+    {"text": "winnings,"},
+    {"text": "losses,"},
+    {"text": "ardors,"},
+    {"text": "swim"},
+    {"text": "thy"},
+    {"text": "waters!"}
+],
+[
+    {"text": "What", "info": "Alliteration: Can be seen when the poet repeats the same consonant sound at the beginning of multiple words. Here - What whirls"},
+    {"text": "whirls", "info": "Alliteration: Can be seen when the poet repeats the same consonant sound at the beginning of multiple words. Here - What whirls"},
+    {"text": "of"},
+    {"text": "evil,"},
+    {"text": "bliss"},
+    {"text": "and"},
+    {"text": "sorrow,"},
+    {"text": "stem"},
+    {"text": "thee!"}
+],
+[
+    {"text": "What"},
+    {"text": "curious"},
+    {"text": "questioning"},
+    {"text": "glances-", "info": "Caesura: Occurs when the poet inserts a pause in the middle of a line of text. This could be through the use of punctuation or a natural pause in the meter."},
+    {"text": "glints"},
+    {"text": "of"},
+    {"text": "love!"}
+],
+[
+    {"text": "Leer,"},
+    {"text": "envy,"},
+    {"text": "scorn,"},
+    {"text": "contempt,"},
+    {"text": "hope,"},
+    {"text": "aspiration!", "info": "Accumulation: In this phrase we see an increasing crescendo of emotions to create rhetorical tension and affect."}
+],
+[
+    {"text": "Thou", "info": "Along with being an anaphora (see above) with the lines that follow, Whitman uses a kind of personification here, addressing Times Square as Thou."},
+    {"text": "wilt"},
+    {"text": "not"},
+    {"text": "be"},
+    {"text": "the"},
+    {"text": "same"},
+    {"text": "as"},
+    {"text": "thyself!"},
+    {"text": "portal-"},
+    {"text": "thou"},
+    {"text": "arena-"},
+    {"text": "thou"},
+    {"text": "of"},
+    {"text": "the"},
+    {"text": "many"},
+    {"text": "long-drawn"},
+    {"text": "lines"},
+    {"text": "and"},
+    {"text": "groups!"}
+],
+[
+    {"text": "(Could"},
+    {"text": "but"},
+    {"text": "thy"},
+    {"text": "flagstones,"},
+    {"text": "curbs,"},
+    {"text": "facades,"},
+    {"text": "tell"},
+    {"text": "their"},
+    {"text": "inimitable"},
+    {"text": "tales;"}
+],
+[
+    {"text": "Thy"},
+    {"text": "windows"},
+    {"text": "rich"},
+    {"text": "and"},
+    {"text": "huge"},
+    {"text": "hotels-"},
+    {"text": "thy"},
+    {"text": "side-walks"},
+    {"text": "wide)"}
+],
+[
+    {"text": "Thou"},
+    {"text": "of"},
+    {"text": "the"},
+    {"text": "endless"},
+    {"text": "sliding,"},
+    {"text": "mincing,"},
+    {"text": "shuffling"},
+    {"text": "feet!"}
+],
+[
+    {"text": "Thou,"},
+    {"text": "like"},
+    {"text": "the"},
+    {"text": "parti-colored"},
+    {"text": "world"},
+    {"text": "itself-"},
+    {"text": "like"},
+    {"text": "infinite,"},
+    {"text": "teeming,"},
+    {"text": "mocking"},
+    {"text": "life!"}
+],
+[
+    {"text": "Thou"},
+    {"text": "visor'd,"},
+    {"text": "vast,"},
+    {"text": "unspeakable"},
+    {"text": "show"},
+    {"text": "and"},
+    {"text": "lesson!"}
+]]
+}
