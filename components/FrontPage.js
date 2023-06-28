@@ -7,8 +7,7 @@ export default function FrontPage(currentFile, allFiles) {
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
   const workshops = allFiles.workshops
-  const installGuides = allFiles.guides
-  const insights = allFiles.insights
+  
   const authors = allFiles.authors
 
 
@@ -18,10 +17,11 @@ export default function FrontPage(currentFile, allFiles) {
       const item = items[key]
       // check if item is in workshops or insights or installGuides or authors
       const workshop = workshops.find(workshop => workshop.slug === key)
-      const insight = insights.find(insight => insight.slug === key)
-      const guide = installGuides.find(guide => guide.slug === key)
-      // const author = authors.find(author => author.slug === key)
-      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (author ? author : null))))
+      // const insight = insights.find(insight => insight.slug === key)
+      // const guide = installGuides.find(guide => guide.slug === key)
+      const author = authors.find(author => author.slug === key)
+      const which = workshop ? workshop : ((author ? author : null))
+      // console.log('which', which)
 
       const allItems = {
         [key]: {

@@ -5,18 +5,45 @@ import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
 import Sidebar from '../../components/Sidebar'
+import FrontPage from '../../components/FrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Presentation from '../../components/Presentation';
-import SlideoutEditor from '../../components/Editor/SlideoutEditor'
 import ArrowBackIcon from '@mui/icons-material//ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material//ArrowForward';
 import yaml from '../../config.yml'
 import Skeleton from '@mui/material/Skeleton';
+import DrawerEditor from '../../components/Editor/DrawerEditor'
+import { styled, useTheme } from '@mui/material/styles';
+import ClassFacilitator from '../../components/ClassFacilitator'
+
+
+const drawerWidth = '-30%';
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginRight: 0,
+    }),
+  }),
+);
+
 
 export default function WorkshopPage({
   workshops,
-  uploads
+  authors,
+  uploads,
+  facilitators,
 }) {
 
   const router = useRouter()
@@ -25,6 +52,23 @@ export default function WorkshopPage({
   const title = currentFile.title
   const content = currentFile.content
 
+  // get front page content
+  const [facilitatorOpen, setFacilitatorOpen] = useState(false);
+  // const frontPageContent = FrontPage(
+  //   currentFile,
+  //   {
+  //     workshops,
+  //     authors,
+  //     uploads,
+  //     facilitators,
+  //   }, facilitatorOpen, setFacilitatorOpen)
+
+
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [code, setCode] = useState('');
+
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
 
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
@@ -156,37 +200,61 @@ export default function WorkshopPage({
 
   return (
     <Container
-      maxWidth="xl"
+      // maxWidth="lg"
       style={{
         display: 'flex',
       }}
     >
-      <div className="card-page">
-        <div className="workshop-container">
-          {PaginationComponent(currentPage)}
-          {currentContentLoaded ? (
-            currentContent
-          ) : (
+      <Main open={editorOpen}
+        sx={{
+          width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
+        }}
+      >
+        {PaginationComponent(currentPage)}
+        <div className="card-page">
+          <div className="workshop-container">
+            {currentContentLoaded ? (
+              currentContent
+            ) : (
 
-            <div className='skeleton-container'
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-            >
-              <Skeleton variant="rect" width={'100%'} height={'50px'} />
-              {
-                Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-            </div>
-          )}
-          {PaginationComponent(currentPage)}
-          <SlideoutEditor />
+              <div className='skeleton-container'
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                {
+                  Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+              </div>
+            )}
+            {PaginationComponent(currentPage)}
+
+          </div>
         </div>
-      </div>
-    </Container>
-  );
-}
+      </Main>
+      {currentFile.programming_language &&
+        <DrawerEditor
+          drawerWidth={drawerWidth}
+          open={editorOpen}
+          setEditorOpen={setEditorOpen}
+          text={code}
+          setText={setCode}
+          askToRun={askToRun}
+          setAskToRun={setAskToRun}
+          language={currentFile.programming_language}
+        />}
+      <ClassFacilitator
+        // You'll have to make state variables in the slug and pass them down
+        name={facilitators}
+        bio={'bio'}
+        facilitatorOpen={facilitatorOpen}
+        handleClose={() => setFacilitatorOpen(false)}
+      />
 
+    </Container>
+  )
+}
 export async function getStaticPaths() {
   const files = fs.readdirSync(path.join('workshop'))
   const paths = files.map((filename) => ({
@@ -234,10 +302,12 @@ export async function getStaticProps() {
   }
   const workshopFiles = getFilesandProcess('workshop')
   const uploadsFiles = getFilesandProcess('uploads')
+  const authorFiles = getFilesandProcess('authors')
 
   return {
     props: {
       workshops: workshopFiles.sort(),
+      authors: authorFiles.sort(),
       uploads: uploadsFiles.sort(),
     },
   }

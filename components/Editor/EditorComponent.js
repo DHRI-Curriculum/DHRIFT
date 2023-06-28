@@ -10,7 +10,7 @@ import { useRef } from "react";
 export default function CodeEditorComponent({ code, onChange, maxLines = null, minLines = 4, debounce = null, width = '100%', ...props }) {
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   const height = props.height || '250px';
-  const language = props.language.toLowerCase() || 'python';
+  const language = props?.language?.toLowerCase() || 'python';
   return (
     <AceEditor
       className="editor"

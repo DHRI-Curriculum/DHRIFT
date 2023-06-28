@@ -178,6 +178,7 @@ const HTMLEditor = ({ className, children }) => {
 }
 
 export default function ConvertMarkdown(markdown, uploads, workshop) {
+
     return (
         compiler(markdown,
             {
