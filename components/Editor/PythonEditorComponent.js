@@ -14,7 +14,7 @@ import { PyodideContext } from '../PyodideProvider';
 // import FileList from "./FileList";
 import EditorTopbar from "./EditorTopbar";
 
-export default function CodeEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
+export default function PythonEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
   const [code, setCode] = useState(defaultCode);
   const [pyodideReady, setPyodideReady] = useState(false);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
