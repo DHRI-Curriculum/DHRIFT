@@ -1,30 +1,28 @@
 // import Editor from "@monaco-editor/react";
-import { useRef, useEffect, useState, useContext, useReducer } from "react";
+import { useRef, useEffect, useState, useContext, useReducer, Fragment } from "react";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
   () => import("./EditorComponent"),
   { ssr: false }
 );
-// import Button from '@mui/material/Button';
-// import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import CloseIcon from '@mui/icons-material//Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { PyodideContext } from '../PyodideProvider';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import FileList from "./FileList";
 import EditorTopbar from "./EditorTopbar";
+import PythonSideREPLComponent from '../PythonSideRepl';
 
-export default function PythonEditorComponent({ defaultCode = "# Write your code here", minLines, codeOnChange, ...props }) {
-  const [code, setCode] = useState(defaultCode);
-  const [pyodideReady, setPyodideReady] = useState(false);
+export default function CodeEditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
+
+  const startingCode = props.text;
+  const [code, setCodeState] = useState(startingCode);
   const [pyodideLoaded, setPyodideLoaded] = useState(false);
   const [pyodideObject, setPyodideObject] = useState(null);
   const [isoutput, setIsoutput] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
+  const [print, setPrint] = useState(null);
   const [runningCode, setRunningCode] = useState(false);
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   const {
     hasLoadPyodideBeenCalled,
@@ -40,6 +38,18 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
     }
   }, [hasLoadPyodideBeenCalled, setIsPyodideLoading, isPyodideReady])
 
+
+  useEffect(() => {
+    setCodeState(startingCode);
+    if (pyodideLoaded && props.askToRun === true) {
+      runPyodide(startingCode);
+    }
+    props.setAskToRun(false);
+
+  }, [props.askToRun])
+
+
+
   /*useEffect(() => {
     nltoolkit = await fetch('https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt.zip')
       .then(nltoolkit =>
@@ -49,12 +59,14 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
   */
 
   const onChange = (newValue) => {
-    if (codeOnChange) {
-      codeOnChange(newValue);
-    } else {
-      setCode(newValue);
-    }
+    // if (codeOnChange) {
+    //   codeOnChange(newValue);
+    // } else {
+    // props.setText(newValue);
+    setCodeState(newValue);
+    // }
   };
+
 
   const allSnippets = props.allUploads;
   // chosenSnippets is a string of files separated by commas, make it an array
@@ -74,6 +86,34 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
     })
   }
 
+  const printPlot =
+    `
+import js
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import io, base64
+# get values from inputs
+mu = int(1)
+sigma = int(2)
+# generate an interval
+x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
+# calculate PDF for each value in the x given mu and sigma and plot a line
+plt.plot(x, stats.norm.pdf(x, mu, sigma))
+# create buffer for an image
+buf = io.BytesIO()
+# copy the plot into the buffer
+plt.savefig(buf, format='png')
+buf.seek(0)
+# encode the image as Base64 string
+img_str = 'data:image/png;base64,' + base64.b64encode(buf.read()).decode('UTF-8')
+# show the image
+img_tag = js.document.getElementById('fig')
+img_tag.src = img_str
+buf.close()
+    `
+
+  let printList = [];
   const runPyodide = async (code) => {
     setRunningCode(true);
     setIsoutput(false);
@@ -82,23 +122,12 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
     outputRef.current = "";
 
     // gets rid of user-defined variables
-    pyodide.globals.clear();
-//     await pyodide.loadPackage("matplotlib");
-//     pyodide.runPython(
-//       `
-// import matplotlib
-// matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
-// `
-//     );
-// await pyodide.loadPackage("nltk");
-    pyodide.globals.set('print', (s) => {
-      outputRef.current = outputRef.current + String(s) + "\n";
-    });
-    pyodide.globals.set('input', (s) => {
-      var response = prompt(s);
-      return response;
-    });
+    // pyodide.globals.clear();
+
+
     await pyodide.loadPackagesFromImports(code);
+    await pyodide.loadPackagesFromImports(printPlot);
+    // pyodide.globals.generate_plot_img = printPlot;  
 
     filteredSnippets.forEach((snippet, index) => {
       pyodide.runPython(
@@ -106,10 +135,29 @@ export default function PythonEditorComponent({ defaultCode = "# Write your code
 file${index + 1} = ${JSON.stringify(snippet.content)}
             `);
     });
-    return await pyodide.runPythonAsync(code).then(result => {
+
+    let namespace = pyodide.globals.get("dict")();
+    namespace.set("print", (s) => {
+      printList.push(s.toString());
+    });
+    namespace.set("input", (s) => {
+      var response = prompt(s);
+      return response;
+    });
+    namespace.set("log", (s) => {
+      console.log(s);
+    });
+    namespace.set("generate_plot_img", () => {
+      pyodide.runPython(printPlot);
+    });
+
+
+    return await pyodide.runPythonAsync(code,
+      { globals: namespace }
+    ).then(result => {
       setIsoutput(true);
       outputRef.current = outputRef.current + '\n' + result;
-      forceUpdate();
+      setPrint(printList.join('\n'));
     }).catch((err) => {
       setIsError(true);
       setError(err);
@@ -119,7 +167,9 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
   };
 
   function showValue() {
-    runPyodide(code);
+    if (pyodideLoaded) {
+      runPyodide(code);
+    }
   }
 
   function closeOutput() {
@@ -130,55 +180,50 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
     setIsError(false);
   }
 
+  const height = props.height ? props.height : '100%';
+
   return (
-    <div>
-      {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js" />
-        <Script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.asm.js"
+    <Fragment>
+      {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />
+        <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.asm.js"
           onLoad={() => {
+            let getPython = async () => {
             if (!isPyodideReady) {
               async function load() {
-                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/' })
+                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
               }
               load().then(() => {
                 setIsPyodideReady(true)
                 setPyodideLoaded(true);
               })
             }
+          }
+          try {
+            getPython();
+          } catch (err) {
+            console.log(err);
+            // wait 2 seconds and try again
+            setTimeout(() => {
+              getPython();
+            }, 2000); 
+
+          }
+
           }}
         /></>}
       <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={(isPyodideLoading || runningCode)} 
-        snippets={filteredSnippets} run={showValue} 
-        defaultCode={defaultCode} setCode={setCode}
-        language='Python' />
-        <EditorComponent code={code} onChange={onChange} maxLines='Infinity' minLines={minLines} />
-      </div>
-
-      {isoutput && <div id='output'
-        style={{
-          margin: "10px",
-          padding: "10px",
-          border: "1px solid #32c259",
-          borderRadius: "5px",
-          backgroundColor: "#f5f5f5",
-          color: "#32c259",
-          fontSize: "20px",
-          overflow: "auto",
-          font: "1.3rem Inconsolata, monospace",
-          whiteSpace: "pre-wrap",
-        }}>
-        <CloseIcon
-          onClick={closeOutput}
-          style={{
-            float: "right",
-            fontSize: "20px",
-            color: "#32c259",
-            marginRight: "10px",
-            cursor: "pointer"
-          }}
+        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady ) || runningCode)}
+          snippets={filteredSnippets} run={showValue}
+          defaultCode={startingCode} setCode={setCodeState}
+          language='Python'
+          {...props}
         />
-        {outputRef.current}
-      </div>}
+        <EditorComponent code={code}
+          onChange={onChange}
+          maxLines='Infinity'
+          minLines={minLines}
+          height={height} />
+      </div>
 
       {isError && <div id="error"
         style={{
@@ -205,6 +250,17 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
         />
         {String(error)}
       </div>}
-    </div>
+      <PythonSideREPLComponent
+        print={print}
+        setPrint={setPrint}
+        {...props}
+      />
+      <div id="fig" style={{ 
+        width: "100%", 
+        height: "100%",
+        display: "none"
+        }}></div>
+
+    </Fragment>
   )
 }
