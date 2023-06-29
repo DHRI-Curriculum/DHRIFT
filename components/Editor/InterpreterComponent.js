@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import CodeEditorComponent from './PythonEditorComponent';
+import PythonEditorComponent from './PythonEditorComponent';
 import JSEditorComponent from './JSEditorComponent';
 import CodeRunBox from './CodeRunBox';
 import { useRef, useEffect, useState, useContext, useReducer } from 'react';

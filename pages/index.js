@@ -81,11 +81,11 @@ export default function Home({ workshop, authors }) {
             // if not last item 
             if (index !== page.length - 1) {
               return (
-                <span>{item.props.children} / </span>
+                <span key={index} >{item.props.children} / </span>
               )
             } else {
               return (
-                <span>{item.props.children}</span>
+                <span key={index}>{item.props.children}</span>
               )
             }
           }

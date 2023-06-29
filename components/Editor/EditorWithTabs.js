@@ -240,7 +240,7 @@ export default function EditorWithTabsComponent({ defaultCode = "# Write your co
         return (
             <div className="editorContainer">
                 <Toolbar>
-                    <div className="tab-bar-left" sx={{ flexGrow: 1 }}>
+                    <div className="tab-bar-left" style={{ flexGrow: 1 }}>
                         <IconButton
                             onClick={() => {
                                 addTab();

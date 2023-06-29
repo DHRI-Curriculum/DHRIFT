@@ -11,7 +11,6 @@ import Button from '@mui/material/Button';
 import Presentation from '../../components/Presentation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import yaml from '../../config.yml'
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
