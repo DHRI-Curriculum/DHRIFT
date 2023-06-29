@@ -24,7 +24,6 @@
     "caniuse-lite": "^1.0.30001361",
     "codemirror": "^5.65.1",
     "compose": "^0.1.2",
-    "console-feed": "^3.3.0",
     "file-saver": "^2.0.5",
     "gray-matter": "^4.0.3",
     "he": "^1.2.0",
