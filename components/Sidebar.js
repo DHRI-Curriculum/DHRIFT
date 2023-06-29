@@ -31,7 +31,6 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
     };
 
     const rearrangePages = (pages) => {
-        console.log(pages);
         // rearrange into parents and children
         let parents = pages.filter(page => page.parent === undefined)
         let children = pages.filter(page => page.parent !== undefined)

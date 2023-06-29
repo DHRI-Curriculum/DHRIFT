@@ -92,7 +92,7 @@ export default function Home({ workshop }) {
               width={300}
               height={300}
               className='frontpage-logo' />
-            <h2 className='title'>{yaml.event}</h2>
+            <h2 className='title'>{yaml.title}</h2>
           </div>
           <Typography
           >

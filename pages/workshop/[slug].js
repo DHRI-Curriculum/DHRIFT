@@ -71,8 +71,9 @@ export default function WorkshopPage({
   const [askToRun, setAskToRun] = useState(false);
 
   // convert markdown to html and split into pages
+  // convert markdown to html and split into pages
   const htmlContent = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, currentFile);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshops, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
@@ -81,6 +82,9 @@ export default function WorkshopPage({
         return acc;
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
+        // this changes from long pages to short ones 
+        // } else if (curr.type === 'h2') {
+        //   allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
@@ -116,63 +120,63 @@ export default function WorkshopPage({
   const [currentHeader, setCurrentHeader] = useState(null);
 
 
-// list of page titles and highlight current page
-useEffect(() => {
-  let mostRecentH1 = null;
-  const pageTitlesGet = pages.map((page, index) => {
-    let header = undefined;
-    // if it's the frontpage vs not
-    index === 0 ? header = "Introduction" : header = page.props.children[0].props.children.props.children[0]
-    let tag = page.props.children[0].props.children.type;
-    let parent = undefined;
-    if (tag === 'h1') {
-      mostRecentH1 = header;
-    }
-    if (tag === 'h2') {
-      parent = mostRecentH1;
-    }
-    header = {
-      title: header,
-      index: index + 1,
-      active: index + 1 === currentPage ? true : false,
-      parent: parent
-    }
-    return (header)
-  })
-  setPageTitles(pageTitlesGet)
-}, [currentPage]);
+  // list of page titles and highlight current page
+  useEffect(() => {
+    let mostRecentH1 = null;
+    const pageTitlesGet = pages.map((page, index) => {
+      let header = undefined;
+      // if it's the frontpage vs not
+      index === 0 ? header = "Introduction" : header = page.props.children[0].props.children.props.children[0]
+      let tag = page.props.children[0].props.children.type;
+      let parent = undefined;
+      if (tag === 'h1') {
+        mostRecentH1 = header;
+      }
+      if (tag === 'h2') {
+        parent = mostRecentH1;
+      }
+      header = {
+        title: header,
+        index: index + 1,
+        active: index + 1 === currentPage ? true : false,
+        parent: parent
+      }
+      return (header)
+    })
+    setPageTitles(pageTitlesGet)
+  }, [currentPage]);
 
-useEffect(() => {
-  setPages(htmlContent(content));
-  setCurrentPage(1);
-  const urlParams = new URLSearchParams(window.location.search);
-  const page = Number(urlParams.get('page'));
-  if (page) {
-    setCurrentPage((page));
-    setCurrentContent(pages[page - 1]);
-    setCurrentContentLoaded(true);
-  } else {
+  useEffect(() => {
     setPages(htmlContent(content));
     setCurrentPage(1);
-    setCurrentContentLoaded(true);
-  }
-}, [slug]);
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = Number(urlParams.get('page'));
+    if (page) {
+      setCurrentPage((page));
+      setCurrentContent(pages[page - 1]);
+      setCurrentContentLoaded(true);
+    } else {
+      setPages(htmlContent(content));
+      setCurrentPage(1);
+      setCurrentContentLoaded(true);
+    }
+  }, [slug]);
 
-// if pages changes, change current content
-useEffect(() => {
-  if (currentPage) {
-    setCurrentContent(pages[currentPage - 1]);
-  } else {
-    setCurrentContent(pages[0]);
-  }
-}, [pages])
+  // if pages changes, change current content
+  useEffect(() => {
+    if (currentPage) {
+      setCurrentContent(pages[currentPage - 1]);
+    } else {
+      setCurrentContent(pages[0]);
+    }
+  }, [pages])
 
-useEffect(() => {
-  // check if current content has changed and get the current h1
-  if (currentContent && currentContent != undefined) {
-    setCurrentHeader(currentContent.props);
-  }
-}, [currentContent])
+  useEffect(() => {
+    // check if current content has changed and get the current h1
+    if (currentContent && currentContent != undefined) {
+      setCurrentHeader(currentContent.props);
+    }
+  }, [currentContent])
 
   const PaginationComponent = (currentPage) => {
     return (

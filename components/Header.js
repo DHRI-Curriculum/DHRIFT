@@ -147,24 +147,10 @@ export default function Header({ props }) {
                             }}>
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
-                                <h2 className='headerLink'>{yaml.event.length > 80 ? yaml.event.substring(0, 80) + '...' : yaml.event}</h2>
+                                <h2 className='headerLink'>{yaml.title.length > 80 ? yaml.title.substring(0, 80) + '...' : yaml.title}</h2>
                             </Link>
                         </Typography>
                         <ul className='links'>
-                            {/* <li>
-                                {propsAvailable ? <Drawer files={allWorkshops} category='workshops' /> : null}
-                            </li>
-                            <li>
-                                {propsAvailable ? <Drawer files={allGuides} category='guides' /> : null}
-                            </li>
-                            <li>
-                                <li>
-                                    {propsAvailable ? <Drawer files={allInsights} category='insights' /> : null}
-                                </li>
-                            </li> */}
-                            <li>
-                                <Link href='/workshops/all' passHref>Workshops</Link>
-                            </li>
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>
