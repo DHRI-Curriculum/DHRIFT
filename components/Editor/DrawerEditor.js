@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
 import Drawer from '@mui/material/Drawer';
 import { useState, useEffect, useRef, Fragment } from 'react';
-import yaml from '../../config.yml'
+
 
 export default function DrawerEditor(props) {
 

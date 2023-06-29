@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import LaunchIcon from '@mui/icons-material/Launch';
 
 export default function Schedule({ schedule, workshops }) {

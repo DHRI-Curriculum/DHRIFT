@@ -3,22 +3,15 @@
 // component that hides text until the user clicks a button to reveal it. This is useful for hiding spoilers or other information that the user may not want to see right away.
 
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import { ArrowDropDown } from '@material-ui/icons';
+import { Button } from '@mui/material/';
+import { ArrowDropDown } from '@mui/material/';
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
 
-export default function HiddenText(props) {
+export default function Secret(props) {
   const [show, setShow] = React.useState(false);
 
   const text = props.children[0]
 
-  const classes = useStyles();
 
   return (
     <div>
@@ -26,7 +19,7 @@ export default function HiddenText(props) {
       <Button
         variant="contained"
         color="primary"
-        className={classes.button}
+        className='secretButton'
         endIcon={<ArrowDropDown />}
         onClick={() => setShow(!show)}
       >

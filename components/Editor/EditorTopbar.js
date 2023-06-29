@@ -1,7 +1,7 @@
 import CircularProgress from '@mui/material/CircularProgress';
 import FileList from "./FileList";
 import Button from '@mui/material/Button';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CodeIcon from '@mui/icons-material/Code';
 
 

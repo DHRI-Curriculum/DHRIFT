@@ -15,8 +15,6 @@ import Box from '@mui/material/Box';
 
 export default function AuthorPage({
     workshops,
-    guides,
-    insights,
     authors
 }) {
 
@@ -145,16 +143,14 @@ export async function getStaticProps() {
         })
         return markdownFiles
     }
-    const workshopFiles = getFilesandProcess('workshops')
-    const installFiles = getFilesandProcess('guides')
-    const insightsFiles = getFilesandProcess('insights')
+    const workshopFiles = getFilesandProcess('document')
+  
     const authorFiles = getFilesandProcess('authors')
 
     return {
         props: {
-            workshops: workshopFiles.sort(),
-            guides: installFiles.sort(),
-            insights: insightsFiles.sort(),
+            workshop: workshopFiles[0],
+           
             authors: authorFiles.sort()
         },
     }

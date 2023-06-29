@@ -21,13 +21,15 @@ process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
-            loader: 'akamai',
+            // loader: 'akamai',
+            unoptimized: true,
             path: '/' + repoName,
         }
     } 
     else if (build) {
         return {
-            loader: 'akamai',
+            unoptimized: true,
+            // loader: 'akamai',
             path: '../..',
         }
     }

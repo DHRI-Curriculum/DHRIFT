@@ -5,7 +5,7 @@ import Image from 'next/image'
 export default function Footer() {
     return (
         <footer 
-        sx={{Zindex: 20000}}
+        style={{Zindex: 20000}}
         >
             <div className="funderImages">
                 <div>
@@ -39,7 +39,9 @@ export default function Footer() {
             </div>
 
             <div className="funding-text">
-                <p align='center'>The Digital Humanities Research Institute is funded through a generous grant from the National Endowment for the Humanities and with support from The Graduate Center&apos;s Provost&apos;s Office.</p>
+                <p 
+                style={{align:'center'}}
+                >The Digital Humanities Research Institute is funded through a generous grant from the National Endowment for the Humanities and with support from The Graduate Center&apos;s Provost&apos;s Office.</p>
             </div>
         </footer>
     )

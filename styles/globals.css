@@ -209,8 +209,9 @@ img {
 }
 
 .frontpage-logo {
-  flex-basis: 300px;
+  flex-basis: 200px;
   flex-grow: 1;
+  max-width: 250px;
 }
 
 .title {
@@ -341,13 +342,15 @@ img {
   padding: 10px;
   font-size: 2rem;
   font-weight: bold;
+  color: #000;
 }
 
 .workshops .menu-card:hover {
   transform: translatex(40px);
   overflow: visible;
   z-index: 0;
-  box-shadow: rgb(102, 102, 102) 0px 0px 0px 2px,
+  box-shadow: 
+    rgb(102, 102, 102) 0px 0px 0px 2px,
     rgb(255, 255, 255) 10px -10px 0px -3px,
     rgb(239, 59, 58) 10px -10px,
     rgb(255, 255, 255) 20px -20px 0px -3px,
@@ -561,9 +564,11 @@ header a:hover {
 
 .logo {
   cursor: pointer;
-  position: absolute;
+  /* position: absolute;
   top: 0;
-  left: 50;
+  left: 50; */
+  width: 100px;
+  height: 100px;
 }
 
 @media(max-width: 1200px) {

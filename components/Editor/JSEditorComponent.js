@@ -18,6 +18,7 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
     const [code, setCode] = useState(defaultCode);
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef(null);
+    const consoleRef = useRef(null);
     const [error, setError] = useState(null);
     const [isoutput, setIsoutput] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -52,19 +53,49 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
     const outputComponent = () => {
         return (
             <div id='output'
-                // ref={outputRef}
                 style={{
-                    margin: "10px",
+                    marginTop: "-30px",
                     padding: "10px",
-                    border: "1px solid #32c259",
-                    borderRadius: "5px",
                     backgroundColor: "#f5f5f5",
                     color: "#32c259",
                     fontSize: "20px",
-                    overflow: "auto",
+                    height: "200px",
+                    overflowY: "scroll",
                     font: "1.3rem Inconsolata, monospace",
                     whiteSpace: "pre-wrap",
-                }}>
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                }}
+            >
+                <div>
+                    <div
+                        style={{
+                            color: "#32c259",
+                            backgroundColor: "black",
+                        }}
+                    >
+                        Returned
+                    </div>
+                    {outputRef.current}
+                </div>
+                <div
+                    style={{
+                        borderLeft: "1px solid #32c259",
+                        paddingLeft: "10px",
+
+                    }}
+                >
+                    <div
+                        style={{
+                            color: "#32c259",
+                            backgroundColor: "black",
+                        }}
+                    >
+                        Console Log
+                    </div>
+                    {consoleRef.current}
+                </div>
                 <CloseIcon
                     onClick={closeOutput}
                     style={{
@@ -75,7 +106,6 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
                         cursor: "pointer"
                     }}
                 />
-                {outputRef.current}
             </div>
         )
     }
@@ -134,24 +164,23 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
         setIsoutput(false);
         setRunningCode(true);
         outputRef.current = "";
+        consoleRef.current = "";
         try {
             var logged = [];
             // store logged values in logged array
             var log = function (value) {
                 logged.push(value);
-
             };
             // capture console.log output 
             console.oldLog = console.log;
             console.log = log;
-           
+
             var result = eval(code);
 
-            writeln('Console.log:');
             for (var i = 0; i < logged.length; i++) {
-                writeln(logged[i]);
+                consoleRef.current += JSoutput(logged[i]) + "\n";
             }
-            writeln('Returned:');
+
             writeln(result);
             forceUpdate();
             setIsoutput(true);
@@ -173,15 +202,15 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
         <>
             <div className="editorContainer" style={{ width: '100%' }}>
                 <EditorTopbar spinnerNeeded={runningCode}
-                    snippets={filteredSnippets} 
+                    snippets={filteredSnippets}
                     run={JSrun} language='JavaScript'
                     defaultCode={defaultCode}
                     setCode={setCode}
-                    />
+                />
                 <EditorComponent code={code}
                     onChange={onChangeJavascript} language={'javascript'}
                     {...props}
-                    />
+                />
             </div>
             {isoutput && outputComponent()}
             {isError && errorComponent()}

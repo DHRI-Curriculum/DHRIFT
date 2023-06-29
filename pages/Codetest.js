@@ -1,12 +1,15 @@
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
 import PythonREPLComponent from '../components/PythonREPLComponent';
-import PythonEditorComponent from '../components/Editor/PythonEditorComponent';
-
-// import FileList from '../components/Editor/FileList';
+import CodeEditorComponent from '../components/Editor/PythonEditorComponent';
+import UploadtoStorage from '../components/UploadtoStorage';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
+import JSInterpreter from '../components/Editor/InterpreterComponent';
 import { height } from '@mui/system';
-import TerminalComponent from '../components/TerminalComponent';
-import RRunner from '../components/Editor/RRunner';
-// import HTMLEditor from '../components/Editor/HTMLEditorComponent';
+import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
+import fileList from '../components/Editor/FileList';
+import JSTerminal from '../components/Editor/JSTerminal';
 
 export default function Test() {
 
@@ -55,10 +58,53 @@ export default function Test() {
             <div>
                 {/* <FileList files='mobydick.txt'/> */}
             </div>
-            <div>
-                <RRunner />
-            </div>
+            {/* <JSTerminal /> */}
         </div>
     )
 
 }
+
+export async function getStaticProps() {
+    // Get files from the workshops dir
+    const getFilesandProcess = (dir) => {
+      const dirents = fs.readdirSync(path.join(dir), { withFileTypes: true })
+      const dirFiles = dirents
+        .filter((file) => file.isFile())
+        .map((file) => file.name);
+      // Get slug and frontmatter from workshop
+      const markdownFiles = dirFiles.map((filename) => {
+        // Create slug
+        const slug = filename.replace('.md', '')
+  
+        // Get frontmatter
+        const markdownWithMeta = fs.readFileSync(
+          path.join(dir, filename),
+          'utf-8',
+        )
+        const itemPath = path.join(dir, filename).replace('.md', '')
+  
+        const matterResult = matter(markdownWithMeta)
+        const content = matterResult.content
+  
+        return {
+          slug,
+          itemPath,
+          content: content,
+          ...matterResult.data,
+        }
+  
+      })
+      return markdownFiles
+    }
+    const workshopFiles = getFilesandProcess('document')
+    const uploadsFiles = getFilesandProcess('uploads')
+    const authorFiles = getFilesandProcess('authors')
+  
+    return {
+      props: {
+        workshop: workshopFiles[0],
+        authors: authorFiles.sort(),
+        uploads: uploadsFiles.sort(),
+      },
+    }
+  }

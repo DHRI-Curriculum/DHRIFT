@@ -109,7 +109,7 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
 
     const doParsing = (code) => {
         // const result = ReactHtmlParser(code, options);
-        setOutput(result);
+        // setOutput(result);
     };
 
     const onChangeHTML = (newValue) => {

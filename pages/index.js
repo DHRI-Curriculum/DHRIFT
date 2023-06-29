@@ -1,37 +1,103 @@
 import fs from 'fs'
 import path from 'path'
+import React, { useEffect, useState } from 'react'
+import ConvertMarkdown from '../components/ConvertMarkdown'
 import matter from 'gray-matter'
-import yaml from '../config.yml'
-import Image from 'next/image'
+import FrontPage from '../components/FrontPage';
 import Markdown, { compiler } from 'markdown-to-jsx';
+// import yaml from '../config.yml'
+import logo from '../public/images/logos/logo.png'
+import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import Schedule from '../components/Schedule';
-import BuildIcon from '@material-ui/icons/Build';
-import Button from '@material-ui/core/Button';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Container from '@mui/material/Container';
+import { Typography } from '@mui/material';
+import TocIcon from '@mui/icons-material/Toc';
 
 const Workshop = dynamic(
-  () => import('../components/MenuItem'),
+  () => import('../components/Workshop'),
   { loading: function loading() { return <p>...</p> } }
 )
 
-export default function Home({ workshops }) {
+export default function Home({ workshop, authors }) {
 
-  const formattedDate = (date) => {
-    const dateObj = new Date(date);
-    const modifiedDate = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * -60000)
-    const options = { weekday: 'long', month: 'long', day: 'numeric' };
-    return modifiedDate.toLocaleDateString('en-US', options);
-  };
+  const content = workshop.content;
+  const description = workshop.description;
+  const title = workshop.title;
 
-  let date = null
-  if (yaml.date) {
-    if (yaml.date === yaml.end_date) {
-      date = formattedDate(yaml.date)
-    } else {
-      date = formattedDate(yaml.date) + ' - ' + formattedDate(yaml.end_date)
-    }
+  const frontPageContent = FrontPage(
+    workshop,
+    {
+      workshop,
+      authors,
+    
+    })
+
+
+  // convert markdown to html and split into pages
+  const htmlContent = function (content) {
+    const htmlifiedContent = ConvertMarkdown(content);
+    // split react element array into pages
+    const allPages = [];
+    const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
+      // allPages = [[h1, h2, h2][h1, h2]]
+      if (typeof curr === 'string') {
+        return acc;
+      } else if (curr.type === 'h1') {
+        allPages.push([curr]);
+      } else if (curr.type === 'h2') {
+        allPages[allPages.length - 1].push(curr);
+      }
+      return acc;
+    }, []);
+    return (
+      allPages);
   }
+
+
+  const [pages, setPages] = useState(htmlContent(content));
+
+  let whichChapter = 1;
+  const tableOfContents = pages.map((page, index) => {
+    let subPages = 0;
+    return (
+      page.map((item, index) => {
+        if (subPages > 4) {
+          return null;
+        }
+        if (item.type === 'h1') {
+          whichChapter++;
+          return (
+            <Typography key={index} variant="h4" style={{ margin: '0.5rem 0' }}>
+              <a href={`workshop/${workshop.slug}/?page=${whichChapter}`}>{whichChapter}. {item.props.children}</a>
+            </Typography>
+          )
+        } else if (item.type === 'h2') {
+          subPages++;
+          if (subPages > 4) {
+            return (
+              '...'
+            )
+          } else {
+            // if not last item 
+            if (index !== page.length - 1) {
+              return (
+                <span key={index} >{item.props.children} / </span>
+              )
+            } else {
+              return (
+                <span key={index}>{item.props.children}</span>
+              )
+            }
+          }
+        }
+      })
+    )
+  })
+  tableOfContents.unshift(
+    <Typography key={0} variant="h4" style={{ margin: '0.5rem 0' }}>
+    <a href={`workshop/${workshop.slug}/?page=${1}`}>1. Frontmatter</a>
+  </Typography>
+  );
 
   return (
     <div className='container'>
@@ -43,81 +109,36 @@ export default function Home({ workshops }) {
                 style={{
                   fontFamily: 'Titillium Web',
                 }}
-                className='title'>{yaml.event}</h2>
+                className='title'>{title}</h2>
               <h2
                 style={{
                   fontFamily: 'Titillium Web',
                   fontWeight: '400',
                 }}
                 className='lineUp'>
-                {date}
               </h2>
-              <p>{yaml.organization}</p>
-              <p>{yaml.location}
-              {yaml.google_maps && <LocationOnIcon
-              onClick={() => window.open(yaml.google_maps, '_blank')}
-              style={{ 
-                cursor: 'pointer',
-                paddingTop: '5px',
-              }}  />}
               
-
-
-              </p>
             </div>
+
             <Image
-              src={'/images/logos/logo.png'}
-              alt={yaml.organization + ' logo'}
-              width={200}
-              height={200}
+              src={logo}
+              alt={'logo'}
+
               className='frontpage-logo' />
           </div>
-          <div className='registration'>
-            {yaml.register?.required && (
-              <p>
-                {yaml.register.text}
-                {yaml.register.show_button && <Button
-                  style={{
-                    color: 'var(--foreground)',
-                    fontFamily: 'Titillium Web',
-                    fontWeight: '400',
-                    fontSize: '1.2rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0rem',
-                    marginLeft: '1rem',
-                    border: '2px solid #ef3b3a',
-                    boxShadow: '#ef3b3a 8px 8px 0px'
-                  }}
-                  href={yaml.register.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className='registerButton'
-                >
-                  Register
-                </Button>}
-              </p>
-            )}
-          </div>
-          {yaml.intro &&
+          {description &&
             <div className='intro'>
               <div className='sectionTitle'>Description</div>
-              <p className='intro-text'><Markdown>{yaml.intro}</Markdown></p>
+              <p className='intro-text'><Markdown>{description}</Markdown></p>
             </div>
           }
         </div>
-        {yaml.schedule &&
-          <div className='schedule-container'>
-            <Schedule schedule={yaml.schedule} workshops={workshops} />
-          </div>
-        }
-        {yaml.show_workshops && <div className='workshops-container'>
-          <div className='sectionTitle'><BuildIcon /> Workshops</div>
-          <div className='workshops'>
-            {workshops.map((workshop, index) => (
-              <Workshop key={index} workshop={workshop} index={index} />
-            ))}
-          </div>
-        </div>}
+        <div className='sectionTitle'><TocIcon /> Table of Contents</div>
+        <div className='workshops'>
+          <ul>
+            {tableOfContents}
+          </ul>
+        </div>
       </div>
     </div>
   )
@@ -153,15 +174,13 @@ export async function getStaticProps() {
     })
     return markdownFiles
   }
-  const workshopFiles = getFilesandProcess('workshops')
-  const installFiles = getFilesandProcess('guides')
-  const insightsFiles = getFilesandProcess('insights')
+  const workshopFiles = getFilesandProcess('document')
+  const authorFiles = getFilesandProcess('authors')
 
   return {
     props: {
-      workshops: workshopFiles.sort(),
-      guides: installFiles.sort(),
-      insights: insightsFiles.sort(),
+      workshop: workshopFiles[0],
+      authors: authorFiles.sort(),
     },
   }
 }

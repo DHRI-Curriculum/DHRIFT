@@ -1,7 +1,7 @@
 import React from "react";
-import Menu from "@material-ui/core/Menu";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from '@mui/icons-material/Menu';
+import Menu from "@mui/material/Menu";
+import IconButton from "@mui/material/IconButton";
+import HomeIcon from "@mui/icons-material/Home";
 
 
 class ButtonAppBarCollapse extends React.Component {
@@ -24,7 +24,7 @@ class ButtonAppBarCollapse extends React.Component {
         const open = Boolean(anchorEl);
 
         return (
-            <div className={'buttonCollapse topBar-container'}
+            <div className={'buttonCollapse'}
             >
                 <IconButton
                     onClick={this.handleMenu}
@@ -38,7 +38,7 @@ class ButtonAppBarCollapse extends React.Component {
                         }
                     }}
                 >
-                    <MenuIcon />
+                    <HomeIcon />
                 </IconButton>
                 <Menu
                 sx={{

@@ -10,7 +10,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
   const description = currentFile.description
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
-  const workshops = allFiles.workshops
+  // const workshops = allFiles.workshops
   const installGuides = allFiles.guides
   const insights = allFiles.insights
   const authors = allFiles.authors
@@ -28,23 +28,19 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
     const addLinktoItems = Object.keys(items).map(key => {
       const item = items[key]
       // check if item is in workshops or insights or installGuides or authors
-      const workshop = workshops.find(workshop => workshop.slug === key)
-      const insight = insights.find(insight => insight.slug === key)
-      const guide = installGuides.find(guide => guide.slug === key)
-      // const author = authors.find(author => author.slug === key)
-      const which = workshop ? workshop : ((insight ? insight : (guide ? guide : (authors ? authors : null))))
-
+      const workshop = currentFile
+      
       const allItems = {
         [key]: {
-          title: which.title,
+          title: workshop.title,
           description: item.description,
           required: item.required,
           recommended: item.recommended,
-          link: which ? `/${which.itemPath}` : '#'
+          // link: which ? `/${which.itemPath}` : '#'
         }
       }
       return {
-        title: which.title,
+        title: item.title,
         allItems
       }
     })
@@ -69,7 +65,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
               const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
               return (
                 <li key={workshopObject} className={requiredOrRecommended}>
-                  <Link href={workshopObject.link}>{item.title}</Link>
+                  {/* <Link href={workshopObject.link}>{item.title}</Link> */}
                   <p>{workshopHtmldescription}</p>
                 </li>
               )
@@ -228,4 +224,3 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
 
   )
 }
-

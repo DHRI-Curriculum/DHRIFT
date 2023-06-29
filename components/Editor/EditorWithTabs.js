@@ -10,7 +10,7 @@ const EditorComponent = dynamic(
 );
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { PyodideContext } from '../PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import AppBar from '@mui/material/AppBar';
@@ -240,7 +240,7 @@ export default function EditorWithTabsComponent({ defaultCode = "# Write your co
         return (
             <div className="editorContainer">
                 <Toolbar>
-                    <div className="tab-bar-left" sx={{ flexGrow: 1 }}>
+                    <div className="tab-bar-left" style={{ flexGrow: 1 }}>
                         <IconButton
                             onClick={() => {
                                 addTab();

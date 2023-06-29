@@ -13,7 +13,7 @@ import InterpreterComponent from './Editor/InterpreterComponent';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
 import Info from './Info';
-import Secret from './Secret';
+import {Secret} from './Secret';
 import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
