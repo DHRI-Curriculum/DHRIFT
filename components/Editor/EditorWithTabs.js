@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useContext } from "react";
-import AddIcon from '@mui/icons-material//Add';
-import RemoveIcon from '@mui/icons-material//Remove';
-import OpenInNewIcon from '@mui/icons-material//OpenInNew';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Script from "next/script";
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
@@ -19,7 +19,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
-import SaveIcon from '@mui/icons-material//Save';
+import SaveIcon from '@mui/icons-material/Save';
 
 export default function EditorWithTabsComponent({ defaultCode = "# Write your code here" }) {
     const [currentTab, setCurrentTab] = useState(0);

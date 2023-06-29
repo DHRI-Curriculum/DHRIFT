@@ -11,7 +11,7 @@ const Frame = dynamic(
 );
 import "allotment/dist/style.css";
 import EditorTopbar from "./EditorTopbar";
-import CloseIcon from '@mui/icons-material//Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export default function JSEditorComponent({ defaultCode = '// Write Javascript Here', ...props }) {

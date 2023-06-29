@@ -8,7 +8,7 @@ import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
 import { Typography } from '@mui/material';
-import TocIcon from '@mui/icons-material//Toc';
+import TocIcon from '@mui/icons-material/Toc';
 
 const Workshop = dynamic(
   () => import('../components/Workshop'),
