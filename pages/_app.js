@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
 import PyodideProvider from '../components/PyodideProvider';
-import yaml from '../config.yml';
+// import yaml from '../config.yml';
 
 function MyApp({ Component, pageProps }) {
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{yaml.event}</title>
+        <title>{pageProps.workshop.title}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"></link>
@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }) {
         </StyledEngineProvider>
       </ThemeProvider>
       <BackToTop />
-      {/* <Footer /> */}
+      <Footer />
     </>
   )
 }

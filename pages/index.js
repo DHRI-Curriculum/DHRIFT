@@ -3,7 +3,9 @@ import path from 'path'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../components/ConvertMarkdown'
 import matter from 'gray-matter'
-import yaml from '../config.yml'
+import Markdown, { compiler } from 'markdown-to-jsx';
+// import yaml from '../config.yml'
+import logo from '../public/images/logos/logo.png'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import Container from '@mui/material/Container';
@@ -18,6 +20,8 @@ const Workshop = dynamic(
 export default function Home({ workshop }) {
 
   const content = workshop.content;
+  const description = workshop.description;
+  const title = workshop.title;
 
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
@@ -79,35 +83,38 @@ export default function Home({ workshop }) {
     )
   })
   return (
-    <Container
-      disableGutters={true}
-      maxWidth="xl"
-    >
-      <div className='frontpage card-page'>
+    <div className='container'>
+      <div className='frontpage'>
         <div>
           <div className='frontpage-top'>
+            <div className='titleContainer'>
+              <h2
+                style={{
+                  fontFamily: 'Titillium Web',
+                }}
+                className='title'>{title}</h2>
+              <h2
+                style={{
+                  fontFamily: 'Titillium Web',
+                  fontWeight: '400',
+                }}
+                className='lineUp'>
+              </h2>
+              
+            </div>
+
             <Image
-              src={'/images/logos/logo.png'}
-              alt={yaml.organization + ' logo'}
-              width={300}
-              height={300}
+              src={logo}
+              alt={'logo'}
+
               className='frontpage-logo' />
-            <h2 className='title'>{yaml.title}</h2>
           </div>
-          <Typography
-          >
-            {/* <h2 className='lineUp'>{yaml.motto || 'Further Expanding Digital Humanities Communities of Practice'}</h2> */}
-            <div
-              style={{
-                margin: '10px',
-              }}
-              className='rectangle'></div>
-            <p
-              style={{
-                margin: '30px',
-              }}
-              className='intro-text'>{yaml.intro}</p>
-          </Typography>
+          {description &&
+            <div className='intro'>
+              <div className='sectionTitle'>Description</div>
+              <p className='intro-text'><Markdown>{description}</Markdown></p>
+            </div>
+          }
         </div>
         <div className='sectionTitle'><TocIcon /> Table of Contents</div>
         <div className='workshops'>
@@ -116,7 +123,7 @@ export default function Home({ workshop }) {
           </ul>
         </div>
       </div>
-    </Container>
+    </div>
   )
 }
 

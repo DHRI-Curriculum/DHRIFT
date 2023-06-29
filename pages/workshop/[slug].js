@@ -11,7 +11,6 @@ import Button from '@mui/material/Button';
 import Presentation from '../../components/Presentation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import yaml from '../../config.yml'
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
@@ -40,7 +39,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 
 export default function WorkshopPage({
-  workshops,
+  workshop,
   authors,
   uploads,
   facilitators,
@@ -48,20 +47,20 @@ export default function WorkshopPage({
 
   const router = useRouter()
   const { slug } = router.query
-  const currentFile = workshops.find((workshop) => workshop.slug === slug)
+  const currentFile = workshop
   const title = currentFile.title
   const content = currentFile.content
 
   // get front page content
   const [facilitatorOpen, setFacilitatorOpen] = useState(false);
-  // const frontPageContent = FrontPage(
-  //   currentFile,
-  //   {
-  //     workshops,
-  //     authors,
-  //     uploads,
-  //     facilitators,
-  //   }, facilitatorOpen, setFacilitatorOpen)
+  const frontPageContent = FrontPage(
+    currentFile,
+    {
+      workshop,
+      authors,
+      uploads,
+      facilitators,
+    }, facilitatorOpen, setFacilitatorOpen)
 
 
   const [editorOpen, setEditorOpen] = useState(false);
@@ -73,7 +72,7 @@ export default function WorkshopPage({
   // convert markdown to html and split into pages
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshops, setCode, setEditorOpen, setAskToRun);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
@@ -90,10 +89,15 @@ export default function WorkshopPage({
       }
       return acc;
     }, []);
+    allPages.unshift(frontPageContent);
 
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
-
+        if (page.props != undefined && page.props.className.includes('frontpage')) {
+          return (
+            frontPageContent
+          )
+        }
         return (
           <div key={index} className='page-content'>
             {page.map((element, index) => {
@@ -161,6 +165,7 @@ export default function WorkshopPage({
       setCurrentContentLoaded(true);
     }
   }, [slug]);
+
 
   // if pages changes, change current content
   useEffect(() => {
@@ -333,7 +338,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      workshops: workshopFiles.sort(),
+      workshop: workshopFiles[0],
       authors: authorFiles.sort(),
       uploads: uploadsFiles.sort(),
     },
