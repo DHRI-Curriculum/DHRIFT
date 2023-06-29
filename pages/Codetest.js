@@ -7,7 +7,7 @@ import UploadtoStorage from '../components/UploadtoStorage';
 import EditorWithTabs from '../components/Editor/EditorWithTabs';
 import JSInterpreter from '../components/Editor/InterpreterComponent';
 import { height } from '@mui/system';
-import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
+// import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
 
