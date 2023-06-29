@@ -1,7 +1,6 @@
 ---
 title: Introduction to Python
 description: Python is a general-purpose programming language suitable for a wide variety of tasks in the digital humanities. Learning Python fundamentals is a gateway to analyzing data, creating visualizations, composing interactive websites, scraping the internet, and engaging in the distant reading of texts. This workshop first introduces participants to core programming concepts such as data types, variables, and functions. Participants will then learn about basic control flow by writing small programs with loops and conditional statements. They will also learn to problem solve, and practice searching for answers and debugging scripts. The workshop wraps up by exposing participants to intermediate tools for further exploration.
-cover_image: /images/workshops/img2.jpg
 programming_language: python
 learning objectives:
     - Understand what Python is and, in general terms, what it can do.
@@ -56,6 +55,7 @@ projects:
     Mapping Arts NYC: 
         description: Mapping Arts NYC, created in 2019 by the Graduate Center’s Data for Public Good fellows, “is a project that explores the geography and representation of arts and culture in New York City over time.” It includes a number of Python scripts written to clean and make sense of all the data.
         link: http://gcdiprojects.org/MappingArtsNYC/
+        
 resources:
     Digital Fellows’ Python Cheat Sheet: 
         description: See the Digital Fellows’ Python Cheat Sheet for handy commands that we cover in this workshop.
