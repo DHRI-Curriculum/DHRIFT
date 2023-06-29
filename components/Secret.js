@@ -7,7 +7,7 @@ import { Button } from '@mui/material/';
 import { ArrowDropDown } from '@mui/material/';
 
 
-export default function HiddenText(props) {
+export default function Secret(props) {
   const [show, setShow] = React.useState(false);
 
   const text = props.children[0]

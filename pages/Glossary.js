@@ -186,8 +186,6 @@ export async function getStaticProps() {
         return markdownFiles
     }
     const workshopFiles = getFilesandProcess('workshops')
-    const installFiles = getFilesandProcess('guides')
-    const insightsFiles = getFilesandProcess('insights')
 
 
     //  load every file in the terms dir
@@ -217,9 +215,7 @@ export async function getStaticProps() {
 
     return {
         props: {
-            workshops: workshopFiles.sort(),
-            guides: installFiles.sort(),
-            insights: insightsFiles.sort(),
+            workshop: workshopFiles[0],
             glossary: glossary,
         },
     }
