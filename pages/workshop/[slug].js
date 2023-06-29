@@ -288,7 +288,7 @@ export default function WorkshopPage({
   )
 }
 export async function getStaticPaths() {
-  const files = fs.readdirSync(path.join('workshop'))
+  const files = fs.readdirSync(path.join('document'))
   const paths = files.map((filename) => ({
     params: {
       slug: filename.replace('.md', ''),
@@ -332,7 +332,7 @@ export async function getStaticProps() {
     })
     return markdownFiles
   }
-  const workshopFiles = getFilesandProcess('workshop')
+  const workshopFiles = getFilesandProcess('document')
   const uploadsFiles = getFilesandProcess('uploads')
   const authorFiles = getFilesandProcess('authors')
 

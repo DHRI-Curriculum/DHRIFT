@@ -3,6 +3,7 @@ import path from 'path'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../components/ConvertMarkdown'
 import matter from 'gray-matter'
+import FrontPage from '../components/FrontPage';
 import Markdown, { compiler } from 'markdown-to-jsx';
 // import yaml from '../config.yml'
 import logo from '../public/images/logos/logo.png'
@@ -17,11 +18,20 @@ const Workshop = dynamic(
   { loading: function loading() { return <p>...</p> } }
 )
 
-export default function Home({ workshop }) {
+export default function Home({ workshop, authors }) {
 
   const content = workshop.content;
   const description = workshop.description;
   const title = workshop.title;
+
+  const frontPageContent = FrontPage(
+    workshop,
+    {
+      workshop,
+      authors,
+    
+    })
+
 
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
@@ -43,9 +53,10 @@ export default function Home({ workshop }) {
       allPages);
   }
 
+
   const [pages, setPages] = useState(htmlContent(content));
 
-  let whichChapter = 0;
+  let whichChapter = 1;
   const tableOfContents = pages.map((page, index) => {
     let subPages = 0;
     return (
@@ -82,6 +93,12 @@ export default function Home({ workshop }) {
       })
     )
   })
+  tableOfContents.unshift(
+    <Typography key={0} variant="h4" style={{ margin: '0.5rem 0' }}>
+    <a href={`workshop/${workshop.slug}/?page=${1}`}>1. Frontmatter</a>
+  </Typography>
+  );
+
   return (
     <div className='container'>
       <div className='frontpage'>
@@ -157,12 +174,13 @@ export async function getStaticProps() {
     })
     return markdownFiles
   }
-  const workshopFiles = getFilesandProcess('workshop')
-
+  const workshopFiles = getFilesandProcess('document')
+  const authorFiles = getFilesandProcess('authors')
 
   return {
     props: {
       workshop: workshopFiles[0],
+      authors: authorFiles.sort(),
     },
   }
 }
