@@ -89,7 +89,6 @@ export default function WorkshopPage({
 
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
-        // if page classname is 'frontpage' then render frontpage
 
         return (
           <div key={index} className='page-content'>
@@ -117,39 +116,63 @@ export default function WorkshopPage({
   const [currentHeader, setCurrentHeader] = useState(null);
 
 
-  // list of page titles and highlight current page
-  useEffect(() => {
-    const pageTitlesGet = pages.map((page, index) => {
-      let header = undefined;
-      header = page.props.children[0].props.children.props.children[0]
-      return (header)
-    })
-    setPageTitles(pageTitlesGet)
-  }, [currentPage]);
+// list of page titles and highlight current page
+useEffect(() => {
+  let mostRecentH1 = null;
+  const pageTitlesGet = pages.map((page, index) => {
+    let header = undefined;
+    // if it's the frontpage vs not
+    index === 0 ? header = "Introduction" : header = page.props.children[0].props.children.props.children[0]
+    let tag = page.props.children[0].props.children.type;
+    let parent = undefined;
+    if (tag === 'h1') {
+      mostRecentH1 = header;
+    }
+    if (tag === 'h2') {
+      parent = mostRecentH1;
+    }
+    header = {
+      title: header,
+      index: index + 1,
+      active: index + 1 === currentPage ? true : false,
+      parent: parent
+    }
+    return (header)
+  })
+  setPageTitles(pageTitlesGet)
+}, [currentPage]);
 
-  useEffect(() => {
+useEffect(() => {
+  setPages(htmlContent(content));
+  setCurrentPage(1);
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = Number(urlParams.get('page'));
+  if (page) {
+    setCurrentPage((page));
+    setCurrentContent(pages[page - 1]);
+    setCurrentContentLoaded(true);
+  } else {
     setPages(htmlContent(content));
     setCurrentPage(1);
-    const urlParams = new URLSearchParams(window.location.search);
-    const page = Number(urlParams.get('page'));
-    if (page) {
-      setCurrentPage((page));
-      setCurrentContent(pages[page - 1]);
-      setCurrentContentLoaded(true);
-    } else {
-      setCurrentContent(pages[0]);
-      setCurrentContentLoaded(true);
-    }
-  }, [slug]);
+    setCurrentContentLoaded(true);
+  }
+}, [slug]);
 
+// if pages changes, change current content
+useEffect(() => {
+  if (currentPage) {
+    setCurrentContent(pages[currentPage - 1]);
+  } else {
+    setCurrentContent(pages[0]);
+  }
+}, [pages])
 
-  useEffect(() => {
-    // check if current content has changed and get the current h1
-    if (currentContent && currentContent != undefined) {
-      setCurrentHeader(currentContent.props);
-    }
-  }, [currentContent])
-
+useEffect(() => {
+  // check if current content has changed and get the current h1
+  if (currentContent && currentContent != undefined) {
+    setCurrentHeader(currentContent.props);
+  }
+}, [currentContent])
 
   const PaginationComponent = (currentPage) => {
     return (
