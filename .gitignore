@@ -2,7 +2,7 @@
 
 # DHRIFT
 # /document/
-/uploads
+# /uploads
 
 # dependencies
 /node_modules
