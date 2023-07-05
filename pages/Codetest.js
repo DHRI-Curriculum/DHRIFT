@@ -10,6 +10,8 @@ import { height } from '@mui/system';
 // import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
+import RRunner from '../components/Editor/RRunner';
+import RRunnerAlt from '../components/Editor/RRunnerAlt';
 
 export default function Test() {
 
@@ -59,6 +61,7 @@ export default function Test() {
                 {/* <FileList files='mobydick.txt'/> */}
             </div>
             {/* <JSTerminal /> */}
+            {<RRunner />}
         </div>
     )
 
