@@ -36,7 +36,7 @@ const [result, setResult] = useState(['Loading webR...']);
       <pre><code id="out">Loading webR, please wait...</code></pre>
       <input id="input" type="text" value={stdin} onChange={e => setStdin(e.target.value)} />
       
-      <button onclick="globalThis.sendInput()" id="run">Run</button>
+      <button onClick="globalThis.sendInput()" id="run">Run</button>
     </div>
         </Fragment>
     )
