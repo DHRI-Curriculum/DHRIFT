@@ -23,14 +23,14 @@ const imagesConfig = function(build, isGitHub) {
         return {
             // loader: 'akamai',
             unoptimized: true,
-            path: '/' + repoName,
+            // path: '/' + repoName,
         }
     } 
     else if (build) {
         return {
             unoptimized: true,
             // loader: 'akamai',
-            path: '../..',
+            // path: '../..',
         }
     }
 }
