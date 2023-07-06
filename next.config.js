@@ -34,6 +34,7 @@ const imagesConfig = function(build, isGitHub) {
 }
 
 const nextConfig = {
+    output: "export",
     trailingSlash: true,
     basePath: isGitHub ? '/' + repoName : '',
     assetPrefix: isGitHub ? '/' + repoName + '/' : '',
