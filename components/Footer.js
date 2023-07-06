@@ -1,6 +1,9 @@
 import Link from 'next/link'
 import path from 'path'
 import Image from 'next/image'
+import neh from '../public/images/logos/neh.jpg';
+import gcdi from '../public/images/logos/gcdi.png';
+import gc from '../public/images/logos/gc_logo.png';
 
 export default function Footer() {
     return (
@@ -10,28 +13,21 @@ export default function Footer() {
             <div className="funderImages">
                 <div>
                     <a href="http://www.neh.gov/" target="_blank" rel="noreferrer"><Image 
-                    src={'/images/logos/neh.png'}
+                    src={neh}
                     width={'446'}
                             height={'108'}
                     className="img-fluid" alt='NEH'/></a>
                 </div>
                 <div>
                     <a href="https://gcdi.commons.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image 
-                    src={"/images/logos/gcdi.png"} 
+                    src={gcdi} 
                     width={'446'}
                             height={'108'}
                     className="img-fluid" alt='GCDI'/></a>
                 </div>
-                {/* <div>
-                    <a href="http://www.cuny.edu/" target="_blank" rel="noreferrer"><Image 
-                    src={"/images/logos/cuny.png"} 
-                    width={'446'}
-                            height={'108'}
-                    className="img-fluid" alt='CUNY'/></a>
-                </div> */}
                 <div>
                     <a href="http://www.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image 
-                    src={"/images/logos/gc_logo.png"} 
+                    src={gc} 
                     width={'446'}
                             height={'108'}
                     className="img-fluid" alt='GC'/></a>
