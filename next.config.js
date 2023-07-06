@@ -22,7 +22,7 @@ const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
             unoptimized: true,
-            // path: '../..',
+            path: '../..',
         }
     } 
     else if (build) {
@@ -37,8 +37,7 @@ const nextConfig = {
     trailingSlash: true,
     basePath: isGitHub ? '/' + repoName : '',
     assetPrefix: isGitHub ? '/' + repoName + '/' : '',
-    images: {unoptimized: true},
-    // images: imagesConfig(build, isGitHub),
+    images: imagesConfig(build, isGitHub),
     // async headers() {
     //     return [
     //         {
