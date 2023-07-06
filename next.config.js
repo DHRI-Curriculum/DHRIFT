@@ -22,7 +22,7 @@ const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
             unoptimized: true,
-            path: '../..',
+            // path: '../..',
         }
     } 
     else if (build) {
