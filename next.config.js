@@ -21,15 +21,13 @@ process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 const imagesConfig = function(build, isGitHub) {
     if (isGitHub) {
         return {
-            // loader: 'akamai',
             unoptimized: true,
-            path: '../..',
+            // path: '../..',
         }
     } 
     else if (build) {
         return {
             unoptimized: true,
-            // loader: 'akamai',
             // path: '../..',
         }
     }
@@ -39,7 +37,8 @@ const nextConfig = {
     trailingSlash: true,
     basePath: isGitHub ? '/' + repoName : '',
     assetPrefix: isGitHub ? '/' + repoName + '/' : '',
-    images: imagesConfig(build, isGitHub),
+    images: {unoptimized: true},
+    // images: imagesConfig(build, isGitHub),
     // async headers() {
     //     return [
     //         {
