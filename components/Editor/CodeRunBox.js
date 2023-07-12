@@ -12,32 +12,32 @@ export default function CodeRunBox(props) {
     const getLang = hljs.getLanguage(highlighted.language).name
 
     var returnedComponent = null;
-    if(highlighted && highlighted.value) {
+    if (highlighted && highlighted.value) {
         returnedComponent = (
             <div className='code-run-box'>
-            <div className='code-run-box-code'>
-                <pre className='hljs'>
-                    <code className='code-run-box-code'
-                        dangerouslySetInnerHTML={{ __html: highlighted.value }}>
-                    </code>
-                </pre>
-            </div>
-            <button
-                className='code-run-box-button'
-                onClick={() => {
-                    setCode(props.defaultCode);
-                    setEditorOpen(true);
-                    props.setAskToRun(true);
-                }}
-            >
-                Run Code
-            </button>
-        </div>
-        )
-            }
-        else {
-            returnedComponent = (
+                <div className='code-run-box-code'>
+                    <pre className='hljs'>
+                        <code className='code-run-box-code'
+                            dangerouslySetInnerHTML={{ __html: highlighted.value }}>
+                        </code>
+                    </pre>
+                </div>
                 <button
+                    className='code-run-box-button'
+                    onClick={() => {
+                        setCode(props.defaultCode);
+                        setEditorOpen(true);
+                        props.setAskToRun(true);
+                    }}
+                >
+                    Run Code
+                </button>
+            </div>
+        )
+    }
+    else {
+        returnedComponent = (
+            <button
                 className='code-run-box-button'
                 onClick={() => {
                     setCode(props.defaultCode);
@@ -47,8 +47,8 @@ export default function CodeRunBox(props) {
             >
                 Open Editor
             </button>
-            )
-        }
+        )
+    }
 
     return returnedComponent;
 }

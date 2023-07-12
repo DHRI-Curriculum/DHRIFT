@@ -16,8 +16,7 @@ import { Secret } from './Secret';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
-// var beautify = require('js-beautify');
-// var beautifyHTML = require('js-beautify').html;
+
 
 
 const Code = ({ className, children }) => {

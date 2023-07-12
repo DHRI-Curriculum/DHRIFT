@@ -1,6 +1,7 @@
 // import InterpreterComponent from './InterpreterComponent';
 import PythonEditorComponent from './PythonEditorComponent';
 import JSEditorComponent from './JSEditorComponent';
+import REditorComponent from './REditorComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
@@ -61,7 +62,20 @@ export default function DrawerEditor(props) {
                     {...props} />
             )
         }
+        else if (language === 'r') {
+            return (
+                <REditorComponent language={language}
+                    defaultCode={text}
+                    handleOpenClose={handleOpenClose}
+                    {...props} />
+            )
+        }
         else {
+            return (
+                <div>
+                    <h2>Language not supported</h2>
+                </div>
+            )
         }
     }
 

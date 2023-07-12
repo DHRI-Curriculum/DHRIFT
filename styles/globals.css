@@ -728,6 +728,9 @@ header a:hover {
   padding-left: 10px;
   padding-top: 10px;
 }
+.console-error {
+  color: red;
+}
 
 .PythonSideREPL {
   height: 100% !important;

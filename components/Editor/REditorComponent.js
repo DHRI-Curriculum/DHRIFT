@@ -7,11 +7,15 @@ import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
 
 // Explicitly set the webR base URL to the webR npm package directory
-const webR = new WebR();
+const webR = new WebR(
+    {
+        baseUrl: '/node_modules/@r-wasm/webr/dist/'
+    }
+);
 webR.init();
 
 
-export default function RRunner({ defaultCode, minLines, codeOnChange, ...props }) {
+export default function REditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
     const startingCode = props.text;
     const [isRReady, setIsRReady] = useState(false);
     const [isRLoading, setIsRLoading] = useState(true);

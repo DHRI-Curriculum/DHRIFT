@@ -11,6 +11,13 @@ export default function JSSideTerminal(props) {
     // ref: https://stackoverflow.com/q/67322922/387194
     // var __EVAL = (s) => eval(`void (__EVAL = ${__EVAL.toString()}); ${s}`);
 
+
+    let error = props.error;
+    let errorString
+    if (error) {
+     errorString = error.toString();
+    }
+
     var randomID = Math.random().toString(36).substring(7);
 
     useEffect(() => {
@@ -69,7 +76,7 @@ export default function JSSideTerminal(props) {
             </div>
             <div className='console'>
             {props.consoleRef.current}
-            <span className="console-error">{theError}</span>
+            <span className="console-error">{errorString}</span>
             </div>
             <div className="side-terminal" id={randomID}
                 style={{

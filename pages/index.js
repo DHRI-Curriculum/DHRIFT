@@ -13,10 +13,6 @@ import Container from '@mui/material/Container';
 import { Typography } from '@mui/material';
 import TocIcon from '@mui/icons-material/Toc';
 
-const Workshop = dynamic(
-  () => import('../components/Workshop'),
-  { loading: function loading() { return <p>...</p> } }
-)
 
 export default function Home({ workshop, authors }) {
 

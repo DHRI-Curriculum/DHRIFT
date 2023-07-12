@@ -9,7 +9,7 @@ import { height } from '@mui/system';
 // import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
-import RRunner from '../components/Editor/RRunner';
+import REditorComponent from '../components/Editor/REditorComponent';
 import RRunnerAlt from '../components/Editor/RRunnerAlt';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
 
@@ -58,8 +58,8 @@ export default function Test() {
                 {/* <FileList files='mobydick.txt'/> */}
             </div>
             {/* <JSTerminal /> */}
-            {/* {<RRunner />} */}
-            {<JSEditorComponent/>}
+            {<REditorComponent />}
+            {/* {<JSEditorComponent/>} */}
         </div>
     )
 
