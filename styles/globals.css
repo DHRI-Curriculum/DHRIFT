@@ -720,6 +720,15 @@ header a:hover {
   --animation: terminal-bar;
 }
 
+.console {
+  size: 1.5;
+  color: white;
+  background: rgb(39, 40, 34);
+  animation: terminal-bar;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
 .PythonSideREPL {
   height: 100% !important;
   overflow-y: auto;

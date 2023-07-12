@@ -16,7 +16,10 @@ export default function InterpreterComponent(props) {
     }
     else if (props.language && props.language.toLowerCase() === 'javascript') {
         return (
-            <JSEditorComponent
+            // <JSEditorComponent
+            //     {...props}
+            // />
+            <CodeRunBox
                 {...props}
             />
         )

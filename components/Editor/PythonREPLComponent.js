@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import Script from 'next/script'
-import { PyodideContext } from './PyodideProvider';
+import { PyodideContext } from '../PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import * as $ from 'jquery';
 require('jquery.terminal');

@@ -50,6 +50,7 @@ export default function WorkshopPage({
   const currentFile = workshop
   const title = currentFile.title
   const content = currentFile.content
+  const language = currentFile.programming_language
 
   // get front page content
   const [facilitatorOpen, setFacilitatorOpen] = useState(false);
@@ -72,7 +73,7 @@ export default function WorkshopPage({
   // convert markdown to html and split into pages
   // convert markdown to html and split into pages
   const htmlContent = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, setCode, setEditorOpen, setAskToRun);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent.props.children.reduce((acc, curr) => {

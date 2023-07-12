@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState, useRef, useDebugValue } from "react";
 import Script from 'next/script'
-import { PyodideContext } from './PyodideProvider';
+import { PyodideContext } from '../PyodideProvider';
 import CircularProgress from '@mui/material/CircularProgress';
 import * as $ from 'jquery';
 require('jquery.terminal');
@@ -48,10 +48,10 @@ export default function PythonSideREPLComponent(props) {
                   builtins.print(*args, **kwargs)
                   sys.stdout.flush()
             `,
-      {globals: namespace}
+      { globals: namespace }
     );
     let print = namespace.get("print");
-    
+
 
     let repr_shorten = namespace.get("repr_shorten");
     let banner = null;

@@ -11,8 +11,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
   // const workshops = allFiles.workshops
-  const installGuides = allFiles.guides
-  const insights = allFiles.insights
+
   const authors = allFiles.authors
 
   const handleOpen = () => {

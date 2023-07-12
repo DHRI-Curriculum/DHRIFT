@@ -1,21 +1,16 @@
-import { useRef, useState, useReducer } from "react";
-
+import { useRef, useState, useReducer, useEffect } from "react";
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
     () => import("./EditorComponent"),
     { ssr: false }
 );
-const Frame = dynamic(
-    () => import('react-frame-component'),
-    { ssr: false }
-);
-import "allotment/dist/style.css";
 import EditorTopbar from "./EditorTopbar";
+import JSSideTerminal from "./JSSideTerminal";
 import CloseIcon from '@mui/icons-material/Close';
 
 
-export default function JSEditorComponent({ defaultCode = '// Write Javascript Here', ...props }) {
-    const [code, setCode] = useState(defaultCode);
+export default function JSEditorComponent({ defaultCode = '// Write JavaScript Here', ...props }) {
+    const [JScode, setJSCode] = useState(defaultCode);
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef(null);
     const consoleRef = useRef(null);
@@ -50,95 +45,95 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
         setIsError(false);
     }
 
-    const outputComponent = () => {
-        return (
-            <div id='output'
-                style={{
-                    marginTop: "-30px",
-                    padding: "10px",
-                    backgroundColor: "#f5f5f5",
-                    color: "#32c259",
-                    fontSize: "20px",
-                    height: "200px",
-                    overflowY: "scroll",
-                    font: "1.3rem Inconsolata, monospace",
-                    whiteSpace: "pre-wrap",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                }}
-            >
-                <div>
-                    <div
-                        style={{
-                            color: "#32c259",
-                            backgroundColor: "black",
-                        }}
-                    >
-                        Returned
-                    </div>
-                    {outputRef.current}
-                </div>
-                <div
-                    style={{
-                        borderLeft: "1px solid #32c259",
-                        paddingLeft: "10px",
+    // const outputComponent = () => {
+    //     return (
+    //         <div id='output'
+    //             style={{
+    //                 marginTop: "-30px",
+    //                 padding: "10px",
+    //                 backgroundColor: "#f5f5f5",
+    //                 color: "#32c259",
+    //                 fontSize: "20px",
+    //                 height: "200px",
+    //                 overflowY: "scroll",
+    //                 font: "1.3rem Inconsolata, monospace",
+    //                 whiteSpace: "pre-wrap",
+    //                 display: "flex",
+    //                 flexDirection: "row",
+    //                 justifyContent: "space-between",
+    //             }}
+    //         >
+    //             <div>
+    //                 <div
+    //                     style={{
+    //                         color: "#32c259",
+    //                         backgroundColor: "black",
+    //                     }}
+    //                 >
+    //                     Returned
+    //                 </div>
+    //                 {outputRef.current}
+    //             </div>
+    //             <div
+    //                 style={{
+    //                     borderLeft: "1px solid #32c259",
+    //                     paddingLeft: "10px",
 
-                    }}
-                >
-                    <div
-                        style={{
-                            color: "#32c259",
-                            backgroundColor: "black",
-                        }}
-                    >
-                        Console Log
-                    </div>
-                    {consoleRef.current}
-                </div>
-                <CloseIcon
-                    onClick={closeOutput}
-                    style={{
-                        float: "right",
-                        fontSize: "20px",
-                        color: "#32c259",
-                        marginRight: "10px",
-                        cursor: "pointer"
-                    }}
-                />
-            </div>
-        )
-    }
+    //                 }}
+    //             >
+    //                 <div
+    //                     style={{
+    //                         color: "#32c259",
+    //                         backgroundColor: "black",
+    //                     }}
+    //                 >
+    //                     Console Log
+    //                 </div>
+    //                 {consoleRef.current}
+    //             </div>
+    //             <CloseIcon
+    //                 onClick={closeOutput}
+    //                 style={{
+    //                     float: "right",
+    //                     fontSize: "20px",
+    //                     color: "#32c259",
+    //                     marginRight: "10px",
+    //                     cursor: "pointer"
+    //                 }}
+    //             />
+    //         </div>
+    //     )
+    // }
 
-    const errorComponent = () => {
-        return (
-            <div id="error"
-                style={{
-                    font: "1.3rem Inconsolata, monospace",
-                    margin: "10px",
-                    padding: "10px",
-                    border: "1px solid red",
-                    borderRadius: "5px",
-                    backgroundColor: "#f5f5f5",
-                    color: "red",
-                    fontSize: "20px",
-                    overflow: "auto",
-                    whiteSpace: "pre-wrap"
-                }}>
-                <CloseIcon
-                    onClick={closeError}
-                    style={{
-                        float: "right",
-                        fontSize: "20px",
-                        color: "#32c259",
-                        marginRight: "10px",
-                        cursor: "pointer"
-                    }}
-                />
-                {String(error)}
-            </div>
-        )
-    }
+    // const errorComponent = () => {
+    //     return (
+    //         <div id="error"
+    //             style={{
+    //                 font: "1.3rem Inconsolata, monospace",
+    //                 margin: "10px",
+    //                 padding: "10px",
+    //                 border: "1px solid red",
+    //                 borderRadius: "5px",
+    //                 backgroundColor: "#f5f5f5",
+    //                 color: "red",
+    //                 fontSize: "20px",
+    //                 overflow: "auto",
+    //                 whiteSpace: "pre-wrap"
+    //             }}>
+    //             <CloseIcon
+    //                 onClick={closeError}
+    //                 style={{
+    //                     float: "right",
+    //                     fontSize: "20px",
+    //                     color: "#32c259",
+    //                     marginRight: "10px",
+    //                     cursor: "pointer"
+    //                 }}
+    //             />
+    //             {String(error)}
+    //         </div>
+    //     )
+    // }
 
     var JSoutput = function (a) {
         var str = "["
@@ -175,7 +170,7 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
             console.oldLog = console.log;
             console.log = log;
 
-            var result = eval(code);
+            var result = eval(JScode);
 
             for (var i = 0; i < logged.length; i++) {
                 consoleRef.current += JSoutput(logged[i]) + "\n";
@@ -194,8 +189,8 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
         setRunningCode(false);
     }
 
-    const onChangeJavascript = (newValue) => {
-        setCode(newValue);
+    const onChange = (newValue) => {
+        setJSCode(newValue);
     };
 
     return (
@@ -205,15 +200,19 @@ export default function JSEditorComponent({ defaultCode = '// Write Javascript H
                     snippets={filteredSnippets}
                     run={JSrun} language='JavaScript'
                     defaultCode={defaultCode}
-                    setCode={setCode}
+                    setCode={setJSCode}
+                    {...props}
                 />
-                <EditorComponent code={code}
-                    onChange={onChangeJavascript} language={'javascript'}
+                <EditorComponent code={JScode}
+                    onChange={onChange} language={'javascript'}
                     {...props}
                 />
             </div>
-            {isoutput && outputComponent()}
-            {isError && errorComponent()}
+            <JSSideTerminal
+                outputRef={outputRef}
+                consoleRef={consoleRef}
+                error={error}
+            />
         </>
     );
 };

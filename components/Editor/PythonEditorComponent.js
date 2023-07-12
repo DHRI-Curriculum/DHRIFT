@@ -9,9 +9,9 @@ const EditorComponent = dynamic(
 import CloseIcon from '@mui/icons-material/Close';
 import { PyodideContext } from '../PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
-import PythonSideREPLComponent from '../PythonSideRepl';
+import PythonSideREPLComponent from './PythonSideRepl';
 
-export default function CodeEditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
+export default function PythonEditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
 
   const startingCode = props.text;
   const [code, setCodeState] = useState(startingCode);
