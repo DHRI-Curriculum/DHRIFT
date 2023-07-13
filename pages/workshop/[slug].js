@@ -153,7 +153,7 @@ export default function WorkshopPage({
 
   useEffect(() => {
     setPages(htmlContent(content));
-    setCurrentPage(1);
+    // setCurrentPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     const page = Number(urlParams.get('page'));
     if (page) {

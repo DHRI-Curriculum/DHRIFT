@@ -10,7 +10,6 @@ import { height } from '@mui/system';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
 import REditorComponent from '../components/Editor/REditorComponent';
-import RRunnerAlt from '../components/Editor/RRunnerAlt';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
 
 export default function Test() {

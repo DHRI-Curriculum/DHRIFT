@@ -47,7 +47,6 @@ export default function DrawerEditor(props) {
         if (language === 'python') {
             return (
                 <PythonEditorComponent language={language}
-                    // onChange={commitCode}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     {...props} />
@@ -56,7 +55,6 @@ export default function DrawerEditor(props) {
         else if (language === 'javascript') {
             return (
                 <JSEditorComponent language={language}
-                    // onChange={commitCode}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     {...props} />
@@ -68,7 +66,6 @@ export default function DrawerEditor(props) {
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     {...props} />
-                // <RSideRepl />
             )
         }
         else {

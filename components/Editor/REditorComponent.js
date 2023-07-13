@@ -39,8 +39,11 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
 
 
     async function runR() {
+        const cleanedCode = code.replace(/(\r\n|\n|\r)/gm, " \n");
+
         const shelter = await new webR.Shelter();
-        const result = await shelter.captureR(code, {
+
+        const result = await shelter.captureR(cleanedCode, {
             withAutoprint: true,
             captureStreams: true,
             captureConditions: false
@@ -49,8 +52,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             const out = result.output.filter(
                 evt => evt.type == 'stdout' || evt.type == 'stderr'
             ).map((evt) => evt.data);
-            //   document.getElementById('out').innerText = out.join('\n');
-            setOutput(out.join('\n'));
+              document.getElementById('out').innerText = out.join('\n');
         } finally {
             shelter.purge();
         }
@@ -75,16 +77,30 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                     setIsError={setIsError}
                     setError={setError}
                     code={code}
+                    {...props}
                 />
                 <EditorComponent code={code}
+                    language='r'
                     onChange={onChange}
                     maxLines='Infinity'
                     minLines={minLines}
                     height={height} />
             </div>
 
-            <div className="outputContainer">
-                {output}
+            <div className="outputContainer" id='out'
+            style={{
+                padding: "10px",
+                backgroundColor: "#f5f5f5",
+                color: "#32c259",
+                fontSize: "20px",
+                height: "100%",
+                font: "1.3rem Inconsolata, monospace",
+                whiteSpace: "pre-wrap",
+                borderRadius: "5px",
+
+            }}
+            >
+                {/* {output} */}
             </div>
 
 

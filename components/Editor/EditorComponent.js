@@ -3,6 +3,7 @@ import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-css";
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools"
 import { useEffect, useRef } from "react";
@@ -18,8 +19,8 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
   } else if (props.language && props.language.toLowerCase() === 'javascript') {
     language = 'javascript';
   }
-  else {
-    language = props.language;
+  else if (props.language && props.language.toLowerCase() === 'r') {
+    language = 'r';
   }
 
   return (
