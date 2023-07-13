@@ -6,7 +6,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import { useState, useEffect, useRef, Fragment } from 'react';
-
+// import RSideRepl from './RSideRepl';
 
 export default function DrawerEditor(props) {
     const language = props.language.toLowerCase();  // this is the language of the editor
@@ -68,6 +68,7 @@ export default function DrawerEditor(props) {
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     {...props} />
+                // <RSideRepl />
             )
         }
         else {

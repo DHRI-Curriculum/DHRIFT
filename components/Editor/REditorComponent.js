@@ -5,12 +5,10 @@ const EditorComponent = dynamic(() => import('./EditorComponent'), { ssr: false 
 import CloseIcon from '@mui/icons-material/Close';
 import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
+import RSideRepl from './RSideRepl';
 
 // Explicitly set the webR base URL to the webR npm package directory
 const webR = new WebR(
-    {
-        baseUrl: '/node_modules/@r-wasm/webr/dist/'
-    }
 );
 webR.init();
 
@@ -63,6 +61,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
 
     return (
         <Fragment>
+            <Script src='../coi-service.js' />
             <div className="editorContainer">
                 <EditorTopbar spinnerNeeded={(isRLoading && !isRReady) ? true : false}
                     setCode={props.setCode}
@@ -84,87 +83,11 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                     height={height} />
             </div>
 
-            {isError && <div id="error"
-                style={{
-                    font: "1.3rem Inconsolata, monospace",
-                    margin: "10px",
-                    padding: "10px",
-                    border: "1px solid red",
-                    borderRadius: "5px",
-                    backgroundColor: "#f5f5f5",
-                    color: "red",
-                    fontSize: "20px",
-                    overflow: "auto",
-                    whiteSpace: "pre-wrap"
-                }}>
-                <CloseIcon
-                    onClick={closeError}
-                    style={{
-                        float: "right",
-                        fontSize: "20px",
-                        color: "#32c259",
-                        marginRight: "10px",
-                        cursor: "pointer"
-                    }}
-                />
-                {String(error)}
-            </div>}
-            <div id="output"
-                style={{
-                    font: "1.3rem Inconsolata, monospace",
-                    margin: "10px",
-                    padding: "10px",
-                    border: "1px solid #32c259",
-                    borderRadius: "5px",
-                    backgroundColor: "#f5f5f5",
-                    color: "#32c259",
-                    fontSize: "20px",
-                    overflow: "auto",
-                    whiteSpace: "pre-wrap"
-                }}>
-                <CloseIcon
-                    // onClick={closeOutput}
-                    style={{
-                        float: "right",
-                        fontSize: "20px",
-                        color: "#32c259",
-                        marginRight: "10px",
-                        cursor: "pointer"
-                    }}
-                />
+            <div className="outputContainer">
                 {output}
             </div>
-            <div id="result"
-                style={{
-                    font: "1.3rem Inconsolata, monospace",
-                    margin: "10px",
-                    padding: "10px",
-                    border: "1px solid #32c259",
-                    borderRadius: "5px",
-                    backgroundColor: "#f5f5f5",
-                    color: "#32c259",
-                    fontSize: "20px",
-                    overflow: "auto",
-                    whiteSpace: "pre-wrap"
-                }}>
-                <CloseIcon
-                    // onClick={closeResult}
-                    style={{
-                        float: "right",
-                        fontSize: "20px",
-                        color: "#32c259",
-                        marginRight: "10px",
-                        cursor: "pointer"
-                    }}
-                />
-                {result}
-            </div>
 
-            <div id="fig" style={{
-                width: "100%",
-                height: "100%",
-                display: "none"
-            }}></div>
+
         </Fragment >
     )
 }
