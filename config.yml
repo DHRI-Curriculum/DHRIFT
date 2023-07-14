@@ -40,7 +40,7 @@ schedule:
   - date: 2023-03-02
     time: 11:00am
     title: "Introduction to the Command Line"
-    workshop: command-line
+    # workshop: command-line
     description: "This workshop will introduce you to the command line, a text-based interface 
     for interacting with your computer. We will cover basic commands, file management, and 
     navigating the file system."

@@ -13,7 +13,7 @@ goals:
     - Learn how to find and import code from external sources to solve more complex problems.
     - Run Python programs, both by interacting directly with the interpreter and by preparing and running scripts.
     - Understand what Python is and, in general terms, what it can do.
-programming_language: 'R'
+programming_language: 'JavaScript'
 ---
 
 # Introduction
