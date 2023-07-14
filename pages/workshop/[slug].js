@@ -167,16 +167,6 @@ export default function WorkshopPage({
     }
   }, [slug]);
 
-
-  // if pages changes, change current content
-  useEffect(() => {
-    if (currentPage) {
-      setCurrentContent(pages[currentPage - 1]);
-    } else {
-      setCurrentContent(pages[0]);
-    }
-  }, [pages])
-
   useEffect(() => {
     // check if current content has changed and get the current h1
     if (currentContent && currentContent != undefined) {
