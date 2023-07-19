@@ -175,7 +175,6 @@ export default function PythonSideREPLComponent(props) {
   useEffect(() => {
     if (props.print !== undefined && theTerminal !== null) {
       theTerminal.clear();
-      console.log(props.print)
       theTerminal.echo(props.print);
       props.setPrint(undefined);
 
