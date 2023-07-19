@@ -10,9 +10,6 @@ import { useState, useEffect, useRef, Fragment } from 'react';
 export default function DrawerEditor(props) {
     const language = props.language.toLowerCase();  // this is the language of the editor
     const text = props.text;  // this is the text in the editor
-
-    const setText = props.setText;  // this is the function to set the text in the editor
-
     const open = props.open;  // this is the state of the drawer
     const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
     const [show, setShow] = useState(false);
@@ -59,6 +56,7 @@ export default function DrawerEditor(props) {
             )
         }
         else if (language === 'r') {
+            console.log('R is not supported yet');
             return (
                 <REditorComponent language={language}
                     defaultCode={text}
