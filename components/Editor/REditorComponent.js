@@ -7,13 +7,12 @@ import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
 import RSideRepl from './RSideRepl';
 
-// Explicitly set the webR base URL to the webR npm package directory
-const webR = new WebR(
-);
-webR.init();
 
 
 export default function REditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
+
+
+
     const startingCode = props.text;
     const [isRReady, setIsRReady] = useState(false);
     const [isRLoading, setIsRLoading] = useState(true);
@@ -31,11 +30,8 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
         setCodeState(newValue);
     };
 
-
-    useEffect(() => {
-        setIsRLoading(false);
-        setIsRReady(true);
-    }, []);
+    const webR = new WebR();
+    webR.init();
 
 
     async function runR() {
@@ -52,7 +48,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             const out = result.output.filter(
                 evt => evt.type == 'stdout' || evt.type == 'stderr'
             ).map((evt) => evt.data);
-              document.getElementById('out').innerText = out.join('\n');
+            document.getElementById('out').innerText = out.join('\n');
         } finally {
             shelter.purge();
         }
@@ -63,9 +59,15 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
 
     return (
         <Fragment>
-            <Script src='../coi-service.js' />
+            <Script
+                strategy='beforeInteractive'
+                onLoad={() => {
+                    setIsRLoading(false);
+                    setIsRReady(true);
+                }}
+                    src = '../../coi-service.js' />
             <div className="editorContainer">
-                <EditorTopbar spinnerNeeded={(isRLoading && !isRReady) ? true : false}
+                <EditorTopbar spinnerNeeded={(!isRLoading && !isRReady) ? true : false}
                     setCode={props.setCode}
                     run={runR}
                     setEditorOpen={props.setEditorOpen}
