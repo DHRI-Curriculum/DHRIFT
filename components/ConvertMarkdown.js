@@ -8,7 +8,8 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import PythonREPLComponent from './Editor/PythonREPLComponent';
 import EditorWithTabsComponent from './Editor/EditorWithTabs';
-import InterpreterComponent from './Editor/InterpreterComponent';
+// import InterpreterComponent from './Editor/InterpreterComponent';
+import CodeRunBox from './Editor/CodeRunBox';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
 import Info from './Info';
@@ -90,7 +91,7 @@ const CodeEditor = ({ children, ...props }) => {
             }
             return (
                 <div>
-                    <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
+                    <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
                 </div>
             )
         }
@@ -99,13 +100,13 @@ const CodeEditor = ({ children, ...props }) => {
         }
         return (
             <div>
-                <InterpreterComponent language={props.language} defaultCode={codeText} {...props} />
+                <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
             </div>
         )
     } else {
         return (
             <div>
-                <InterpreterComponent language={props.language} {...props} />
+                <CodeRunBox language={props.language} {...props} />
             </div>
         )
     }

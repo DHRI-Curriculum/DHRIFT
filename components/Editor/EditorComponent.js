@@ -13,20 +13,12 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
 
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   const height = props.height || '250px';
-  var language;
-  if (props.language && props.language.toLowerCase() === 'python') {
-    language = 'python';
-  } else if (props.language && props.language.toLowerCase() === 'javascript') {
-    language = 'javascript';
-  }
-  else if (props.language && props.language.toLowerCase() === 'r') {
-    language = 'r';
-  }
+
 
   return (
     <AceEditor
       className="editor"
-      mode={language}
+      mode={props.language.toLowerCase()}
       theme="monokai"
       onChange={onChange}
       name={uniqueid}
@@ -35,7 +27,7 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
       fontSize={22}
       width="auto"
       minLines={15}
-      maxLines='infinity'
+      maxLines={'infinity'}
       showPrintMargin={false}
       showGutter={true}
       highlightActiveLine={true}

@@ -6,11 +6,9 @@ import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import { useState, useEffect, useRef, Fragment } from 'react';
-// import RSideRepl from './RSideRepl';
 
 export default function DrawerEditor(props) {
     const language = props.language.toLowerCase();  // this is the language of the editor
-
     const text = props.text;  // this is the text in the editor
 
     const setText = props.setText;  // this is the function to set the text in the editor
