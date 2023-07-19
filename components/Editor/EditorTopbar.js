@@ -6,7 +6,6 @@ import CodeIcon from '@mui/icons-material/Code';
 
 
 export default function EditorTopbar(props) {
-    console.log(props)
     const spinnerNeeded = props.spinnerNeeded;
     return (
         <>
