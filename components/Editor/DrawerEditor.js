@@ -56,7 +56,6 @@ export default function DrawerEditor(props) {
             )
         }
         else if (language === 'r') {
-            console.log('R is not supported yet');
             return (
                 <REditorComponent language={language}
                     defaultCode={text}
