@@ -215,13 +215,14 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
         <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady ) || runningCode)}
           snippets={filteredSnippets} run={showValue}
           defaultCode={startingCode} setCode={setCodeState}
-          language='Python'
+          language={props.language}
           {...props}
         />
         <EditorComponent code={code}
           onChange={onChange}
           maxLines='Infinity'
           minLines={minLines}
+          language={props.language}
           height={height} />
       </div>
 
