@@ -5,13 +5,10 @@ const EditorComponent = dynamic(() => import('./EditorComponent'), { ssr: false 
 import CloseIcon from '@mui/icons-material/Close';
 import EditorTopbar from './EditorTopbar';
 import { WebR } from '@r-wasm/webr';
-import RSideRepl from './RSideRepl';
 
 
 
 export default function REditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
-
-
 
     const startingCode = props.text;
     const [isRReady, setIsRReady] = useState(false);
@@ -65,7 +62,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                     setIsRLoading(false);
                     setIsRReady(true);
                 }}
-                    src = '../../coi-service.js' />
+                src='../../coi-service.js' />
             <div className="editorContainer">
                 <EditorTopbar spinnerNeeded={(!isRLoading && !isRReady) ? true : false}
                     setCode={props.setCode}
@@ -90,17 +87,17 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             </div>
 
             <div className="outputContainer" id='out'
-            style={{
-                padding: "10px",
-                backgroundColor: "#f5f5f5",
-                color: "#32c259",
-                fontSize: "20px",
-                height: "100%",
-                font: "1.3rem Inconsolata, monospace",
-                whiteSpace: "pre-wrap",
-                borderRadius: "5px",
+                style={{
+                    padding: "10px",
+                    backgroundColor: "#f5f5f5",
+                    color: "#32c259",
+                    fontSize: "20px",
+                    height: "100%",
+                    font: "1.3rem Inconsolata, monospace",
+                    whiteSpace: "pre-wrap",
+                    borderRadius: "5px",
 
-            }}
+                }}
             >
                 {/* {output} */}
             </div>

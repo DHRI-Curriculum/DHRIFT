@@ -8,12 +8,11 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import PythonREPLComponent from './Editor/PythonREPLComponent';
 import EditorWithTabsComponent from './Editor/EditorWithTabs';
-// import InterpreterComponent from './Editor/InterpreterComponent';
 import CodeRunBox from './Editor/CodeRunBox';
 import Download from './Download';
 import JSTerminal from './Editor/JSTerminal';
 import Info from './Info';
-import { Secret } from './Secret';
+import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
@@ -191,6 +190,14 @@ const InfoAlert = ({ className, children }) => {
     )
 }
 
+const Secret = ({ className, children }) => {
+    return (
+        <div>
+            <SecretComponent text={children} />
+        </div>
+    )
+}
+
 export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun) {
     return (
         compiler(markdown,
@@ -234,13 +241,15 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                             className: 'info-alert',
                         }
                     },
+ 
                     Quiz,
                     PythonREPL,
                     Terminal,
                     EditorWithTabs,
                     JSTerminal,
+                    Secret
                     // HTMLEditor,
-                    Secret,
+                   
                 }
 
             })

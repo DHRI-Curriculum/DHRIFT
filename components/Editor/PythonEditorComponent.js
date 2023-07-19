@@ -45,7 +45,6 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
       runPyodide(startingCode);
     }
     props.setAskToRun(false);
-
   }, [props.askToRun])
 
 
