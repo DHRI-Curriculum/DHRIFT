@@ -59,8 +59,6 @@ export default function Test() {
             {/* <JSTerminal /> */}
             {/* {<REditorComponent />} */}
             {/* {<JSEditorComponent/>} */}
-                <iframe src="../webvm/index.html" width="100%" height="600%" ></iframe>
-
         </div>
     )
 
