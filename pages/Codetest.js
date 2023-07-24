@@ -57,8 +57,10 @@ export default function Test() {
                 {/* <FileList files='mobydick.txt'/> */}
             </div>
             {/* <JSTerminal /> */}
-            {<REditorComponent />}
+            {/* {<REditorComponent />} */}
             {/* {<JSEditorComponent/>} */}
+                <iframe src="../webvm/index.html" width="100%" height="600%" ></iframe>
+
         </div>
     )
 
