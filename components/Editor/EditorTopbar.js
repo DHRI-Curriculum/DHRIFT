@@ -7,6 +7,7 @@ import CodeIcon from '@mui/icons-material/Code';
 
 export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
+    const runButtonNeeded = props.runButtonNeeded || false;
     return (
         <>
             <div className="editorTopBarButtonsContainer">
@@ -21,7 +22,7 @@ export default function EditorTopbar(props) {
                         }}
                     />
                 </Button>
-                {(!spinnerNeeded) && <Button
+                {(!spinnerNeeded && runButtonNeeded) && <Button
                     onClick={() => {
                         props.run();
                     }}

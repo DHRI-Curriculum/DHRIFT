@@ -198,7 +198,7 @@ __      __   _  __   ____  __
 	var consoleDiv = document.getElementById("console");
 
 	//xterm.js related logic
-	var term = new Terminal({cursorBlink:true,convertEol:true, fontFamily:"monospace", fontWeight: 400, fontWeightBold: 700});
+	var term = new Terminal({cursorBlink:true,convertEol:true, fontFamily:"monospace", fontWeight: 400, fontWeightBold: 700, fontSize: 24, lineHeight: 1.2, theme: {background: "#000000", foreground: "#ffffff"}});
 	var fitAddon = new FitAddon.FitAddon();
 	term.loadAddon(fitAddon);
 	term.open(consoleDiv);

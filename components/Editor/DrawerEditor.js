@@ -5,6 +5,7 @@ import REditorComponent from './REditorComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
+import Webvm from '../Webvm';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
 export default function DrawerEditor(props) {
@@ -44,6 +45,7 @@ export default function DrawerEditor(props) {
                 <PythonEditorComponent language={language}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
+                    runButtonNeeded={true}
                     {...props} />
             )
         }
@@ -52,6 +54,7 @@ export default function DrawerEditor(props) {
                 <JSEditorComponent language={language}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
+                    runButtonNeeded={true}
                     {...props} />
             )
         }
@@ -60,7 +63,16 @@ export default function DrawerEditor(props) {
                 <REditorComponent language={language}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
+                    runButtonNeeded={true}
                     {...props} />
+            )
+        }
+        else if (language === 'computer') {
+            return (
+                <Webvm
+                handleOpenClose={handleOpenClose}
+                runButtonNeeded={false}
+                />
             )
         }
         else {

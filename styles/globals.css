@@ -657,8 +657,6 @@ header a:hover {
   display: none;
 }
 
-.drawer-header {}
-
 .editorContainer {
   display: flex;
   flex-direction: column;
@@ -669,10 +667,16 @@ header a:hover {
   /* margin-top: 30px; */
 }
 
+.webvm{
+  height: 90vh;
+  background-color: #000;
+}
+
 .drawer-editor {
   display: flex;
   flex-direction: column;
   height: 100% !important;
+  background-color: #000;
 }
 
 .editor-button-container {
@@ -717,9 +721,6 @@ header a:hover {
   border: #29343f 1px solid;
   margin-bottom: 20px;
 }
-/* #fig{
-  height: 50vh;
-} */
 
 .terminal {
   --size: 1.5;

@@ -2,6 +2,7 @@
 title: 'Command Line Workshop'
 description: 'If asked to show someone who has never seen a computer how to do something on your computer, many of us would explain what a screen and a cursor are, and then show how to point and click on icons. This approach relies on a graphical user interface, or GUI (pronounced “gooey!”). Today we’re going to explore another way to make your computer do things: through the command line. Instead of pointing and clicking, we’ll be typing in either git bash (Windows) or terminal (macOS) to tell the computer directly what task we’d like it to perform.'
 cover_image: '/images/workshops/img2.jpg'
+programming_language: 'computer'
 learning objectives: 
     - description: 'The goals of this workshop are to:'
     - Learn common commands to create files (`touch` and `echo`)

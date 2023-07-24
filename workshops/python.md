@@ -1,7 +1,7 @@
 ---
 title: Introduction to Python
 description: Python is a general-purpose programming language suitable for a wide variety of tasks in the digital humanities. Learning Python fundamentals is a gateway to analyzing data, creating visualizations, composing interactive websites, scraping the internet, and engaging in the distant reading of texts. This workshop first introduces participants to core programming concepts such as data types, variables, and functions. Participants will then learn about basic control flow by writing small programs with loops and conditional statements. They will also learn to problem solve, and practice searching for answers and debugging scripts. The workshop wraps up by exposing participants to intermediate tools for further exploration.
-programming_language: Python
+programming_language: computer
 learning objectives:
     - Understand what Python is and, in general terms, what it can do.
     - Run Python programs, both by interacting directly with the interpreter and by preparing and running scripts.
