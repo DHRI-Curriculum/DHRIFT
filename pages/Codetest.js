@@ -11,6 +11,7 @@ import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
 import REditorComponent from '../components/Editor/REditorComponent';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
+import Webvm from '../components/Webvm';
 
 export default function Test() {
 
@@ -59,7 +60,7 @@ export default function Test() {
             {/* <JSTerminal /> */}
             {/* {<REditorComponent />} */}
             {/* {<JSEditorComponent/>} */}
-            <iframe src='../../webvm/index.html' width='100%' height='100%'></iframe>
+            <Webvm />
         </div>
     )
 
