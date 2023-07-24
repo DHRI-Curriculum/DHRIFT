@@ -23,6 +23,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   const outputRef = useRef(null);
   const [print, setPrint] = useState(null);
   const [runningCode, setRunningCode] = useState(false);
+  const [isPlot, setIsPlot] = useState(false);
 
   const {
     hasLoadPyodideBeenCalled,
@@ -58,59 +59,28 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   */
 
   const onChange = (newValue) => {
-    // if (codeOnChange) {
-    //   codeOnChange(newValue);
-    // } else {
-    // props.setText(newValue);
     setCodeState(newValue);
-    // }
   };
-
 
   const allSnippets = props.allUploads;
   // chosenSnippets is a string of files separated by commas, make it an array
   const chosenSnippets = typeof props.snippets === 'string' ? props.snippets.split(',') : [];
 
-  var filteredSnippets = [];
+  var filteredSnippets = allSnippets;
 
-  // for item in chosenSnippets
-  // if item in slug of item in allSnippets
-  // add item to filteredSnippets
-  if (chosenSnippets != undefined) {
-    chosenSnippets.forEach(snippet => {
-      const currentFile = allSnippets.find(file => file.slug === snippet.trim());
-      if (currentFile != undefined) {
-        filteredSnippets.push(currentFile);
+  const checkImports = (code) => {
+    const lines = code.split('\n');
+    let matLine = '';
+    lines.forEach(line => {
+      if (line.includes('import matplotlib')) {
+        matLine =
+          `
+import matplotlib
+matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
       }
     })
+    return matLine;
   }
-
-  const printPlot =
-    `
-import js
-import numpy as np
-import scipy.stats as stats
-import matplotlib.pyplot as plt
-import io, base64
-# get values from inputs
-mu = int(1)
-sigma = int(2)
-# generate an interval
-x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
-# calculate PDF for each value in the x given mu and sigma and plot a line
-plt.plot(x, stats.norm.pdf(x, mu, sigma))
-# create buffer for an image
-buf = io.BytesIO()
-# copy the plot into the buffer
-plt.savefig(buf, format='png')
-buf.seek(0)
-# encode the image as Base64 string
-img_str = 'data:image/png;base64,' + base64.b64encode(buf.read()).decode('UTF-8')
-# show the image
-img_tag = js.document.getElementById('fig')
-img_tag.src = img_str
-buf.close()
-    `
 
   let printList = [];
   const runPyodide = async (code) => {
@@ -120,22 +90,15 @@ buf.close()
     setError(null);
     outputRef.current = "";
 
-    // gets rid of user-defined variables
-    // pyodide.globals.clear();
-
-
     await pyodide.loadPackagesFromImports(code);
-    await pyodide.loadPackagesFromImports(printPlot);
-    // pyodide.globals.generate_plot_img = printPlot;  
-
-    filteredSnippets.forEach((snippet, index) => {
-      pyodide.runPython(
-        `
-file${index + 1} = ${JSON.stringify(snippet.content)}
-            `);
-    });
 
     let namespace = pyodide.globals.get("dict")();
+
+    
+
+    filteredSnippets.forEach((snippet, index) => {
+      namespace.set(`file${index + 1}`, snippet.content);
+    });
     namespace.set("print", (s) => {
       printList.push(s.toString());
     });
@@ -146,11 +109,8 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
     namespace.set("log", (s) => {
       console.log(s);
     });
-    namespace.set("generate_plot_img", () => {
-      pyodide.runPython(printPlot);
-    });
-
-
+    await pyodide.runPythonAsync(checkImports(code),
+      { globals: namespace });
     return await pyodide.runPythonAsync(code,
       { globals: namespace }
     ).then(result => {
@@ -167,51 +127,76 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
 
   function showValue() {
     if (pyodideLoaded) {
+      closePlot();
       runPyodide(code);
     }
-  }
-
-  function closeOutput() {
-    setIsoutput(false);
   }
 
   function closeError() {
     setIsError(false);
   }
 
+  function closePlot() {
+    setIsPlot(false);
+    const fig = document.getElementById('fig');
+    fig.remove();
+    const newFig = document.createElement('div');
+    newFig.id = 'fig';
+    document.getElementById('figHolder').appendChild(newFig);
+  }
+
+  useEffect(() => {
+    // listen for the creation of a div with id that starts with 'matplotlib'
+    // when that happens, move the contents of that div to id='fig'
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.target.id.startsWith('matplotlib')) {
+          const fig = document.getElementById('fig');
+          const matplotlibDiv = document.getElementById(mutation.target.id);
+          fig.appendChild(matplotlibDiv);
+          setIsPlot(true);
+        }
+      });
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }, []);
+
   const height = props.height ? props.height : '100%';
 
   return (
-    <Fragment>
+    <div>
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.asm.js"
           onLoad={() => {
             let getPython = async () => {
-            if (!isPyodideReady) {
-              async function load() {
-                globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
+              if (!isPyodideReady) {
+                async function load() {
+                  globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
+                }
+                load().then(() => {
+                  setIsPyodideReady(true)
+                  setPyodideLoaded(true);
+                })
               }
-              load().then(() => {
-                setIsPyodideReady(true)
-                setPyodideLoaded(true);
-              })
             }
-          }
-          try {
-            getPython();
-          } catch (err) {
-            console.log(err);
-            // wait 2 seconds and try again
-            setTimeout(() => {
+            try {
               getPython();
-            }, 2000); 
+            } catch (err) {
+              console.log(err);
+              // wait 2 seconds and try again
+              setTimeout(() => {
+                getPython();
+              }, 2000);
 
-          }
+            }
 
           }}
         /></>}
       <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady ) || runningCode)}
+        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady) || runningCode)}
           snippets={filteredSnippets} run={showValue}
           defaultCode={startingCode} setCode={setCodeState}
           language={props.language}
@@ -225,42 +210,51 @@ file${index + 1} = ${JSON.stringify(snippet.content)}
           height={height} />
       </div>
 
-      {isError && <div id="error"
-        style={{
-          font: "1.3rem Inconsolata, monospace",
-          margin: "10px",
-          padding: "10px",
-          border: "1px solid red",
-          borderRadius: "5px",
-          backgroundColor: "#f5f5f5",
-          color: "red",
-          fontSize: "20px",
-          overflow: "auto",
-          whiteSpace: "pre-wrap"
-        }}>
-        <CloseIcon
-          onClick={closeError}
+      <div className="shellContainer">
+        {isError && <div id="error"
           style={{
-            float: "right",
+            font: "1.3rem Inconsolata, monospace",
+            margin: "10px",
+            padding: "10px",
+            border: "1px solid red",
+            borderRadius: "5px",
+            backgroundColor: "#f5f5f5",
+            color: "red",
             fontSize: "20px",
-            color: "#32c259",
-            marginRight: "10px",
-            cursor: "pointer"
-          }}
-        />
-        {String(error)}
-      </div>}
-      <PythonSideREPLComponent
-        print={print}
-        setPrint={setPrint}
-        {...props}
-      />
-      <div id="fig" style={{ 
-        width: "100%", 
-        height: "100%",
-        display: "none"
-        }}></div>
-
-    </Fragment>
+            overflow: "auto",
+            whiteSpace: "pre-wrap"
+          }}>
+          <CloseIcon
+            onClick={closeError}
+            style={{
+              float: "right",
+              fontSize: "20px",
+              color: "#32c259",
+              marginRight: "10px",
+              cursor: "pointer"
+            }}
+          />
+          {String(error)}
+        </div>}
+        {!isPlot && <PythonSideREPLComponent
+          print={print}
+          setPrint={setPrint}
+          {...props}
+        />}
+        <div id='figHolder'>
+          {/* {isPlot && <CloseIcon
+            onClick={closePlot}
+            style={{
+              float: "right",
+              fontSize: "20px",
+              color: "#32c259",
+              marginRight: "10px",
+              cursor: "pointer"
+            }} />} */}
+          <div id='fig'>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
