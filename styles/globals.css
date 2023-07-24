@@ -664,7 +664,7 @@ header a:hover {
   flex-direction: column;
   align-items: left;
   width: 100%;
-  height: 50%;
+  height: 40vh;
   background-color: black;
   /* margin-top: 30px; */
 }
@@ -686,6 +686,21 @@ header a:hover {
   background-color: #000;
 }
 
+.editorTopBarButtonsContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  height: 30px;
+  z-index: 100;
+  background-color: #000;
+}
+
+.shellContainer{
+  height: 60vh;
+}
+
 .editor-button {
   color: white;
 }
@@ -702,7 +717,9 @@ header a:hover {
   border: #29343f 1px solid;
   margin-bottom: 20px;
 }
-
+/* #fig{
+  height: 50vh;
+} */
 
 .terminal {
   --size: 1.5;

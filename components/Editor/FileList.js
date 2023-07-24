@@ -16,6 +16,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import Tooltip from '@mui/material/Tooltip';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 
 export default function FileList(filteredSnippets) {
     const [files, setFiles] = useState([]);
@@ -71,13 +77,15 @@ export default function FileList(filteredSnippets) {
         }
     }, []);
 
-    const handleDelete = (file) => {
-        const fileList = files.filter(f => f.filename !== file.filename);
-        setFiles(fileList);
-        setUserFiles(userFiles.filter(f => f.filename !== file.filename));
-        localStorage.setItem('files', userFiles.filter(f => f.filename !== file.filename).join(','));
-        localStorage.setItem('filenames', userFiles.filter(f => f.filename !== file.filename).map(f => f.filename).join(','));
-    }
+
+
+    // const handleDelete = (file) => {
+    //     const fileList = files.filter(f => f.filename !== file.filename);
+    //     setFiles(fileList);
+    //     setUserFiles(userFiles.filter(f => f.filename !== file.filename));
+    //     localStorage.setItem('files', userFiles.filter(f => f.filename !== file.filename).join(','));
+    //     localStorage.setItem('filenames', userFiles.filter(f => f.filename !== file.filename).map(f => f.filename).join(','));
+    // }
 
     const handleDownload = (file) => {
         const fileList = files.filter(f => f.filename !== file.filename);
@@ -114,19 +122,19 @@ export default function FileList(filteredSnippets) {
         };
     }
 
-    const handleEdit = (file) => {
-        const fileContent = localStorage.getItem(file);
-        const edit = document.createElement('a');
-        edit.href = fileContent;
-        edit.click();
-    }
+    // const handleEdit = (file) => {
+    //     const fileContent = localStorage.getItem(file);
+    //     const edit = document.createElement('a');
+    //     edit.href = fileContent;
+    //     edit.click();
+    // }
 
 
-    const handleDownloadAll = () => {
-        const download = document.createElement('a');
-        download.href = '#';
-        download.click();
-    }
+    // const handleDownloadAll = () => {
+    //     const download = document.createElement('a');
+    //     download.href = '#';
+    //     download.click();
+    // }
 
     const uploadComponent = (
         <div>
@@ -167,72 +175,52 @@ export default function FileList(filteredSnippets) {
         </div>
     );
 
-    return (
-        <div className="file-list">
-            {filteredSnippets.snippets.map((snippet, index) => (
-                <div key={index}>
-                    <Tooltip title={'variable file' + (index + 1)}>
-                    <div className="file-item"
-                    style={{
-                        color: 'white',
-                    }}
-                    >
-                        {snippet.slug}
-                    </div>
-                    </Tooltip>
-                </div>
-            ))}
-        </div>
-    );
+    // return (
+    //     <div className="file-list">
+    //         {filteredSnippets.snippets.map((snippet, index) => (
+    //             <div key={index}>
+    //                 <Tooltip title={'variable file' + (index + 1)}>
+    //                 <div className="file-item"
+    //                 style={{
+    //                     color: 'white',
+    //                 }}
+    //                 >
+    //                     {snippet.slug}
+    //                 </div>
+    //                 </Tooltip>
+    //             </div>
+    //         ))}
+    //     </div>
+    // );
+
+        useEffect(() => {
+            if(filteredSnippets){
+                setFiles(filteredSnippets.snippets);
+            }
+        }, [filteredSnippets]);
+
+
+// create a dropdown list of files
+return (
+    <div className="file-list"
+    >
+        <FormControl sx={{ m: 1, minWidth: 120, background:"white" }}>
+            <InputLabel id="select-label">Files</InputLabel>
+            <Select
+                labelId="select-label"
+                id="simple-select"
+                value={file}
+                label="File"
+                onChange={handleChange}
+            >
+                {files.map((file, index) => (
+                    <MenuItem value={file} key={index}>{file.slug}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    </div>
+);
 }
 
-
-
-
-
-
-
-
-
-                    //     return (
-                    //         <ListItem key={index}>
-                    //             <ListItemIcon>
-                    //                 <ListItemButton onClick={() => handleDownload(file)}>
-                    //                     <DownloadIcon />
-                    //                 </ListItemButton>
-                    //             </ListItemIcon>
-                    //             <ListItemText primary={file} />
-                    //             <ListItemIcon>
-                    //                 <ListItemButton onClick={() => handleEdit(file)}>
-                    //                     <EditIcon />
-                    //                 </ListItemButton>
-                    //             </ListItemIcon>
-                    //             <ListItemIcon>
-                    //                 <ListItemButton onClick={() => handleDelete(file)}>
-                    //                     <DeleteIcon />
-                    //                 </ListItemButton>
-                    //             </ListItemIcon>
-                    //         </ListItem>
-                    //     )
-                    // }
-                    // ) || <ListItem>
-                    //         <ListItemText primary="No files found" />
-                    //     </ListItem>}
-
-        //         </List>
-        //     </Box>
-        //     <Box>
-        //         <List>
-        //             <ListItem>
-        //                 <ListItemButton onClick={handleDownloadAll}>
-        //                     Download All
-        //                 </ListItemButton>
-        //             </ListItem>
-        //             <ListItem>
-        //                 {uploadComponent}
-        //             </ListItem>
-        //         </List>
-        //     </Box>
-        // </div>
 
 

@@ -9,9 +9,8 @@ export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
     return (
         <>
-           {props.snippets && <FileList snippets={props.snippets} />}
-            <div className="buttonsContainer">
-                                <Button
+            <div className="editorTopBarButtonsContainer">
+                <Button
                     color="primary"
                     aria-label="open drawer"
                     onClick={props.handleOpenClose}
@@ -50,7 +49,8 @@ export default function EditorTopbar(props) {
                         marginLeft: "10px",
                         marginTop: "10px"
                     }}
-                />}
+                    />}
+                    {props.snippets && <FileList snippets={props.snippets} />}
 
 
                 {/* <Button

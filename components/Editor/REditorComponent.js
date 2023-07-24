@@ -27,14 +27,30 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
         setCodeState(newValue);
     };
 
+    var filteredSnippets = props.allUploads;
     const webR = new WebR();
     webR.init();
 
 
     async function runR() {
-        const cleanedCode = code.replace(/(\r\n|\n|\r)/gm, " \n");
 
         const shelter = await new webR.Shelter();
+
+        let fileCode = '';
+        filteredSnippets.forEach((snippet, index) => {
+            // CURRENT LIMIT IS 3 FILES
+            if (index < 3) {
+                // escape characters troublesome to R
+                let escapedSnippet = snippet.content.replace(/'/g, "\\'");
+                escapedSnippet = escapedSnippet.replace(/\n/g, "\\n");
+                let filename = `file` + index + `<- '` + escapedSnippet + `'\n`;
+                fileCode += filename;
+            }
+        });
+
+        let cleanedCode = code.replace(/(\r\n|\n|\r)/gm, " \n");
+
+        cleanedCode = fileCode + cleanedCode;
 
         const result = await shelter.captureR(cleanedCode, {
             withAutoprint: true,

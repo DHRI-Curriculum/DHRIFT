@@ -266,6 +266,7 @@ export default function WorkshopPage({
           askToRun={askToRun}
           setAskToRun={setAskToRun}
           language={currentFile.programming_language}
+          allUploads={uploads}
         />}
       <ClassFacilitator
         // You'll have to make state variables in the slug and pass them down
