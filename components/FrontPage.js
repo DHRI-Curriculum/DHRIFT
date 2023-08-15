@@ -166,8 +166,8 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                   </li>
                 )
               }
-              if (typeof item === 'object') {
-                if (item.link) {
+              if (typeof item === 'object' && item !== null) {
+                if (item?.link) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
                     <li key={key}>
@@ -176,7 +176,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                     </li>
                   )
                 }
-                if (item.description) {
+                if (item?.description) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
                     <li key={key} className='authors-list'>
