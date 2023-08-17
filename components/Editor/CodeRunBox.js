@@ -9,7 +9,7 @@ export default function CodeRunBox(props) {
     const setEditorOpen = props.setEditorOpen;
     let highlighted = null;
     try{
-    const highlighted = hljs.highlight(props.defaultCode, { language: props.language, ignoreIllegals: true });
+    highlighted = hljs.highlight(props.defaultCode, { language: props.language, ignoreIllegals: true });
     } catch (e) {
         console.log(e);
     }
