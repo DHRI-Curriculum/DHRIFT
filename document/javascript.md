@@ -18,7 +18,7 @@ programming_language: 'JavaScript'
 
 # Introduction
 
-Hello! This is *The JavaScripting Masters Student*, a course designed particulary for graduate students who are not pursuing a degree in computer science. The course is designed to help you learn the fundamentals of programming and to help you get started on your own projects. The course is __not__ intended to be a comprehensive introduction to computer science concepts, but rather a step-by-step path to making something useful.
+Hello! This is *The JavaScripting Graduate Student*, a course designed particulary for graduate students who are not pursuing a degree in computer science. The course is designed to help you learn the fundamentals of programming and to help you get started on your own projects. The course is __not__ intended to be a comprehensive introduction to computer science concepts, but rather a step-by-step path to making something useful.
 
 ## Learning Outcomes
 
@@ -2269,7 +2269,7 @@ Let's take a look at the contents of the file. Open your project in VSCode and o
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>My JavaScripting Master's Student Project</title>
+    <title>My JavaScripting Graduate Student Project</title>
   </head>
   <body>
     <h1>This is my project!</h1>
@@ -2366,7 +2366,7 @@ So, open the `index.html` file in VSCode and add the `<link>` to the `<head>` se
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css">
-    <title>My JavaScripting Master's Student Project</title>
+    <title>My JavaScripting Graduate Student Project</title>
   </head>
   <body>
     <h1>This is my project!</h1>
@@ -2415,7 +2415,7 @@ Next, let's add a paragraph with some text to our page. We'll start by adding a 
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css">
-    <title>My JavaScripting Master's Student Project</title>
+    <title>My JavaScripting Graduate Student Project</title>
   </head>
   <body>
     <h1>This is my project!</h1>
@@ -2472,7 +2472,7 @@ To create a class, we use the `.` (dot) character followed by the name of the cl
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css">
-    <title>My JavaScripting Master's Student Project</title>
+    <title>My JavaScripting Graduate Student Project</title>
   </head>
   <body>
     <div class="formatText">
@@ -2552,7 +2552,7 @@ Let's start by creating a new section in our HTML file, and adding a new `id` of
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="styles.css">
-    <title>My JavaScripting Master's Student Project</title>
+    <title>My JavaScripting Graduate Student Project</title>
   </head>
   <body>
     <div class="formatText">
@@ -4588,7 +4588,7 @@ Once you are finished with your project, follow the instructions below to deploy
 
 3. __Go to the Settings tab at the top, and then to the Pages tab in the sidebar__.
 
-4. __Under Branch, choose `master`__.
+4. __Under Branch, choose `main`__.
 
 5. __Click the Save button__.
 
