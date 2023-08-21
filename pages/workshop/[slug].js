@@ -131,7 +131,7 @@ export default function WorkshopPage({
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
       // if it's the frontpage vs not
-      index === 0 ? header = "Introduction" : header = page.props.children[0].props.children.props.children[0]
+      index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children.props.children[0]
       let tag = page.props.children[0].props.children.type;
       let parent = undefined;
       if (tag === 'h1') {
