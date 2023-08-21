@@ -21,7 +21,7 @@ was revised in Summer 2020 to better meet the needs of virtual instruction due t
 While the curriculum has always been available openly on GitHub, this site creates a more 
 user-friendly and functional interface that is open and free for public use."
 
-motto: "Test motto"
+motto: "Test"
 
 register: 
   required: true
