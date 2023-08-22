@@ -95,3 +95,6 @@ Let's try a little math in the Python prompt. In the Python REPL environment bel
 
 You should see the text `Hello World!` appear in the output below the code editor in the shell.
 
+<CodeEditor>
+    1+2
+</CodeEditor>

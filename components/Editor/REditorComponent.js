@@ -10,7 +10,6 @@ import { WebR } from '@r-wasm/webr';
 
 export default function REditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
 
-    const startingCode = props.text;
     const [isRReady, setIsRReady] = useState(false);
     const [isRLoading, setIsRLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -18,13 +17,15 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     const [isOutput, setIsoutput] = useState(false);
     const [output, setOutput] = useState('');
     const [runningCode, setRunningCode] = useState(false);
-    const [code, setCodeState] = useState(startingCode);
     const outputRef = useRef('');
     const [result, setResult] = useState(['Loading webR...']);
+    // const [Rcode, setRCode] = useState(defaultCode);
+    const Rcode = useRef(defaultCode);
 
 
     const onChange = (newValue) => {
-        setCodeState(newValue);
+        // setRCode(newValue);
+        Rcode.current = newValue;
     };
 
     var filteredSnippets = props.allUploads;
@@ -32,8 +33,8 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     webR.init();
 
 
-    async function runR() {
-
+    async function runR(theCode) {
+        setRunningCode(true);
         const shelter = await new webR.Shelter();
 
         let fileCode = '';
@@ -48,7 +49,12 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             }
         });
 
-        let cleanedCode = code.replace(/(\r\n|\n|\r)/gm, " \n");
+        if (theCode === undefined) {
+            theCode = Rcode.current;
+        }
+
+        // escape characters troublesome to R
+        let cleanedCode = theCode.replace(/(\r\n|\n|\r)/gm, " \n");
 
         cleanedCode = fileCode + cleanedCode;
 
@@ -64,9 +70,17 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             document.getElementById('out').innerText = out.join('\n');
         } finally {
             shelter.purge();
+            setRunningCode(false);
         }
     }
 
+    useEffect(() => {
+        Rcode.current = defaultCode;
+        if (props.askToRun === true) {
+            runR(Rcode.current);
+        }
+        props.setAskToRun(false);
+      }, [props.askToRun])
 
     const height = props.height ? props.height : '100%';
 
@@ -80,26 +94,18 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                 }}
                 src='../../coi-service.js' />
             <div className="editorContainer">
-                <EditorTopbar spinnerNeeded={(!isRLoading && !isRReady) ? true : false}
-                    setCode={props.setCode}
+                <EditorTopbar spinnerNeeded={runningCode}
+                    defaultCode={defaultCode}
                     run={runR}
-                    setEditorOpen={props.setEditorOpen}
-                    setAskToRun={props.setAskToRun}
-                    setRunningCode={setRunningCode}
-                    runningCode={runningCode}
-                    setOutput={setOutput}
-                    setIsoutput={setIsoutput}
-                    setIsError={setIsError}
-                    setError={setError}
-                    code={code}
+                    language='R'
                     {...props}
                 />
-                <EditorComponent code={code}
-                    language='r'
+                <EditorComponent code={Rcode.current}
                     onChange={onChange}
-                    maxLines='Infinity'
-                    minLines={minLines}
-                    height={height} />
+                    language='r'
+                    height={height}
+                    {...props}
+                />
             </div>
 
             <div className="outputContainer" id='out'
@@ -117,8 +123,6 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
             >
                 {/* {output} */}
             </div>
-
-
         </Fragment >
     )
 }

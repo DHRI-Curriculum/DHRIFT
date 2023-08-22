@@ -4,7 +4,6 @@ import 'highlight.js/styles/atom-one-dark.css'
 
 
 export default function CodeRunBox(props) {
-
     const setCode = props.setCode;
     const setEditorOpen = props.setEditorOpen;
     let highlighted = null;
