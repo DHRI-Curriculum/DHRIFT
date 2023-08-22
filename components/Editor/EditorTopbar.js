@@ -8,7 +8,6 @@ import CodeIcon from '@mui/icons-material/Code';
 export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
     const runButtonNeeded = props.runButtonNeeded || false;
-    console.log("spinnerNeeded", spinnerNeeded);
     return (
         <>
             <div className="editorTopBarButtonsContainer">
