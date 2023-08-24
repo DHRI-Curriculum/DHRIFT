@@ -99,7 +99,7 @@ These greater-than symbols `>>>` are how you know that you have entered an inter
 Let's try a little math in the Python prompt. In the Python REPL environment below <span style = "color:green">(shown in green text)</span>, type the following mathematical operations after the Python prompt (the `>>>`), and hit <kbd>enter</kbd> or <kbd>return</kbd> after each operation.
 
 ```pycon
->>> 2 + 3
+>>> 2 + 4
 >>> 14 - 10
 >>> 10 * 10
 >>> 6 / 3
