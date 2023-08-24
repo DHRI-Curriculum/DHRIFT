@@ -67,21 +67,13 @@ With that said, let's get started!
 
 One of the most basic ways to interact with R is through an "interactive session."  This is a special space that allows us to run little one-line bits of R, experimenting and exploring what it can do, without having to save it. Think of this interactive space as a playground. Later on, we will be working with R in a more robust way, executing longer R scripts.
 
-eofihwoeifhwoiehfwoiehf
 
-
-```r
-dim(iris)
-```
-```r
-dim(iris)
-```
 
 ```r
 x = 5  # radius of a circle
 ```
 
-```r
+```
 par(mar = c(4, 4, .2, .1))
 plot(cars, pch = 19)
 plot(pressure, pch = 17)
@@ -102,3 +94,7 @@ Let's try a little math in the Python prompt. In the Python REPL environment bel
 </CodeEditor>
 
 You should see the text `Hello World!` appear in the output below the code editor in the shell.
+
+<CodeEditor>
+    1+2
+</CodeEditor>

@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{pageProps.workshop.title}</title>
+        {/* <title>{pageProps.workshop.title}</title> */}
       </Head>
       <CssBaseline />
       <ThemeProvider>

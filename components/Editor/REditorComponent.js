@@ -38,6 +38,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
         const shelter = await new webR.Shelter();
 
         let fileCode = '';
+        if (filteredSnippets?.length > 0) {
         filteredSnippets.forEach((snippet, index) => {
             // CURRENT LIMIT IS 3 FILES
             if (index < 3) {
@@ -48,6 +49,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                 fileCode += filename;
             }
         });
+    }
 
         if (theCode === undefined) {
             theCode = Rcode.current;

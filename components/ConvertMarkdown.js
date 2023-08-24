@@ -199,6 +199,7 @@ const Secret = ({ className, children }) => {
 }
 
 export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun) {
+    if(!markdown)   return null;
     return (
         compiler(markdown,
             {

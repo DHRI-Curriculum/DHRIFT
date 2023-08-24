@@ -127,7 +127,7 @@ export default function Header({ props }) {
                             }}>
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
-                                <h2 className='headerLink'>{props.workshop.title.length > 80 ? props.workshop.title.substring(0, 80) + '...' : props.workshop.title}</h2>
+                                {/* <h2 className='headerLink'>{props.workshop.title.length > 80 ? props.workshop.title.substring(0, 80) + '...' : props.workshop.title}</h2> */}
                             </Link>
                         </Typography>
                         <ul className='links'>
