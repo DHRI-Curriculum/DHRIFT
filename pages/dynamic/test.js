@@ -59,7 +59,7 @@ export default function WorkshopPage({
   const fetcher = (...args) => fetch(...args).then(res => res.text())
 
   function useWorkshop() {
-    const { data, error } = useSWR(`https://raw.githubusercontent.com/DHRI-Curriculum/DHRIFT/main/workshops/intro_to_R.md`, fetcher)
+    const { data, error } = useSWR(`https://raw.githubusercontent.com/DHRI-Curriculum/DHRIFT/main/workshops/python.md`, fetcher)
     return {
       data: data,
       isLoading: !error && !data,
