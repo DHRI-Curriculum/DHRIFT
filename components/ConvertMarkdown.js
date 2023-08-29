@@ -54,12 +54,14 @@ const Code = ({ className, children }) => {
     }
 }
 
+
 const Imager = ({ className, ...props }) => {
     let newProps = { ...props };
     if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
         newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
     }
-    const imageSource = newProps.src
+    let imageSource = newProps.src
+
     return (
         <div className="image-container">
             <Zoom>
@@ -70,11 +72,12 @@ const Imager = ({ className, ...props }) => {
                         alt={newProps.alt}
                         layout='fill'
                         objectFit='cover'
+                        onError={() => setSrc('/images/logos/logo.png')}
                     />
                 </div>
             </Zoom>
         </div>
-    );
+    )
 }
 
 const CodeEditor = ({ children, ...props }) => {
@@ -198,8 +201,9 @@ const Secret = ({ className, children }) => {
     )
 }
 
-export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun) {
-    if(!markdown)   return null;
+export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug) {
+
+    if (!markdown) return null;
     return (
         compiler(markdown,
             {
@@ -211,9 +215,35 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                         }
                     },
                     img: {
-                        component: Imager,
+                        component:
+                            function (props ) {
+                                let newProps = { ...props };
+                                if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
+                                    newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
+                                }
+                                const [src, setSrc] = useState(newProps.src);
+                                const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${newProps.src}`
+    
+                                return (
+                                    <div className="image-container">
+                                        <Zoom>
+                                            <div className='markdown-image-container' >
+                                                <Image
+                                                    className='markdown-image'
+                                                    src={src}
+                                                    alt={newProps.alt}
+                                                    layout='fill'
+                                                    objectFit='cover'
+                                                    onError={() => setSrc(builtURL)}
+                                                />
+                                            </div>
+                                        </Zoom>
+                                    </div>
+                                )
+                            },
                         props: {
                             className: 'image',
+                            slug: slug,
                         }
                     },
                     CodeEditor: {
@@ -242,7 +272,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                             className: 'info-alert',
                         }
                     },
- 
+
                     Quiz,
                     PythonREPL,
                     Terminal,
@@ -250,7 +280,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                     JSTerminal,
                     Secret
                     // HTMLEditor,
-                   
+
                 }
 
             })

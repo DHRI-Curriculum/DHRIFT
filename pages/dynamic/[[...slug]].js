@@ -56,17 +56,22 @@ export default function WorkshopPage({
 
   const router = useRouter()
   const { slug } = router.query
+
   const fetcher = (...args) => fetch(...args).then(res => res.text())
 
-  function useWorkshop() {
-    const { data, error } = useSWR(`https://raw.githubusercontent.com/DHRI-Curriculum/DHRIFT/main/workshops/html-css.md`, fetcher)
+  function useWorkshop(slug) {
+    // problematic?
+    if (slug === undefined) slug = ['jupyter', 'jupyter', 'README']
+    const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[2]}.md`
+    const { data, error } = useSWR(builtURL, fetcher)
     return {
       data: data,
       isLoading: !error && !data,
       isError: error
     }
   }
-  const { data, isLoading, isError } = useWorkshop()
+  const { data, isLoading, isError } = useWorkshop(slug)
+
 
   // get front page content
   // const [facilitatorOpen, setFacilitatorOpen] = useState(false);
@@ -80,12 +85,9 @@ export default function WorkshopPage({
   //   })
 
 
-
-
   // convert markdown to html and split into pages
-
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -137,7 +139,7 @@ export default function WorkshopPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
 
-  if (data && !currentFile && typeof (data) === 'string') {
+  if (data && !currentFile && slug && typeof (data) === 'string') {
     // setCurrentFile(matter(data))
     const matterResult = matter(data)
     setCurrentFile(matterResult)
@@ -171,7 +173,7 @@ export default function WorkshopPage({
       return (header)
     })
     setPageTitles(pageTitlesGet)
-  }, [currentPage]);
+  }, [currentPage, pages]);
 
   useEffect(() => {
     // setCurrentPage(1);
@@ -193,7 +195,6 @@ export default function WorkshopPage({
     // check if current content has changed and get the current h1
     if (currentContent && currentContent != undefined) {
       setCurrentHeader(currentContent.props);
-
     }
   }, [currentContent])
 
@@ -239,7 +240,7 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    // router.push(`/workshop/${slug}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    router.push(`/workshop/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
@@ -282,7 +283,7 @@ export default function WorkshopPage({
           </div>
         </div>
       </Main>
-      {language && 
+      {language &&
         <DrawerEditor
           drawerWidth={drawerWidth}
           open={editorOpen}
