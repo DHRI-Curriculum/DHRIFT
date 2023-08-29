@@ -1,4 +1,5 @@
 'use client'
+import Head from 'next/head'
 import matter from 'gray-matter'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
@@ -41,13 +42,17 @@ export default function WorkshopPage({
   workshop,
   authors,
   uploads,
+  title,
+  setTitle
   // facilitators,
 }) {
+  // const title = pageProps.title;
+  // const setTitle = pageProps.setTitle;
+
   const [content, setContent] = useState('');
-  const [htmlContent, setHtmlContent] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
   const [currentContent, setCurrentContent] = useState([]);
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('');
   const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
@@ -240,7 +245,8 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    router.push(`/workshop/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    // CHANGE THIS
+    router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
@@ -255,6 +261,9 @@ export default function WorkshopPage({
         display: 'flex',
       }}
     >
+      <Head>
+        <title>{title}</title>
+      </Head>
       <Main open={editorOpen}
         sx={{
           width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
