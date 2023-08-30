@@ -55,31 +55,6 @@ const Code = ({ className, children }) => {
 }
 
 
-const Imager = ({ className, ...props }) => {
-    let newProps = { ...props };
-    if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
-        newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
-    }
-    let imageSource = newProps.src
-
-    return (
-        <div className="image-container">
-            <Zoom>
-                <div className='markdown-image-container' >
-                    <Image
-                        className='markdown-image'
-                        src={imageSource}
-                        alt={newProps.alt}
-                        layout='fill'
-                        objectFit='cover'
-                        onError={() => setSrc('/images/logos/logo.png')}
-                    />
-                </div>
-            </Zoom>
-        </div>
-    )
-}
-
 const CodeEditor = ({ children, ...props }) => {
     var codeText
 
@@ -203,6 +178,32 @@ const Secret = ({ className, children }) => {
 
 export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug) {
 
+    const [src, setSrc] = useState(null);
+    const Imager = ({ className, ...props }) => {
+        let newProps = { ...props };
+        if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
+            newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
+        }
+        const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${newProps.src}`
+        setSrc(newProps.src)
+        return (
+            <div className="image-container">
+                <Zoom>
+                    <div className='markdown-image-container' >
+                        <Image
+                            className='markdown-image'
+                            src={src}
+                            alt={newProps.alt}
+                            layout='fill'
+                            objectFit='cover'
+                            onError={() => setSrc(builtURL)}
+                        />
+                    </div>
+                </Zoom>
+            </div>
+        )
+    }
+
     if (!markdown) return null;
     return (
         compiler(markdown,
@@ -215,32 +216,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                         }
                     },
                     img: {
-                        component:
-                            function (props ) {
-                                let newProps = { ...props };
-                                if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
-                                    newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
-                                }
-                                const [src, setSrc] = useState(newProps.src);
-                                const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${newProps.src}`
-    
-                                return (
-                                    <div className="image-container">
-                                        <Zoom>
-                                            <div className='markdown-image-container' >
-                                                <Image
-                                                    className='markdown-image'
-                                                    src={src}
-                                                    alt={newProps.alt}
-                                                    layout='fill'
-                                                    objectFit='cover'
-                                                    onError={() => setSrc(builtURL)}
-                                                />
-                                            </div>
-                                        </Zoom>
-                                    </div>
-                                )
-                            },
+                        component: Imager,
                         props: {
                             className: 'image',
                             slug: slug,
