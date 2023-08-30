@@ -55,6 +55,7 @@ export default function WorkshopPage({
   const [pageTitles, setPageTitles] = useState([]);
   const [currentHeader, setCurrentHeader] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [workshopTitle, setWorkshopTitle] = useState('');
 
   const router = useRouter()
   const { slug } = router.query
@@ -65,12 +66,12 @@ export default function WorkshopPage({
     // problematic?
     if (slug === undefined) slug = ['jupyter', 'jupyter', 'README']
     let builtURL;
-    if(slug.length === 3) {
-    builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[2]}.md`
-    } else if(slug.length === 2) {
+    if (slug.length === 3) {
+      builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[2]}.md`
+    } else if (slug.length === 2) {
       builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[1]}.md`
     }
-    
+
     const { data, error } = useSWR(builtURL, fetcher)
     return {
       data: data,
@@ -153,12 +154,13 @@ export default function WorkshopPage({
     setCurrentFile(matterResult)
     setContent(matterResult.content)
     setPages(convertContenttoHTML(matterResult.content));
-    setTitle(matterResult.data.title);
     setLanguage(matterResult.data.programming_language);
+    setWorkshopTitle(matterResult.data.title);
   }
-
+  
   // list of page titles and highlight current page
   useEffect(() => {
+    setTitle(workshopTitle);
     let mostRecentH1 = null;
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
