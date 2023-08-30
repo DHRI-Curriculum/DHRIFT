@@ -178,14 +178,15 @@ const Secret = ({ className, children }) => {
 
 export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug) {
 
-    const [src, setSrc] = useState(null);
+    
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
             newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
         }
+        const [src, setSrc] = useState(newProps.src);
         const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${newProps.src}`
-        setSrc(newProps.src)
+        // setSrc()
         return (
             <div className="image-container">
                 <Zoom>
