@@ -1,4 +1,5 @@
 'use client'
+import Head from 'next/head'
 import matter from 'gray-matter'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
@@ -41,25 +42,30 @@ export default function WorkshopPage({
   workshop,
   authors,
   uploads,
+  title,
+  setTitle
   // facilitators,
 }) {
+
   const [content, setContent] = useState('');
-  const [htmlContent, setHtmlContent] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
   const [currentContent, setCurrentContent] = useState([]);
-  const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('');
   const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
   const [pageTitles, setPageTitles] = useState([]);
   const [currentHeader, setCurrentHeader] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [workshopTitle, setWorkshopTitle] = useState('');
 
-  const router = useRouter()
-  const { slug } = router.query
+
   const fetcher = (...args) => fetch(...args).then(res => res.text())
 
   function useWorkshop() {
-    const { data, error } = useSWR(`https://raw.githubusercontent.com/DHRI-Curriculum/DHRIFT/main/workshops/html-css.md`, fetcher)
+    // problematic?
+    let builtURL;
+
+    builtURL = `https://raw.githubusercontent.com/szweibel/python/main/python.md`
+    const { data, error } = useSWR(builtURL, fetcher)
     return {
       data: data,
       isLoading: !error && !data,
@@ -67,6 +73,7 @@ export default function WorkshopPage({
     }
   }
   const { data, isLoading, isError } = useWorkshop()
+
 
   // get front page content
   // const [facilitatorOpen, setFacilitatorOpen] = useState(false);
@@ -80,12 +87,10 @@ export default function WorkshopPage({
   //   })
 
 
-
-
   // convert markdown to html and split into pages
-
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun);
+    let slug = ['szweibel', 'python', 'python']
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -143,12 +148,13 @@ export default function WorkshopPage({
     setCurrentFile(matterResult)
     setContent(matterResult.content)
     setPages(convertContenttoHTML(matterResult.content));
-    setTitle(matterResult.data.title);
     setLanguage(matterResult.data.programming_language);
+    setWorkshopTitle(matterResult.data.title);
   }
 
   // list of page titles and highlight current page
   useEffect(() => {
+    setTitle(workshopTitle);
     let mostRecentH1 = null;
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
@@ -171,7 +177,7 @@ export default function WorkshopPage({
       return (header)
     })
     setPageTitles(pageTitlesGet)
-  }, [currentPage]);
+  }, [currentPage, pages]);
 
   useEffect(() => {
     // setCurrentPage(1);
@@ -193,7 +199,6 @@ export default function WorkshopPage({
     // check if current content has changed and get the current h1
     if (currentContent && currentContent != undefined) {
       setCurrentHeader(currentContent.props);
-
     }
   }, [currentContent])
 
@@ -239,7 +244,8 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    // router.push(`/workshop/${slug}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    // CHANGE THIS
+    // router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
@@ -254,6 +260,9 @@ export default function WorkshopPage({
         display: 'flex',
       }}
     >
+      <Head>
+        <title>{title}</title>
+      </Head>
       <Main open={editorOpen}
         sx={{
           width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
@@ -282,7 +291,7 @@ export default function WorkshopPage({
           </div>
         </div>
       </Main>
-      {language && 
+      {language &&
         <DrawerEditor
           drawerWidth={drawerWidth}
           open={editorOpen}

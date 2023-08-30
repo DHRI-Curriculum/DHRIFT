@@ -22,12 +22,12 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
 
     
     const Imager = ({ className, ...props }) => {
-        const [src, setSrc] = useState(null);
         let newProps = { ...props };
         if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
             newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
         }
-        setSrc(newProps.src);
+        const [src, setSrc] = useState(newProps.src);
+        // setSrc();
         const builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${newProps.src}`
         return (
             <div className="image-container">

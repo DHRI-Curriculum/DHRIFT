@@ -57,20 +57,10 @@ export default function WorkshopPage({
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
 
-  const router = useRouter()
-  const { slug } = router.query
 
   const fetcher = (...args) => fetch(...args).then(res => res.text())
 
-  function useWorkshop(slug) {
-    // problematic?
-    if (slug === undefined) slug = ['jupyter', 'jupyter', 'README']
-    let builtURL;
-    if (slug.length === 3) {
-      builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[2]}.md`
-    } else if (slug.length === 2) {
-      builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[1]}.md`
-    }
+  function useWorkshop(builtURL) {
 
     const { data, error } = useSWR(builtURL, fetcher)
     return {
@@ -79,7 +69,7 @@ export default function WorkshopPage({
       isError: error
     }
   }
-  const { data, isLoading, isError } = useWorkshop(slug)
+  // const { data, isLoading, isError } = useWorkshop(slug)
 
 
   // get front page content
@@ -96,6 +86,8 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
+    // FOR TESTING
+    let slug = ['szweibel', 'python', 'python']
     const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug);
     // split react element array into pages
     const allPages = [];
@@ -148,16 +140,38 @@ export default function WorkshopPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
 
-  if (data && !currentFile && slug && typeof (data) === 'string') {
-    // setCurrentFile(matter(data))
-    const matterResult = matter(data)
-    setCurrentFile(matterResult)
-    setContent(matterResult.content)
-    setPages(convertContenttoHTML(matterResult.content));
-    setLanguage(matterResult.data.programming_language);
-    setWorkshopTitle(matterResult.data.title);
-  }
-  
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const gitUser = (urlParams.get('user'));
+    const gitRepo = (urlParams.get('repo'));
+    const gitFile = (urlParams.get('file'));
+    let builtURL;
+    if (gitFile === null) {
+      builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
+    } else {
+      builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
+    }
+    // const { data, isLoading, isError } = useWorkshop(builtURL)
+    const data = fetch(builtURL).then(res => res.text()
+    ).then(data => {
+      const matterResult = matter(data)
+      setCurrentFile(matterResult)
+      setContent(matterResult.content)
+      setPages(convertContenttoHTML(matterResult.content));
+      setLanguage(matterResult.data.programming_language);
+      setWorkshopTitle(matterResult.data.title);
+    })
+  }, [])
+
+
+  //   // if (data && !currentFile && typeof (data) === 'string') {
+  //     console.log(data)
+  //     // setCurrentFile(matter(data))
+  //   }
+  // }, [])
+
+
+
   // list of page titles and highlight current page
   useEffect(() => {
     setTitle(workshopTitle);
@@ -251,13 +265,13 @@ export default function WorkshopPage({
     });
     const valueAsNumber = Number(value);
     // CHANGE THIS
-    router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    // router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  if (isLoading) return <div>Loading...</div>
-  if (isError) return <div>Error...</div>
+  // if (isLoading) return <div>Loading...</div>
+  // if (isError) return <div>Error...</div>
 
   return (
     <Container
