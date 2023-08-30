@@ -6,11 +6,13 @@ import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
 
-export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFacilitatorOpen) {
+export default function FrontPage(currentFile, allFiles,
+   facilitatorOpen, setFacilitatorOpen
+  ) {
   const description = currentFile.description
   const title = currentFile.title
   const dependencies = currentFile.dependencies || []
-  // const workshops = allFiles.workshops
+  const workshops = allFiles.workshops
 
   const authors = allFiles.authors
 

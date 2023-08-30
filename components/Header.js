@@ -21,20 +21,11 @@ const Drawer = dynamic(
     { loading: function loading() { return <p>...</p> } }
 )
 
-export default function Header({ props }) {
+export default function Header({ title }) {
 
  
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
-
-    // useEffect(() => {
-    //     if (props && props.workshops) {
-    //         setPropsAvailable(true)
-    //         setAllWorkshops(props.workshops)
-    //         setAllGuides(props.guides)
-    //         setAllInsights(props.insights)
-    //     }
-    // }, [props.workshops])
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -127,7 +118,8 @@ export default function Header({ props }) {
                             }}>
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
-                                <h2 className='headerLink'>{props.workshop.title.length > 80 ? props.workshop.title.substring(0, 80) + '...' : props.workshop.title}</h2>
+                                {title &&
+                                <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>}
                             </Link>
                         </Typography>
                         <ul className='links'>
