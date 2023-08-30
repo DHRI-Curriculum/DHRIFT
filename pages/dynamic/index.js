@@ -58,37 +58,10 @@ export default function WorkshopPage({
   const [workshopTitle, setWorkshopTitle] = useState('');
 
 
-  const fetcher = (...args) => fetch(...args).then(res => res.text())
-
-  function useWorkshop(builtURL) {
-
-    const { data, error } = useSWR(builtURL, fetcher)
-    return {
-      data: data,
-      isLoading: !error && !data,
-      isError: error
-    }
-  }
-  // const { data, isLoading, isError } = useWorkshop(slug)
-
-
-  // get front page content
-  // const [facilitatorOpen, setFacilitatorOpen] = useState(false);
-  // const frontPageContent = FrontPage(
-  //   currentFile,
-  //   {
-  //     workshop,
-  //     authors,
-  //     uploads,
-  //     // facilitators,
-  //   })
-
-
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    // FOR TESTING
-    let slug = ['szweibel', 'python', 'python']
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug);
+
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -139,29 +112,40 @@ export default function WorkshopPage({
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+  const [gitFile, setGitFile] = useState(null);
+  
+
+  const fetcher = (...args) => fetch(...args).then(res => res.text())
+  let builtURL;
+  if (gitFile === null) {
+    builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
+  } else {
+    builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
+  }
+  const { data, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher,
+    { revalidateOnFocus: false, revalidateOnReconnect: false });
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const gitUser = (urlParams.get('user'));
-    const gitRepo = (urlParams.get('repo'));
-    const gitFile = (urlParams.get('file'));
-    let builtURL;
-    if (gitFile === null) {
-      builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
-    } else {
-      builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
-    }
-    // const { data, isLoading, isError } = useWorkshop(builtURL)
-    const data = fetch(builtURL).then(res => res.text()
-    ).then(data => {
-      const matterResult = matter(data)
-      setCurrentFile(matterResult)
-      setContent(matterResult.content)
-      setPages(convertContenttoHTML(matterResult.content));
-      setLanguage(matterResult.data.programming_language);
-      setWorkshopTitle(matterResult.data.title);
-    })
-  }, [])
+    setGitUser(urlParams.get('user'));
+    setGitRepo(urlParams.get('repo'));
+    setGitFile(urlParams.get('file'));
+
+    // const data = fetch(builtURL).then(res => res.text()
+    // ).then(data => {
+    //   if (data) {
+    //     console.log(data)
+    //   }
+    //   const matterResult = matter(data)
+    //   setCurrentFile(matterResult)
+    //   setContent(matterResult.content)
+    //   setPages(convertContenttoHTML(matterResult.content));
+    //   setLanguage(matterResult.data.programming_language);
+    //   setWorkshopTitle(matterResult.data.title);
+    // })
+  }, [gitUser, gitRepo, gitFile])
 
 
   //   // if (data && !currentFile && typeof (data) === 'string') {
@@ -170,6 +154,16 @@ export default function WorkshopPage({
   //   }
   // }, [])
 
+  useEffect(() => {
+    if (data && !currentFile && typeof (data) === 'string') {
+     const matterResult = matter(data)
+      setCurrentFile(matterResult)
+      setContent(matterResult.content)
+      setPages(convertContenttoHTML(matterResult.content));
+      setLanguage(matterResult.data.programming_language);
+      setWorkshopTitle(matterResult.data.title);
+    }
+  }, [data])
 
 
   // list of page titles and highlight current page
@@ -208,7 +202,6 @@ export default function WorkshopPage({
       setCurrentContent(pages[page - 1]);
       setCurrentContentLoaded(true);
     } else {
-      // setPages(convertContenttoHTML(content));
       setCurrentContent(pages[0]);
       setCurrentPage(1);
       setCurrentContentLoaded(true);
