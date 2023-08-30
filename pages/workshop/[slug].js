@@ -1,5 +1,5 @@
-'use client'
-import Head from 'next/head'
+import fs from 'fs'
+import path from 'path'
 import matter from 'gray-matter'
 import React, { useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
@@ -8,14 +8,14 @@ import Sidebar from '../../components/Sidebar'
 import FrontPage from '../../components/FrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-// import Presentation from '../../components/Presentation';
+import Presentation from '../../components/Presentation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
 import ClassFacilitator from '../../components/ClassFacilitator'
-import useSWR from 'swr'
+
 
 const drawerWidth = '-30%';
 
@@ -42,63 +42,41 @@ export default function WorkshopPage({
   workshop,
   authors,
   uploads,
-  title,
-  setTitle
-  // facilitators,
+  facilitators,
 }) {
-
-  const [content, setContent] = useState('');
-  const [currentFile, setCurrentFile] = useState(null);
-  const [currentContent, setCurrentContent] = useState([]);
-  const [language, setLanguage] = useState('');
-  const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
-  const [pageTitles, setPageTitles] = useState([]);
-  const [currentHeader, setCurrentHeader] = useState(null);
-  const [editorOpen, setEditorOpen] = useState(false);
 
   const router = useRouter()
   const { slug } = router.query
-
-  const fetcher = (...args) => fetch(...args).then(res => res.text())
-
-  function useWorkshop(slug) {
-    // problematic?
-    if (slug === undefined) slug = ['jupyter', 'jupyter', 'README']
-    let builtURL;
-    if(slug.length === 3) {
-    builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[2]}.md`
-    } else if(slug.length === 2) {
-      builtURL = `https://raw.githubusercontent.com/${slug[0]}/${slug[1]}/main/${slug[1]}.md`
-    }
-    
-    const { data, error } = useSWR(builtURL, fetcher)
-    return {
-      data: data,
-      isLoading: !error && !data,
-      isError: error
-    }
-  }
-  const { data, isLoading, isError } = useWorkshop(slug)
-
+  const currentFile = workshop
+  const title = currentFile.title
+  const content = currentFile.content
+  const language = currentFile.programming_language
 
   // get front page content
-  // const [facilitatorOpen, setFacilitatorOpen] = useState(false);
-  // const frontPageContent = FrontPage(
-  //   currentFile,
-  //   {
-  //     workshop,
-  //     authors,
-  //     uploads,
-  //     // facilitators,
-  //   })
+  const [facilitatorOpen, setFacilitatorOpen] = useState(false);
+  const frontPageContent = FrontPage(
+    currentFile,
+    {
+      workshop,
+      authors,
+      uploads,
+      facilitators,
+    }, facilitatorOpen, setFacilitatorOpen)
 
+
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [code, setCode] = useState('');
+
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
 
   // convert markdown to html and split into pages
-  const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, slug);
+  // convert markdown to html and split into pages
+  const htmlContent = function (content) {
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun);
     // split react element array into pages
     const allPages = [];
-    const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
+    const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
       // allPages = [[h1, p, p][h1, p, div]]
       if (typeof curr === 'string') {
         return acc;
@@ -112,8 +90,7 @@ export default function WorkshopPage({
       }
       return acc;
     }, []);
-
-    // allPages.unshift(frontPageContent);
+    allPages.unshift(frontPageContent);
 
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
@@ -139,23 +116,14 @@ export default function WorkshopPage({
     )
   }
 
-
   // set defaults 
-  const [code, setCode] = useState(null);
-  // communicates with the editor to run code
-  const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState(htmlContent(content));
+  const [currentContent, setCurrentContent] = useState([]);
+  const [currentContentLoaded, setCurrentContentLoaded] = useState(false);
+  const [pageTitles, setPageTitles] = useState([]);
+  const [currentHeader, setCurrentHeader] = useState(null);
 
-  if (data && !currentFile && slug && typeof (data) === 'string') {
-    // setCurrentFile(matter(data))
-    const matterResult = matter(data)
-    setCurrentFile(matterResult)
-    setContent(matterResult.content)
-    setPages(convertContenttoHTML(matterResult.content));
-    setTitle(matterResult.data.title);
-    setLanguage(matterResult.data.programming_language);
-  }
 
   // list of page titles and highlight current page
   useEffect(() => {
@@ -181,9 +149,10 @@ export default function WorkshopPage({
       return (header)
     })
     setPageTitles(pageTitlesGet)
-  }, [currentPage, pages]);
+  }, [currentPage]);
 
   useEffect(() => {
+    setPages(htmlContent(content));
     // setCurrentPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     const page = Number(urlParams.get('page'));
@@ -192,12 +161,11 @@ export default function WorkshopPage({
       setCurrentContent(pages[page - 1]);
       setCurrentContentLoaded(true);
     } else {
-      // setPages(convertContenttoHTML(content));
-      setCurrentContent(pages[0]);
+      setPages(htmlContent(content));
       setCurrentPage(1);
       setCurrentContentLoaded(true);
     }
-  }, [pages])
+  }, [slug]);
 
   useEffect(() => {
     // check if current content has changed and get the current h1
@@ -223,11 +191,11 @@ export default function WorkshopPage({
           handlePageChange={handlePageChange}
 
         />
-        {/* <Presentation
+        <Presentation
           currentHeader={currentHeader}
           content={currentFile}
           title={title}
-        /> */}
+        />
         <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
@@ -248,14 +216,10 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    // CHANGE THIS
-    router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    router.push(`/workshop/${slug}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
-
-  if (isLoading) return <div>Loading...</div>
-  if (isError) return <div>Error...</div>
 
   return (
     <Container
@@ -264,9 +228,6 @@ export default function WorkshopPage({
         display: 'flex',
       }}
     >
-      <Head>
-        <title>{title}</title>
-      </Head>
       <Main open={editorOpen}
         sx={{
           width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
@@ -287,7 +248,7 @@ export default function WorkshopPage({
               >
                 <Skeleton variant="rect" width={'100%'} height={'50px'} />
                 {
-                  Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                  Array(content.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
               </div>
             )}
             {PaginationComponent(currentPage)}
@@ -295,7 +256,7 @@ export default function WorkshopPage({
           </div>
         </div>
       </Main>
-      {language &&
+      {currentFile.programming_language &&
         <DrawerEditor
           drawerWidth={drawerWidth}
           open={editorOpen}
@@ -304,17 +265,74 @@ export default function WorkshopPage({
           setText={setCode}
           askToRun={askToRun}
           setAskToRun={setAskToRun}
-          language={language}
+          language={currentFile.programming_language}
           allUploads={uploads}
         />}
-      {/* <ClassFacilitator
+      <ClassFacilitator
         // You'll have to make state variables in the slug and pass them down
         name={facilitators}
         bio={'bio'}
         facilitatorOpen={facilitatorOpen}
         handleClose={() => setFacilitatorOpen(false)}
-      /> */}
+      />
 
     </Container>
   )
+}
+export async function getStaticPaths() {
+  const files = fs.readdirSync(path.join('document'))
+  const paths = files.map((filename) => ({
+    params: {
+      slug: filename.replace('.md', ''),
+    },
+  }))
+  return {
+    paths,
+    fallback: false,
+  }
+}
+
+export async function getStaticProps() {
+  // Get files from the workshops dir
+  const getFilesandProcess = (dir) => {
+    const dirents = fs.readdirSync(path.join(dir), { withFileTypes: true })
+    const dirFiles = dirents
+      .filter((file) => file.isFile())
+      .map((file) => file.name);
+    // Get slug and frontmatter from workshop
+    const markdownFiles = dirFiles.map((filename) => {
+      // Create slug
+      const slug = filename.replace('.md', '')
+
+      // Get frontmatter
+      const markdownWithMeta = fs.readFileSync(
+        path.join(dir, filename),
+        'utf-8',
+      )
+      const itemPath = path.join(dir, filename).replace('.md', '')
+
+      const matterResult = matter(markdownWithMeta)
+      const content = matterResult.content
+
+      return {
+        slug,
+        itemPath,
+        content: content,
+        ...matterResult.data,
+      }
+
+    })
+    return markdownFiles
+  }
+  const workshopFiles = getFilesandProcess('document')
+  const uploadsFiles = getFilesandProcess('uploads')
+  const authorFiles = getFilesandProcess('authors')
+
+  return {
+    props: {
+      workshop: workshopFiles[0],
+      authors: authorFiles.sort(),
+      uploads: uploadsFiles.sort(),
+    },
+  }
 }
