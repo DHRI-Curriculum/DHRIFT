@@ -6,6 +6,7 @@ import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
 import Sidebar from '../../components/Sidebar'
 import FrontPage from '../../components/FrontPage';
+import NewFrontPage from '../../components/NewFrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 // import Presentation from '../../components/Presentation';
@@ -57,6 +58,16 @@ export default function WorkshopPage({
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
 
+  // const frontPageContent = FrontPage(
+  //   currentFile,
+  //   {
+  //     workshop,
+  //     authors,
+  //     // uploads,
+  //     // facilitators,
+  //   },
+  //   // facilitatorOpen, setFacilitatorOpen
+  // )
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
@@ -83,11 +94,11 @@ export default function WorkshopPage({
 
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
-        if (page.props != undefined && page.props.className.includes('frontpage')) {
-          return (
-            frontPageContent
-          )
-        }
+        // if (page.props != undefined && page.props.className.includes('frontpage')) {
+        //   return (
+        //     frontPageContent
+        //   )
+        // }
         return (
           <div key={index} className='page-content'>
             {page.map((element, index) => {
@@ -115,7 +126,7 @@ export default function WorkshopPage({
   const [gitUser, setGitUser] = useState(null);
   const [gitRepo, setGitRepo] = useState(null);
   const [gitFile, setGitFile] = useState(null);
-  
+
 
   const fetcher = (...args) => fetch(...args).then(res => res.text())
   let builtURL;
@@ -132,38 +143,40 @@ export default function WorkshopPage({
     setGitUser(urlParams.get('user'));
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
-
-    // const data = fetch(builtURL).then(res => res.text()
-    // ).then(data => {
-    //   if (data) {
-    //     console.log(data)
-    //   }
-    //   const matterResult = matter(data)
-    //   setCurrentFile(matterResult)
-    //   setContent(matterResult.content)
-    //   setPages(convertContenttoHTML(matterResult.content));
-    //   setLanguage(matterResult.data.programming_language);
-    //   setWorkshopTitle(matterResult.data.title);
-    // })
   }, [gitUser, gitRepo, gitFile])
-
-
-  //   // if (data && !currentFile && typeof (data) === 'string') {
-  //     console.log(data)
-  //     // setCurrentFile(matter(data))
-  //   }
-  // }, [])
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
-     const matterResult = matter(data)
+      const matterResult = matter(data)
       setCurrentFile(matterResult)
       setContent(matterResult.content)
-      setPages(convertContenttoHTML(matterResult.content));
       setLanguage(matterResult.data.programming_language);
       setWorkshopTitle(matterResult.data.title);
+      // setPages(convertContenttoHTML(matterResult.content))
     }
   }, [data])
+
+  useEffect(() => {
+    if (currentFile != null) {
+      // const frontPageContent = FrontPage(
+      //   currentFile,
+      //   {
+      //     workshop,
+      //     authors,
+      //     // uploads,
+      //     // facilitators,
+      //   },
+        // facilitatorOpen, setFacilitatorOpen
+        // )
+        
+        const frontPageContent = NewFrontPage(currentFile);
+        
+        setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
+        // setPages(convertContenttoHTML(currentFile.content));
+        
+      }
+    }, [currentFile])
+
 
 
   // list of page titles and highlight current page
@@ -263,8 +276,8 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  // if (isLoading) return <div>Loading...</div>
-  // if (isError) return <div>Error...</div>
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error...</div>
 
   return (
     <Container
