@@ -128,15 +128,46 @@ export default function WorkshopPage({
   const [gitFile, setGitFile] = useState(null);
 
 
-  const fetcher = (...args) => fetch(...args).then(res => res.text())
-  let builtURL;
-  if (gitFile === null) {
-    builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
+  let builtURL, headers;
+
+  if (process.env.GITHUBKEY) {
+    console.log('using github secret')
+  headers = new Headers(
+    {
+      'Content-Type': 'application/json',
+      'authorization': `token ${process.env.GITHUBSECRET}`
+    });
   } else {
-    builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
+    console.log('using public github api')
+    headers = new Headers(
+      {
+        'Content-Type': 'application/json',
+      });
   }
-  const { data, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher,
+
+  const fetcher = (headers) => (...args) => fetch(...args, { 
+    headers: headers,
+    method: 'GET', 
+   }).then(
+    res => res.json()
+  ).then(
+    // decode from base64
+    res => Buffer.from(res.content, 'base64').toString()
+  )
+
+
+  if (gitFile === null) {
+    // builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
+    builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`
+
+  } else {
+    // builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
+    builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`
+  }
+   
+  const { data, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
     { revalidateOnFocus: false, revalidateOnReconnect: false });
+
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -147,6 +178,7 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
+
       const matterResult = matter(data)
       setCurrentFile(matterResult)
       setContent(matterResult.content)
@@ -166,16 +198,16 @@ export default function WorkshopPage({
       //     // uploads,
       //     // facilitators,
       //   },
-        // facilitatorOpen, setFacilitatorOpen
-        // )
-        
-        const frontPageContent = NewFrontPage(currentFile);
-        
-        setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
-        // setPages(convertContenttoHTML(currentFile.content));
-        
-      }
-    }, [currentFile])
+      // facilitatorOpen, setFacilitatorOpen
+      // )
+
+      const frontPageContent = NewFrontPage(currentFile);
+
+      setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
+      // setPages(convertContenttoHTML(currentFile.content));
+
+    }
+  }, [currentFile])
 
 
 
@@ -277,8 +309,10 @@ export default function WorkshopPage({
   }
 
   if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error...</div>
-
+  if (error) {
+    console.log(error)
+    return <div>Error...</div>
+  }
   return (
     <Container
       // maxWidth="lg"

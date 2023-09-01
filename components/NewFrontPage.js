@@ -83,7 +83,7 @@ export default function NewFrontPage(currentFile, allFiles,
                 )
               }
               if (key === 'projects') {
-                console.log(item)
+                // console.log(item)
               }
               // if (obj.title === 'facilitators') {
               //   const facilitator = authors.find(author => author.title === item);
@@ -167,7 +167,7 @@ export default function NewFrontPage(currentFile, allFiles,
                         console.log(key)
                         const term = ConvertMarkdown(item[key].description)
                         return (
-                          <div>
+                          <div key={key}>
                           <h3><a href={item[key].link}>{key}</a></h3>
                           <p key={key} className='frontpage-list'>{term}</p>
                           </div>
