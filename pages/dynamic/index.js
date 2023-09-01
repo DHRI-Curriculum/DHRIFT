@@ -130,7 +130,7 @@ export default function WorkshopPage({
 
   let builtURL, headers;
 
-  if (process.env.GITHUBKEY) {
+  if (process.env.GITHUBSECRET) {
     console.log('using github secret')
   headers = new Headers(
     {
