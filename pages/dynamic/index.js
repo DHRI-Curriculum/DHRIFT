@@ -130,12 +130,12 @@ export default function WorkshopPage({
 
   let builtURL, headers;
 
-  if (process.env.GITHUBSECRET) {
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET) {
     console.log('using github secret')
   headers = new Headers(
     {
       'Content-Type': 'application/json',
-      'authorization': `token ${process.env.GITHUBSECRET}`
+      'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
     });
   } else {
     console.log('using public github api')
