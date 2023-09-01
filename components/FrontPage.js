@@ -6,20 +6,22 @@ import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
 
-export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFacilitatorOpen) {
-  const description = currentFile.description
-  const title = currentFile.title
-  const dependencies = currentFile.dependencies || []
-  // const workshops = allFiles.workshops
+export default function FrontPage(currentFile, allFiles,
+  //  facilitatorOpen, setFacilitatorOpen
+) {
+  const description = currentFile.data.description
+  const title = currentFile.data.title
+  const dependencies = currentFile.data.dependencies || []
 
-  const authors = allFiles.authors
+
+  // const authors = allFiles.authors
 
   const handleOpen = () => {
-    setFacilitatorOpen(true);
+    // setFacilitatorOpen(true);
   };
 
   const handleClose = () => {
-    setFacilitatorOpen(false);
+    // setFacilitatorOpen(false);
   };
 
   const formattedDependencies = Object.keys(dependencies).map(key => {
@@ -28,10 +30,10 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
       const item = items[key]
       // check if item is in workshops or insights or installGuides or authors
       const workshop = currentFile
-      
+
       const allItems = {
         [key]: {
-          title: workshop.title,
+          title: workshop.data.title,
           description: item.description,
           required: item.required,
           recommended: item.recommended,
@@ -39,7 +41,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
         }
       }
       return {
-        title: item.title,
+        title: workshop.data.title,
         allItems
       }
     })
@@ -100,6 +102,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
               const item = obj.items[key]
               // if there's a description, show it
               if (key === 'description') {
+                
                 const description = ConvertMarkdown(item)
                 return (
                   <li key={key}>
@@ -157,7 +160,6 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                   </li>
                 )
               }
-
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
@@ -167,7 +169,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                 )
               }
               if (typeof item === 'object' && item !== null) {
-                if (item?.link) {
+                if (item?.link || item['workshop prerequisites']) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
                     <li key={key}>
@@ -185,6 +187,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                     </li>
                   )
                 }
+                try{
                 return (
                   <div key={key}>
                     {Object.keys(item).map(key => {
@@ -195,6 +198,9 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
                     })}
                   </div>
                 )
+                } catch (error) {
+                  console.log(error)
+                }
               }
             })}
           </ul>
@@ -216,7 +222,7 @@ export default function FrontPage(currentFile, allFiles, facilitatorOpen, setFac
       <ClassFacilitator
         name={'facilitatorList.name'}
         bio={'bio'}
-        facilitatorOpen={facilitatorOpen}
+        // facilitatorOpen={facilitatorOpen}
         handleClose={handleClose}
       />
     </div>

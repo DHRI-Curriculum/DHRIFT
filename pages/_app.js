@@ -13,18 +13,21 @@ import PyodideProvider from '../components/PyodideProvider';
 // import yaml from '../config.yml';
 
 function MyApp({ Component, pageProps }) {
+  const [title, setTitle] = useState('');
+  pageProps.title = title;
+  pageProps.setTitle = setTitle;
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
   return (
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>{pageProps.workshop.title}</title>
+        {/* <title>{pageProps.workshop.title}</title> */}
       </Head>
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
           <Header
-            props={pageProps} />
+            title={title} />
           <main className='container'>
             <PyodideProvider>
               <Component {...pageProps} />

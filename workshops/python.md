@@ -17,14 +17,13 @@ facilitators:
 estimated time:
     - 3 - 4 hours
 
-dependencies: 
-    workshop prerequisites: 
-        command-line: 
-            description: Introduction to the Command Line (Required) This workshop makes reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about programming with Python.
-            required: true
-        data-ethics: 
-            description: Data Ethics (Recommended) This workshop will give you a basis for thinking through the ethical considerations of your programming projects.
-            recommended: true
+prerequisites: 
+    - command line: 
+        description: Introduction to the Command Line (Required) This workshop makes reference to concepts from the Command Line workshop, and having basic knowledge about how to use the command line will be central for anyone who wants to learn about programming with Python.
+        required: true
+    - data ethics: 
+        description: Data Ethics (Recommended) This workshop will give you a basis for thinking through the ethical considerations of your programming projects.
+        recommended: true
 
 authors:
     - 'Kalle Westerling'
@@ -48,16 +47,15 @@ ethical considerations:
     - As we learn about the Python data types and grammar, keep in mind that working within any digital format requires making seemingly neutral choices that carry ethical consequences. When using python, be aware of the ways the ways that data is transformed into computable form. What choices are you making about your data? What is being included, and what is left out? What are reductions and assumptions necessary to encode your data? If you are more interested in thinking further about data types and our choices in relation to data, you should have a look at our [Data Literacies workshop](https://www.github.com/DHRI-Curriculum/data-literacies).
 
 projects:
-    description: "Projects that use the skills you'll learn in this workshop:"
-    The NEH Impact Index:
+    - The NEH Impact Index:
         description: Built by former Digital Fellow Patrick Smyth, The NEH Impact Index makes visible the distribution of funds by National Endowment for the Humanities across the United States. The website uses python to map projects, communities, and cultural institutions who have received NEH support. You can check out the code on Github.
         link: http://www.nehimpact.org/about
-    Mapping Arts NYC: 
+    - Mapping Arts NYC: 
         description: Mapping Arts NYC, created in 2019 by the Graduate Center’s Data for Public Good fellows, “is a project that explores the geography and representation of arts and culture in New York City over time.” It includes a number of Python scripts written to clean and make sense of all the data.
         link: http://gcdiprojects.org/MappingArtsNYC/
         
 resources:
-    Digital Fellows’ Python Cheat Sheet: 
+    - Digital Fellows’ Python Cheat Sheet: 
         description: See the Digital Fellows’ Python Cheat Sheet for handy commands that we cover in this workshop.
         link: https://curriculum.dhinstitutes.org/shortcuts/workshop/python
 

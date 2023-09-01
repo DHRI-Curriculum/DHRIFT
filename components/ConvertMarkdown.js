@@ -18,72 +18,86 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
 
 
+export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
 
-const Code = ({ className, children }) => {
-    const [isShown, setIsShown] = useState(false);
-    // using hljs to highlight code
-    const html = children.props.children;
-    const childClassName = children.props.className;
-    if (childClassName !== undefined) {
-        const language = childClassName.replace('lang-', '');
-        const highlighted = hljs.highlight(html, { language: language, ignoreIllegals: true });
-        const getLang = hljs.getLanguage(highlighted.language).name
+    
+    const Imager = ({ className, ...props }) => {
+        let newProps = { ...props };
+        if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
+            newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
+        }
+        const [src, setSrc] = useState(newProps.src);
+        const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${newProps.src}`
         return (
-            <div className="code-block"
-                onMouseEnter={() => setIsShown(true)}
-                onMouseLeave={() => setIsShown(false)}>
-                <pre className={className + ' ' + language}>
-                    {/* {isShown && (
-                        <>
-                            {language && <span className="language">{getLang}</span>}
-                        </>
-                    )} */}
-                    <code className={className}
-                        dangerouslySetInnerHTML={{ __html: highlighted.value }}>
-                    </code>
-                </pre>
+            <div className="image-container">
+                <Zoom>
+                    <div className='markdown-image-container' >
+                        <Image
+                            className='markdown-image'
+                            src={src}
+                            alt={newProps.alt}
+                            layout='fill'
+                            objectFit='cover'
+                            onError={() => setSrc(builtURL)}
+                        />
+                    </div>
+                </Zoom>
             </div>
-        );
+        )
     }
-    else {
-        return (
-            <pre className={className}>
-                <code className={className} dangerouslySetInnerHTML={{ __html: html }}></code>
-            </pre>
-        );
-    }
-}
 
-const Imager = ({ className, ...props }) => {
-    let newProps = { ...props };
-    if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
-        newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
-    }
-    const imageSource = newProps.src
-    return (
-        <div className="image-container">
-            <Zoom>
-                <div className='markdown-image-container' >
-                    <Image
-                        className='markdown-image'
-                        src={imageSource}
-                        alt={newProps.alt}
-                        layout='fill'
-                        objectFit='cover'
-                    />
+    const Code = ({ className, children }) => {
+        const [isShown, setIsShown] = useState(false);
+        // using hljs to highlight code
+        const html = children.props.children;
+        const childClassName = children.props.className;
+        if (childClassName !== undefined) {
+            const language = childClassName.replace('lang-', '');
+            const highlighted = hljs.highlight(html, { language: language, ignoreIllegals: true });
+            const getLang = hljs.getLanguage(highlighted.language).name
+            return (
+                <div className="code-block"
+                    onMouseEnter={() => setIsShown(true)}
+                    onMouseLeave={() => setIsShown(false)}>
+                    <pre className={className + ' ' + language}>
+                        {/* {isShown && (
+                            <>
+                                {language && <span className="language">{getLang}</span>}
+                            </>
+                        )} */}
+                        <code className={className}
+                            dangerouslySetInnerHTML={{ __html: highlighted.value }}>
+                        </code>
+                    </pre>
                 </div>
-            </Zoom>
-        </div>
-    );
-}
-
-const CodeEditor = ({ children, ...props }) => {
-    var codeText
-
-    if (children) {
-        if (children.length > 0) {
-            if (typeof children[0] === 'object') {
-                codeText = children[0].props.children.join('');
+            );
+        }
+        else {
+            return (
+                <pre className={className}>
+                    <code className={className} dangerouslySetInnerHTML={{ __html: html }}></code>
+                </pre>
+            );
+        }
+    }
+    
+    
+    const CodeEditor = ({ children, ...props }) => {
+        var codeText
+    
+        if (children) {
+            if (children.length > 0) {
+                if (typeof children[0] === 'object') {
+                    codeText = children[0].props.children.join('');
+                }
+                else {
+                    codeText = children.join('');
+                }
+                return (
+                    <div>
+                        <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
+                    </div>
+                )
             }
             else {
                 codeText = children.join('');
@@ -93,112 +107,103 @@ const CodeEditor = ({ children, ...props }) => {
                     <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
                 </div>
             )
+        } else {
+            return (
+                <div>
+                    <CodeRunBox language={props.language} {...props} />
+                </div>
+            )
         }
-        else {
-            codeText = children.join('');
-        }
+    }
+    
+    const EditorWithTabs = ({ className, children }) => {
+        const codeText = children.join('');
         return (
             <div>
-                <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
-            </div>
-        )
-    } else {
-        return (
-            <div>
-                <CodeRunBox language={props.language} {...props} />
+                <EditorWithTabsComponent defaultCode={codeText} />
             </div>
         )
     }
-}
+    
+    const PythonREPL = ({ className, children }) => {
+        return (
+            <div>
+                <PythonREPLComponent />
+            </div>
+        )
+    }
+    
+    const Terminal = ({ className, children }) => {
+        return (
+            <div>
+                <JSTerminal />
+            </div>
+        )
+    }
+    
+    
+    const Quiz = ({ className, children }) => {
+        return (
+            <div>
+                <QuizComponent>
+                    {children}
+                </QuizComponent>
+            </div>
+        )
+    }
+    
+    // const HTMLEditor = ({ className, children }) => {
+    //     var html, css;
+    //     for (var i = 0; i < children.length; i++) {
+    //         if (children[i].type === 'html') {
+    //             // react components converted to a string
+    //             html = renderToStaticMarkup(children[i].props.children);
+    //             html = beautifyHTML(html, { indent_size: 2 });
+    //         }
+    //         if (children[i].type === 'javascript') {
+    //             var javascript = [];
+    //             // javascript = renderToStaticMarkup(children[i].props.children.join(''));
+    //             // for line in children[i].props.children {
+    //             for (var j = 0; j < children[i].props.children.length; j++) {
+    //                 // render as pure text instead of react components
+    //                 var line = renderToStaticMarkup(children[i].props.children[j]);
+    //                 line = line.replace(/<\/?code>/g, '');
+    //                 line = he.decode(line);
+    //                 if (line !== undefined) {
+    //                     javascript.push(line);
+    //                 }
+    //             }
+    //             javascript = beautify.js(javascript.join(''), { indent_size: 2 });
+    
+    //         }
+    //         if (children[i].type === 'css') {
+    //             css = renderToStaticMarkup(children[i].props.children.join(''));
+    //         }
+    //     }
+    //     return (
+    //         <div>
+    //             <HTMLEditorComponent defaultCode={html} defaultJS={javascript} defaultCSS={css} />
+    //         </div>
+    //     )
+    // }
+    
+    const InfoAlert = ({ className, children }) => {
+        return (
+            <div className="info-alert">
+                <Info text={children} />
+            </div>
+        )
+    }
+    
+    const Secret = ({ className, children }) => {
+        return (
+            <div>
+                <SecretComponent text={children} />
+            </div>
+        )
+    }
 
-const EditorWithTabs = ({ className, children }) => {
-    const codeText = children.join('');
-    return (
-        <div>
-            <EditorWithTabsComponent defaultCode={codeText} />
-        </div>
-    )
-}
-
-const PythonREPL = ({ className, children }) => {
-    return (
-        <div>
-            <PythonREPLComponent />
-        </div>
-    )
-}
-
-const Terminal = ({ className, children }) => {
-    return (
-        <div>
-            <JSTerminal />
-        </div>
-    )
-}
-
-
-const Quiz = ({ className, children }) => {
-    return (
-        <div>
-            <QuizComponent>
-                {children}
-            </QuizComponent>
-        </div>
-    )
-}
-
-// const HTMLEditor = ({ className, children }) => {
-//     var html, css;
-//     for (var i = 0; i < children.length; i++) {
-//         if (children[i].type === 'html') {
-//             // react components converted to a string
-//             html = renderToStaticMarkup(children[i].props.children);
-//             html = beautifyHTML(html, { indent_size: 2 });
-//         }
-//         if (children[i].type === 'javascript') {
-//             var javascript = [];
-//             // javascript = renderToStaticMarkup(children[i].props.children.join(''));
-//             // for line in children[i].props.children {
-//             for (var j = 0; j < children[i].props.children.length; j++) {
-//                 // render as pure text instead of react components
-//                 var line = renderToStaticMarkup(children[i].props.children[j]);
-//                 line = line.replace(/<\/?code>/g, '');
-//                 line = he.decode(line);
-//                 if (line !== undefined) {
-//                     javascript.push(line);
-//                 }
-//             }
-//             javascript = beautify.js(javascript.join(''), { indent_size: 2 });
-
-//         }
-//         if (children[i].type === 'css') {
-//             css = renderToStaticMarkup(children[i].props.children.join(''));
-//         }
-//     }
-//     return (
-//         <div>
-//             <HTMLEditorComponent defaultCode={html} defaultJS={javascript} defaultCSS={css} />
-//         </div>
-//     )
-// }
-
-const InfoAlert = ({ className, children }) => {
-    return (
-        <div className="info-alert">
-            <Info text={children} />
-        </div>
-    )
-}
-
-const Secret = ({ className, children }) => {
-    return (
-        <div>
-            <SecretComponent text={children} />
-        </div>
-    )
-}
-
-export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun) {
+    if (!markdown) return null;
     return (
         compiler(markdown,
             {
@@ -213,6 +218,9 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                         component: Imager,
                         props: {
                             className: 'image',
+                            gitUser: gitUser,
+                            gitRepo: gitRepo,
+                            gitFile: gitFile,
                         }
                     },
                     CodeEditor: {
@@ -241,7 +249,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                             className: 'info-alert',
                         }
                     },
- 
+
                     Quiz,
                     PythonREPL,
                     Terminal,
@@ -249,7 +257,7 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                     JSTerminal,
                     Secret
                     // HTMLEditor,
-                   
+
                 }
 
             })

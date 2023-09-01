@@ -94,11 +94,12 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
 
     let namespace = pyodide.globals.get("dict")();
 
-    
 
-    filteredSnippets.forEach((snippet, index) => {
-      namespace.set(`file${index + 1}`, snippet.content);
-    });
+    if (filteredSnippets?.length > 0) {
+      filteredSnippets.forEach((snippet, index) => {
+        namespace.set(`file${index + 1}`, snippet.content);
+      });
+    }
     namespace.set("print", (s) => {
       printList.push(s.toString());
     });
