@@ -130,41 +130,34 @@ export default function WorkshopPage({
 
   let builtURL, headers;
 
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET) {
-    console.log('using github secret')
-  headers = new Headers(
-    {
-      'Content-Type': 'application/json',
-      'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-    });
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+    headers = new Headers(
+      {
+        'Content-Type': 'application/json',
+        'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
+      });
   } else {
-    console.log('using public github api')
     headers = new Headers(
       {
         'Content-Type': 'application/json',
       });
   }
 
-  const fetcher = (headers) => (...args) => fetch(...args, { 
+  const fetcher = (headers) => (...args) => fetch(...args, {
     headers: headers,
-    method: 'GET', 
-   }).then(
+    method: 'GET',
+  }).then(
     res => res.json()
   ).then(
     // decode from base64
     res => Buffer.from(res.content, 'base64').toString()
   )
-
-
   if (gitFile === null) {
-    // builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitRepo}.md`
     builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`
-
   } else {
-    // builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${gitFile}.md`
     builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`
   }
-   
+
   const { data, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
     { revalidateOnFocus: false, revalidateOnReconnect: false });
 
@@ -178,7 +171,6 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
-
       const matterResult = matter(data)
       setCurrentFile(matterResult)
       setContent(matterResult.content)
@@ -190,22 +182,8 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null) {
-      // const frontPageContent = FrontPage(
-      //   currentFile,
-      //   {
-      //     workshop,
-      //     authors,
-      //     // uploads,
-      //     // facilitators,
-      //   },
-      // facilitatorOpen, setFacilitatorOpen
-      // )
-
       const frontPageContent = NewFrontPage(currentFile);
-
       setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
-      // setPages(convertContenttoHTML(currentFile.content));
-
     }
   }, [currentFile])
 
@@ -277,11 +255,6 @@ export default function WorkshopPage({
           handlePageChange={handlePageChange}
 
         />
-        {/* <Presentation
-          currentHeader={currentHeader}
-          content={currentFile}
-          title={title}
-        /> */}
         <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
