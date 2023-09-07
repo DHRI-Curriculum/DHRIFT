@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Form() {
+    const [user, setUser] = useState("");
     const [repo, setRepo] = useState("");
     const [file, setFile] = useState("");
 
@@ -16,20 +17,20 @@ export default function Form() {
         // redirect to /dynamic/?user=${username}&repo=${repoName}&file=${fileName}
         window.location.href = `/dynamic/?user=${username}&repo=${repoName}&file=${fileName}`
 
-        // get file contents from github api
-        // fetch(`https://api.github.com/repos/${username}/${repoName}/contents/${fileName}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         // console.log(data)
-        //         // decode base64 encoded file contents
-        //         const decoded = atob(data.content);
-        //         console.log(decoded)
-        //     })
     }
 
 
     return (
         <form onSubmit={handleSubmit}>
+             <label>
+                GitHub username:
+                <input
+                    type="text"
+                    value={username}
+                    onChange={e => setRepo(e.target.value)}
+                    required
+                />
+            </label>
             <label>
                 GitHub repo:
                 <input
