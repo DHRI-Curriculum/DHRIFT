@@ -22,17 +22,17 @@ export default function Form() {
 
     return (
         <form onSubmit={handleSubmit}>
-             <label>
+             {/* <label>
                 GitHub username:
                 <input
                     type="text"
-                    value={username}
-                    onChange={e => setRepo(e.target.value)}
+                    value={user}
+                    onChange={e => setUser(e.target.value)}
                     required
                 />
-            </label>
+            </label> */}
             <label>
-                GitHub repo:
+                GitHub repo url:
                 <input
                     type="url"
                     value={repo}

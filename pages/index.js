@@ -1,18 +1,78 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import ConvertMarkdown from '../components/ConvertMarkdown'
 import matter from 'gray-matter'
 import NewFrontPage from '../components/NewFrontPage';
 import Markdown, { compiler } from 'markdown-to-jsx';
-// import yaml from '../config.yml'
 import logo from '../public/images/logos/logo.png'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
-import Container from '@mui/material/Container';
-import { Typography } from '@mui/material';
-import TocIcon from '@mui/icons-material/Toc';
+import useSWR from 'swr'
 
+let workshopsBuiltURL, headers;
+if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+  headers = new Headers(
+    {
+      'Content-Type': 'application/json',
+      'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
+    });
+} else {
+  headers = new Headers(
+    {
+      'Content-Type': 'application/json',
+    });
+}
+
+const workshopFetcher = (headers) => (...args) => fetch(...args, {
+  headers: headers,
+  method: 'GET',
+}).then(
+  res => res.json()
+).then(
+  // decode from base64
+  res => Buffer.from(res.content, 'base64').toString()
+)
+
+function useWorkshop(workshop){
+  const { data, error } = useSWR(workshop.url, workshopFetcher(headers),
+    { revalidateOnFocus: false, revalidateOnReconnect: false });
+  return data;
+}
 
 export default function Home() {
+
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+
+
+
+
+  const allFetcher = (headers) => (...args) => fetch(...args, {
+    headers: headers,
+    method: 'GET',
+  }).then(
+    res => res.json()
+  ).catch(
+    err => console.log('err', err)
+  )
+
+  workshopsBuiltURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/`
+  const { data: allWorkshops, isLoading, error } = useSWR(gitUser ? workshopsBuiltURL : null, allFetcher(headers),
+    { revalidateOnFocus: false, revalidateOnReconnect: false });
+  console.log('allWorkshops', allWorkshops);
+  
+  let workshops
+  allWorkshops && allWorkshops.map(workshop => {
+    useWorkshop(workshop);
+    workshops.push(workshop);
+  })
+  console.log('workshops', workshops);
+
+
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setGitUser(urlParams.get('user'));
+    setGitRepo(urlParams.get('repo'));
+  }, [gitUser, gitRepo])
 
   return (
     <div className='home'>
