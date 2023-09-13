@@ -267,7 +267,6 @@ export default function WorkshopPage({
     )
   }
 
-
   const handlePageChange = (event, value) => {
     // scroll smoothly to top of page
     window.scrollTo({
