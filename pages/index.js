@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { memo, use, useEffect, useState } from 'react'
 import ConvertMarkdown from '../components/ConvertMarkdown'
 import matter from 'gray-matter'
 import NewFrontPage from '../components/NewFrontPage';
@@ -11,6 +11,7 @@ export default function Home() {
 
   const [gitUser, setGitUser] = useState(null);
   const [gitRepo, setGitRepo] = useState(null);
+  const [workshops, setWorkshops] = useState([]);
 
   const allFetcher = (headers) => (...args) => fetch(...args, {
     headers: headers,
@@ -24,8 +25,11 @@ export default function Home() {
   let workshopsBuiltURL, headers;
   workshopsBuiltURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/`
   const { data: allWorkshops, isLoading, error } = useSWR(gitUser ? workshopsBuiltURL : null, allFetcher(headers),
-  { revalidateOnFocus: false, revalidateOnReconnect: false });
-  console.log('allWorkshops', allWorkshops);
+    { revalidateOnFocus: false, revalidateOnReconnect: false });
+  // check allWorkshops against local storage of workshops Hash
+  allWorkshops && console.log('allWorkshops', allWorkshops);
+  
+
 
   if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
     headers = new Headers(
@@ -40,30 +44,43 @@ export default function Home() {
       });
   }
 
-  const workshopFetcher = (headers) => (...args) => fetch(...args, {
-    headers: headers,
-    method: 'GET',
-  }).then(
-    res => res.json()
-  ).then(
-    // decode from base64
-    res => Buffer.from(res.content, 'base64').toString()
-  )
-  
-  function useWorkshop(workshop){
-    const { data, error } = useSWR(workshop.url, workshopFetcher(headers),
-      { revalidateOnFocus: false, revalidateOnReconnect: false });
-    return data;
-  }
-
-  let workshops
-  allWorkshops && allWorkshops.map(workshop => {
-    useWorkshop(workshop);
-    workshops.push(workshop);
-  })
-  console.log('workshops', workshops);
+  useEffect(() => {
+    allWorkshops && allWorkshops.map(workshop => {
+      console.log('workshop', workshop);
+      // check against local storage of workshops Hash
+      // if workshop hash is the same, don't fetch
+      // if workshop hash is different, fetch
+      // if workshop doesn't exist, fetch
+      // if workshop doesn't exist, add to local storage of workshops Hash
 
 
+
+      if (workshop.type === 'dir') {
+        return
+      }
+      const response = fetch(workshop.url, {
+        headers: headers,
+        method: 'GET',
+      }).then(
+        res => res.json()
+      ).then(
+        // decode from base64
+        res => Buffer.from(res.content, 'base64').toString()
+      ).then(
+        res => {
+          const matterResult = matter(res)
+          const data = matterResult.data
+          console.log('data', data);
+          setWorkshops(workshops => [...workshops, data])
+        }
+      ).catch(
+        err => {
+          console.log('err', err)
+          console.log('workshop.url', workshop.url)
+        }
+      )
+    })
+  }, [allWorkshops])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -71,19 +88,38 @@ export default function Home() {
     setGitRepo(urlParams.get('repo'));
   }, [gitUser, gitRepo])
 
+  if (!gitUser || !gitRepo) {
+    return (
+      <div className='home'>
+        <div className='home-header'>
+          <div className='home-header-left'>
+            <h1>Workshop</h1>
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className='home'>
       <div className='home-header'>
         <div className='home-header-left'>
-          <div className='home-header-left-logo'>
-            <Image src={logo} alt='logo' />
-          </div>
-          <div className='home-header-left-title'>
-            <h1>DHRIFT</h1>
-          </div>
+          {gitUser && gitRepo ?
+            <h1>{gitUser}/{gitRepo}</h1>
+            :
+            <h1>Workshop</h1>
+          }
+          {workshops && workshops.map(workshop => {
+            return (
+              <div className='workshop'>
+                <h2>{workshop.title}</h2>
+                <p>{workshop.description}</p>
+              </div>
+            )
+          }
+          )}
         </div>
       </div>
     </div>
   )
-
 }
+
