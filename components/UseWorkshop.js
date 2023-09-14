@@ -1,4 +1,4 @@
-import useSWRImmutable from "swr/immutable";
+import useSWRImmutable, {mutate} from "swr/immutable";
 import { useState, useEffect } from "react";
 
 export default function useWorkshop(gitUser, builtURL, editing){
@@ -28,8 +28,7 @@ export default function useWorkshop(gitUser, builtURL, editing){
       res => Buffer.from(res.content, 'base64').toString()
     )
   
-    console.log('editing mode', editing);
-    const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
+    const { data, isLoading, error, mutate } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
       {
         onSuccess(data) {
           // const matterResult = matter(data)
@@ -47,8 +46,12 @@ export default function useWorkshop(gitUser, builtURL, editing){
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         revalidateIfStale: false,
-        revalidateOnMount: editing ? true : false
+        revalidateOnMount: true
       })
+
+      if (editing) {
+        mutate()
+      }
 
     return data
 
