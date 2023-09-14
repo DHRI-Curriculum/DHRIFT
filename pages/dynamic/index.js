@@ -16,7 +16,7 @@ import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
 import ClassFacilitator from '../../components/ClassFacilitator'
 import useSWRImmutable from 'swr/immutable';
-import useUploads from '../../components/UseUploads'
+import useUploads from '../../components/UseUploads';
 import useWorkshop from '../../components/UseWorkshop'
 
 const drawerWidth = '-30%';
