@@ -1,4 +1,5 @@
-import useSWRImmutable, {mutate} from "swr/immutable";
+import useSWRImmutable from "swr/immutable";
+import { mutate } from "swr";
 import { useState, useEffect } from "react";
 
 export default function useWorkshop(gitUser, builtURL, editing){
@@ -46,12 +47,15 @@ export default function useWorkshop(gitUser, builtURL, editing){
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         revalidateIfStale: false,
-        revalidateOnMount: true
+        // revalidateOnMount: true
       })
 
-      if (editing) {
-        mutate()
-      }
+      
+useEffect(() => {
+  if (editing) {
+    mutate()
+  }
+}, [editing])
 
     return data
 
