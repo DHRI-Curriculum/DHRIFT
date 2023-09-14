@@ -98,7 +98,7 @@ export default function Home() {
           }
           {workshops && workshops.map(workshop => {
             return (
-              <div className='workshop'>
+              <div className='workshop' key={workshop.title}>
                 <h2>{workshop.title}</h2>
                 <p>{workshop.description}</p>
               </div>
