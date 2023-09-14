@@ -16,7 +16,8 @@ import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
 import ClassFacilitator from '../../components/ClassFacilitator'
 import useSWRImmutable from 'swr/immutable';
-import useUploads from '../../components/Uploads'
+import useUploads from '../../components/UseUploads'
+import useWorkshop from '../../components/UseWorkshop'
 
 const drawerWidth = '-30%';
 
@@ -40,9 +41,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 
 export default function WorkshopPage({
-  workshop,
   authors,
-  // uploads,
   title,
   setTitle
   // facilitators,
@@ -66,13 +65,14 @@ export default function WorkshopPage({
   const [gitRepo, setGitRepo] = useState(null);
   const [gitFile, setGitFile] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
+  const [editing, setEditing] = useState(false);
 
   const [allUploads, setAllUploads] = useState([]);
   const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -109,58 +109,18 @@ export default function WorkshopPage({
     )
   }
 
-  let headers;
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
-    headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-        'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-      });
-  } else {
-    headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-      });
-  }
-
-  const fetcher = (headers) => (...args) => fetch(...args, {
-    headers: headers,
-    method: 'GET',
-  }).then(
-    res => res.json()
-  ).then(
-    // decode from base64
-    res => Buffer.from(res.content, 'base64').toString()
-  )
-
-  const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
-    {
-      onSuccess(data) {
-        const matterResult = matter(data)
-        setCurrentFile(matterResult)
-        setContent(matterResult.content)
-        setLanguage(matterResult.data.programming_language);
-        setWorkshopTitle(matterResult.data.title);
-      },
-      onFailure(err) {
-        console.log('err', err)
-        console.log('workshop.url', builtURL)
-      }
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-    })
+  const data = useWorkshop(gitUser, builtURL, editing);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setGitUser(urlParams.get('user'));
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
+    setEditing(urlParams.get('edit'));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
-    } else {
+    } 
+    else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
   }, [gitUser, gitRepo, gitFile])

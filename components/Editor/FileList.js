@@ -24,6 +24,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 
 export default function FileList(filteredSnippets) {
+    console.log(filteredSnippets);
     const [files, setFiles] = useState([]);
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState(null);

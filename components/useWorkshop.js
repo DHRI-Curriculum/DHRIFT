@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 
-export default function useWorkshop(gitUser, gitRepo, gitFile){
+export default function useWorkshop(gitUser, builtURL, editing){
 
     let headers;
 
@@ -31,11 +31,11 @@ export default function useWorkshop(gitUser, gitRepo, gitFile){
     const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
       {
         onSuccess(data) {
-          const matterResult = matter(data)
-          setCurrentFile(matterResult)
-          setContent(matterResult.content)
-          setLanguage(matterResult.data.programming_language);
-          setWorkshopTitle(matterResult.data.title);
+          // const matterResult = matter(data)
+          // setCurrentFile(matterResult)
+          // setContent(matterResult.content)
+          // setLanguage(matterResult.data.programming_language);
+          // setWorkshopTitle(matterResult.data.title);
         },
         onFailure(err) {
           console.log('err', err)
@@ -46,6 +46,9 @@ export default function useWorkshop(gitUser, gitRepo, gitFile){
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         revalidateIfStale: false,
+        revalidateOnMount: editing ? true : false
       })
+
+    return data
 
 }

@@ -1,5 +1,5 @@
 import CircularProgress from '@mui/material/CircularProgress';
-import FileList from "./FileList";
+// import FileList from "./FileList";
 import Button from '@mui/material/Button';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CodeIcon from '@mui/icons-material/Code';
@@ -51,7 +51,7 @@ export default function EditorTopbar(props) {
                         marginTop: "10px"
                     }}
                     />}
-                    {props.snippets && <FileList snippets={props.snippets} />}
+                    {/* {props.snippets && <FileList snippets={props.snippets} />} */}
 
 
                 {/* <Button

@@ -18,8 +18,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
 
 
-export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
-    console.log(uploads)
+export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
     
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
@@ -113,6 +112,16 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
         }
     }
     
+    // const Downloader = ({ className, children, ...props }) => {
+    //     if (uploads == undefined) return null;
+    //     return (
+    //         <div>
+    //             <Download {...props} />
+    //         </div>
+    //     )
+    // }
+
+
     const EditorWithTabs = ({ className, children }) => {
         const codeText = children.join('');
         return (
@@ -229,14 +238,14 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                             setCode: setCode,
                             setEditorOpen: setEditorOpen,
                             setAskToRun: setAskToRun,
-                            workshop: workshop,
+                            workshopTitle: workshopTitle,
                         }
 
                     },
                     Download: {
                         component: Download,
                         props: {
-                            workshop: workshop,
+                            workshopTitle: workshopTitle,
                             allUploads: uploads,
                         }
                     },

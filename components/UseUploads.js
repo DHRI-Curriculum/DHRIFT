@@ -38,6 +38,6 @@ export default function useUploads(allUploads, setAllUploads, gitUser, gitRepo) 
         }
     }, [uploads])
 
-    return { uploads, error }
+    return uploads
 
 }
