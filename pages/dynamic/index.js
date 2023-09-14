@@ -1,7 +1,7 @@
 'use client'
 import Head from 'next/head'
 import matter from 'gray-matter'
-import React, { useEffect, useState } from 'react'
+import React, { cache, useEffect, useState } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
 import Sidebar from '../../components/Sidebar'
@@ -16,7 +16,8 @@ import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
 import ClassFacilitator from '../../components/ClassFacilitator'
-import useSWR from 'swr'
+import useSWRImmutable from 'swr/immutable'
+// import localStorage from 'localStorage';
 
 const drawerWidth = '-30%';
 
@@ -126,9 +127,9 @@ export default function WorkshopPage({
   const [gitUser, setGitUser] = useState(null);
   const [gitRepo, setGitRepo] = useState(null);
   const [gitFile, setGitFile] = useState(null);
+  const [builtURL, setBuiltURL] = useState(null);
 
-
-  let builtURL, headers;
+  let headers;
 
   if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
     headers = new Headers(
@@ -152,14 +153,28 @@ export default function WorkshopPage({
     // decode from base64
     res => Buffer.from(res.content, 'base64').toString()
   )
-  if (gitFile === null) {
-    builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`
-  } else {
-    builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`
-  }
 
-  const { data, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
-    { revalidateOnFocus: false, revalidateOnReconnect: false });
+  const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
+    {
+      onSuccess(data) {
+        const matterResult = matter(data)
+        setCurrentFile(matterResult)
+        setContent(matterResult.content)
+        setLanguage(matterResult.data.programming_language);
+        setWorkshopTitle(matterResult.data.title);
+      },
+      onFailure(err) {
+        console.log('err', err)
+        console.log('workshop.url', builtURL)
+      }
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    })
+
+
 
 
   useEffect(() => {
@@ -167,7 +182,13 @@ export default function WorkshopPage({
     setGitUser(urlParams.get('user'));
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
+    if (gitFile === null) {
+      setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
+    } else {
+      setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
+    }
   }, [gitUser, gitRepo, gitFile])
+
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
@@ -176,7 +197,6 @@ export default function WorkshopPage({
       setContent(matterResult.content)
       setLanguage(matterResult.data.programming_language);
       setWorkshopTitle(matterResult.data.title);
-      // setPages(convertContenttoHTML(matterResult.content))
     }
   }, [data])
 
@@ -280,11 +300,7 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) {
-    console.log(error)
-    return <div>Error...</div>
-  }
+  // if (isLoading) return <div>Loading...</div>
   return (
     <Container
       // maxWidth="lg"

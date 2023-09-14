@@ -25,9 +25,7 @@ export default function Home() {
   let workshopsBuiltURL, headers;
   workshopsBuiltURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/`
   const { data: allWorkshops, isLoading, error } = useSWR(gitUser ? workshopsBuiltURL : null, allFetcher(headers),
-    { revalidateOnFocus: false, revalidateOnReconnect: false });
-  // check allWorkshops against local storage of workshops Hash
-  allWorkshops && console.log('allWorkshops', allWorkshops);
+    { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
   
 
 
@@ -46,15 +44,6 @@ export default function Home() {
 
   useEffect(() => {
     allWorkshops && allWorkshops.map(workshop => {
-      console.log('workshop', workshop);
-      // check against local storage of workshops Hash
-      // if workshop hash is the same, don't fetch
-      // if workshop hash is different, fetch
-      // if workshop doesn't exist, fetch
-      // if workshop doesn't exist, add to local storage of workshops Hash
-
-
-
       if (workshop.type === 'dir') {
         return
       }
@@ -70,7 +59,6 @@ export default function Home() {
         res => {
           const matterResult = matter(res)
           const data = matterResult.data
-          console.log('data', data);
           setWorkshops(workshops => [...workshops, data])
         }
       ).catch(
