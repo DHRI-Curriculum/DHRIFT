@@ -28,6 +28,7 @@ export default function useWorkshop(gitUser, builtURL, editing){
       res => Buffer.from(res.content, 'base64').toString()
     )
   
+    console.log('editing mode', editing);
     const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
       {
         onSuccess(data) {
