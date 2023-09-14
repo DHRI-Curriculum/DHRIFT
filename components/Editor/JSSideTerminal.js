@@ -15,7 +15,7 @@ export default function JSSideTerminal(props) {
     let error = props.error;
     let errorString
     if (error) {
-     errorString = error.toString();
+        errorString = error.toString();
     }
 
     var randomID = Math.random().toString(36).substring(7);
@@ -58,9 +58,11 @@ export default function JSSideTerminal(props) {
 
 
     useEffect(() => {
-    console.log(props.error)
+        if (props.error) {
+            console.log(props.error)
+        }
     }, [props.error])
-        
+
 
     return (
         <div className="terminal-container"
@@ -75,8 +77,8 @@ export default function JSSideTerminal(props) {
                 <h1>Console</h1>
             </div>
             <div className='console'>
-            {props.consoleRef.current}
-            <span className="console-error">{errorString}</span>
+                {props.consoleRef.current}
+                <span className="console-error">{errorString}</span>
             </div>
             <div className="side-terminal" id={randomID}
                 style={{

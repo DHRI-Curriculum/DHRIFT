@@ -164,7 +164,7 @@ export default function NewFrontPage(currentFile, allFiles,
                   return (
                     <div key={key}>
                       {Object.keys(item).map(key => {
-                        console.log(key)
+                        // console.log(key)
                         const term = ConvertMarkdown(item[key].description)
                         return (
                           <div key={key}>
