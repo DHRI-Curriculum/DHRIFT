@@ -6,7 +6,7 @@ export default function Download(props) {
 
     const allUploads = props.allUploads;
     const chosenUploads = typeof props.files === 'string' ? props.files.split(',') : [];
-  
+    console.log(allUploads);
     var filteredUploads = [];
   
     if (chosenUploads != undefined) {

@@ -1,11 +1,10 @@
 'use client'
 import Head from 'next/head'
 import matter from 'gray-matter'
-import React, { cache, useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 import ConvertMarkdown from '../../components/ConvertMarkdown'
 import { useRouter } from 'next/router'
 import Sidebar from '../../components/Sidebar'
-import FrontPage from '../../components/FrontPage';
 import NewFrontPage from '../../components/NewFrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -16,8 +15,8 @@ import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
 import ClassFacilitator from '../../components/ClassFacilitator'
-import useSWRImmutable from 'swr/immutable'
-// import localStorage from 'localStorage';
+import useSWRImmutable from 'swr/immutable';
+import useUploads from '../../components/Uploads'
 
 const drawerWidth = '-30%';
 
@@ -43,7 +42,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 export default function WorkshopPage({
   workshop,
   authors,
-  uploads,
+  // uploads,
   title,
   setTitle
   // facilitators,
@@ -58,21 +57,21 @@ export default function WorkshopPage({
   const [currentHeader, setCurrentHeader] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
+  const [code, setCode] = useState(null);
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pages, setPages] = useState([]);
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+  const [gitFile, setGitFile] = useState(null);
+  const [builtURL, setBuiltURL] = useState(null);
 
-  // const frontPageContent = FrontPage(
-  //   currentFile,
-  //   {
-  //     workshop,
-  //     authors,
-  //     // uploads,
-  //     // facilitators,
-  //   },
-  //   // facilitatorOpen, setFacilitatorOpen
-  // )
+  const [allUploads, setAllUploads] = useState([]);
+  const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-
     const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
     // split react element array into pages
     const allPages = [];
@@ -91,22 +90,15 @@ export default function WorkshopPage({
       return acc;
     }, []);
 
-    // allPages.unshift(frontPageContent);
-
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
-        // if (page.props != undefined && page.props.className.includes('frontpage')) {
-        //   return (
-        //     frontPageContent
-        //   )
-        // }
         return (
           <div key={index} className='page-content'>
             {page.map((element, index) => {
               return (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   {element}
-                </React.Fragment>
+                </Fragment>
               )
             }
             )}
@@ -117,20 +109,7 @@ export default function WorkshopPage({
     )
   }
 
-
-  // set defaults 
-  const [code, setCode] = useState(null);
-  // communicates with the editor to run code
-  const [askToRun, setAskToRun] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState([]);
-  const [gitUser, setGitUser] = useState(null);
-  const [gitRepo, setGitRepo] = useState(null);
-  const [gitFile, setGitFile] = useState(null);
-  const [builtURL, setBuiltURL] = useState(null);
-
   let headers;
-
   if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
     headers = new Headers(
       {
@@ -174,9 +153,6 @@ export default function WorkshopPage({
       revalidateIfStale: false,
     })
 
-
-
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setGitUser(urlParams.get('user'));
@@ -188,7 +164,6 @@ export default function WorkshopPage({
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
   }, [gitUser, gitRepo, gitFile])
-
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
@@ -206,8 +181,6 @@ export default function WorkshopPage({
       setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
     }
   }, [currentFile])
-
-
 
   // list of page titles and highlight current page
   useEffect(() => {

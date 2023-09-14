@@ -19,13 +19,10 @@ import he from 'he';
 
 
 export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
-
+    console.log(uploads)
     
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
-        // if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
-        //     newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
-        // }
         const [src, setSrc] = useState(newProps.src);
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${newProps.src}`
         return (
