@@ -4,22 +4,29 @@ import { useState, useEffect } from "react";
 
 export default function useWorkshop(gitUser, builtURL, editing) {
 
-  const [cacheCleared, setCacheCleared] = useState(false);
   let headers;
 
 
-  const { mutate } = useSWRConfig()
+  const [cacheCleared, setCacheCleared] = useState(false);
+  // const { mutate } = useSWRConfig()
+  // const clearCache = () => mutate(
+  //   () => true,
+  //   undefined,
+  //   { revalidate: false }
+  // )
+  // if (editing == 'true' && cacheCleared == false) {
+  //   clearCache()
+  //   setCacheCleared(true)
+  // }
+  useEffect(() => {
+    if (editing == 'true' && cacheCleared == false) {
+      localStorage.removeItem('app-cache');
+      localStorage.removeItem('app-cache-time');
+      setCacheCleared(true)
+      console.log('cache cleared')
+    }
+  }, [editing])
 
-
-  const clearCache = () => mutate(
-    () => true,
-    undefined,
-    { revalidate: false }
-  )
-  if (editing == 'true' && cacheCleared == false) {
-    clearCache()
-    setCacheCleared(true)
-  }
 
   if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
     headers = new Headers(

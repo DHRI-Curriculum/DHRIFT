@@ -21,37 +21,46 @@ function MyApp({ Component, pageProps }) {
   pageProps.setTitle = setTitle;
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
 
-// useCacheProvider hook
-function useCacheProvider() {
-  const cache = useRef(new Map());
+  // useCacheProvider hook
+  function useCacheProvider() {
+    const cache = useRef(new Map());
 
-  useEffect(() => {
-    const appCache = localStorage.getItem('app-cache');
-    if (appCache) {
-      const map = new Map(JSON.parse(appCache));
-      map.forEach((value, key) => cache.current.set(key, value));
-    }
+    useEffect(() => {
+      const currentDate = new Date();
+      const appCache = localStorage.getItem('app-cache');
+      if (appCache) {
+        // if at least a day has passed since the cache was set, clear it
+        if (localStorage.getItem('app-cache-time') && (currentDate - new Date(localStorage.getItem('app-cache-time'))) > 86400000) {
+          localStorage.removeItem('app-cache');
+          localStorage.removeItem('app-cache-time');
+          console.log('cache cleared')
+          return;
+        }
+        const map = new Map(JSON.parse(appCache));
+        map.forEach((value, key) => cache.current.set(key, value));
+      }
 
-    const saveCache = () => {
-      const appCache = JSON.stringify(Array.from(cache.current.entries()));
-      localStorage.setItem('app-cache', appCache);
-    };
+      const saveCache = () => {
+        const appCache = JSON.stringify(Array.from(cache.current.entries()));
+        localStorage.setItem('app-cache', appCache);
+        const whenSet = new Date()
+        localStorage.setItem('app-cache-time', whenSet);
+      };
 
-    window.addEventListener('beforeunload', saveCache);
-    return () => window.removeEventListener('beforeunload', saveCache);
-  }, []);
+      window.addEventListener('beforeunload', saveCache);
+      return () => window.removeEventListener('beforeunload', saveCache);
+    }, []);
 
-  return () => cache.current;
-}
+    return () => cache.current;
+  }
 
-// use hook in SWRConfig
-const provider = useCacheProvider();
+  // use hook in SWRConfig
+  const provider = useCacheProvider();
 
   return (
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        {/* <title>{pageProps.workshop.title}</title> */}
       </Head>
       <CssBaseline />
       <ThemeProvider>
@@ -59,11 +68,11 @@ const provider = useCacheProvider();
           <Header
             title={title} />
           <main className='container'>
-          <SWRConfig value={{ provider }}>
-            <PyodideProvider>
-              <Component {...pageProps} />
-            </PyodideProvider>
-          </SWRConfig>
+            <SWRConfig value={{ provider }}>
+              <PyodideProvider>
+                <Component {...pageProps} />
+              </PyodideProvider>
+            </SWRConfig>
           </main>
         </StyledEngineProvider>
       </ThemeProvider>

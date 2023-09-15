@@ -44,7 +44,6 @@ export default function WorkshopPage({
   authors,
   title,
   setTitle
-  // facilitators,
 }) {
 
   const [content, setContent] = useState('');
@@ -82,8 +81,8 @@ export default function WorkshopPage({
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
         // this changes from long pages to short ones 
-        // } else if (curr.type === 'h2') {
-        //   allPages.push([curr]);
+        } else if (curr.type === 'h2') {
+          allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
@@ -119,7 +118,7 @@ export default function WorkshopPage({
     setEditing(urlParams.get('edit'));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
-    } 
+    }
     else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
