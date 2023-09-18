@@ -123,13 +123,14 @@ export default function FrontPage(currentFile, allFiles,
                 if (key === 'description') {
                   bio = item;
                 };
-
                 return (
+                  <div className = "facilitator">
                   <li key={facilitatorList.name}>
                     <Button onClick={handleOpen}>
                       {facilitatorList.name}
                     </Button>
                   </li>
+                  </div>
                 );
               }
 

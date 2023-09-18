@@ -1,0 +1,224 @@
+// import fonts
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@12..96&family=Montserrat:wght@400;700&display=swap');
+
+// primary colors (still need primary colors for dark mode)
+$primary-color-bark: #614F42;
+$primary-color-sun:  #F9976A;
+$primary-color-cream:  #FFF9F4;
+$primary-color-white: #FFFFFF;
+$primary-color-black: #1B1621;
+
+// typography
+$headers-font: 'Bricolage Grotesque', sans-serif;
+$body-font: 'Montserrat', sans-serif;
+
+// defaults
+$background: $primary-color-white;
+$background-page: $primary-color-cream;
+$foreground: $primary-color-black;
+
+// dark theme
+/*
+[data-theme='dark'] {
+    $background: !
+  }
+*/
+
+#__next {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+    background-color: $background-page;
+    color: $foreground;
+    font-family: $body-font, sans-serif;
+    font-size: 20px;
+  }
+
+header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 40px;
+    background-color: $background;
+}
+
+.topBar {
+    position: static;
+    margin: 0;
+    z-index: 2;
+    box-shadow: none;
+    height: 10px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    &-container {
+        background-color: $background;
+        z-index: 1000;
+        width: 98%;
+        height: 100px;
+    }  
+}
+  
+#nav-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    color: $background;
+}
+  
+//front page styles
+.frontpage {
+  h1 {
+    // front page title
+    font-family: $headers-font, sans-serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    padding: 10px !important;
+  }
+  &-item {
+    padding: 20px;
+    border: 2px solid $primary-color-bark !important;
+    background: $background-page !important;
+    box-shadow: $primary-color-bark 8px 8px 0px;
+  }
+}
+
+// page content styles
+.page-content h1 {
+    font-size: 2rem;
+    font-family: $headers-font, sans-serif;
+    margin-bottom: 30px;
+    padding: 10px !important;
+    border: $primary-color-bark;
+    border: 2px solid $primary-color-bark !important;
+    background: var(--background-page) !important;
+    box-shadow: $primary-color-bark 8px 8px 0px;
+  }
+
+.pagination {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    z-index: 12;
+    top: 5px;
+  }
+
+// table of contents sidebar
+.drawer-left>.MuiPaper-root {
+    z-index: 1;
+    background-color: $primary-color-bark;
+  }
+
+nav.sidenav {
+    max-width: 325px;
+    min-width: 300px;
+    align-self: flex-start;
+    position: sticky;
+    max-height: 100 vh - 144px;
+    overflow: auto;
+    padding: 16px;
+    z-index: 1;
+    ul {
+      li {
+        list-style: none;
+        font-size: 25px;
+        border-bottom: #000000 solid 1px;
+      }
+      a:hover {
+        cursor: pointer;
+      }
+      div {
+        span {
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
+
+.sidebar {
+  &-item {
+    cursor: pointer;
+    span {
+      font-size: 1.5rem;
+    }
+  }
+  &-subitem {
+    margin-left: 40px;
+    span {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media(max-width: 2100px) {
+  .drawer-left.permanent {
+    display: none !important;
+  }
+}
+
+@media(min-width: 2100px) {
+  .sidebar-button {
+    display: none !important;
+  }
+
+.drawer-left.permanent {
+    position: absolute !important;
+  }
+}
+
+// footer styles and imgs
+footer {
+  background-color: var(--background-page);
+  width: 100%;
+  bottom: 0;
+  z-index: 10;
+
+}
+
+.funderImages {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  div {
+    a {
+      img {
+        max-height: 100px;
+        max-width: 200px;
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+.funding-text {
+  color: var(--foreground);
+}
+
+// mixin for centering elements
+@mixin absolute-center() {
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+
+// front matter stuff needs work
+.facilitator {
+  text-align: center;
+}
+
