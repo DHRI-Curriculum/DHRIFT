@@ -62,9 +62,6 @@ export default function Test() {
             setWorkshopsGitRepo(parsedYAML.workshopsrepo)
         }
     }, [parsedYAML])
-
-    console.log('parsedYAML', parsedYAML)
-
     return (
         <div className='home'>
             <div className='home-header'>
