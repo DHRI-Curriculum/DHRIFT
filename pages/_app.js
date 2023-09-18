@@ -9,7 +9,7 @@ import BackToTop from '../components/ScrollTop';
 import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
-import PyodideProvider from '../components/PyodideProvider';
+import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
 // import yaml from '../config.yml';
@@ -33,6 +33,7 @@ function MyApp({ Component, pageProps }) {
         if (localStorage.getItem('app-cache-time') && (currentDate - new Date(localStorage.getItem('app-cache-time'))) > 86400000) {
           localStorage.removeItem('app-cache');
           localStorage.removeItem('app-cache-time');
+          cache.clear();
           console.log('cache cleared')
           return;
         }

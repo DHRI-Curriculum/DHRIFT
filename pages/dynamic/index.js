@@ -2,10 +2,10 @@
 import Head from 'next/head'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
-import ConvertMarkdown from '../../components/ConvertMarkdown'
+import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
 import { useRouter } from 'next/router'
-import Sidebar from '../../components/Sidebar'
-import NewFrontPage from '../../components/NewFrontPage';
+import Sidebar from '../../components/WorkshopPieces/Sidebar'
+import NewFrontPage from '../../components/WorkshopPieces/NewFrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 // import Presentation from '../../components/Presentation';
@@ -14,10 +14,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
-import ClassFacilitator from '../../components/ClassFacilitator'
+import ClassFacilitator from '../../components/WorkshopPieces/ClassFacilitator'
 import useSWRImmutable from 'swr/immutable';
-import useUploads from '../../components/UseUploads';
-import useWorkshop from '../../components/UseWorkshop'
+import useUploads from '../../components/Hooks/UseUploads';
+import useWorkshop from '../../components/Hooks/UseWorkshop'
 
 const drawerWidth = '-30%';
 

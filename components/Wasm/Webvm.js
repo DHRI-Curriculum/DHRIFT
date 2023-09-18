@@ -1,4 +1,4 @@
-import EditorTopbar from './Editor/EditorTopbar';
+import EditorTopbar from '../Editor/EditorTopbar';
 import Script from 'next/script';
 
 export default function Webvm(props) {

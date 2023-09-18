@@ -3,9 +3,8 @@ import { useSWRConfig } from "swr";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 
-export default function UseWorkshopsComponent(workshop) {
-
-    // const [metadata, setMetadata] = useState(null);
+export default function UseWorkshopComponent(workshop) {
+    const [parsedWorkshop, setParsedWorkshop] = useState(null);
 
     let builtURL;
     // remove '?ref=main' from the end of the url
@@ -34,26 +33,28 @@ export default function UseWorkshopsComponent(workshop) {
         // decode from base64
         res => Buffer.from(res.content, 'base64').toString()
     )
-
-    console.log('workshop.url', builtURL)
     const { data, isLoading, error } = useSWRImmutable(builtURL, fetcher(headers),
         {
             onSuccess(data) {
-                console.log('data returned')
+                // console.log('data returned')
             },
             onFailure(err) {
                 console.log('err', err)
                 console.log('workshop.url', builtURL)
             }
         })
-    const matterResult = matter(data)
+    useEffect(() => {
+        if (data) {
+            setParsedWorkshop(matter(data))
+        }
+    }, [data])
 
     return (
         <div>
 
             <div>
-                <h1>{matterResult && matterResult.data.title}</h1>
-                <p>{matterResult && matterResult.data.description}</p>
+                <h1>{parsedWorkshop && parsedWorkshop.data.title}</h1>
+                <p>{parsedWorkshop && parsedWorkshop.data.description}</p>
             </div>
 
         </div>

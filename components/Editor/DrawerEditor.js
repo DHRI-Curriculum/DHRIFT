@@ -5,7 +5,7 @@ import REditorComponent from './REditorComponent';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import Webvm from '../Webvm';
+import Webvm from '../Wasm/Webvm';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
 export default function DrawerEditor(props) {

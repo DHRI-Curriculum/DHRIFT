@@ -6,11 +6,11 @@ import 'highlight.js/styles/atom-one-dark.css'
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import PythonREPLComponent from './Editor/PythonREPLComponent';
-import EditorWithTabsComponent from './Editor/EditorWithTabs';
-import CodeRunBox from './Editor/CodeRunBox';
+import PythonREPLComponent from '../Editor/PythonREPLComponent';
+import EditorWithTabsComponent from '../Editor/EditorWithTabs';
+import CodeRunBox from '../Editor/CodeRunBox';
 import Download from './Download';
-import JSTerminal from './Editor/JSTerminal';
+import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
