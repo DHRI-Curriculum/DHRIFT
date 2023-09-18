@@ -3,9 +3,12 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import LaunchIcon from '@mui/icons-material/Launch';
 
-export default function Schedule({ schedule, workshops }) {
+export default function Schedule({ 
+  schedule, 
+  // workshops 
+}) {
 
-  const [activeAccordion, setActiveAccordion] = useState(schedule[0].date);
+  const [activeAccordion, setActiveAccordion] = useState(null);
   const formattedDate = (date) => {
 
     const dateObj = new Date(date);
@@ -17,10 +20,10 @@ export default function Schedule({ schedule, workshops }) {
   // group events by date
   const eventsByDate = schedule.reduce((acc, event) => {
     const date = formattedDate(event.date);
-    if(event.workshop !== undefined) {
-      // search for the workshop in the workshops array by slug 
-      event.slug =  workshops.find((workshop) => workshop.slug === event.workshop).slug;
-    }
+    // if(event.workshop !== undefined) {
+    //   // search for the workshop in the workshops array by slug 
+    //   event.slug =  workshops.find((workshop) => workshop.slug === event.workshop).slug;
+    // }
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -72,7 +75,7 @@ export default function Schedule({ schedule, workshops }) {
                       <h2>{event.title}
                       {event.slug && 
                       <LaunchIcon className="launch-icon" 
-                      onClick={() => window.open(`/workshops/${event.slug}`)} 
+                      // onClick={() => window.open(`/workshops/${event.slug}`)} 
                       style={{ 
                         cursor: 'pointer',
                         paddingTop: '5px',

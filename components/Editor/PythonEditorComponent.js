@@ -7,7 +7,7 @@ const EditorComponent = dynamic(
   { ssr: false }
 );
 import CloseIcon from '@mui/icons-material/Close';
-import { PyodideContext } from '../PyodideProvider';
+import { PyodideContext } from '../Wasm/PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
 import PythonSideREPLComponent from './PythonSideRepl';
 

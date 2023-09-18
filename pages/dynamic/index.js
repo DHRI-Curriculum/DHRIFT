@@ -1,12 +1,11 @@
 'use client'
 import Head from 'next/head'
 import matter from 'gray-matter'
-import React, { cache, useEffect, useState } from 'react'
-import ConvertMarkdown from '../../components/ConvertMarkdown'
+import { useEffect, useState, Fragment } from 'react'
+import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
 import { useRouter } from 'next/router'
-import Sidebar from '../../components/Sidebar'
-import FrontPage from '../../components/FrontPage';
-import NewFrontPage from '../../components/NewFrontPage';
+import Sidebar from '../../components/WorkshopPieces/Sidebar'
+import NewFrontPage from '../../components/WorkshopPieces/NewFrontPage';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 // import Presentation from '../../components/Presentation';
@@ -15,9 +14,10 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
-import ClassFacilitator from '../../components/ClassFacilitator'
-import useSWRImmutable from 'swr/immutable'
-// import localStorage from 'localStorage';
+import ClassFacilitator from '../../components/WorkshopPieces/ClassFacilitator'
+import useSWRImmutable from 'swr/immutable';
+import useUploads from '../../components/Hooks/UseUploads';
+import useWorkshop from '../../components/Hooks/UseWorkshop'
 
 const drawerWidth = '-30%';
 
@@ -41,12 +41,9 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 
 export default function WorkshopPage({
-  workshop,
   authors,
-  uploads,
   title,
   setTitle
-  // facilitators,
 }) {
 
   const [content, setContent] = useState('');
@@ -58,22 +55,23 @@ export default function WorkshopPage({
   const [currentHeader, setCurrentHeader] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
+  const [code, setCode] = useState(null);
+  // communicates with the editor to run code
+  const [askToRun, setAskToRun] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pages, setPages] = useState([]);
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+  const [gitFile, setGitFile] = useState(null);
+  const [builtURL, setBuiltURL] = useState(null);
+  const [editing, setEditing] = useState(false);
 
-  // const frontPageContent = FrontPage(
-  //   currentFile,
-  //   {
-  //     workshop,
-  //     authors,
-  //     // uploads,
-  //     // facilitators,
-  //   },
-  //   // facilitatorOpen, setFacilitatorOpen
-  // )
+  const [allUploads, setAllUploads] = useState([]);
+  const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -83,30 +81,23 @@ export default function WorkshopPage({
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
         // this changes from long pages to short ones 
-        // } else if (curr.type === 'h2') {
-        //   allPages.push([curr]);
+        } else if (curr.type === 'h2') {
+          allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
       return acc;
     }, []);
 
-    // allPages.unshift(frontPageContent);
-
     return (
       allPages.map((page, index) => {  // page = [h1, p, p]
-        // if (page.props != undefined && page.props.className.includes('frontpage')) {
-        //   return (
-        //     frontPageContent
-        //   )
-        // }
         return (
           <div key={index} className='page-content'>
             {page.map((element, index) => {
               return (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   {element}
-                </React.Fragment>
+                </Fragment>
               )
             }
             )}
@@ -117,78 +108,21 @@ export default function WorkshopPage({
     )
   }
 
-
-  // set defaults 
-  const [code, setCode] = useState(null);
-  // communicates with the editor to run code
-  const [askToRun, setAskToRun] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState([]);
-  const [gitUser, setGitUser] = useState(null);
-  const [gitRepo, setGitRepo] = useState(null);
-  const [gitFile, setGitFile] = useState(null);
-  const [builtURL, setBuiltURL] = useState(null);
-
-  let headers;
-
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
-    headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-        'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-      });
-  } else {
-    headers = new Headers(
-      {
-        'Content-Type': 'application/json',
-      });
-  }
-
-  const fetcher = (headers) => (...args) => fetch(...args, {
-    headers: headers,
-    method: 'GET',
-  }).then(
-    res => res.json()
-  ).then(
-    // decode from base64
-    res => Buffer.from(res.content, 'base64').toString()
-  )
-
-  const { data, isLoading, error } = useSWRImmutable(gitUser !=null ? builtURL : null, fetcher(headers),
-    {
-      onSuccess(data) {
-        const matterResult = matter(data)
-        setCurrentFile(matterResult)
-        setContent(matterResult.content)
-        setLanguage(matterResult.data.programming_language);
-        setWorkshopTitle(matterResult.data.title);
-      },
-      onFailure(err) {
-        console.log('err', err)
-        console.log('workshop.url', builtURL)
-      }
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
-    })
-
-
-
+  const data = useWorkshop(gitUser, builtURL, editing);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setGitUser(urlParams.get('user'));
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
+    setEditing(urlParams.get('edit'));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
-    } else {
+    }
+    else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
   }, [gitUser, gitRepo, gitFile])
-
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
@@ -206,8 +140,6 @@ export default function WorkshopPage({
       setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
     }
   }, [currentFile])
-
-
 
   // list of page titles and highlight current page
   useEffect(() => {

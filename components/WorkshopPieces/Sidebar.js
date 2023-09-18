@@ -1,4 +1,5 @@
-import * as React from 'react';
+// import * as React from 'react';
+import { useState, useEffect, Fragment} from 'react';
 import Drawer from '@mui/material/Drawer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
@@ -11,12 +12,9 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
-
-
-
 export default function SidebarDrawer({ pages, currentPage, handlePageChange }) {
 
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         top: false,
         left: false,
         bottom: false,
@@ -43,13 +41,13 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
     }
     const newPages = rearrangePages(pages);
     const CollapsibleList = ({ pages }) => {
-        const [open, setOpen] = React.useState(false)
+        const [open, setOpen] = useState(false)
         const handleClick = () => {
             setOpen(!open)
         }
         return (
             // top items are also pages with children
-            <React.Fragment>
+            <Fragment>
                 {pages.children.length == 0 &&
                     <ListItem>
                         <ListItemText primary={pages.title}
@@ -59,7 +57,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                         />
                     </ListItem>
                 }
-                {pages.children.length > 0 && <React.Fragment>
+                {pages.children.length > 0 && <Fragment>
                     <ListItem>
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
@@ -101,13 +99,13 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                             ))}
                         </List>
                     </Collapse>
-                </React.Fragment>}
-            </React.Fragment>
+                </Fragment>}
+            </Fragment>
         )
     }
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         // set the active page
         // const newPages = [...pages]
         newPages.forEach((page, index) => {
@@ -130,7 +128,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
 
     return (
         // icon and button to open top drawer 
-        <React.Fragment>
+        <Fragment>
 
             <Button color="primary"
                 aria-label="open drawer"
@@ -189,6 +187,6 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                     </List>
                 </nav>
             </Drawer>
-        </React.Fragment>
+        </Fragment>
     );
 }

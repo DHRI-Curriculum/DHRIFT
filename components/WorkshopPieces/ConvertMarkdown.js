@@ -6,11 +6,11 @@ import 'highlight.js/styles/atom-one-dark.css'
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import PythonREPLComponent from './Editor/PythonREPLComponent';
-import EditorWithTabsComponent from './Editor/EditorWithTabs';
-import CodeRunBox from './Editor/CodeRunBox';
+import PythonREPLComponent from '../Editor/PythonREPLComponent';
+import EditorWithTabsComponent from '../Editor/EditorWithTabs';
+import CodeRunBox from '../Editor/CodeRunBox';
 import Download from './Download';
-import JSTerminal from './Editor/JSTerminal';
+import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
@@ -18,14 +18,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import he from 'he';
 
 
-export default function ConvertMarkdown(markdown, uploads, workshop, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
-
+export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
     
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
-        // if (process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true") {
-        //     newProps.src = '/' + process.env.NEXT_PUBLIC_REPO_NAME + newProps.src;
-        // }
         const [src, setSrc] = useState(newProps.src);
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${newProps.src}`
         return (
@@ -116,6 +112,16 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
         }
     }
     
+    // const Downloader = ({ className, children, ...props }) => {
+    //     if (uploads == undefined) return null;
+    //     return (
+    //         <div>
+    //             <Download {...props} />
+    //         </div>
+    //     )
+    // }
+
+
     const EditorWithTabs = ({ className, children }) => {
         const codeText = children.join('');
         return (
@@ -232,14 +238,14 @@ export default function ConvertMarkdown(markdown, uploads, workshop, language, s
                             setCode: setCode,
                             setEditorOpen: setEditorOpen,
                             setAskToRun: setAskToRun,
-                            workshop: workshop,
+                            workshopTitle: workshopTitle,
                         }
 
                     },
                     Download: {
                         component: Download,
                         props: {
-                            workshop: workshop,
+                            workshopTitle: workshopTitle,
                             allUploads: uploads,
                         }
                     },

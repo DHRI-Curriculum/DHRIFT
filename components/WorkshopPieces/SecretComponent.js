@@ -1,10 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import { Button } from '@mui/material/';
 import { ArrowDropDown } from '@mui/material/';
 
 
 export default function SecretComponent(props) {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const children = props.text;
 
   return (
