@@ -170,6 +170,7 @@ Let's look at the difference between:
 </CodeEditor>
 
 and...
+
 <CodeEditor>
 head_size <- 2 / 3
 </CodeEditor>
@@ -181,6 +182,47 @@ The format is name <- value.
 The value on the right is assigned to the object on the left.
 
 This statement can be interpreted as “2/3 goes into head_size”. For historical reasons, you can also use = for assignments, but not in every context. Because = can throw unexpected results in some situations, it is good practice to always use <- for assignments.
+
+Which of the following object names is invalid?
+
+- site_num
+
+- R2
+
+- 1st_try
+
+- fish.scale.size
+
+Try assigning numbers of each of these variable names. What happens?
+
+You might have noticed that assigning a value to an object doesn’t print anything. To print the value, you can either use parentheses around the assignment or type the object name:
+
+<CodeEditor>
+
+head_size <- 40 # doesn't print anything
+(head_size <- 40) # prints output
+
+head_size # prints output if you've already assigned a value to the object
+
+</CodeEditor>
+
+Important aside: The comments written to the right of the hash mark don’t get run as code. Using informative comments is good coding practice. Clear comments are essential for when you want someone else to run your code and be able to interpret what you’re typing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 my_sequence <- c(1,2,3,4)
 my_new_sequence <- c(1,3,5,100)
