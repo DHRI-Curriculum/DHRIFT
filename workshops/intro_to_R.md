@@ -81,30 +81,22 @@ One of the most basic ways to interact with R is through an "interactive session
 
 
 ```r
-x = 5  # radius of a circle
-```
+2+3
 
 ```
-par(mar = c(4, 4, .2, .1))
-plot(cars, pch = 19)
-plot(pressure, pch = 17)
+
 ```
-
-
-As you can see, it first shows the current Python version along with some hints for help or licensing information. Next, you will see three very important greater-than signs: `>>>`. 
-
-These greater-than symbols `>>>` are how you know that you have entered an interactive session with Python, as distinct from the normal `$` terminal prompt (or `%` if you are on MacOS). Let's work with this environment a bit.
+32 +3
+```
 
 ## A Little Math
 
-Let's try a little math in the Python prompt. In the Python REPL environment below <span style = "color:green">(shown in green text)</span>, type the following mathematical operations after the Python prompt (the `>>>`), and hit <kbd>enter</kbd> or <kbd>return</kbd> after each operation.
+Let's try a little math in the R prompt. In the Python REPL environment below <span style = "color:green">(shown in green text)</span>, type the following mathematical operations after the Python prompt (the `>>>`), and hit <kbd>enter</kbd> or <kbd>return</kbd> after each operation.
 
 
 <CodeEditor>
     1+1
 </CodeEditor>
-
-You should see the text `Hello World!` appear in the output below the code editor in the shell.
 
 <CodeEditor>
     1+2
@@ -112,6 +104,72 @@ You should see the text `Hello World!` appear in the output below the code edito
 
 ## First Puzzle
 
+You see the following series of numbers and the end result of 8. Play with the code editor to come up with the right arithamtic operations to end up with 8!
+(does up arrow give you previous line?)
+
+10 [] 5 [] 6 [] 4 = 8
+
+
 <CodeEditor>
     1+1
 </CodeEditor>
+
+10/5*6-4
+(10/5)*6-4
+
+## First Puzzle
+
+3 + 5 
+3 * 5 
+3 / 5 
+
+3 == 3
+4 == 10
+4 == "hello"
+
+# creating a vector (can think of it as a list)
+
+my_sequence <- c(1,2,3,4)
+my_new_sequence <- c(1,3,5,100)
+mixed_vector <- c(1,"yes", 5, 100, TRUE)
+
+print(mixed_vector)
+
+
+# open a comma separated value file
+
+read.csv("internet_usage_regions.csv")
+
+full_dataset <- read.csv("internet_usage_regions.csv")
+
+# sample data
+
+head(full_dataset)
+tail(full_dataset)
+
+print(full_dataset)
+
+# extract & show individual variables 
+
+full_dataset$Region
+full_dataset$Percentage
+
+region_list <- full_dataset$Region
+
+head(region_list)
+
+# remove objects
+
+rm(my_sequence)
+
+# square brackets to extract values or vectors from a dataframe. *Row first, then column!*
+
+full_dataset[5,3]
+
+full_dataset[5,]
+full_dataset[5,1:3]
+
+central_asia_data <- full_dataset[full_dataset$Region == "Central Asia", ]
+
+
+
