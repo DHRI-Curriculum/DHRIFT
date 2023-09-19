@@ -9,6 +9,7 @@ learning objectives:
     
 facilitators: 
     name: 'Leanne Fan'
+    name: "Sam O'Hana"
     description: 'Here is a short bio.'
 
 estimated time:
@@ -26,6 +27,7 @@ dependencies:
 authors:
     - 'Yuxiao Luo'
     - 'Leanne Fan'
+    - "Sam O'Hana"
 
 
 editors:
@@ -56,6 +58,15 @@ goals:
 
 
 ---
+
+# Why Learn R?
+
+R has become a standard language for statistical computing and data analysis, especially in academia. It is open-source, contributing to its widespread adoption and increasing role as a standard for writing reproducible code. 
+
+# Intended Audience
+Are you a student in academic fields like humanities, social sciences, or various science programs where R isn't typically taught? This workshop isn't about diving deep into data wrangling or how to use R to run statistial models; instead, it lays the foundation for you to appreciate R's functionality, syntax and logic. While you don't need to install R or R Studio (more on these later) to get started, by the end of the workshop, you will be able to get started with those. 
+
+We'll start with math puzzles and practical challenges to provide you with rapid feedback and tangible outcomes. 
 
 # Interacting With R
 
@@ -97,4 +108,10 @@ You should see the text `Hello World!` appear in the output below the code edito
 
 <CodeEditor>
     1+2
+</CodeEditor>
+
+## First Puzzle
+
+<CodeEditor>
+    1+1
 </CodeEditor>
