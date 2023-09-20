@@ -209,6 +209,8 @@ footer {
   color: var(--foreground);
 }
 
+// MIXINS
+
 // mixin for centering elements
 @mixin absolute-center() {
     position:absolute;
@@ -216,6 +218,69 @@ footer {
     top:50%;
     transform:translate(-50%,-50%);
 }
+@mixin vertical-center {
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+$breakpoints:  (
+  "xs": 25em, // 400px
+  "sm": 34em, // 544px
+  "md": 48em, // 768px
+  "lg": 60em, // 960px
+  "xl": 80em, // 1280px
+  "xxl": 90em // 1440px
+);
+@mixin respond-above($breakpoint) {
+  // If the breakpoint exists in the map.
+  @if map-has-key($breakpoints, $breakpoint) {
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+    // Write the media query.
+    @media (min-width: $breakpoint-value) {
+      @content;
+    }
+    // If the breakpoint doesn't exist in the map.
+  }
+  @else {
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+  }
+}
+// Example of usage
+// h1 {
+//   font-size: 14px;
+//   line-height: 22px;
+//   @include respond-above(md) {
+//     font-size: 18px;
+//     line-height: 26px;
+//     font-weight: 600;
+//   }
+// }
+
+// breakpoint var (first in array is the largest number, etc array.length)
+$z-indexes: (
+  "modal",
+  "sidebar",
+  “header”
+);
+ 
+@function z-index($name) {
+  @if index($z-indexes, $name) {
+    @return (length($z-indexes) - index($z-indexes, $name))+1;
+  }
+  @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+    @return null;
+  }
+}
+// Example of usage
+// .header {
+// z-index: z-index(‘header’);
+// }
 
 // front matter stuff needs work
 .facilitator {
