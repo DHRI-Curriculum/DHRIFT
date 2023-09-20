@@ -52,7 +52,7 @@ export default function Header({ title }) {
             sx={{ display: 'flex' }}
         >
             <CssBaseline />
-            <ButtonAppBarCollapse
+            {/* <ButtonAppBarCollapse
                 className='topBar-container'
                 sx={{
                     display: {
@@ -64,16 +64,14 @@ export default function Header({ title }) {
                     }
                 }}
             >
-                {/* mobile menu */}
-                {/* simple dropdown with text links to Workshops, Guides, Insights */}
-                
                 <IconButton sx={{ ml: 1 }}
                     id="dark-mode-toggle"
                     onClick={(e) => themeToggle(e)}
+                    
                     color="inherit">
                     {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
                 </IconButton>
-            </ButtonAppBarCollapse>
+            </ButtonAppBarCollapse> */}
             <AppBar
                 position="static"
                 sx={{
@@ -81,7 +79,7 @@ export default function Header({ title }) {
                         xs: 'none',
                         md: 'block'
                     },
-                    Zindex: 10000,
+                    // Zindex: 10000,
                 }}
                 className='topBar-container'>
                 <Toolbar

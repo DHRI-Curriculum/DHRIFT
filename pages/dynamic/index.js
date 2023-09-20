@@ -5,7 +5,7 @@ import { useEffect, useState, Fragment } from 'react'
 import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
 import { useRouter } from 'next/router'
 import Sidebar from '../../components/WorkshopPieces/Sidebar'
-import NewFrontPage from '../../components/WorkshopPieces/NewFrontPage';
+import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 // import Presentation from '../../components/Presentation';
@@ -14,8 +14,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
-import ClassFacilitator from '../../components/WorkshopPieces/ClassFacilitator'
-import useSWRImmutable from 'swr/immutable';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop'
 
@@ -136,7 +134,7 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null) {
-      const frontPageContent = NewFrontPage(currentFile);
+      const frontPageContent = Frontmatter(currentFile);
       setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
     }
   }, [currentFile])
@@ -235,9 +233,14 @@ export default function WorkshopPage({
   // if (isLoading) return <div>Loading...</div>
   return (
     <Container
-      // maxWidth="lg"
-      style={{
+      disableGutters={true}
+      maxWidth={'md'}
+      sx={{
         display: 'flex',
+        marginLeft:{
+          md: '100px',
+        },
+        
       }}
     >
       <Head>
@@ -248,7 +251,7 @@ export default function WorkshopPage({
           width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
         }}
       >
-        {PaginationComponent(currentPage)}
+        {/* {PaginationComponent(currentPage)} */}
         <div className="card-page">
           <div className="workshop-container">
             {currentContentLoaded ? (

@@ -51,11 +51,9 @@ export default function WorkshopsView({ gitUser, gitRepo }) {
         .map((v, i) => i);
 
     return (
-        <div className='home'>
-            <div className='home-header'>
-                <div className='home-header-left'>
+        <div className='workshop-grid'>
                     {toLoop.map(v => {
-                        if (workshops[v] && workshops[v].type != 'dir') {
+                        if (workshops[v] && workshops[v].type != 'dir' && workshops[v].name != 'README.md') {
                             return (
                                 <div key={v}>
                                     <UseWorkshopsComponent workshop={workshops[v]} />
@@ -64,8 +62,6 @@ export default function WorkshopsView({ gitUser, gitRepo }) {
                         }
                     }
                     )}
-                </div>
-            </div>
         </div>
     )
 }

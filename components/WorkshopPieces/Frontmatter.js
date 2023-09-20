@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
 
-export default function NewFrontPage(currentFile, allFiles,
+export default function Frontmatter(currentFile, allFiles,
   //  facilitatorOpen, setFacilitatorOpen
 ) {
   // create an object that represents an item on the front page, which could be an author box, facilitator, recommended reading, etc.
@@ -41,7 +41,7 @@ export default function NewFrontPage(currentFile, allFiles,
       const recommended = workshopObject.recommended
       const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
       return (
-        <div className='frontpage-item dependency' key={dep.title}>
+        <div className='frontmatter-item dependency' key={dep.title}>
           <h2>{dep.title}</h2>
           <p className={requiredOrRecommended}>
             {/* <Link href={workshopObject.link}>{item.title}</Link> */}
@@ -68,7 +68,7 @@ export default function NewFrontPage(currentFile, allFiles,
   const formattedObjects = allObjects.
     filter(item => item !== null).map(obj => {
       return (
-        <div className="frontpage-item" key={obj.title}>
+        <div className="frontmatter-item" key={obj.title}>
           <h2>{obj.title}</h2>
           <ul>
             {obj.items && Object.keys(obj.items).map(key => {
@@ -137,7 +137,7 @@ export default function NewFrontPage(currentFile, allFiles,
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
-                  <li key={key} className='frontpage-list'>
+                  <li key={key} className='frontmatter-list'>
                     {itemHtml}
                   </li>
                 )
@@ -168,8 +168,8 @@ export default function NewFrontPage(currentFile, allFiles,
                         const term = ConvertMarkdown(item[key].description)
                         return (
                           <div key={key}>
-                          <h3><a href={item[key].link}>{key}</a></h3>
-                          <p key={key} className='frontpage-list'>{term}</p>
+                            <h3><a href={item[key].link}>{key}</a></h3>
+                            <p key={key} className='frontmatter-list'>{term}</p>
                           </div>
                         )
                       })}
@@ -186,16 +186,28 @@ export default function NewFrontPage(currentFile, allFiles,
     })
   // check if formattedObjects or formattedDeps is empty, if so, return null
   const formatted = formattedObjects.length === 0 && formedDeps.length === 0 ? true : false
-
   return (
-    <div className="frontpage">
-      <h1>{title}</h1>
-      {description && <div className="description">
-        <p>{description}</p></div>}
-      {!formatted && <Masonry columns={{ sm: 1, md: 2 }} spacing={2}>
-        {formedDeps}
-        {formattedObjects}
-      </Masonry>}
+    <div className="frontmatter">
+      <div className="frontmatter-hero">
+        <h1>{title}</h1>
+        {description && 
+          <p>{description}</p>
+        }
+      </div>
+      {formedDeps.length > 0 && <div className="frontmatter-item dependencies">
+        <h2>Prerequisites</h2>
+        <ul>
+          {formedDeps}
+        </ul>
+      </div>}
+      {formattedObjects.length > 0 && <div className="frontmatter-item">
+        <h2>Details</h2>
+        <ul>
+          {formattedObjects}
+        </ul>
+      </div>}
+
+      {/* {formatted && {formattedObjects}} */}
       {/* <ClassFacilitator
       name={'facilitatorList.name'}
       bio={'bio'}

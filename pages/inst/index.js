@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import jsyaml from 'js-yaml'
 import WorkshopsView from '../../components/WorkshopsView';
 import Schedule from '../../components/Schedule';
+import Container from '@mui/material/Container';
 
 
 export default function Test() {
@@ -63,39 +64,55 @@ export default function Test() {
         }
     }, [parsedYAML])
     return (
-        <div className='home'>
-            <div className='home-header'>
-                <div className='home-header-left'>
-                    <h1>{
-                        parsedYAML && parsedYAML.event
-                    }</h1>
-                    <h2>{
-                        parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${parsedYAML.datestart} - ${parsedYAML.enddate}`
-                    }</h2>
-                    <p>
-                        {
-                            parsedYAML && parsedYAML.venue
-                        }
-                    </p>
-                    <p>{
-                        parsedYAML && parsedYAML.description
-                    }</p>
-                    <p>{
-                        parsedYAML && parsedYAML.registerlink &&
-                        <a href={parsedYAML.registerlink}>Register</a>
-                    }</p>
-                    <div className='schedule'>
-                        {sessions &&
-                            <Schedule schedule={sessions} />}
+        <Container
+            disableGutters={true}
+            maxWidth={'md'}
+            sx={{
+                display: 'flex',
+                marginLeft: {
+                    md: '100px',
+                },
+
+            }}
+        >
+            <div>
+                <div className="frontmatter">
+                    <div className='frontmatter-hero'>
+                        <h1>{
+                            parsedYAML && parsedYAML.event
+                        }</h1>
+                        <h2>{
+                            parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${parsedYAML.datestart} - ${parsedYAML.enddate}`
+                        }</h2>
+                        <p>
+                            {
+                                parsedYAML && parsedYAML.venue
+                            }
+                        </p>
+                        <p>{
+                            parsedYAML && parsedYAML.registerlink &&
+                            <a href={parsedYAML.registerlink}>Register</a>
+                        }</p>
                     </div>
-                    <h1>Workshops</h1>
-                    <div className='workshops'>
-                        {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                            <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} />
-                        }
+                    <div className=''>
+                        <div>
+                        <p>{
+                            parsedYAML && parsedYAML.description
+                        }</p>
+                        </div>
+                        <div className='schedule'>
+                            {sessions &&
+                                <Schedule schedule={sessions} />}
+                        </div>
+                        <h1>Workshops</h1>
+                        <div className='workshops'>
+                            {workshopsGitUser && workshopsGitRepo && parsedYAML &&
+                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} />
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Container>
     )
 }

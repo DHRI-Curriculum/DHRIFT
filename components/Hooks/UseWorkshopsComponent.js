@@ -1,5 +1,9 @@
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 import useSWRImmutable from "swr/immutable";
-import { useSWRConfig } from "swr";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 
@@ -49,14 +53,26 @@ export default function UseWorkshopComponent(workshop) {
         }
     }, [data])
 
+    console.log('parsedWorkshop', parsedWorkshop)
     return (
         <div>
 
-            <div>
-                <h1>{parsedWorkshop && parsedWorkshop.data.title}</h1>
-                <p>{parsedWorkshop && parsedWorkshop.data.description}</p>
-            </div>
-
+            {parsedWorkshop &&
+                <Box
+                    sx={{
+                        minWidth: 275,
+                    }}>
+                    <Card>
+                        <CardContent>
+                            <h2>{parsedWorkshop.data.title}</h2>
+                            <div>{parsedWorkshop.data.description.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small"><a href={parsedWorkshop.data.url}>View Workshop</a></Button>
+                        </CardActions>
+                    </Card>
+                </Box>
+            }
         </div>
     )
 }
