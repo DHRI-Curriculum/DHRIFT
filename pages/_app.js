@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
         if (localStorage.getItem('app-cache-time') && (currentDate - new Date(localStorage.getItem('app-cache-time'))) > 86400000) {
           localStorage.removeItem('app-cache');
           localStorage.removeItem('app-cache-time');
-          cache.clear();
+          // cache.clear();
           console.log('cache cleared')
           return;
         }
