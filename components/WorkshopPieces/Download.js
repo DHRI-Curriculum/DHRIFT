@@ -19,7 +19,7 @@ export default function Download(props) {
     console.log('filteredUploads', filteredUploads);
 
     let headers;
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',

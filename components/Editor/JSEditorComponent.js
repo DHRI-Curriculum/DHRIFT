@@ -156,6 +156,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     var JSrun = function () {
         var str;
         setIsError(false);
+        setError(null);
         setIsoutput(false);
         setRunningCode(true);
         outputRef.current = "";

@@ -16,7 +16,7 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
     builtURL = workshop.url.split('?')[0]
 
     let headers;
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',

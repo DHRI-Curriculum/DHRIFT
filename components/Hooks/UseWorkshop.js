@@ -23,14 +23,15 @@ export default function useWorkshop(gitUser, builtURL, editing) {
     }
   }, [editing])
 
-
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
+  // console.log(process.env.NEXT_PUBLIC_GITHUBSECRET)
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') { 
     headers = new Headers(
       {
         'Content-Type': 'application/json',
         'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
       });
   } else {
+    console.log('no secret')
     headers = new Headers(
       {
         'Content-Type': 'application/json',
