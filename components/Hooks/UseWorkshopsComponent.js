@@ -7,7 +7,7 @@ import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 
-export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUser, instRepo}) {
+export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instUser, instRepo }) {
 
     const [parsedWorkshop, setParsedWorkshop] = useState(null);
 
@@ -54,28 +54,27 @@ export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUs
         }
     }, [data])
 
-    const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' +  workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
+    const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
         <>
             {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description &&
-        <div>
-
-                <Box
-                    sx={{
-                        minWidth: 275,
-                    }}>
-                    <Card>
-                        <CardContent>
-                            <h2>{parsedWorkshop.data.title}</h2>
-                            <div>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
-                        </CardContent>
-                        <CardActions>
-                            {gitUser && gitRepo &&
-                            <Button size="small"><a href={workshopLink}>Learn More</a></Button>
-                            }
-                        </CardActions>
-                    </Card>
-                </Box>
+                <div>
+                    <Box
+                        sx={{
+                            minWidth: 275,
+                        }}>
+                        <Card>
+                            <CardContent>
+                                <h2>{parsedWorkshop.data.title}</h2>
+                                <div>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
+                            </CardContent>
+                            <CardActions>
+                                {gitUser && gitRepo &&
+                                    <Button size="small"><a href={workshopLink}>Learn More</a></Button>
+                                }
+                            </CardActions>
+                        </Card>
+                    </Box>
                 </div>
             }
         </>
