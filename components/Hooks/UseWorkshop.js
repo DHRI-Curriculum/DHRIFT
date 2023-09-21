@@ -25,7 +25,6 @@ export default function useWorkshop(gitUser, builtURL, editing) {
 
 
   if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
-    console.log('using github secret')
     headers = new Headers(
       {
         'Content-Type': 'application/json',
