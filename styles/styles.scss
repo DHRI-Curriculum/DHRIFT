@@ -39,7 +39,12 @@ $foreground: $primary-color-black;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $headers-font, sans-serif;
   font-weight: 500;
 }
@@ -104,7 +109,7 @@ header {
   display: flex;
   flex-direction: row;
   align-content: center;
-  justify-content: left;
+  justify-content: space-between;
   align-items: flex-start;
   background-color: $primary-color-brown;
   z-index: header;
@@ -118,6 +123,26 @@ header {
 
   div {
     color: $primary-color-white;
+  }
+
+  &-left {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: left;
+    align-items: flex-start;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  &-right {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: right;
+    align-items: flex-end;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 
   &-breadcrumbs {
@@ -158,11 +183,6 @@ header {
   width: 100%;
   color: $background;
 }
-
-// main{
-//   margin-top: 0px;
-//   padding: 0px;
-// }
 
 // institute styles
 .schedule {
@@ -233,8 +253,14 @@ header {
     .description {
       color: $primary-color-white;
       margin-top: 20px;
-      margin-bottom: 20px;
-      padding: 10px !important;
+      margin-bottom: 0px;
+      padding: 10px;
+      position: relative;
+    }
+
+    .button {
+      margin-bottom: 50px;
+      padding: 10px;
       position: relative;
     }
 
@@ -243,9 +269,6 @@ header {
   &-item {
     padding: 20px;
 
-    // border: 2px solid $primary-color-bark !important;
-    // background: $background-page !important;
-    // box-shadow: $primary-color-bark 8px 8px 0px;
     li {
       margin-bottom: 10px;
     }
@@ -255,12 +278,14 @@ header {
 // page content styles
 .page-content {
 
+  margin-top: 100px;
+  margin-bottom: 100px;
+
   h1 {
     font-size: 2rem;
     font-family: $headers-font, sans-serif;
     margin-bottom: 30px;
     padding: 10px !important;
-
   }
 
 }
@@ -291,8 +316,9 @@ header {
 }
 
 nav.sidenav {
-  max-width: 325px;
-  min-width: 300px;
+  // max-width: 325px;
+  // min-width: 300px;
+  width: 100%;
   align-self: flex-start;
   position: sticky;
   max-height: 100 vh - 144px;
@@ -320,6 +346,16 @@ nav.sidenav {
 }
 
 .sidebar {
+  &-button {
+    margin-top: 30px;
+    color: $primary-color-white;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+    font-family: $headers-font, sans-serif;
+    cursor: pointer;
+  }
+
   &-item {
     cursor: pointer;
 

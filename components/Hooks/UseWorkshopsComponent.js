@@ -7,12 +7,13 @@ import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 
-export default function UseWorkshopComponent(workshop) {
+export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUser, instRepo}) {
+
     const [parsedWorkshop, setParsedWorkshop] = useState(null);
 
     let builtURL;
     // remove '?ref=main' from the end of the url
-    builtURL = workshop.workshop.url.split('?')[0]
+    builtURL = workshop.url.split('?')[0]
 
     let headers;
     if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
@@ -53,7 +54,7 @@ export default function UseWorkshopComponent(workshop) {
         }
     }, [data])
 
-    console.log('parsedWorkshop', parsedWorkshop)
+    const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' +  workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
         <div>
 
@@ -68,7 +69,9 @@ export default function UseWorkshopComponent(workshop) {
                             <div>{parsedWorkshop.data.description.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
                         </CardContent>
                         <CardActions>
-                            <Button size="small"><a href={parsedWorkshop.data.url}>View Workshop</a></Button>
+                            {gitUser && gitRepo &&
+                            <Button size="small"><a href={workshopLink}>Learn More</a></Button>
+                            }
                         </CardActions>
                     </Card>
                 </Box>

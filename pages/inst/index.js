@@ -96,9 +96,9 @@ export default function Test() {
                     </div>
                     <div className=''>
                         <div>
-                        <p>{
-                            parsedYAML && parsedYAML.description
-                        }</p>
+                            <p>{
+                                parsedYAML && parsedYAML.description
+                            }</p>
                         </div>
                         <div className='schedule'>
                             {sessions &&
@@ -107,7 +107,7 @@ export default function Test() {
                         <h1>Workshops</h1>
                         <div className='workshops'>
                             {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} />
+                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
                             }
                         </div>
                     </div>

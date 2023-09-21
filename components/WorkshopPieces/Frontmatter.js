@@ -193,11 +193,11 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
         <h1>{title}</h1>
         {description &&
           <>
-            <p>{description}
+            <p className='description'>{description}</p><br />
               <Button className='button button-white'
               onClick={() => { setCurrentPage(2) }}>
                 Get Started
-              </Button></p>
+              </Button>
           </>
         }
       </div>

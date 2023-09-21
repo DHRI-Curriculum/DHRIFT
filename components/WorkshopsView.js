@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import UseWorkshopsComponent from '../components/Hooks/UseWorkshopsComponent';
 
 
-export default function WorkshopsView({ gitUser, gitRepo }) {
+export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) {
 
     const [workshops, setWorkshops] = useState([]);
     const [totalWorkshops, setTotalWorkshops] = useState(0);
@@ -52,16 +52,19 @@ export default function WorkshopsView({ gitUser, gitRepo }) {
 
     return (
         <div className='workshop-grid'>
-                    {toLoop.map(v => {
-                        if (workshops[v] && workshops[v].type != 'dir' && workshops[v].name != 'README.md') {
-                            return (
-                                <div key={v}>
-                                    <UseWorkshopsComponent workshop={workshops[v]} />
-                                </div>
-                            )
-                        }
-                    }
-                    )}
+            {toLoop.map(v => {
+                if (workshops[v] && workshops[v].type != 'dir' && workshops[v].name != 'README.md') {
+                    return (
+                        <div key={v}>
+                            {gitUser && gitRepo &&
+                                <UseWorkshopsComponent workshop={workshops[v]} gitUser={gitUser}
+                                    gitRepo={gitRepo} instRepo={instRepo} instUser={instUser} />
+                            }
+                        </div>
+                    )
+                }
+            }
+            )}
         </div>
     )
 }

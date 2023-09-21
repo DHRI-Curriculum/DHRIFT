@@ -43,7 +43,7 @@ export default function WorkshopPage({
   setTitle,
   ...props
 }) {
-  
+
   const [content, setContent] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
   const [currentContent, setCurrentContent] = useState([]);
@@ -61,6 +61,8 @@ export default function WorkshopPage({
   const [gitUser, setGitUser] = useState(null);
   const [gitRepo, setGitRepo] = useState(null);
   const [gitFile, setGitFile] = useState(null);
+  const [instUser, setInstUser] = useState(null);
+  const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
 
@@ -114,13 +116,15 @@ export default function WorkshopPage({
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
     setEditing(urlParams.get('edit'));
+    setInstUser(urlParams.get('instUser'));
+    setInstRepo(urlParams.get('instRepo'));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
     }
     else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
-  }, [gitUser, gitRepo, gitFile])
+  }, [gitUser, gitRepo, gitFile, editing, instUser, instRepo])
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
@@ -138,14 +142,6 @@ export default function WorkshopPage({
       setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
   }, [currentFile, content])
-
-  // useEffect(() => {
-  //   if (currentFile != null) {
-  //     setPages([...convertContenttoHTML(currentFile.content)]);
-  //   }
-  // }, [currentFile])
-
-
 
   // list of page titles and highlight current page
   useEffect(() => {
@@ -198,24 +194,46 @@ export default function WorkshopPage({
 
   useEffect(() => {
     // This is for the frontmatter 'Get Started' button
-    if(currentPage === 2) {
+    if (currentPage === 2) {
       setCurrentContent(pages[1]);
     }
   }, [currentPage])
 
   const PaginationComponent = (currentPage) => {
-    const backPageName = pageTitles[currentPage - 2]?.title
-    const nextPageName = pageTitles[currentPage + 1]?.title
+    const sectionTitle = function () {
+      let theMostRecentH1 = null;
+      if (pageTitles[currentPage - 2]?.parent) {
+        theMostRecentH1 = pageTitles[currentPage - 2]?.parent;
+      } else {
+        theMostRecentH1 = pageTitles[currentPage + 1]?.parent;
+      }
+      return theMostRecentH1;
+    }
+    const goBackString = function () {
+      if (sectionTitle() !== pageTitles[currentPage - 2]?.title) {
+        return sectionTitle() + ': ' + pageTitles[currentPage - 2]?.title;
+      } else {
+        return pageTitles[currentPage - 2]?.title;
+      }
+    }
+    const nextH1 = pageTitles[currentPage]?.parent ? pageTitles[currentPage]?.parent : pageTitles[currentPage]?.title;
+    const goForwardString = function () {
+      if (nextH1 !== pageTitles[currentPage]?.title) {
+        return nextH1 + ': ' + pageTitles[currentPage]?.title;
+      } else {
+        return pageTitles[currentPage]?.title;
+      }
+    }
+
     return (
       <div className='pagination'>
-       
-          <Button
+        <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) - 1)}
           disabled={currentPage === 1}
-        > 
+        >
           <ArrowBackIcon />
-          {currentPage === 1 ? 'Frontmatter' : backPageName}
+          {currentPage === 1 ? 'Frontmatter' : goBackString()}
         </Button>
         <Button
           className='pagination-button'
@@ -225,7 +243,7 @@ export default function WorkshopPage({
             justifySelf: 'flex-end',
           }}
         >
-          {currentPage === pages.length ? 'Frontmatter' : nextPageName}
+          {currentPage === pages.length ? 'Frontmatter' : goForwardString()}
           <ArrowForwardIcon />
         </Button>
       </div>
@@ -233,7 +251,7 @@ export default function WorkshopPage({
   }
 
   useEffect(() => {
-    if(currentPage === 1) {
+    if (currentPage === 1) {
       props.setWorkshopHeader(false);
     }
     else {
@@ -258,9 +276,11 @@ export default function WorkshopPage({
   // if (isLoading) return <div>Loading...</div>
   return (
     <Fragment>
-      {props.workshopHeader && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage} 
-      setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
-      pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle} />}
+      {props.workshopHeader && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+        setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+        pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
+        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
+      />}
       <Container
         disableGutters={true}
         maxWidth={'md'}
