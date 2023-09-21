@@ -56,9 +56,10 @@ export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUs
 
     const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' +  workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
+        <>
+            {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description &&
         <div>
 
-            {parsedWorkshop &&
                 <Box
                     sx={{
                         minWidth: 275,
@@ -66,7 +67,7 @@ export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUs
                     <Card>
                         <CardContent>
                             <h2>{parsedWorkshop.data.title}</h2>
-                            <div>{parsedWorkshop.data.description.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
+                            <div>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
                         </CardContent>
                         <CardActions>
                             {gitUser && gitRepo &&
@@ -75,7 +76,8 @@ export default function UseWorkshopComponent({workshop, gitUser, gitRepo, instUs
                         </CardActions>
                     </Card>
                 </Box>
+                </div>
             }
-        </div>
+        </>
     )
 }

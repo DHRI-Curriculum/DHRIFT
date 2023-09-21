@@ -5,8 +5,7 @@ import WorkshopsView from '../../components/WorkshopsView';
 import Schedule from '../../components/Schedule';
 import Container from '@mui/material/Container';
 
-
-export default function Test() {
+export default function Institute() {
 
     const [gitUser, setGitUser] = useState(null);
     const [gitRepo, setGitRepo] = useState(null);
