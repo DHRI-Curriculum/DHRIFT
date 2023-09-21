@@ -17,7 +17,7 @@ export default function Institute() {
 
     let headers;
 
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',

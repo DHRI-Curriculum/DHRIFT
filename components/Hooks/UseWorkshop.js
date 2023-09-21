@@ -24,7 +24,7 @@ export default function useWorkshop(gitUser, builtURL, editing) {
   }, [editing])
 
 
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
     console.log('using github secret')
     headers = new Headers(
       {

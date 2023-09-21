@@ -9,7 +9,7 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
     const [totalWorkshops, setTotalWorkshops] = useState(0);
 
     let workshopsBuiltURL, headers;
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',

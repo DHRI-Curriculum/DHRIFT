@@ -6,7 +6,7 @@ export default function useUploads(allUploads, setAllUploads, gitUser, gitRepo) 
     let headers;
     const builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads`
 
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
