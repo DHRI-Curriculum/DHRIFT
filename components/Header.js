@@ -1,5 +1,4 @@
 import Link from 'next/link'
-// import yaml from '../config.yml'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,7 +22,7 @@ const Drawer = dynamic(
 
 export default function Header({ title }) {
 
- 
+
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
 
@@ -52,7 +51,7 @@ export default function Header({ title }) {
             sx={{ display: 'flex' }}
         >
             <CssBaseline />
-            <ButtonAppBarCollapse
+            {/* <ButtonAppBarCollapse
                 className='topBar-container'
                 sx={{
                     display: {
@@ -64,16 +63,14 @@ export default function Header({ title }) {
                     }
                 }}
             >
-                {/* mobile menu */}
-                {/* simple dropdown with text links to Workshops, Guides, Insights */}
-                
                 <IconButton sx={{ ml: 1 }}
                     id="dark-mode-toggle"
                     onClick={(e) => themeToggle(e)}
+
                     color="inherit">
                     {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
                 </IconButton>
-            </ButtonAppBarCollapse>
+            </ButtonAppBarCollapse> */}
             <AppBar
                 position="static"
                 sx={{
@@ -81,7 +78,7 @@ export default function Header({ title }) {
                         xs: 'none',
                         md: 'block'
                     },
-                    Zindex: 10000,
+                    // Zindex: 10000,
                 }}
                 className='topBar-container'>
                 <Toolbar
@@ -119,7 +116,7 @@ export default function Header({ title }) {
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
                                 {title &&
-                                <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>}
+                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>}
                             </Link>
                         </Typography>
                         <ul className='links'>

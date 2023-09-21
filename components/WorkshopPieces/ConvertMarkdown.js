@@ -6,20 +6,20 @@ import 'highlight.js/styles/atom-one-dark.css'
 import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-import PythonREPLComponent from './Editor/PythonREPLComponent';
-import EditorWithTabsComponent from './Editor/EditorWithTabs';
-import CodeRunBox from './Editor/CodeRunBox';
+import PythonREPLComponent from '../Editor/PythonREPLComponent';
+import EditorWithTabsComponent from '../Editor/EditorWithTabs';
+import CodeRunBox from '../Editor/CodeRunBox';
 import Download from './Download';
-import JSTerminal from './Editor/JSTerminal';
+import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
-import { renderToStaticMarkup } from 'react-dom/server';
-import he from 'he';
+// import { renderToStaticMarkup } from 'react-dom/server';
+// import he from 'he';
 
 
 export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
-    
+
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
@@ -76,11 +76,10 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             );
         }
     }
-    
-    
+
+
     const CodeEditor = ({ children, ...props }) => {
         var codeText
-    
         if (children) {
             if (children.length > 0) {
                 if (typeof children[0] === 'object') {
@@ -89,6 +88,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                 else {
                     codeText = children.join('');
                 }
+                console.log('codeText', codeText)
                 return (
                     <div>
                         <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
@@ -111,7 +111,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             )
         }
     }
-    
+
     // const Downloader = ({ className, children, ...props }) => {
     //     if (uploads == undefined) return null;
     //     return (
@@ -130,7 +130,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             </div>
         )
     }
-    
+
     const PythonREPL = ({ className, children }) => {
         return (
             <div>
@@ -138,7 +138,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             </div>
         )
     }
-    
+
     const Terminal = ({ className, children }) => {
         return (
             <div>
@@ -146,8 +146,8 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             </div>
         )
     }
-    
-    
+
+
     const Quiz = ({ className, children }) => {
         return (
             <div>
@@ -157,7 +157,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             </div>
         )
     }
-    
+
     // const HTMLEditor = ({ className, children }) => {
     //     var html, css;
     //     for (var i = 0; i < children.length; i++) {
@@ -180,7 +180,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
     //                 }
     //             }
     //             javascript = beautify.js(javascript.join(''), { indent_size: 2 });
-    
+
     //         }
     //         if (children[i].type === 'css') {
     //             css = renderToStaticMarkup(children[i].props.children.join(''));
@@ -192,7 +192,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
     //         </div>
     //     )
     // }
-    
+
     const InfoAlert = ({ className, children }) => {
         return (
             <div className="info-alert">
@@ -200,7 +200,7 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
             </div>
         )
     }
-    
+
     const Secret = ({ className, children }) => {
         return (
             <div>
@@ -233,14 +233,15 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                         component: CodeEditor,
                         props: {
                             allUploads: uploads,
-                            // language is given or python is default
                             language: language,
                             setCode: setCode,
                             setEditorOpen: setEditorOpen,
                             setAskToRun: setAskToRun,
                             workshopTitle: workshopTitle,
+                        },
+                        options: {
+                            forceInline: true,
                         }
-
                     },
                     Download: {
                         component: Download,

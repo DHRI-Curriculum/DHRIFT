@@ -1,0 +1,653 @@
+// import fonts
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@12..96&family=Montserrat:wght@400;700&display=swap');
+
+// primary colors (still need primary colors for dark mode)
+$primary-color-bark: #614F42;
+$primary-color-brown: #3d342f;
+$primary-color-sun: #F9976A;
+$primary-color-cream: #FFF9F4;
+$primary-color-white: #FFFFFF;
+$primary-color-black: #1B1621;
+
+// typography
+$headers-font: 'Bricolage Grotesque', sans-serif;
+$body-font: 'Montserrat', sans-serif;
+
+// defaults
+$background: $primary-color-white;
+$background-page: $primary-color-cream;
+$foreground: $primary-color-black;
+
+// dark theme
+/*
+[data-theme='dark'] {
+    $background: !
+  }
+*/
+
+// global styles
+#__next {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+  background-color: $background-page;
+  color: $foreground;
+  font-family: $body-font, sans-serif;
+  font-size: 20px;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $headers-font, sans-serif;
+  font-weight: 500;
+}
+
+// button styles
+.button {
+  padding: 10px;
+  border-radius: 0px;
+}
+
+.button-white {
+  background-color: $primary-color-white;
+  color: $primary-color-bark;
+
+  &:hover {
+    background-color: $primary-color-brown;
+    color: $primary-color-white;
+  }
+}
+
+.button-bark {
+  background-color: $primary-color-bark;
+  color: $primary-color-white;
+
+  &:hover {
+    background-color: $primary-color-brown;
+    color: $primary-color-white;
+  }
+}
+
+// Headers
+header {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 40px;
+  background-color: $background;
+}
+
+.topBar {
+  position: static;
+  margin: 0;
+  z-index: 2;
+  height: 10px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  &-container {
+    box-shadow: none;
+    background-color: $background;
+    z-index: header;
+    height: 100px;
+    margin-bottom: 0%;
+  }
+}
+
+.workshop-header {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: $primary-color-brown;
+  z-index: header;
+  height: 100px;
+
+  h1 {
+    color: $primary-color-white;
+    font-family: $headers-font, sans-serif;
+    font-size: 2rem;
+  }
+
+  div {
+    color: $primary-color-white;
+  }
+
+  &-left {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: left;
+    align-items: flex-start;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  &-right {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: right;
+    align-items: flex-end;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  &-breadcrumbs {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+
+    // .crumb{
+    //   cursor: pointer;
+    //   &:hover{
+    //     text-decoration: underline;
+    //   }
+    // }
+
+    p {
+      margin-left: 5px;
+      margin-right: 5px;
+      color: $primary-color-white;
+    }
+
+
+  }
+
+  .home-icon {
+    margin-top: 21px;
+    margin-left: 20px;
+    margin-right: 10px;
+    color: $primary-color-white;
+  }
+}
+
+#nav-container {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  color: $background;
+}
+
+// institute styles
+.schedule {
+  &-item {
+    background-color: $primary-color-white;
+    box-shadow: none;
+  }
+}
+
+// workshop cards
+.workshop {
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  &-card {
+    background-color: $primary-color-white;
+    box-shadow: none;
+  }
+}
+
+//frontmatter styles
+.frontmatter {
+  &-hero {
+    // front page hero block
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: $primary-color-bark;
+    margin-bottom: 20px;
+
+    h1 {
+      // front page title
+      font-family: $headers-font, sans-serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      margin-top: 0px;
+      padding: 10px !important;
+      color: $primary-color-white;
+      position: relative;
+    }
+
+    &:before {
+      content: '';
+      background-color: $primary-color-brown;
+      position: absolute;
+      height: 100%;
+      // width entire screen 
+      width: 110vw;
+      left: -150px;
+
+      // z-index: 12;
+    }
+
+    h2,
+    p,
+    li {
+      color: $primary-color-white;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px !important;
+      position: relative;
+    }
+
+    .description {
+      color: $primary-color-white;
+      margin-top: 20px;
+      margin-bottom: 0px;
+      padding: 10px;
+      position: relative;
+    }
+
+    .button {
+      margin-bottom: 50px;
+      padding: 10px;
+      position: relative;
+    }
+
+  }
+
+  &-item {
+    padding: 20px;
+
+    li {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// page content styles
+.page-content {
+
+  margin-top: 100px;
+  margin-bottom: 100px;
+
+  h1 {
+    font-size: 2rem;
+    font-family: $headers-font, sans-serif;
+    margin-bottom: 30px;
+    padding: 10px !important;
+  }
+
+}
+
+.pagination {
+  background-color: $primary-color-brown;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 20px;
+  z-index: 12;
+  top: 5px;
+
+  &-button {
+    color: $primary-color-white;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+// table of contents sidebar
+.drawer-left>.MuiPaper-root {
+  z-index: 1;
+  background-color: $primary-color-bark;
+}
+
+nav.sidenav {
+  // max-width: 325px;
+  // min-width: 300px;
+  width: 100%;
+  align-self: flex-start;
+  position: sticky;
+  max-height: 100 vh - 144px;
+  overflow: auto;
+  padding: 16px;
+  z-index: 1;
+
+  ul {
+    li {
+      list-style: none;
+      font-size: 25px;
+      border-bottom: #000000 solid 1px;
+    }
+
+    a:hover {
+      cursor: pointer;
+    }
+
+    div {
+      span {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
+
+.sidebar {
+  &-button {
+    margin-top: 30px;
+    color: $primary-color-white;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+    font-family: $headers-font, sans-serif;
+    cursor: pointer;
+  }
+
+  &-item {
+    cursor: pointer;
+
+    span {
+      font-size: 1.5rem;
+    }
+  }
+
+  &-subitem {
+    margin-left: 40px;
+
+    span {
+      font-size: 1rem;
+    }
+  }
+}
+
+// editor drawer 
+.drawer {
+  background-color: #a3a9af;
+}
+
+.drawer-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: space-between;
+  height: 50vh;
+  margin: auto;
+  padding: 30px;
+}
+
+.drawer-click {
+  cursor: pointer;
+}
+
+.drawer-over {
+  position: relative;
+}
+
+.drawer-over:hover {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+  transition: .5s ease;
+}
+
+.drawer-overlay {
+  position: absolute;
+  top: -114px;
+  font-size: 30px;
+}
+
+.editorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  height: 40vh;
+  background-color: black;
+  /* margin-top: 30px; */
+}
+
+.webvm {
+  height: 90vh;
+  background-color: #000;
+}
+
+.editor-button-container {
+  /* on the far right  */
+  position: fixed !important;
+  right: 0;
+  top: 100px;
+  margin: 10px;
+  height: 30px;
+  z-index: 100;
+  background-color: #000;
+}
+
+.editorTopBarButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  height: 30px;
+  z-index: 100;
+  background-color: #000;
+}
+
+.shellContainer {
+  height: 60vh;
+}
+
+.editor-button {
+  color: white;
+}
+
+.JS-console {
+  overflow-y: scroll;
+}
+
+.JS-console div {
+  background-color: rgba(0, 0, 0, 0.87);
+}
+
+.PythonREPL {
+  border: #29343f 1px solid;
+  margin-bottom: 20px;
+}
+
+.terminal {
+  --size: 1.5;
+  --color: rgba(0, 128, 0, 0.99);
+  --background: white;
+  --animation: terminal-bar;
+  /* min-height: 200px;
+  max-height: 200px; */
+}
+
+.side-terminal {
+  --size: 1.5;
+  --color: white;
+  --background: rgb(39, 40, 34);
+  --animation: terminal-bar;
+}
+
+.console {
+  size: 1.5;
+  color: white;
+  background: rgb(39, 40, 34);
+  animation: terminal-bar;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.console-error {
+  color: red;
+}
+
+.PythonSideREPL {
+  height: 100% !important;
+  overflow-y: auto;
+  background: rgb(39, 40, 34);
+}
+
+.repl-header {
+  background-color: #29343f;
+  color: white;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@media(max-width: 2100px) {
+  .drawer-left.permanent {
+    display: none !important;
+  }
+}
+
+@media(min-width: 2100px) {
+  .sidebar-button {
+    display: none !important;
+  }
+
+  .drawer-left.permanent {
+    position: absolute !important;
+  }
+}
+
+// footer styles and imgs
+footer {
+  background-color: $primary-color-bark;
+  color: $primary-color-white;
+  width: 100%;
+  bottom: 0;
+  z-index: 10;
+  padding: 20px;
+}
+
+.funderImages {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+
+  div {
+    a {
+      img {
+        max-height: 100px;
+        max-width: 200px;
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+.funding-text {
+  color: var(--foreground);
+}
+
+// MIXINS
+
+// mixins for centering elements
+@mixin absolute-center() {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin vertical-center {
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+// Mixin for responsive breakpoints
+$breakpoints: (
+  "xs": 25em,
+  // 400px
+  "sm": 34em,
+  // 544px
+  "md": 48em,
+  // 768px
+  "lg": 60em,
+  // 960px
+  "xl": 80em,
+  // 1280px
+  "xxl": 90em // 1440px
+);
+
+@mixin respond-above($breakpoint) {
+
+  // If the breakpoint exists in the map.
+  @if map-has-key($breakpoints, $breakpoint) {
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+    // Write the media query.
+    @media (min-width: $breakpoint-value) {
+      @content;
+    }
+
+    // If the breakpoint doesn't exist in the map.
+  }
+
+  @else {
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+  }
+}
+
+// Example of usage
+// h1 {
+//   font-size: 14px;
+//   line-height: 22px;
+//   @include respond-above(md) {
+//     font-size: 18px;
+//     line-height: 26px;
+//     font-weight: 600;
+//   }
+// }
+
+// Mixin for z-index
+// breakpoint var (first in array is the largest number, etc array.length)
+$z-indexes: (
+  "modal",
+  "sidebar",
+  “header”
+);
+
+@function z-index($name) {
+  @if index($z-indexes, $name) {
+    @return (length($z-indexes) - index($z-indexes, $name))+1;
+  }
+
+  @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+    @return null;
+  }
+}
+
+// Example of usage
+// .header {
+// z-index: z-index(‘header’);
+// }
+
+// front matter stuff needs work
+.facilitator {
+  text-align: center;
+}

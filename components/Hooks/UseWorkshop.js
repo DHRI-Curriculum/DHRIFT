@@ -8,20 +8,16 @@ export default function useWorkshop(gitUser, builtURL, editing) {
 
 
   const [cacheCleared, setCacheCleared] = useState(false);
-  // const { mutate } = useSWRConfig()
-  // const clearCache = () => mutate(
-  //   () => true,
-  //   undefined,
-  //   { revalidate: false }
-  // )
-  // if (editing == 'true' && cacheCleared == false) {
-  //   clearCache()
-  //   setCacheCleared(true)
-  // }
+  const { cache, mutate } = useSWRConfig()
+  const clearCache = () => {
+    cache.clear()
+  }
+
   useEffect(() => {
     if (editing == 'true' && cacheCleared == false) {
       localStorage.removeItem('app-cache');
       localStorage.removeItem('app-cache-time');
+      clearCache()
       setCacheCleared(true)
       console.log('cache cleared')
     }
@@ -29,6 +25,7 @@ export default function useWorkshop(gitUser, builtURL, editing) {
 
 
   if (process.env.NEXT_PUBLIC_GITHUBSECRET === 'true') {
+    console.log('using github secret')
     headers = new Headers(
       {
         'Content-Type': 'application/json',

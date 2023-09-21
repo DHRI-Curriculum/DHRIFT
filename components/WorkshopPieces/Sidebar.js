@@ -1,5 +1,5 @@
 // import * as React from 'react';
-import { useState, useEffect, Fragment} from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import Drawer from '@mui/material/Drawer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
@@ -53,7 +53,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
                             onClick={() => { handlePageChange(event, pages.index) }}
-                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' }  }}
+                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
                         />
                     </ListItem>
                 }
@@ -62,22 +62,22 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
                             onClick={() => { handlePageChange(event, pages.index) }}
-                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' }  }}
+                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
                         />
-                            <ListItemSecondaryAction onClick={handleClick}>
-                        { open ? <ExpandLess 
-                        onClick={handleClick}
-                        sx={{
-                            cursor: 'pointer',
-                            color: 'white',
-                        }}
-                         /> : pages.children.some(child => child.active) ? null: <ExpandMore
-                        sx={{
-                            cursor: 'pointer',
-                            color: 'white',
-                        }}
-                        
-                        />}
+                        <ListItemSecondaryAction onClick={handleClick}>
+                            {open ? <ExpandLess
+                                onClick={handleClick}
+                                sx={{
+                                    cursor: 'pointer',
+                                    color: 'white',
+                                }}
+                            /> : pages.children.some(child => child.active) ? null : <ExpandMore
+                                sx={{
+                                    cursor: 'pointer',
+                                    color: 'white',
+                                }}
+
+                            />}
                         </ListItemSecondaryAction>
                     </ListItem>
                     <Collapse in={
@@ -93,7 +93,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                                     key={index}>
                                     <ListItemText primary={page.title}
                                         className={'sidebar-subitem'}
-                                        {...page.active ? { style: { color: 'black' } } : { style: { color: 'white' }  }}
+                                        {...page.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
                                     />
                                 </ListItem>
                             ))}
@@ -132,9 +132,8 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
 
             <Button color="primary"
                 aria-label="open drawer"
-                className={'sidebar-button'}
-
-                onClick={toggleDrawer('left', true)}>
+                className='sidebar-button'
+                onClick={toggleDrawer('top', true)}>
                 <TocIcon />
                 Table of Contents
             </Button>
@@ -143,9 +142,9 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
 
             <Drawer
                 variant="temporary"
-                open={state['left']}
+                open={state['top']}
                 className='drawer-left temporary'
-                onClose={toggleDrawer('left', false)}
+                onClose={toggleDrawer('top', false)}
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}
@@ -180,7 +179,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                         marginTop: '8rem',
                     }}
                     className='sidenav'>
-                   <List>
+                    <List>
                         {newPages.map((page, index) => (
                             <CollapsibleList pages={page} key={index} />
                         ))}

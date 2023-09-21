@@ -2,22 +2,19 @@
 import Head from 'next/head'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
-import ConvertMarkdown from '../../components/ConvertMarkdown'
-import { useRouter } from 'next/router'
-import Sidebar from '../../components/Sidebar'
-import NewFrontPage from '../../components/NewFrontPage';
+import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
+import Sidebar from '../../components/WorkshopPieces/Sidebar'
+import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
+import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-// import Presentation from '../../components/Presentation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
 import { styled, useTheme } from '@mui/material/styles';
-import ClassFacilitator from '../../components/ClassFacilitator'
-import useSWRImmutable from 'swr/immutable';
-import useUploads from '../../components/UseUploads';
-import useWorkshop from '../../components/UseWorkshop'
+import useUploads from '../../components/Hooks/UseUploads';
+import useWorkshop from '../../components/Hooks/UseWorkshop'
 
 const drawerWidth = '-30%';
 
@@ -43,7 +40,8 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 export default function WorkshopPage({
   authors,
   title,
-  setTitle
+  setTitle,
+  ...props
 }) {
 
   const [content, setContent] = useState('');
@@ -63,6 +61,8 @@ export default function WorkshopPage({
   const [gitUser, setGitUser] = useState(null);
   const [gitRepo, setGitRepo] = useState(null);
   const [gitFile, setGitFile] = useState(null);
+  const [instUser, setInstUser] = useState(null);
+  const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
 
@@ -81,8 +81,8 @@ export default function WorkshopPage({
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
         // this changes from long pages to short ones 
-        } else if (curr.type === 'h2') {
-          allPages.push([curr]);
+      } else if (curr.type === 'h2') {
+        allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
@@ -116,13 +116,15 @@ export default function WorkshopPage({
     setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
     setEditing(urlParams.get('edit'));
+    setInstUser(urlParams.get('instUser'));
+    setInstRepo(urlParams.get('instRepo'));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
     }
     else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
-  }, [gitUser, gitRepo, gitFile])
+  }, [gitUser, gitRepo, gitFile, editing, instUser, instRepo])
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
@@ -135,11 +137,11 @@ export default function WorkshopPage({
   }, [data])
 
   useEffect(() => {
-    if (currentFile != null) {
-      const frontPageContent = NewFrontPage(currentFile);
-      setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
+    if (currentFile != null && content != '') {
+      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages);
+      setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
-  }, [currentFile])
+  }, [currentFile, content])
 
   // list of page titles and highlight current page
   useEffect(() => {
@@ -190,7 +192,39 @@ export default function WorkshopPage({
     }
   }, [currentContent])
 
+  useEffect(() => {
+    // This is for the frontmatter 'Get Started' button
+    if (currentPage === 2) {
+      setCurrentContent(pages[1]);
+    }
+  }, [currentPage])
+
   const PaginationComponent = (currentPage) => {
+    const sectionTitle = function () {
+      let theMostRecentH1 = null;
+      if (pageTitles[currentPage - 2]?.parent) {
+        theMostRecentH1 = pageTitles[currentPage - 2]?.parent;
+      } else {
+        theMostRecentH1 = pageTitles[currentPage + 1]?.parent;
+      }
+      return theMostRecentH1;
+    }
+    const goBackString = function () {
+      if (sectionTitle() !== pageTitles[currentPage - 2]?.title) {
+        return sectionTitle() + ': ' + pageTitles[currentPage - 2]?.title;
+      } else {
+        return pageTitles[currentPage - 2]?.title;
+      }
+    }
+    const nextH1 = pageTitles[currentPage]?.parent ? pageTitles[currentPage]?.parent : pageTitles[currentPage]?.title;
+    const goForwardString = function () {
+      if (nextH1 !== pageTitles[currentPage]?.title) {
+        return nextH1 + ': ' + pageTitles[currentPage]?.title;
+      } else {
+        return pageTitles[currentPage]?.title;
+      }
+    }
+
     return (
       <div className='pagination'>
         <Button
@@ -199,25 +233,32 @@ export default function WorkshopPage({
           disabled={currentPage === 1}
         >
           <ArrowBackIcon />
-          Previous
+          {currentPage === 1 ? 'Frontmatter' : goBackString()}
         </Button>
-        <Sidebar
-          pages={pageTitles}
-          currentPage={currentPage}
-          handlePageChange={handlePageChange}
-
-        />
         <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
           disabled={currentPage === pages.length}
+          sx={{
+            justifySelf: 'flex-end',
+          }}
         >
-          Next
+          {currentPage === pages.length ? 'Frontmatter' : goForwardString()}
           <ArrowForwardIcon />
         </Button>
       </div>
     )
   }
+
+  useEffect(() => {
+    if (currentPage === 1) {
+      props.setWorkshopHeader(false);
+    }
+    else {
+      props.setWorkshopHeader(true);
+    }
+  }, [currentPage])
+
 
   const handlePageChange = (event, value) => {
     // scroll smoothly to top of page
@@ -234,63 +275,77 @@ export default function WorkshopPage({
 
   // if (isLoading) return <div>Loading...</div>
   return (
-    <Container
-      // maxWidth="lg"
-      style={{
-        display: 'flex',
-      }}
-    >
-      <Head>
-        <title>{title}</title>
-      </Head>
-      <Main open={editorOpen}
+    <Fragment>
+      {props.workshopHeader && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+        setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+        pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
+        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
+      />}
+      <Container
+        disableGutters={true}
+        maxWidth={'md'}
         sx={{
-          width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
+          display: 'flex',
+          marginLeft: {
+            md: '100px',
+          },
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {PaginationComponent(currentPage)}
-        <div className="card-page">
-          <div className="workshop-container">
-            {currentContentLoaded ? (
-              currentContent
-            ) : (
+        <Head>
+          <title>{title}</title>
+        </Head>
+        <Main open={editorOpen}
+          // sx={{
+          //   width: { xs: '100%', md: !editorOpen ? '100%' : '60%' },
+          // }}
+          sx={{
+            padding: '0px',
+          }}
+        >
+          <div className="card-page">
+            <div className="workshop-container">
+              {currentContentLoaded ? (
+                currentContent
+              ) : (
 
-              <div className='skeleton-container'
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
-                <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                {
-                  Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-              </div>
-            )}
-            {PaginationComponent(currentPage)}
-
+                <div className='skeleton-container'
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                  {
+                    Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Main>
-      {language &&
-        <DrawerEditor
-          drawerWidth={drawerWidth}
-          open={editorOpen}
-          setEditorOpen={setEditorOpen}
-          text={code}
-          setText={setCode}
-          askToRun={askToRun}
-          setAskToRun={setAskToRun}
-          language={language}
-          allUploads={uploads}
-        />}
-      {/* <ClassFacilitator
+        </Main>
+
+        {language &&
+          <DrawerEditor
+            drawerWidth={drawerWidth}
+            open={editorOpen}
+            setEditorOpen={setEditorOpen}
+            text={code}
+            setText={setCode}
+            askToRun={askToRun}
+            setAskToRun={setAskToRun}
+            language={language}
+            allUploads={uploads}
+          />}
+        {/* <ClassFacilitator
         // You'll have to make state variables in the slug and pass them down
         name={facilitators}
         bio={'bio'}
         facilitatorOpen={facilitatorOpen}
         handleClose={() => setFacilitatorOpen(false)}
       /> */}
-
-    </Container>
+      </Container>
+      {PaginationComponent(currentPage)}
+    </Fragment>
   )
 }

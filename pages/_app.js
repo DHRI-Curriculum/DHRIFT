@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 import { StyledEngineProvider } from '@mui/material/styles';
-import '../styles/globals.css';
+import '../styles/styles.scss';
 import '../node_modules/highlight.js/styles/obsidian.css';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
@@ -9,7 +9,7 @@ import BackToTop from '../components/ScrollTop';
 import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
-import PyodideProvider from '../components/PyodideProvider';
+import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
 // import yaml from '../config.yml';
@@ -17,6 +17,9 @@ import { useRef } from 'react';
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
+  const [workshopHeader, setWorkshopHeader] = useState(false);
+  pageProps.workshopHeader = workshopHeader;
+  pageProps.setWorkshopHeader = setWorkshopHeader;
   pageProps.title = title;
   pageProps.setTitle = setTitle;
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
@@ -24,7 +27,6 @@ function MyApp({ Component, pageProps }) {
   // useCacheProvider hook
   function useCacheProvider() {
     const cache = useRef(new Map());
-
     useEffect(() => {
       const currentDate = new Date();
       const appCache = localStorage.getItem('app-cache');
@@ -33,6 +35,7 @@ function MyApp({ Component, pageProps }) {
         if (localStorage.getItem('app-cache-time') && (currentDate - new Date(localStorage.getItem('app-cache-time'))) > 86400000) {
           localStorage.removeItem('app-cache');
           localStorage.removeItem('app-cache-time');
+          // cache.clear();
           console.log('cache cleared')
           return;
         }
@@ -65,8 +68,8 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          <Header
-            title={title} />
+          {!workshopHeader && 
+          <Header title={title} />}
           <main className='container'>
             <SWRConfig value={{ provider }}>
               <PyodideProvider>
