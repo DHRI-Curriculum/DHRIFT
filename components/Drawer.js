@@ -13,8 +13,8 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
 
   const filesList = files.map((file, index) => {
     return (
-      <Workshop 
-      key={index} workshop={file} />
+      <Workshop
+        key={index} workshop={file} />
     )
   })
 
@@ -54,12 +54,11 @@ export default function TemporaryDrawer({ files, category, onClick, onClose, ope
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <div
-      className='drawer-list'
-      >
-        
-          {filesList}
-        
+      <div 
+      className='drawer-list'>
+
+        {filesList}
+
       </div>
     </Box>
 

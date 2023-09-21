@@ -37,7 +37,7 @@ export default function QuizComponent({ className, children }) {
             li: parse(li)
         }
     })
-    
+
     const componentUniqueId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
     const onSubmit = (e) => {
@@ -49,7 +49,7 @@ export default function QuizComponent({ className, children }) {
         const CorrectLIstoInt = correctLIindexes.map(correctLIindex => parseInt(correctLIindex));
         // check if correct
         const correct = checkedToInt.every(checked => CorrectLIstoInt.includes(checked)) && checkedToInt.length === correctLIindexes.length;
-        
+
 
         if (correct) {
             // change componentUniqueId color to green 
@@ -101,7 +101,7 @@ export default function QuizComponent({ className, children }) {
 
                     ))}
                 </FormControl>
-                <Button type="submit" variant="contained" color="primary" className='quizButton'
+                <Button type="submit" className='button button-bark'
                     id={`${componentUniqueId}-submit`}>
                     Check my answer
                 </Button>

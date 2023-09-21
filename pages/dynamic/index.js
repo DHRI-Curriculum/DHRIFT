@@ -3,12 +3,11 @@ import Head from 'next/head'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
 import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
-import { useRouter } from 'next/router'
 import Sidebar from '../../components/WorkshopPieces/Sidebar'
 import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
+import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-// import Presentation from '../../components/Presentation';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
@@ -41,9 +40,10 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 export default function WorkshopPage({
   authors,
   title,
-  setTitle
+  setTitle,
+  ...props
 }) {
-
+  
   const [content, setContent] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
   const [currentContent, setCurrentContent] = useState([]);
@@ -79,8 +79,8 @@ export default function WorkshopPage({
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
         // this changes from long pages to short ones 
-        } else if (curr.type === 'h2') {
-          allPages.push([curr]);
+      } else if (curr.type === 'h2') {
+        allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
       }
@@ -133,11 +133,19 @@ export default function WorkshopPage({
   }, [data])
 
   useEffect(() => {
-    if (currentFile != null) {
-      const frontPageContent = Frontmatter(currentFile);
-      setPages([frontPageContent, ...convertContenttoHTML(currentFile.content)]);
+    if (currentFile != null && content != '') {
+      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages);
+      setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
-  }, [currentFile])
+  }, [currentFile, content])
+
+  // useEffect(() => {
+  //   if (currentFile != null) {
+  //     setPages([...convertContenttoHTML(currentFile.content)]);
+  //   }
+  // }, [currentFile])
+
+
 
   // list of page titles and highlight current page
   useEffect(() => {
@@ -188,34 +196,51 @@ export default function WorkshopPage({
     }
   }, [currentContent])
 
+  useEffect(() => {
+    // This is for the frontmatter 'Get Started' button
+    if(currentPage === 2) {
+      setCurrentContent(pages[1]);
+    }
+  }, [currentPage])
+
   const PaginationComponent = (currentPage) => {
+    const backPageName = pageTitles[currentPage - 2]?.title
+    const nextPageName = pageTitles[currentPage + 1]?.title
     return (
       <div className='pagination'>
-        <Button
+       
+          <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) - 1)}
           disabled={currentPage === 1}
-        >
+        > 
           <ArrowBackIcon />
-          Previous
+          {currentPage === 1 ? 'Frontmatter' : backPageName}
         </Button>
-        <Sidebar
-          pages={pageTitles}
-          currentPage={currentPage}
-          handlePageChange={handlePageChange}
-
-        />
         <Button
           className='pagination-button'
           onClick={() => handlePageChange(event, Number(currentPage) + 1)}
           disabled={currentPage === pages.length}
+          sx={{
+            justifySelf: 'flex-end',
+          }}
         >
-          Next
+          {currentPage === pages.length ? 'Frontmatter' : nextPageName}
           <ArrowForwardIcon />
         </Button>
       </div>
     )
   }
+
+  useEffect(() => {
+    if(currentPage === 1) {
+      props.setWorkshopHeader(false);
+    }
+    else {
+      props.setWorkshopHeader(true);
+    }
+  }, [currentPage])
+
 
   const handlePageChange = (event, value) => {
     // scroll smoothly to top of page
@@ -232,68 +257,75 @@ export default function WorkshopPage({
 
   // if (isLoading) return <div>Loading...</div>
   return (
-    <Container
-      disableGutters={true}
-      maxWidth={'md'}
-      sx={{
-        display: 'flex',
-        marginLeft:{
-          md: '100px',
-        },
-        
-      }}
-    >
-      <Head>
-        <title>{title}</title>
-      </Head>
-      <Main open={editorOpen}
+    <Fragment>
+      {props.workshopHeader && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage} 
+      setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+      pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle} />}
+      <Container
+        disableGutters={true}
+        maxWidth={'md'}
         sx={{
-          width: { xs: '100%', sm: 0, md: !editorOpen ? '100%' : '60%' },
+          display: 'flex',
+          marginLeft: {
+            md: '100px',
+          },
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {/* {PaginationComponent(currentPage)} */}
-        <div className="card-page">
-          <div className="workshop-container">
-            {currentContentLoaded ? (
-              currentContent
-            ) : (
+        <Head>
+          <title>{title}</title>
+        </Head>
+        <Main open={editorOpen}
+          // sx={{
+          //   width: { xs: '100%', md: !editorOpen ? '100%' : '60%' },
+          // }}
+          sx={{
+            padding: '0px',
+          }}
+        >
+          <div className="card-page">
+            <div className="workshop-container">
+              {currentContentLoaded ? (
+                currentContent
+              ) : (
 
-              <div className='skeleton-container'
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
-                <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                {
-                  Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-              </div>
-            )}
-            {PaginationComponent(currentPage)}
-
+                <div className='skeleton-container'
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                  {
+                    Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Main>
-      {language &&
-        <DrawerEditor
-          drawerWidth={drawerWidth}
-          open={editorOpen}
-          setEditorOpen={setEditorOpen}
-          text={code}
-          setText={setCode}
-          askToRun={askToRun}
-          setAskToRun={setAskToRun}
-          language={language}
-          allUploads={uploads}
-        />}
-      {/* <ClassFacilitator
+        </Main>
+
+        {language &&
+          <DrawerEditor
+            drawerWidth={drawerWidth}
+            open={editorOpen}
+            setEditorOpen={setEditorOpen}
+            text={code}
+            setText={setCode}
+            askToRun={askToRun}
+            setAskToRun={setAskToRun}
+            language={language}
+            allUploads={uploads}
+          />}
+        {/* <ClassFacilitator
         // You'll have to make state variables in the slug and pass them down
         name={facilitators}
         bio={'bio'}
         facilitatorOpen={facilitatorOpen}
         handleClose={() => setFacilitatorOpen(false)}
       /> */}
-
-    </Container>
+      </Container>
+      {PaginationComponent(currentPage)}
+    </Fragment>
   )
 }

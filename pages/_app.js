@@ -17,6 +17,9 @@ import { useRef } from 'react';
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
+  const [workshopHeader, setWorkshopHeader] = useState(false);
+  pageProps.workshopHeader = workshopHeader;
+  pageProps.setWorkshopHeader = setWorkshopHeader;
   pageProps.title = title;
   pageProps.setTitle = setTitle;
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
@@ -24,7 +27,6 @@ function MyApp({ Component, pageProps }) {
   // useCacheProvider hook
   function useCacheProvider() {
     const cache = useRef(new Map());
-
     useEffect(() => {
       const currentDate = new Date();
       const appCache = localStorage.getItem('app-cache');
@@ -66,8 +68,8 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          <Header
-            title={title} />
+          {!workshopHeader && 
+          <Header title={title} />}
           <main className='container'>
             <SWRConfig value={{ provider }}>
               <PyodideProvider>

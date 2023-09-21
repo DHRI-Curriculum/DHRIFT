@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import Masonry from '@mui/lab/Masonry';
 import ConvertMarkdown from './ConvertMarkdown'
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
 
-export default function Frontmatter(currentFile, allFiles,
+export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages,
   //  facilitatorOpen, setFacilitatorOpen
 ) {
   // create an object that represents an item on the front page, which could be an author box, facilitator, recommended reading, etc.
@@ -186,12 +186,19 @@ export default function Frontmatter(currentFile, allFiles,
     })
   // check if formattedObjects or formattedDeps is empty, if so, return null
   const formatted = formattedObjects.length === 0 && formedDeps.length === 0 ? true : false
+
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
         <h1>{title}</h1>
-        {description && 
-          <p>{description}</p>
+        {description &&
+          <>
+            <p>{description}
+              <Button className='button button-white'
+              onClick={() => { setCurrentPage(2) }}>
+                Get Started
+              </Button></p>
+          </>
         }
       </div>
       {formedDeps.length > 0 && <div className="frontmatter-item dependencies">

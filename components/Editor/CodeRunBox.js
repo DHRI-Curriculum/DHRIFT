@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import hljs from 'highlight.js'
+import Button from '@mui/material/Button';
 import 'highlight.js/styles/atom-one-dark.css'
 
 
@@ -18,14 +19,14 @@ export default function CodeRunBox(props) {
         returnedComponent = (
             <div className='code-run-box'>
                 <div className='code-run-box-code'>
-                    <pre className='hljs'>
-                        <code className='code-run-box-code'
+                    <pre className=''>
+                        <code className='code-run-box-code hljs'
                             dangerouslySetInnerHTML={{ __html: highlighted.value }}>
                         </code>
                     </pre>
                 </div>
-                <button
-                    className='code-run-box-button'
+                <Button
+                    className='button button-bark'
                     onClick={() => {
                         setCode(props.defaultCode);
                         setEditorOpen(true);
@@ -33,14 +34,14 @@ export default function CodeRunBox(props) {
                     }}
                 >
                     Run Code
-                </button>
+                </Button>
             </div>
         )
     }
     else {
         returnedComponent = (
-            <button
-                className='code-run-box-button'
+            <Button
+                className='button button-bark'
                 onClick={() => {
                     setCode(props.defaultCode);
                     setEditorOpen(true);
@@ -48,7 +49,7 @@ export default function CodeRunBox(props) {
                 }}
             >
                 Open Editor
-            </button>
+            </Button>
         )
     }
 
