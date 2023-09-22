@@ -52,12 +52,10 @@ export default function Schedule({
     }
   };
 
-
-
   return (
     <Fragment>
-      <div className='schedule'>
-        <div className='sectionTitle'>Schedule</div>
+      <div className=''>
+        <h1>Schedule</h1>
         <div className="accordion">
           {Object.keys(eventsByDate).map((date) => (
             <Accordion

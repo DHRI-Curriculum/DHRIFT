@@ -4,6 +4,7 @@ import jsyaml from 'js-yaml'
 import WorkshopsView from '../../components/WorkshopsView';
 import Schedule from '../../components/Schedule';
 import Container from '@mui/material/Container';
+import { Button } from '@mui/material';
 
 export default function Institute() {
 
@@ -17,7 +18,7 @@ export default function Institute() {
 
     let headers;
 
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -60,8 +61,16 @@ export default function Institute() {
             setSessions(parsedYAML.sessions)
             setWorkshopsGitUser(parsedYAML.workshopsuser)
             setWorkshopsGitRepo(parsedYAML.workshopsrepo)
+            if (parsedYAML.datestart && parsedYAML.enddate) {
+                const dateStart = new Date(parsedYAML.datestart)
+                const dateEnd = new Date(parsedYAML.enddate)
+                const cleanDateStart = dateStart.toDateString()
+                const cleanDateEnd = dateEnd.toDateString()
+                setParsedYAML({ ...parsedYAML, datestart: cleanDateStart, enddate: cleanDateEnd })
+            }
         }
     }, [parsedYAML])
+
     return (
         <Container
             disableGutters={true}
@@ -75,8 +84,8 @@ export default function Institute() {
             }}
         >
             <div>
-                <div className="frontmatter">
-                    <div className='frontmatter-hero'>
+                <div className="inst">
+                    <div className='inst-hero'>
                         <h1>{
                             parsedYAML && parsedYAML.event
                         }</h1>
@@ -90,25 +99,27 @@ export default function Institute() {
                         </p>
                         <p>{
                             parsedYAML && parsedYAML.registerlink &&
-                            <a href={parsedYAML.registerlink}>Register</a>
+                            // <a href={parsedYAML.registerlink}>Register</a>
+                            <Button
+                                className='button button-white'
+                                href={parsedYAML.registerlink}
+                            >Register</Button>
                         }</p>
                     </div>
-                    <div className=''>
-                        <div>
-                            <p>{
-                                parsedYAML && parsedYAML.description
-                            }</p>
-                        </div>
-                        <div className='schedule'>
-                            {sessions &&
-                                <Schedule schedule={sessions} />}
-                        </div>
+                    <div className='inst-description'>
+                        <p>{
+                            parsedYAML && parsedYAML.description
+                        }</p>
+                    </div>
+                    <div className='schedule'>
+                        {sessions &&
+                            <Schedule schedule={sessions} />}
+                    </div>
+                    <div className='inst-workshops'>
                         <h1>Workshops</h1>
-                        <div className='workshops'>
-                            {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
-                            }
-                        </div>
+                        {workshopsGitUser && workshopsGitRepo && parsedYAML &&
+                            <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
+                        }
                     </div>
                 </div>
             </div>

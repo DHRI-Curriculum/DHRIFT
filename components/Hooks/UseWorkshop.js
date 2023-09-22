@@ -31,7 +31,6 @@ export default function useWorkshop(gitUser, builtURL, editing) {
         'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
       });
   } else {
-    console.log('no secret')
     headers = new Headers(
       {
         'Content-Type': 'application/json',

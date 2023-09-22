@@ -138,7 +138,8 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null && content != '') {
-      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages);
+      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, 
+        pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
       setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
   }, [currentFile, content])
@@ -297,9 +298,6 @@ export default function WorkshopPage({
           <title>{title}</title>
         </Head>
         <Main open={editorOpen}
-          // sx={{
-          //   width: { xs: '100%', md: !editorOpen ? '100%' : '60%' },
-          // }}
           sx={{
             padding: '0px',
           }}

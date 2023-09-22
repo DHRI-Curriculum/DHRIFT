@@ -9,7 +9,7 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
     const [totalWorkshops, setTotalWorkshops] = useState(0);
 
     let workshopsBuiltURL, headers;
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -35,10 +35,11 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
 
     useEffect(() => {
         if (allWorkshops) {
-            setWorkshops(allWorkshops);
+            // remove workshop from array if it starts with 'DHRIFT_'
+            const filteredWorkshops = allWorkshops.filter(item => !item.name.startsWith('DHRIFT_'));
+            setWorkshops(filteredWorkshops);
         }
-    }
-        , [allWorkshops])
+    }, [allWorkshops])
 
 
     useEffect(() => {

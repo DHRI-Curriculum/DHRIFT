@@ -1,17 +1,14 @@
-import Link from 'next/link'
-import Masonry from '@mui/lab/Masonry';
+
 import ConvertMarkdown from './ConvertMarkdown'
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { useEffect } from 'react';
 import ClassFacilitator from './ClassFacilitator';
 import Button from '@mui/material/Button';
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages,
+  instUser, instRepo, workshopTitle, pageTitles, currentPage
   //  facilitatorOpen, setFacilitatorOpen
-) {
-  // create an object that represents an item on the front page, which could be an author box, facilitator, recommended reading, etc.
-  //  That will then be rendered in the front page
-
+  ) {
   const description = currentFile.data.description
   const title = currentFile.data.title
   const prerequisites = currentFile.data.prerequisites || []
@@ -186,18 +183,36 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     })
   // check if formattedObjects or formattedDeps is empty, if so, return null
   const formatted = formattedObjects.length === 0 && formedDeps.length === 0 ? true : false
-
+  const route = instRepo && instUser ? `/inst/?user=${instUser}&repo=${instRepo}` : '/'
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
+        <div className='workshop-header-breadcrumbs'>
+          <a href={route}>
+            <HomeIcon
+            sx={{ 
+              color: 'white',
+              zIndex: 1000,
+              position: 'relative',
+              marginTop: '32px',
+            }}
+
+              className='home-icon' />
+          </a>
+          <p>/</p>
+          {workshopTitle &&
+            <p className='crumb'>{workshopTitle}</p>}
+            
+        </div>
+        
         <h1>{title}</h1>
         {description &&
           <>
             <p className='description'>{description}</p><br />
-              <Button className='button button-white'
+            <Button className='button button-white'
               onClick={() => { setCurrentPage(2) }}>
-                Get Started
-              </Button>
+              Get Started
+            </Button>
           </>
         }
       </div>
