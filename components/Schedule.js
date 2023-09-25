@@ -59,7 +59,7 @@ export default function Schedule({
         <div className="accordion">
           {Object.keys(eventsByDate).map((date) => (
             <Accordion
-            square={true}
+              square={true}
               key={date}
               expanded={date === activeAccordion}
               onChange={(event) => handleAccordionChange(event, date)}
@@ -72,11 +72,11 @@ export default function Schedule({
               }}
             >
               <AccordionSummary className='schedule-item'
-              sx={{
-                boxShadow: 'none',
-                border: 'none',
-              }} 
-              expandIcon={<ExpandMore />}>
+                sx={{
+                  boxShadow: 'none',
+                  border: 'none',
+                }}
+                expandIcon={<ExpandMore />}>
                 <h3 className="accordion-summary">{date}</h3>
               </AccordionSummary>
               <AccordionDetails>

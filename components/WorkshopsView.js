@@ -1,6 +1,6 @@
 import React, { memo, use, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import UseWorkshopsComponent from '../components/Hooks/UseWorkshopsComponent';
+import UseWorkshopsComponent from './Hooks/UseWorkshopsCard';
 
 
 export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) {
@@ -41,12 +41,12 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
         }
     }, [allWorkshops])
 
-
     useEffect(() => {
         if (allWorkshops) {
             setTotalWorkshops(allWorkshops.length);
         }
     }, [totalWorkshops, allWorkshops])
+
     const toLoop = Array(totalWorkshops)
         .fill()
         .map((v, i) => i);

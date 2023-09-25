@@ -115,13 +115,19 @@ export default function Header({ title }) {
                             }}>
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
-                                {title &&
-                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>}
+                                {/* {title &&
+                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>} */}
                             </Link>
                         </Typography>
                         <ul className='links'>
                             <li>
+                                <Link href='/' passHref>Workshops</Link>
+                            </li>
+                            <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
+                            </li>
+                            <li>
+                                <Link href='/About' passHref>About</Link>
                             </li>
                         </ul>
                         <IconButton sx={{ ml: 1 }}

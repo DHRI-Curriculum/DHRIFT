@@ -5,6 +5,7 @@ import WorkshopsView from '../../components/WorkshopsView';
 import Schedule from '../../components/Schedule';
 import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
+import Head from 'next/head';
 
 export default function Institute() {
 
@@ -66,7 +67,6 @@ export default function Institute() {
                 const dateEnd = new Date(parsedYAML.enddate)
                 const cleanDateStart = dateStart.toDateString()
                 const cleanDateEnd = dateEnd.toDateString()
-                setParsedYAML({ ...parsedYAML, datestart: cleanDateStart, enddate: cleanDateEnd })
             }
         }
     }, [parsedYAML])
@@ -83,6 +83,9 @@ export default function Institute() {
 
             }}
         >
+            <Head>
+                <title>{parsedYAML && parsedYAML.event}</title>
+            </Head>
             <div>
                 <div className="inst">
                     <div className='inst-hero'>
@@ -90,7 +93,7 @@ export default function Institute() {
                             parsedYAML && parsedYAML.event
                         }</h1>
                         <h2>{
-                            parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${parsedYAML.datestart} - ${parsedYAML.enddate}`
+                           parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${new Date(parsedYAML.datestart).toDateString()} - ${new Date(parsedYAML.enddate).toDateString()}`
                         }</h2>
                         <p>
                             {

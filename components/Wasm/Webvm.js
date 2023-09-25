@@ -9,7 +9,7 @@ export default function Webvm(props) {
 
                 src='../../coi-service.js' />
             <EditorTopbar {...props} />
-            <iframe src='../../webvm/index.html' width='100%' height='100%'></iframe>
+            <iframe src='../../webvm/index.html' width='100%' height='95%'></iframe>
         </div>
     )
 }

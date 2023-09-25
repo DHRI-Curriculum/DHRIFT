@@ -19,42 +19,34 @@ export default function JSSideTerminal(props) {
     }
 
     var randomID = Math.random().toString(36).substring(7);
-
+  
     useEffect(() => {
-        setWindow(window);
-    }, []);
-
-    useEffect(() => {
-        if (theWindow !== null) {
-            try {
-                var term = $('#' + randomID).terminal(function (command) {
-                    if (command !== '') {
-                        try {
-                            var result = __EVAL(command);
-                            if (result !== undefined) {
-                                this.echo(new String(result));
-                            }
-                        } catch (e) {
-                            this.error(new String(e));
-                        }
-                    } else {
-                        this.echo('');
+        var term = $('#' + randomID).terminal(function (command) {
+            if (command !== '') {
+                try {
+                    var result = __EVAL(command);
+                    if (result !== undefined) {
+                        this.echo(new String(result));
                     }
-                }, {
-                    tabindex: 0,
-                    greetings: '',
-                    prompt: '> ',
-                    enabled: false,
-                    focus: false,
-                    historyState: true,
-                });
-                // term.focus();
-                return () => term.destroy();
-            } catch (error) {
-                console.log(error);
+                } catch (e) {
+                    this.error(new String(e));
+                }
+            } else {
+                this.echo('');
             }
-        }
-    }, [theWindow]);
+        }, {
+            tabindex: 0,
+            greetings: '',
+            prompt: '> ',
+            enabled: false,
+            focus: false,
+            height: '100vh',
+            overflowY: 'scroll',
+            
+        });
+        // term.focus();
+        return () => term.destroy();
+    }, []);
 
 
     useEffect(() => {
@@ -70,11 +62,11 @@ export default function JSSideTerminal(props) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                height: '100%',
+                height: '77%',
             }}
         >
             <div className='repl-header'>
-                <h1>Console</h1>
+                <h3>Console</h3>
             </div>
             <div className='console'>
                 {props.consoleRef.current}

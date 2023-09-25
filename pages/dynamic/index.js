@@ -138,7 +138,7 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null && content != '') {
-      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, 
+      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent,
         pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
       setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
@@ -152,6 +152,9 @@ export default function WorkshopPage({
       let header = undefined;
       // if it's the frontpage vs not
       index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children.props.children[0]
+      if (typeof header === 'object') {
+        header = header.props.children;
+      }
       let tag = page.props.children[0].props.children.type;
       let parent = undefined;
       if (tag === 'h1') {
@@ -212,17 +215,34 @@ export default function WorkshopPage({
     }
     const goBackString = function () {
       if (sectionTitle() !== pageTitles[currentPage - 2]?.title) {
-        return sectionTitle() + ': ' + pageTitles[currentPage - 2]?.title;
+
+        return (
+          <>
+            {sectionTitle()}: <p>{pageTitles[currentPage - 2]?.title}</p>
+          </>
+        )
       } else {
-        return pageTitles[currentPage - 2]?.title;
+        return (
+          <>
+            {pageTitles[currentPage - 2]?.title}
+          </>
+        )
       }
     }
     const nextH1 = pageTitles[currentPage]?.parent ? pageTitles[currentPage]?.parent : pageTitles[currentPage]?.title;
     const goForwardString = function () {
       if (nextH1 !== pageTitles[currentPage]?.title) {
-        return nextH1 + ': ' + pageTitles[currentPage]?.title;
+        return (
+          <>
+            {nextH1}: <p>{pageTitles[currentPage]?.title}</p>
+          </>
+        )
       } else {
-        return pageTitles[currentPage]?.title;
+        return (
+          <>
+            {pageTitles[currentPage]?.title}
+          </>
+        )
       }
     }
 

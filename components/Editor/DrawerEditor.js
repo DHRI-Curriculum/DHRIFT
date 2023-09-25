@@ -110,9 +110,9 @@ export default function DrawerEditor(props) {
                 }}
                 // if small, then drawer is 100% width, otherwise some portion
                 sx={{
-                    width: { xs: '100%', sm: '100%', md: '35%' },
+                    width: { xs: '100%', sm: '100%', md: '45%' },
                     flexShrink: { xs: 1, sm: 0 },
-                    '& .MuiDrawer-paper': { width: { xs: '100%', sm: '100%', md: '35%' }, boxSizing: 'border-box' },
+                    '& .MuiDrawer-paper': { width: { xs: '100%', sm: '100%', md: '45%' }, boxSizing: 'border-box' },
                     display: !show ? 'none' : 'block',
                 }}
 

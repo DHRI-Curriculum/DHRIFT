@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import path from 'path'
 import Image from 'next/image'
-import neh from '../public/images/logos/neh.jpg';
+import neh from '../public/images/logos/NEH.png';
 import gcdi from '../public/images/logos/gcdi.png';
 import gc from '../public/images/logos/gc_logo.png';
 import DHRIFTLogo from '../public/images/logos/logo.png';
@@ -30,22 +30,21 @@ export default function Footer() {
                     <div>
                         <a href="http://www.neh.gov/" target="_blank" rel="noreferrer"><Image
                             src={neh}
-                            width={'223'}
-                            height={'54'}
+                            width={'153'}
                             className="img-fluid" alt='NEH' /></a>
                     </div>
                     <div>
                         <a href="https://gcdi.commons.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image
                             src={gcdi}
-                            width={'223'}
-                            height={'54'}
+                            width={'153'}
+                            // height={'54'}
                             className="img-fluid" alt='GCDI' /></a>
                     </div>
                     <div>
                         <a href="http://www.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image
                             src={gc}
-                            width={'223'}
-                            height={'54'}
+                            width={'153'}
+                            // height={'54'}
                             className="img-fluid" alt='GC' /></a>
                     </div>
                 </div>

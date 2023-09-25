@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
+import { CardActionArea } from '@mui/material';
+import { CardContent } from '@mui/material';
+import { CardMedia } from '@mui/material';
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
@@ -16,7 +16,7 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
     builtURL = workshop.url.split('?')[0]
 
     let headers;
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -54,27 +54,43 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
         }
     }, [data])
 
+    const [src, setSrc] = useState(imageBuiltURL);
+    var coverimage = parsedWorkshop?.data?.coverimage;
+    var imageBuiltURL;
+    if (coverimage) {
+        imageBuiltURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${coverimage}`
+    }
+    const randomNumberBetween1and7 = Math.floor(Math.random() * 7) + 1;
+    useEffect(() => {
+        if (coverimage) {
+            setSrc(imageBuiltURL)
+        }
+        else {
+            setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
+        }
+    }, [coverimage])
+
+
+
     const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
         <>
             {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description &&
                 <div>
-                    <Box
-                        sx={{
-                            minWidth: 275,
-                        }}>
-                        <Card>
+                    <Card className='workshop-card'>
+                        <CardActionArea href={workshopLink}>
+                            <CardMedia
+                                component="img"
+                                height="140"
+                                image={src}
+                                alt={parsedWorkshop.data.title}
+                            />
                             <CardContent>
-                                <h2>{parsedWorkshop.data.title}</h2>
-                                <div>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</div>
+                                <h3>{parsedWorkshop.data.title}</h3>
+                                <p>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</p>
                             </CardContent>
-                            <CardActions>
-                                {gitUser && gitRepo &&
-                                    <Button size="small"><a href={workshopLink}>Learn More</a></Button>
-                                }
-                            </CardActions>
-                        </Card>
-                    </Box>
+                        </CardActionArea>
+                    </Card>
                 </div>
             }
         </>

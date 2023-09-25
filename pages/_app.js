@@ -2,7 +2,7 @@ import Header from '../components/Header';
 import { StyledEngineProvider } from '@mui/material/styles';
 import '../styles/styles.scss';
 import '../node_modules/highlight.js/styles/obsidian.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import CssBaseline from '@mui/material/CssBaseline';
 import BackToTop from '../components/ScrollTop';
