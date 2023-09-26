@@ -158,7 +158,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                     </List>
                 </nav>
             </Drawer>
-            <Drawer variant="permanent"
+            {/* <Drawer variant="permanent"
                 anchor="left"
                 open={state['left']}
                 onClose={toggleDrawer('left', false)}
@@ -185,7 +185,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange }) 
                         ))}
                     </List>
                 </nav>
-            </Drawer>
+            </Drawer> */}
         </Fragment>
     );
 }

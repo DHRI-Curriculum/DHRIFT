@@ -768,9 +768,9 @@ nav.sidenav {
 }
 
 @media(min-width: 2100px) {
-  .sidebar-button {
-    display: none !important;
-  }
+  // .sidebar-button {
+  //   display: none !important;
+  // }
 
   .drawer-left.permanent {
     position: absolute !important;
