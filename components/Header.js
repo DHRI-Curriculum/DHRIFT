@@ -14,12 +14,6 @@ import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-
-const Drawer = dynamic(
-    () => import('./Drawer'),
-    { loading: function loading() { return <p>...</p> } }
-)
-
 export default function Header({ title }) {
 
 

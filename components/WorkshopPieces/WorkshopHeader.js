@@ -1,5 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home';
-import Sidebar from './Sidebar';
+import Sidebar from './ToC';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
@@ -7,6 +8,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
     setCurrentContent, handlePageChange, instUser, instRepo
 }) {
 
+    const [drawerOpen, setDrawerOpen] = useState(false);
     const router = useRouter();
     const instURL = '../inst/?user=' + instUser + '&repo=' + instRepo;
     const currentPageParent = pageTitles[currentPage - 1]?.parent ? pageTitles[currentPage - 1].parent : null;
@@ -39,13 +41,15 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                     }
                 </div>
             </div>
-            <div className='workshop-header-right'>
+            <div className={drawerOpen ? 'workshop-header-right drawer-open' : 'workshop-header-right'}>
                 <Sidebar
                     pages={pageTitles}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     setCurrentContent={setCurrentContent}
                     handlePageChange={handlePageChange}
+                    drawerOpen={drawerOpen}
+                    setDrawerOpen={setDrawerOpen}
                 />
             </div>
         </div>

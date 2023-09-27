@@ -17,9 +17,9 @@ import { useRef } from 'react';
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
-  const [workshopHeader, setWorkshopHeader] = useState(false);
-  pageProps.workshopHeader = workshopHeader;
-  pageProps.setWorkshopHeader = setWorkshopHeader;
+  const [workshopMode, setWorkshopMode] = useState(false);
+  pageProps.workshopMode = workshopMode;
+  pageProps.setWorkshopMode = setWorkshopMode;
   pageProps.title = title;
   pageProps.setTitle = setTitle;
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
@@ -68,8 +68,8 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          {!workshopHeader && 
-          <Header title={title} />}
+          {!workshopMode &&
+            <Header title={title} />}
           <main className='container'>
             <SWRConfig value={{ provider }}>
               <PyodideProvider>
@@ -79,8 +79,9 @@ function MyApp({ Component, pageProps }) {
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      <BackToTop />
-      <Footer />
+      {/* <BackToTop /> */}
+      {!workshopMode &&
+      <Footer />}
     </>
   )
 }

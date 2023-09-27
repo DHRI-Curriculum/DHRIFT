@@ -98,31 +98,6 @@ $breakpoints: (
 //   }
 // }
 
-// Mixin for z-index
-// breakpoint var (first in array is the largest number, etc array.length)
-$z-indexes: (
-  "modal",
-  "sidebar",
-  “header”
-);
-
-@function z-index($name) {
-  @if index($z-indexes, $name) {
-    @return (length($z-indexes) - index($z-indexes, $name))+1;
-  }
-
-  @else {
-    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
-    @return null;
-  }
-}
-
-// Example of usage
-// .header {
-// z-index: z-index(‘header’);
-// }
-
-
 
 // global styles
 #__next {
@@ -135,7 +110,7 @@ $z-indexes: (
   color: $foreground;
   font-family: $body-font, sans-serif;
   font-size: 20px;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 h1,
@@ -187,12 +162,14 @@ header {
   flex-direction: row;
   justify-content: space-evenly;
   margin-bottom: 40px;
+  position: relative;
+  z-index: 20;
+
 }
 
 .topBar {
   position: static;
   margin: 0;
-  z-index: 2;
   height: 10px;
   display: flex;
   flex-direction: row;
@@ -250,7 +227,8 @@ header {
   justify-content: space-between;
   align-items: flex-start;
   background-color: $primary-color-brown;
-  z-index: header;
+  z-index: 21;
+  position: relative;
   height: 100px;
 
   h1 {
@@ -281,7 +259,14 @@ header {
     align-items: flex-end;
     margin-left: 20px;
     margin-right: 20px;
+
+    &.drawer-open {
+      background-color: $primary-color-bark;
+      padding-bottom: 30px;
+      padding-left: 10px;
+    }
   }
+
 
   &-breadcrumbs {
     margin-top: 15px;
@@ -528,7 +513,8 @@ header {
   grid-template-columns: 1fr 1fr;
   margin-top: 20px;
   z-index: 12;
-  top: 5px;
+  position: relative;
+  // bottom: 30;
 
   p {
     font-weight: 700;
@@ -548,21 +534,21 @@ header {
 }
 
 // table of contents sidebar
+.drawer-left {
+  z-index: 10;
+}
+
 .drawer-left>.MuiPaper-root {
   z-index: 1;
   background-color: $primary-color-bark;
 }
 
 nav.sidenav {
-  // max-width: 325px;
-  // min-width: 300px;
-  width: 100%;
-  align-self: flex-start;
-  position: sticky;
-  max-height: 100 vh - 144px;
-  overflow: auto;
-  padding: 16px;
-  z-index: 1;
+  width: 50%;
+  align-self: center;
+  z-index: 12;
+  position: relative;
+  top: 100px;
 
   ul {
     li {
@@ -577,7 +563,15 @@ nav.sidenav {
 
     div {
       span {
-        font-size: 1.3rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+
+      .sidebar-subitem {
+        span {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
       }
     }
   }
@@ -778,13 +772,27 @@ nav.sidenav {
 }
 
 // footer styles and imgs
+
+// container for footer and pagination in workshops
+.workshop-footer {
+  z-index: 10;
+  min-height: 200px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 339px;
+}
+
 footer {
   background-color: $primary-color-bark;
   color: $primary-color-white;
-  width: 100%;
-  bottom: 0;
-  z-index: 10;
   padding: 20px;
+  z-index: 10;
+
+  &.footer {
+    padding: 20px;
+    width: 100%;
+  }
 
   .footer-lower {
     display: flex;
@@ -810,9 +818,4 @@ footer {
       }
     }
   }
-}
-
-
-.funding-text {
-  color: var(--foreground);
 }

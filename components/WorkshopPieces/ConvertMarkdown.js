@@ -23,18 +23,30 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
-        const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${newProps.src}`
+        const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`
         return (
-            <div className="image-container">
+            <div className="image-container"
+                style={{
+                    position: 'relative',
+                }}
+            >
                 <Zoom>
-                    <div className='markdown-image-container' >
+                    <div className='markdown-image-container'
+                        style={{
+                            position: 'relative',
+                            // height: '400px',
+                            // width: '100%',
+                        }}
+                    >
                         <Image
                             className='markdown-image'
+                            // fill={true}
+                            width={0}
+                            height={0}
                             src={src}
                             alt={newProps.alt}
-                            layout='fill'
-                            objectFit='cover'
                             onError={() => setSrc(builtURL)}
+                            style={{ width: '100%', height: 'auto' }}
                         />
                     </div>
                 </Zoom>

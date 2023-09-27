@@ -7,8 +7,9 @@ import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
 import Head from 'next/head';
 
-export default function Institute() {
+export default function Institute(props) {
 
+    props.setWorkshopMode(false)
     const [gitUser, setGitUser] = useState(null);
     const [gitRepo, setGitRepo] = useState(null);
     const [builtURL, setBuiltURL] = useState(null);

@@ -6,12 +6,12 @@ import gcdi from '../public/images/logos/gcdi.png';
 import gc from '../public/images/logos/gc_logo.png';
 import DHRIFTLogo from '../public/images/logos/logo.png';
 
-export default function Footer() {
+export default function Footer({ workshopMode }) {
+    const footerClass = workshopMode ? 'footer-workshop' : 'footer'
     return (
-        <footer className="footer">
+        <footer className={footerClass}>
             <div className="footer-logo">
                 <Link href="/">
-
                     <Image
                         src={DHRIFTLogo}
                         width={'50'}
