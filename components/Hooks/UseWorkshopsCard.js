@@ -77,12 +77,15 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
                 <div>
                     <Card className='workshop-card'>
                         <CardActionArea href={workshopLink}>
+                            <div
+                            className='image-container'>
                             <CardMedia
                                 component="img"
-                                height="140"
+                                height="240"
                                 image={src}
                                 alt={parsedWorkshop.data.title}
                             />
+                            </div>
                             <CardContent>
                                 <h3>{parsedWorkshop.data.title}</h3>
                                 <p>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</p>

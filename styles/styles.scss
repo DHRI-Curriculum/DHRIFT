@@ -1,5 +1,7 @@
 // import fonts
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@12..96&family=Montserrat:wght@400;700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@12..96&family=Montserrat:wght@400;700&display=swap');
+// import Poppins
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 // primary colors (still need primary colors for dark mode)
 $primary-color-bark: #614F42;
@@ -8,10 +10,12 @@ $primary-color-sun: #F9976A;
 $primary-color-cream: #FFF9F4;
 $primary-color-white: #FFFFFF;
 $primary-color-black: #1B1621;
+$primary-color-cool: #8dd0cd;
+
 
 // typography
-$headers-font: 'Bricolage Grotesque', sans-serif;
-$body-font: 'Montserrat', sans-serif;
+$headers-font: 'Poppins', sans-serif;
+$body-font: 'Poppins', sans-serif;
 
 // defaults
 $background: $primary-color-white;
@@ -267,7 +271,6 @@ header {
     }
   }
 
-
   &-breadcrumbs {
     margin-top: 15px;
     display: flex;
@@ -401,18 +404,30 @@ header {
       transform: translatey(-10px);
       overflow: visible;
       z-index: 0;
-      box-shadow: rgb(102, 102, 102) 0px 0px 0px 2px,
-        rgb(255, 255, 255) 10px -10px 0px -3px,
-        rgb(239, 59, 58) 10px -10px,
-        rgb(255, 255, 255) 20px -20px 0px -3px,
-        rgb(93, 85, 165) 20px -20px,
-        rgb(255, 255, 255) 30px -30px 0px -3px,
-        rgb(69, 177, 193) 30px -30px;
+      box-shadow: #8dd0cd 16px 16px 0px;
       transition: all 0.5s ease;
+    }
 
+    .image-container {
+      transition: background-color .2s;
+      background-color: $primary-color-cool;
+      position: relative;
+      text-align: center;
+      color: white;
+
+      // &:hover {
+      // }
+    }
+
+    img {
+      mix-blend-mode: multiply;
+      -webkit-filter: grayscale(100%);
+      /* Safari 6.0 - 9.0 */
+      filter: grayscale(100%);
     }
   }
 }
+
 
 //frontmatter styles
 .frontmatter {
