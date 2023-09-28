@@ -400,11 +400,22 @@ header {
     border-radius: 0px;
     box-shadow: none;
 
+    h3 {
+      font-weight: 900;
+      font-size: 1.5rem;
+      margin-top: -5px;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-top: -5px;
+    }
+
     &:hover {
       transform: translatey(-10px);
       overflow: visible;
       z-index: 0;
-      box-shadow: #8dd0cd 16px 16px 0px;
+      box-shadow: $primary-color-cool 16px 16px 0px;
       transition: all 0.5s ease;
     }
 
@@ -414,18 +425,26 @@ header {
       position: relative;
       text-align: center;
       color: white;
-
-      // &:hover {
-      // }
     }
 
-    img {
-      mix-blend-mode: multiply;
-      -webkit-filter: grayscale(100%);
-      /* Safari 6.0 - 9.0 */
-      filter: grayscale(100%);
+    .centered {
+      color: white;
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 700;
     }
+  
+
+  img {
+    mix-blend-mode: multiply;
+    -webkit-filter: grayscale(100%);
+    /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
   }
+}
 }
 
 

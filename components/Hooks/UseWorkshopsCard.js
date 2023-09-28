@@ -70,6 +70,8 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
         }
     }, [coverimage])
 
+    console.log(parsedWorkshop)
+
     const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
         <>
@@ -86,8 +88,13 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
                                 alt={parsedWorkshop.data.title}
                             />
                             </div>
-                            <CardContent>
-                                <h3>{parsedWorkshop.data.title}</h3>
+                            <CardContent
+                                style={{
+                                    padding: '0px',
+                                    paddingTop: '10px',
+                                }}
+                            ><p className='centered'>{parsedWorkshop.data.title}</p>
+                                {/* <h3>{parsedWorkshop.data.title}</h3> */}
                                 <p>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</p>
                             </CardContent>
                         </CardActionArea>
