@@ -16,7 +16,9 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
     return (
         <div className='workshop-header'>
             <div className='workshop-header-left'>
-                <h1>DHRIFT</h1>
+                <h1
+                className='workshop-header-title'
+                >DHRIFT</h1>
                 <div className='workshop-header-breadcrumbs'>
                     {pages && instUser && instRepo &&
                         <HomeIcon

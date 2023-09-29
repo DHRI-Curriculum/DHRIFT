@@ -1,10 +1,9 @@
 import Link from 'next/link'
-import path from 'path'
 import Image from 'next/image'
 import neh from '../public/images/logos/NEH.png';
 import gcdi from '../public/images/logos/gcdi.png';
-import gc from '../public/images/logos/gc_logo.png';
-import DHRIFTLogo from '../public/images/logos/logo.png';
+import gc from '../public/images/logos/GC.svg';
+import DHRIFTLogo from '../public/images/logos/logo-white.png';
 
 export default function Footer({ workshopMode }) {
     const footerClass = workshopMode ? 'footer-workshop' : 'footer'
@@ -14,8 +13,8 @@ export default function Footer({ workshopMode }) {
                 <Link href="/">
                     <Image
                         src={DHRIFTLogo}
-                        width={'50'}
-                        height={'50'}
+                        width={'400'}
+                        // height={'50'}
                         className="img-fluid" alt='DHRIFT' />
 
                 </Link>
@@ -37,15 +36,13 @@ export default function Footer({ workshopMode }) {
                         <a href="https://gcdi.commons.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image
                             src={gcdi}
                             width={'153'}
-                            // height={'54'}
                             className="img-fluid" alt='GCDI' /></a>
                     </div>
                     <div>
                         <a href="http://www.gc.cuny.edu/" target="_blank" rel="noreferrer"><Image
                             src={gc}
                             width={'153'}
-                            // height={'54'}
-                            className="img-fluid" alt='GC' /></a>
+                            className="img-fluid GC" alt='GC' /></a>
                     </div>
                 </div>
             </div>

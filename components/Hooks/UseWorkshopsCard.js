@@ -78,14 +78,18 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
             {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description &&
                 <div>
                     <Card className='workshop-card'>
-                        <CardActionArea href={workshopLink}>
+                        <CardActionArea 
+                        style={{
+                            height: '400px',
+                        }}
+                        href={workshopLink}>
                             <div
                             className='image-container'>
                             <CardMedia
                                 component="img"
                                 height="240"
                                 image={src}
-                                alt={parsedWorkshop.data.title}
+                                alt={parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}
                             />
                             </div>
                             <CardContent
@@ -93,7 +97,7 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
                                     padding: '0px',
                                     paddingTop: '10px',
                                 }}
-                            ><p className='centered'>{parsedWorkshop.data.title}</p>
+                            ><p className='centered'>{parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}</p>
                                 {/* <h3>{parsedWorkshop.data.title}</h3> */}
                                 <p>{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</p>
                             </CardContent>

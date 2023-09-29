@@ -2,6 +2,7 @@
 // @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz@12..96&family=Montserrat:wght@400;700&display=swap');
 // import Poppins
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo:wght@400;500;600;700&display=swap');
 
 // primary colors (still need primary colors for dark mode)
 $primary-color-bark: #614F42;
@@ -10,7 +11,7 @@ $primary-color-sun: #F9976A;
 $primary-color-cream: #FFF9F4;
 $primary-color-white: #FFFFFF;
 $primary-color-black: #1B1621;
-$primary-color-cool: #8dd0cd;
+$primary-color-sky: #8dd0cd;
 
 
 // typography
@@ -188,6 +189,13 @@ header {
     height: 100px;
     margin-bottom: 0%;
   }
+
+  .logo {
+    padding-left: 30px;
+    position: relative;
+    z-index: 20;
+  }
+
 }
 
 #nav-container {
@@ -213,7 +221,7 @@ header {
       list-style: none;
       padding: 10px;
       font-size: 1.3rem;
-      font-weight: 500;
+      font-weight: 400;
 
       a {
         text-decoration: none;
@@ -237,8 +245,9 @@ header {
 
   h1 {
     color: $primary-color-white;
-    font-family: $headers-font, sans-serif;
-    font-size: 2rem;
+    font-family: 'Baloo', sans-serif;
+    font-size: 2.1rem;
+    letter-spacing: 6px;
   }
 
   div {
@@ -411,23 +420,26 @@ header {
       margin-top: -5px;
     }
 
+
     &:hover {
       transform: translatey(-10px);
       overflow: visible;
       z-index: 0;
-      box-shadow: $primary-color-cool 16px 16px 0px;
+      box-shadow: $primary-color-sky 16px 16px 0px;
       transition: all 0.5s ease;
     }
 
+
     .image-container {
       transition: background-color .2s;
-      background-color: $primary-color-cool;
+      background-color: $primary-color-sky;
       position: relative;
       text-align: center;
       color: white;
     }
 
     .centered {
+      font-family: 'Baloo', sans-serif;
       color: white;
       position: absolute;
       top: 30%;
@@ -435,16 +447,17 @@ header {
       transform: translate(-50%, -50%);
       font-size: 3rem;
       font-weight: 700;
+      text-align: center;
     }
-  
 
-  img {
-    mix-blend-mode: multiply;
-    -webkit-filter: grayscale(100%);
-    /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%);
+
+    img {
+      mix-blend-mode: multiply;
+      -webkit-filter: grayscale(100%);
+      /* Safari 6.0 - 9.0 */
+      filter: grayscale(100%);
+    }
   }
-}
 }
 
 
@@ -464,7 +477,6 @@ header {
       font-size: 3rem;
       margin-bottom: 20px;
       margin-top: 0px;
-      padding: 10px !important;
       color: $primary-color-white;
       position: relative;
     }
@@ -505,7 +517,6 @@ header {
       color: $primary-color-white;
       margin-top: 20px;
       margin-bottom: 0px;
-      padding: 10px;
       position: relative;
     }
 
@@ -535,7 +546,6 @@ header {
     font-size: 2rem;
     font-family: $headers-font, sans-serif;
     margin-bottom: 30px;
-    padding: 10px !important;
   }
 
 }
@@ -588,7 +598,7 @@ nav.sidenav {
     li {
       list-style: none;
       font-size: 25px;
-      border-bottom: #000000 solid 1px;
+      border-bottom: white solid 1px;
     }
 
     a:hover {
@@ -814,18 +824,19 @@ nav.sidenav {
   width: 100%;
   position: absolute;
   bottom: 0;
-  height: 339px;
+  height: 340px;
 }
 
 footer {
   background-color: $primary-color-bark;
   color: $primary-color-white;
-  padding: 20px;
   z-index: 10;
 
   &.footer {
-    padding: 20px;
     width: 100%;
+  }
+  .footer-logo{
+    margin-left: 55px;
   }
 
   .footer-lower {
@@ -834,7 +845,8 @@ footer {
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
-    margin-top: 20px;
+    margin-left: 100px;
+    margin-top: -30px;
 
     .funding-text {
       width: 50%;
@@ -846,9 +858,11 @@ footer {
       justify-content: space-around;
       align-items: center;
       flex-wrap: wrap;
+      margin: auto;
 
-      div {
-        margin: 10px;
+      .img-fluid{
+        margin: 20px;
+        filter: brightness(0) invert(1);
       }
     }
   }

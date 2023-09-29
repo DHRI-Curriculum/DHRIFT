@@ -95,8 +95,7 @@ export default function Header({ title }) {
                         <Image
                             src={logo}
                             alt={'logo'}
-                            width={100}
-                            height={100}
+                            width={463.5}
                             className='logo' />
                     </Link>
                     <div

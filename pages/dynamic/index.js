@@ -241,7 +241,7 @@ export default function WorkshopPage({
             md: '100px',
           },
           ...(props.workshopMode && {
-            paddingBottom: '339px',
+            paddingBottom: '340px',
           })
         }}
       >
@@ -249,9 +249,9 @@ export default function WorkshopPage({
           <title>{title}</title>
         </Head>
         <Main open={editorOpen}
-        // style={{
-        //   minHeight: '100vh',
-        // }}
+        style={{
+          paddingLeft:'0px'
+        }}
         >
           <div className="card-page">
             <div className="workshop-container">

@@ -14,7 +14,6 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 export default function SidebarDrawer({ pages, currentPage, handlePageChange, drawerOpen, setDrawerOpen
  }) {
 
-    // const [state, setState] = useState(false);
     const state = drawerOpen;
     const setState = setDrawerOpen;
 
