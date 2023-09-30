@@ -105,17 +105,25 @@ $breakpoints: (
 
 
 // global styles
+html{
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 #__next {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  position: relative;
+  width: 100vw;
   background-color: $background-page;
   color: $foreground;
   font-family: $body-font, sans-serif;
   font-size: 20px;
   overflow: hidden;
+}
+.container{
+  position: relative;
 }
 
 h1,
@@ -305,6 +313,7 @@ header {
 .schedule {
   position: relative;
   padding-top: 30px;
+  width: 100vw;
 
   h1,
   h2,
@@ -312,9 +321,33 @@ header {
     position: relative;
   }
 
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    margin-top: 20px;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .time {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
   &-item {
     background-color: $primary-color-white;
     box-shadow: none;
+  }
+
+  .accordion-summary{
+    margin-bottom: 20px;
+  }
+  .accordion-details div {
+    margin-bottom: 80px;
   }
 
   &:before {
@@ -331,26 +364,40 @@ header {
 .inst {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+
+  // sets the padding for the apge
+  >div{
+    @include respond-above(md) {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+    padding: 0px 20px 0px 20px;
+  }
 
   &-hero {
     // front page hero block
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-color: $primary-color-bark;
     margin-bottom: 20px;
     margin-top: 20px;
+    align-self: flex-start;
 
-    &:before {
-      content: '';
-      background-color: $primary-color-brown;
+    &-overlay {
+      @include respond-above(md) {
+        padding-left: 100px;
+        padding-right: 100px;
+        }
+      padding: 0px 20px 0px 20px;
       position: absolute;
-      height: 100%;
-      // width entire screen 
-      width: 130vw;
-      left: -150px;
+      height: 600px;
+      width: 100%;
+      left: 0px;
+      top: 0px;
+      background: linear-gradient(to right, $primary-color-brown, rgba(0, 0, 0, 0.5));
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
     }
 
     h1 {
@@ -375,6 +422,7 @@ header {
 
   &-workshops {
     padding-top: 30px;
+    width: 100vw;
   }
 
   &-description {
@@ -382,6 +430,7 @@ header {
     padding-top: 40px;
     padding-bottom: 40px;
     position: relative;
+    width: 100vw;
   }
 
   .button {
@@ -397,7 +446,8 @@ header {
   &-grid {
     display: grid;
     // 3 columns
-    grid-template-columns: repeat(3, 1fr);
+    // grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     // bit of space 
     grid-gap: 40px;
     margin-bottom: 30px;
@@ -528,6 +578,9 @@ header {
   }
 
   &-item {
+    ul{
+      padding: 0px;
+    }
 
     li {
       margin-bottom: 10px;
@@ -835,7 +888,8 @@ footer {
   &.footer {
     width: 100%;
   }
-  .footer-logo{
+
+  .footer-logo {
     margin-left: 55px;
   }
 
@@ -860,7 +914,7 @@ footer {
       flex-wrap: wrap;
       margin: auto;
 
-      .img-fluid{
+      .img-fluid {
         margin: 20px;
         filter: brightness(0) invert(1);
       }

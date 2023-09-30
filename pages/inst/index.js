@@ -5,6 +5,7 @@ import WorkshopsView from '../../components/WorkshopsView';
 import Schedule from '../../components/Schedule';
 import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
+import heroImage from '../../public/images/learn.jpg';
 import Head from 'next/head';
 
 export default function Institute(props) {
@@ -79,7 +80,7 @@ export default function Institute(props) {
             sx={{
                 display: 'flex',
                 marginLeft: {
-                    md: '100px',
+                    md: '0px',
                 },
 
             }}
@@ -87,9 +88,18 @@ export default function Institute(props) {
             <Head>
                 <title>{parsedYAML && parsedYAML.event}</title>
             </Head>
-            <div>
                 <div className="inst">
-                    <div className='inst-hero'>
+                    <div className='inst-hero'
+                    style={{
+                        height: '600px',
+                        width: '100vw',
+                        position: 'relative',
+                        backgroundSize: 'cover',
+                        backgroundPosition: '50% 50%',
+                        backgroundImage: `url(${heroImage.src})`,
+                        // paddingLeft: '100px',
+                      }}>
+                        <div className='inst-hero-overlay'>
                         <h1>{
                             parsedYAML && parsedYAML.event
                         }</h1>
@@ -109,6 +119,7 @@ export default function Institute(props) {
                                 href={parsedYAML.registerlink}
                             >Register</Button>
                         }</p>
+                        </div>
                     </div>
                     <div className='inst-description'>
                         <p>{
@@ -126,7 +137,6 @@ export default function Institute(props) {
                         }
                     </div>
                 </div>
-            </div>
         </Container>
     )
 }

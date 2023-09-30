@@ -237,6 +237,7 @@ export default function WorkshopPage({
         disableGutters={true}
         maxWidth={'md'}
         sx={{
+          // position: 'relative',
           marginLeft: {
             md: '100px',
           },

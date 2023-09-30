@@ -53,7 +53,8 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     const item = currentFile.data[key]
     // if object name is 'prerequisites' or 'workshops' or 'insights' or 'installations' or 'description' or 'title' or 'cover_image', don't add to list
     if (key === 'prerequisites' || key === 'workshops' || key === 'insights' || key === 'installations' || key === 'description' || key === 'title' || key === 'cover_image' || key === 'content' || key === 'slug'
-      || key === 'path' || key === 'itemPath' || key === 'programming_language') {
+      || key === 'path' || key === 'itemPath' || key === 'programming_language'
+      || key === 'cover title') {
       return null
     }
     return {

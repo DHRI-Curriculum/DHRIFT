@@ -77,13 +77,13 @@ export default function Schedule({
                   border: 'none',
                 }}
                 expandIcon={<ExpandMore />}>
-                <h3 className="accordion-summary">{date}</h3>
+                <h2 className="accordion-summary">{date}</h2>
               </AccordionSummary>
               <AccordionDetails>
                 <div className="accordion-details">
                   {eventsByDate[date].map((event, index) => (
                     <div key={index}>
-                      <h2>{event.title}
+                      <h3>{event.title}
                         {event.slug &&
                           <LaunchIcon className="launch-icon"
                             // onClick={() => window.open(`/workshops/${event.slug}`)} 
@@ -93,8 +93,8 @@ export default function Schedule({
                             }}
                           />
                         }
-                      </h2>
-                      <p>{event.time}</p>
+                      </h3>
+                      <p className='time'>{event.time}</p>
                       <p>{event.description}</p>
                     </div>
                   ))}
