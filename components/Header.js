@@ -14,8 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-export default function Header({ title }) {
-
+export default function Header({ title, instUser, instRepo, workshopsGitUser, workshopsGitRepo }) {
 
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
@@ -87,9 +86,7 @@ export default function Header({ title }) {
                         <MenuIcon />
                     </IconButton> */}
 
-                    {/* <div
-                        id='logo-container'
-                    > */}
+
                     <Link href='/'
                         passHref>
                         <Image
@@ -113,9 +110,10 @@ export default function Header({ title }) {
                             </Link>
                         </Typography>
                         <ul className='links'>
-                            <li>
-                                <Link href='/' passHref>Workshops</Link>
-                            </li>
+
+                            {instUser && instRepo && <li>
+                                <Link href={`/workshops/?user=${instUser}&repo=${instRepo}&wUser=${workshopsGitUser}&wGitRepo=${workshopsGitRepo}`} passHref>Workshops</Link>
+                            </li>}
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
                             </li>

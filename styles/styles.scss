@@ -105,7 +105,7 @@ $breakpoints: (
 
 
 // global styles
-html{
+html {
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
@@ -122,7 +122,8 @@ html{
   font-size: 20px;
   overflow: hidden;
 }
-.container{
+
+.container {
   position: relative;
 }
 
@@ -167,6 +168,37 @@ h6 {
     color: $primary-color-white;
   }
 }
+
+// stylized images 
+.image-container {
+  transition: background-color .2s;
+  background-color: $primary-color-sky !important;
+  position: relative;
+  text-align: center;
+  color: white;
+
+  img {
+    display: block;
+    mix-blend-mode: multiply;
+    -webkit-filter: grayscale(100%);
+    /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+  }
+}
+
+.centered {
+  z-index: 20;
+  font-family: 'Baloo', sans-serif;
+  color: white;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+}
+
 
 // Headers
 header {
@@ -343,9 +375,10 @@ header {
     box-shadow: none;
   }
 
-  .accordion-summary{
+  .accordion-summary {
     margin-bottom: 20px;
   }
+
   .accordion-details div {
     margin-bottom: 80px;
   }
@@ -367,11 +400,12 @@ header {
   justify-content: center;
 
   // sets the padding for the apge
-  >div{
+  >div {
     @include respond-above(md) {
       padding-left: 100px;
       padding-right: 100px;
     }
+
     padding: 0px 20px 0px 20px;
   }
 
@@ -385,7 +419,8 @@ header {
       @include respond-above(md) {
         padding-left: 100px;
         padding-right: 100px;
-        }
+      }
+
       padding: 0px 20px 0px 20px;
       position: absolute;
       height: 600px;
@@ -465,11 +500,10 @@ header {
       margin-top: -5px;
     }
 
-    p {
+    .description {
       font-size: 1rem;
       margin-top: -5px;
     }
-
 
     &:hover {
       transform: translatey(-10px);
@@ -479,40 +513,21 @@ header {
       transition: all 0.5s ease;
     }
 
-
-    .image-container {
-      transition: background-color .2s;
-      background-color: $primary-color-sky;
-      position: relative;
-      text-align: center;
-      color: white;
-    }
-
-    .centered {
-      font-family: 'Baloo', sans-serif;
-      color: white;
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3rem;
-      font-weight: 700;
-      text-align: center;
-    }
-
-
-    img {
-      mix-blend-mode: multiply;
-      -webkit-filter: grayscale(100%);
-      /* Safari 6.0 - 9.0 */
-      filter: grayscale(100%);
-    }
   }
 }
 
 
 //frontmatter styles
 .frontmatter {
+  width: 90%;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include respond-above(xl) {
+    display: grid;
+    grid-template-columns: 50vw 1fr;
+  }
+
   &-hero {
     // front page hero block
     width: 100%;
@@ -520,6 +535,7 @@ header {
     position: relative;
     background-color: $primary-color-bark;
     margin-bottom: 20px;
+    grid-column: 1;
 
     h1 {
       // front page title
@@ -568,17 +584,21 @@ header {
       margin-top: 20px;
       margin-bottom: 0px;
       position: relative;
+      grid-column: 1;
     }
 
     .button {
       margin-bottom: 50px;
       position: relative;
+      grid-column: 1;
     }
 
   }
 
   &-item {
-    ul{
+    grid-column: 1;
+
+    ul {
       padding: 0px;
     }
 
@@ -587,6 +607,46 @@ header {
       list-style: none;
     }
   }
+
+  .button {
+    grid-column: 1;
+    margin-bottom: 50px;
+    width: 250px;
+  }
+
+  &-feature {
+    grid-column: 2;
+    z-index: 10;
+    max-width: 500px;
+    display: none;
+
+    @include respond-above(xl) {
+      margin-top: 80px;
+      grid-row-start: 1;
+      justify-self: right;
+      position: absolute;
+      display: block;
+    }
+
+    >div {
+      background-color: $primary-color-white;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    div {
+      background-color: $primary-color-white;
+
+      h1,
+      h2,
+      ul {
+        margin: 0px;
+        padding-bottom: 20px;
+        padding-left: 30px;
+        list-style: none;
+      }
+    }
+  }
+
 }
 
 // page content styles

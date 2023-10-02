@@ -1,4 +1,4 @@
-import React, { memo, use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import jsyaml from 'js-yaml'
 import WorkshopsView from '../../components/WorkshopsView';
@@ -6,6 +6,7 @@ import Schedule from '../../components/Schedule';
 import Container from '@mui/material/Container';
 import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
+import Header from '../../components/Header';
 import Head from 'next/head';
 
 export default function Institute(props) {
@@ -13,11 +14,11 @@ export default function Institute(props) {
     props.setWorkshopMode(false)
     const [gitUser, setGitUser] = useState(null);
     const [gitRepo, setGitRepo] = useState(null);
+    const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
+    const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
-    const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
-    const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
 
     let headers;
 
@@ -74,6 +75,10 @@ export default function Institute(props) {
     }, [parsedYAML])
 
     return (
+        <>
+        <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
+            workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
+        />
         <Container
             disableGutters={true}
             maxWidth={'md'}
@@ -138,5 +143,6 @@ export default function Institute(props) {
                     </div>
                 </div>
         </Container>
+        </>
     )
 }

@@ -1,5 +1,6 @@
 'use client'
 import Head from 'next/head'
+import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
 import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
@@ -231,18 +232,28 @@ export default function WorkshopPage({
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
         setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
         pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
-      />}
+        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo} 
+      />
+      || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+        workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+      />
+      }
       <Container
         disableGutters={true}
-        maxWidth={'md'}
+        maxWidth={
+          props.workshopMode ? 'md' : '100vw'
+        }
         sx={{
           // position: 'relative',
           marginLeft: {
-            md: '100px',
+            md: '80px',
           },
           ...(props.workshopMode && {
             paddingBottom: '340px',
+            marginLeft: {
+              md: '100px',
+            },
+            
           })
         }}
       >
