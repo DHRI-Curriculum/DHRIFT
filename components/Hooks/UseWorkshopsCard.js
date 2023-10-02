@@ -50,7 +50,14 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
         })
     useEffect(() => {
         if (data) {
-            setParsedWorkshop(matter(data))
+            try {
+                var parsedData = matter(data)
+                setParsedWorkshop(matter(data))
+            }
+            catch (err) {
+                console.log('err', err)
+                console.log('data', data)
+            }
         }
     }, [data])
 
