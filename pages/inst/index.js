@@ -76,54 +76,53 @@ export default function Institute(props) {
 
     return (
         <>
-        <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
-            workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
-        />
-        <Container
-            disableGutters={true}
-            maxWidth={'md'}
-            sx={{
-                display: 'flex',
-                marginLeft: {
-                    md: '0px',
-                },
-
-            }}
-        >
-            <Head>
-                <title>{parsedYAML && parsedYAML.event}</title>
-            </Head>
+            <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
+                workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
+            />
+            <Container
+                disableGutters={true}
+                maxWidth={'md'}
+                sx={{
+                    display: 'flex',
+                    marginLeft: {
+                        md: '0px',
+                    },
+                }}
+            >
+                <Head>
+                    <title>{parsedYAML && parsedYAML.event}</title>
+                </Head>
                 <div className="inst">
                     <div className='inst-hero'
-                    style={{
-                        height: '600px',
-                        width: '100vw',
-                        position: 'relative',
-                        backgroundSize: 'cover',
-                        backgroundPosition: '50% 50%',
-                        backgroundImage: `url(${heroImage.src})`,
-                        // paddingLeft: '100px',
-                      }}>
+                        style={{
+                            height: '600px',
+                            width: '100vw',
+                            position: 'relative',
+                            backgroundSize: 'cover',
+                            backgroundPosition: '50% 50%',
+                            backgroundImage: `url(${heroImage.src})`,
+                            // paddingLeft: '100px',
+                        }}>
                         <div className='inst-hero-overlay'>
-                        <h1>{
-                            parsedYAML && parsedYAML.event
-                        }</h1>
-                        <h2>{
-                           parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${new Date(parsedYAML.datestart).toDateString()} - ${new Date(parsedYAML.enddate).toDateString()}`
-                        }</h2>
-                        <p>
-                            {
-                                parsedYAML && parsedYAML.venue
-                            }
-                        </p>
-                        <p>{
-                            parsedYAML && parsedYAML.registerlink &&
-                            // <a href={parsedYAML.registerlink}>Register</a>
-                            <Button
-                                className='button button-white'
-                                href={parsedYAML.registerlink}
-                            >Register</Button>
-                        }</p>
+                            <h1>{
+                                parsedYAML && parsedYAML.event
+                            }</h1>
+                            <h2>{
+                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${new Date(parsedYAML.datestart).toDateString()} - ${new Date(parsedYAML.enddate).toDateString()}`
+                            }</h2>
+                            <p>
+                                {
+                                    parsedYAML && parsedYAML.venue
+                                }
+                            </p>
+                            <p>{
+                                parsedYAML && parsedYAML.registerlink &&
+                                // <a href={parsedYAML.registerlink}>Register</a>
+                                <Button
+                                    className='button button-white'
+                                    href={parsedYAML.registerlink}
+                                >Register</Button>
+                            }</p>
                         </div>
                     </div>
                     <div className='inst-description'>
@@ -142,7 +141,7 @@ export default function Institute(props) {
                         }
                     </div>
                 </div>
-        </Container>
+            </Container>
         </>
     )
 }

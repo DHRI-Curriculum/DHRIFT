@@ -64,6 +64,7 @@ export default function WorkshopPage({
   const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [markdownError, setMarkdownError] = useState(false);
 
   const [allUploads, setAllUploads] = useState([]);
   const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
@@ -127,11 +128,18 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
+      try{
       const matterResult = matter(data)
       setCurrentFile(matterResult)
       setContent(matterResult.content)
       setLanguage(matterResult.data.programming_language);
       setWorkshopTitle(matterResult.data.title);
+      }
+      catch(err){
+        console.log('err', err)
+        console.log('data', data)
+        setMarkdownError(err);
+      }
     }
   }, [data])
 
@@ -226,7 +234,21 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  // if (isLoading) return <div>Loading...</div>
+  if (markdownError) return(
+    <>
+     <div
+      style={{
+        color: 'red',
+        fontSize: '20px',
+        textAlign: 'center',
+        marginTop: '20px',
+        marginBottom: '20px',
+        fontWeight: 'bold'
+      }}
+     >There was an error loading the markdown file. Please check the file and try again.
+     <div>{markdownError.message}</div>
+      </div>
+     </>)
   return (
     <Fragment>
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
@@ -249,7 +271,6 @@ export default function WorkshopPage({
             md: '80px',
           },
           ...(props.workshopMode && {
-            paddingBottom: '340px',
             marginLeft: {
               md: '100px',
             },

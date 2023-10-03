@@ -6,7 +6,6 @@ export default function useWorkshop(gitUser, builtURL, editing) {
 
   let headers;
 
-
   const [cacheCleared, setCacheCleared] = useState(false);
   const { cache, mutate } = useSWRConfig()
   const clearCache = () => {
@@ -49,13 +48,6 @@ export default function useWorkshop(gitUser, builtURL, editing) {
 
   const { data, isLoading, error } = useSWRImmutable(gitUser != null ? builtURL : null, fetcher(headers),
     {
-      onSuccess(data) {
-        // const matterResult = matter(data)
-        // setCurrentFile(matterResult)
-        // setContent(matterResult.content)
-        // setLanguage(matterResult.data.programming_language);
-        // setWorkshopTitle(matterResult.data.title);
-      },
       onFailure(err) {
         console.log('err', err)
         console.log('workshop.url', builtURL)

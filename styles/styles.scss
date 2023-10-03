@@ -125,6 +125,10 @@ html {
 
 .container {
   position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 h1,
@@ -462,10 +466,12 @@ header {
 
   &-description {
     color: black;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    margin-top: 80px;
+    margin-bottom: 80px;
     position: relative;
-    width: 100vw;
+    width: 50vw;
   }
 
   .button {
@@ -935,9 +941,9 @@ nav.sidenav {
   z-index: 10;
   min-height: 200px;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  height: 340px;
+  // position: absolute;
+  // bottom: 0;
+  // height: 340px;
 }
 
 footer {
