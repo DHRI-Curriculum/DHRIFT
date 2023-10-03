@@ -6,6 +6,7 @@ const EditorComponent = dynamic(
   () => import("./EditorComponent"),
   { ssr: false }
 );
+import { Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { PyodideContext } from '../Wasm/PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
@@ -24,6 +25,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   const [print, setPrint] = useState(null);
   const [runningCode, setRunningCode] = useState(false);
   const [isPlot, setIsPlot] = useState(false);
+  const [matplotlibDiv, setMatplotlibDiv] = useState(null);
 
   const {
     hasLoadPyodideBeenCalled,
@@ -128,7 +130,7 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
 
   function showValue() {
     if (pyodideLoaded) {
-      closePlot();
+      // closePlot();
       runPyodide(code);
     }
   }
@@ -139,11 +141,11 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
 
   function closePlot() {
     setIsPlot(false);
-    const fig = document.getElementById('fig');
-    fig.remove();
-    const newFig = document.createElement('div');
-    newFig.id = 'fig';
-    document.getElementById('figHolder').appendChild(newFig);
+    // const fig = document.getElementById('fig');
+    // fig.remove();
+    // const newFig = document.createElement('div');
+    // newFig.id = 'fig';
+    // document.getElementById('figHolder').appendChild(newFig);
   }
 
   useEffect(() => {
@@ -152,10 +154,11 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.target.id.startsWith('matplotlib')) {
-          const fig = document.getElementById('fig');
-          const matplotlibDiv = document.getElementById(mutation.target.id);
-          fig.appendChild(matplotlibDiv);
           setIsPlot(true);
+
+          const fig = document.getElementById('fig');
+          // const matplotlibDiv = document.getElementById(mutation.target.id);
+          setMatplotlibDiv(mutation.target);
         }
       });
     });
@@ -164,6 +167,13 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
       subtree: true,
     });
   }, []);
+
+  useEffect(() => {
+    if (matplotlibDiv && isPlot) {
+      const fig = document.getElementById('fig');
+      fig.appendChild(matplotlibDiv);
+    }
+  }, [matplotlibDiv, isPlot])
 
   const height = props.height ? props.height : '100%';
 
@@ -209,22 +219,13 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
           minLines={minLines}
           language={props.language}
           height={height} />
-      </div>
-
-      <div className="shellContainer">
-        {isError && <div id="error"
+        {isError && <Alert id="error"
+          severity="error"
           style={{
             font: "1.3rem Inconsolata, monospace",
-            margin: "10px",
-            padding: "10px",
-            border: "1px solid red",
-            borderRadius: "5px",
-            backgroundColor: "#f5f5f5",
-            color: "red",
-            fontSize: "20px",
-            overflow: "auto",
             whiteSpace: "pre-wrap"
-          }}>
+          }}
+        >
           <CloseIcon
             onClick={closeError}
             style={{
@@ -236,25 +237,37 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
             }}
           />
           {String(error)}
-        </div>}
+        </Alert>}
+        <div
+          id='figHolder'
+          style={{
+            backgroundColor: 'white',
+          }}
+        >
+          {isPlot &&
+            <>
+              <CloseIcon
+                onClick={closePlot}
+                style={{
+                  float: "right",
+                  fontSize: "20px",
+                  color: "#32c259",
+                  marginRight: "10px",
+                  cursor: "pointer"
+                }} />
+              <div id='fig'>
+              </div>
+            </>}
+        </div>
+      </div>
+
+      <div className="shellContainer">
         {!isPlot && <PythonSideREPLComponent
           print={print}
           setPrint={setPrint}
           {...props}
         />}
-        <div id='figHolder'>
-          {/* {isPlot && <CloseIcon
-            onClick={closePlot}
-            style={{
-              float: "right",
-              fontSize: "20px",
-              color: "#32c259",
-              marginRight: "10px",
-              cursor: "pointer"
-            }} />} */}
-          <div id='fig'>
-          </div>
-        </div>
+
       </div>
     </div>
   )

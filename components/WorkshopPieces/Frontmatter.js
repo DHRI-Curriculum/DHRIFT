@@ -1,17 +1,13 @@
-import Link from 'next/link'
-import Masonry from '@mui/lab/Masonry';
+
 import ConvertMarkdown from './ConvertMarkdown'
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import ClassFacilitator from './ClassFacilitator';
+import { useEffect } from 'react';
 import Button from '@mui/material/Button';
+import HomeIcon from '@mui/icons-material/Home';
+import FrontmatterFeature from './FrontmatterFeature';
 
 export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages,
-  //  facilitatorOpen, setFacilitatorOpen
+  instUser, instRepo, workshopTitle, pageTitles, currentPage
 ) {
-  // create an object that represents an item on the front page, which could be an author box, facilitator, recommended reading, etc.
-  //  That will then be rendered in the front page
-
   const description = currentFile.data.description
   const title = currentFile.data.title
   const prerequisites = currentFile.data.prerequisites || []
@@ -20,7 +16,6 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     const items = prerequisites[key]
     const addLinktoItems = Object.keys(items).map(key => {
       const item = items[key]
-
       const allItems = {
         title: key,
         description: item.description,
@@ -54,11 +49,10 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
   // all objects in currentFile
   const allObjects = Object.keys(currentFile.data).map(key => {
     const item = currentFile.data[key]
-    // if object name is 'prerequisites' or 'workshops' or 'insights' or 'installations' or 'description' or 'title' or 'cover_image', don't add to list
-    if (key === 'prerequisites' || key === 'workshops' || key === 'insights' || key === 'installations' || key === 'description' || key === 'title' || key === 'cover_image' || key === 'content' || key === 'slug'
-      || key === 'path' || key === 'itemPath' || key === 'programming_language') {
-      return null
-    }
+    const excludedKeys = ['prerequisites', 'workshops', 'insights', 'installations', 'description',
+      'title', 'cover_image', 'content', 'slug', 'path', 'itemPath', 'programming_language',
+      'cover title', 'authors', 'editors', 'teachers']
+    if (excludedKeys.includes(key)) { return null }
     return {
       title: key,
       items: item
@@ -67,12 +61,22 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
 
   const formattedObjects = allObjects.
     filter(item => item !== null).map(obj => {
+      if (typeof obj.items === 'string') {
+        const itemHtml = ConvertMarkdown(obj.items)
+        return (
+          <div key={obj.title} className='frontmatter-item'>
+            <h2>{obj.title}</h2>
+            <p>{itemHtml}</p>
+          </div>
+        )
+      }
       return (
         <div className="frontmatter-item" key={obj.title}>
           <h2>{obj.title}</h2>
           <ul>
             {obj.items && Object.keys(obj.items).map(key => {
               const item = obj.items[key]
+              // console.log(item)
               // if there's a description, show it
               if (key === 'description') {
                 const description = ConvertMarkdown(item)
@@ -85,55 +89,6 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
               if (key === 'projects') {
                 // console.log(item)
               }
-              // if (obj.title === 'facilitators') {
-              //   const facilitator = authors.find(author => author.title === item);
-              //   const facilitatorPath = facilitator ? `/authors/${facilitator.slug}` : '#';
-              //   const facilitatorList = {
-              //     name: item,
-              //     value: facilitatorPath
-              //   };
-
-              // let bio = '';
-              // if (key === 'description') {
-              //   bio = item;
-              // };
-
-              //   return (
-              //     <li key={facilitatorList.name}>
-              //       <Button onClick={handleOpen}>
-              //         {facilitatorList.name}
-              //       </Button>
-              //     </li>
-              //   );
-              // }
-
-              // if (obj.title === 'authors') {
-              //   const author = authors.find(author => author.title === item)
-              //   const authorPath = author ? `/authors/${author.slug}` : '#'
-              //   const authorList = {
-              //     key: item,
-              //     value: authorPath
-              //   }
-              //   return (
-              //     <li key={key} className='authors-list'>
-              //       <Link href={authorList.value}>{authorList.key}</Link>
-              //     </li>
-              //   )
-              // }
-
-              // if (obj.title === 'editors') {
-              //   const editor = authors.find(author => author.title === item)
-              //   const editorPath = editor ? `/authors/${editor.slug}` : '#'
-              //   const editorList = {
-              //     key: item,
-              //     value: editorPath
-              //   }
-              //   return (
-              //     <li key={key} className='authors-list'>
-              //       <Link href={editorList.value}>{editorList.key}</Link>
-              //     </li>
-              //   )
-              // }
               if (typeof item === 'string') {
                 const itemHtml = ConvertMarkdown(item)
                 return (
@@ -184,20 +139,35 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
         </div>
       )
     })
-  // check if formattedObjects or formattedDeps is empty, if so, return null
-  const formatted = formattedObjects.length === 0 && formedDeps.length === 0 ? true : false
 
+  // check if formattedObjects or formattedDeps is empty, if so, return null
+  const route = instRepo && instUser ? `/inst/?user=${instUser}&repo=${instRepo}` : '/'
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
+        <div className='frontmatter-hero-breadcrumbs'>
+          <a href={route}>
+            <HomeIcon
+              sx={{
+                color: 'white',
+                zIndex: 1000,
+                position: 'relative',
+                marginTop: '32px',
+              }}
+              className='home-icon' />
+          </a>
+          <p>/</p>
+          {workshopTitle &&
+            <p className='crumb'>{workshopTitle}</p>}
+        </div>
         <h1>{title}</h1>
         {description &&
           <>
             <p className='description'>{description}</p><br />
-              <Button className='button button-white'
+            <Button className='button button-white'
               onClick={() => { setCurrentPage(2) }}>
-                Get Started
-              </Button>
+              Get Started
+            </Button>
           </>
         }
       </div>
@@ -213,15 +183,19 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
           {formattedObjects}
         </ul>
       </div>}
-
-      {/* {formatted && {formattedObjects}} */}
-      {/* <ClassFacilitator
-      name={'facilitatorList.name'}
-      bio={'bio'}
-      // facilitatorOpen={facilitatorOpen}
-      handleClose={handleClose}
-    /> */}
+      <Button className='button button-bark'
+        onClick={() => {
+          setCurrentPage(2)
+          window.scrollTo(0, 0)
+        }}>
+        Start the Workshop
+      </Button>
+      <FrontmatterFeature
+        authors={currentFile.data.authors}
+        teachers={currentFile.data.teachers}
+        editors={currentFile.data.editors}
+        title={workshopTitle}
+      />
     </div>
-
   )
 }

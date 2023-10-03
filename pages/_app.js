@@ -2,26 +2,23 @@ import Header from '../components/Header';
 import { StyledEngineProvider } from '@mui/material/styles';
 import '../styles/styles.scss';
 import '../node_modules/highlight.js/styles/obsidian.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import CssBaseline from '@mui/material/CssBaseline';
-import BackToTop from '../components/ScrollTop';
 import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 const Footer = dynamic(() => import('../components/Footer'))
 import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
-// import yaml from '../config.yml';
 
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
-  const [workshopHeader, setWorkshopHeader] = useState(false);
-  pageProps.workshopHeader = workshopHeader;
-  pageProps.setWorkshopHeader = setWorkshopHeader;
-  pageProps.title = title;
-  pageProps.setTitle = setTitle;
+  const [workshopMode, setWorkshopMode] = useState(false);
+  Object.assign(pageProps, {
+    title, setTitle, workshopMode, setWorkshopMode,
+  })
   const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
 
   // useCacheProvider hook
@@ -68,8 +65,12 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          {!workshopHeader && 
-          <Header title={title} />}
+          {/* {!workshopMode &&
+            <Header
+              title={title}
+              instUser={instUser}
+              instRepo={instRepo}
+            />} */}
           <main className='container'>
             <SWRConfig value={{ provider }}>
               <PyodideProvider>
@@ -79,8 +80,9 @@ function MyApp({ Component, pageProps }) {
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      <BackToTop />
-      <Footer />
+      {/* <BackToTop /> */}
+      {!workshopMode &&
+        <Footer />}
     </>
   )
 }

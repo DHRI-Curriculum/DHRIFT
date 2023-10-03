@@ -1,20 +1,19 @@
 'use client'
 import Head from 'next/head'
+import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
 import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
-import Sidebar from '../../components/WorkshopPieces/Sidebar'
 import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
 import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
+import Footer from '../../components/Footer'
 import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Skeleton from '@mui/material/Skeleton';
 import DrawerEditor from '../../components/Editor/DrawerEditor'
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
-import useWorkshop from '../../components/Hooks/UseWorkshop'
+import useWorkshop from '../../components/Hooks/UseWorkshop';
+import Pagination from '../../components/WorkshopPieces/Pagination';
 
 const drawerWidth = '-30%';
 
@@ -65,6 +64,7 @@ export default function WorkshopPage({
   const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [markdownError, setMarkdownError] = useState(false);
 
   const [allUploads, setAllUploads] = useState([]);
   const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
@@ -128,17 +128,25 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
+      try{
       const matterResult = matter(data)
       setCurrentFile(matterResult)
       setContent(matterResult.content)
       setLanguage(matterResult.data.programming_language);
       setWorkshopTitle(matterResult.data.title);
+      }
+      catch(err){
+        console.log('err', err)
+        console.log('data', data)
+        setMarkdownError(err);
+      }
     }
   }, [data])
 
   useEffect(() => {
     if (currentFile != null && content != '') {
-      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages);
+      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent,
+        pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
       setPages([frontPageContent, ...convertContenttoHTML(content)]);
     }
   }, [currentFile, content])
@@ -151,6 +159,9 @@ export default function WorkshopPage({
       let header = undefined;
       // if it's the frontpage vs not
       index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children.props.children[0]
+      if (typeof header === 'object') {
+        header = header.props.children;
+      }
       let tag = page.props.children[0].props.children.type;
       let parent = undefined;
       if (tag === 'h1') {
@@ -199,63 +210,13 @@ export default function WorkshopPage({
     }
   }, [currentPage])
 
-  const PaginationComponent = (currentPage) => {
-    const sectionTitle = function () {
-      let theMostRecentH1 = null;
-      if (pageTitles[currentPage - 2]?.parent) {
-        theMostRecentH1 = pageTitles[currentPage - 2]?.parent;
-      } else {
-        theMostRecentH1 = pageTitles[currentPage + 1]?.parent;
-      }
-      return theMostRecentH1;
-    }
-    const goBackString = function () {
-      if (sectionTitle() !== pageTitles[currentPage - 2]?.title) {
-        return sectionTitle() + ': ' + pageTitles[currentPage - 2]?.title;
-      } else {
-        return pageTitles[currentPage - 2]?.title;
-      }
-    }
-    const nextH1 = pageTitles[currentPage]?.parent ? pageTitles[currentPage]?.parent : pageTitles[currentPage]?.title;
-    const goForwardString = function () {
-      if (nextH1 !== pageTitles[currentPage]?.title) {
-        return nextH1 + ': ' + pageTitles[currentPage]?.title;
-      } else {
-        return pageTitles[currentPage]?.title;
-      }
-    }
-
-    return (
-      <div className='pagination'>
-        <Button
-          className='pagination-button'
-          onClick={() => handlePageChange(event, Number(currentPage) - 1)}
-          disabled={currentPage === 1}
-        >
-          <ArrowBackIcon />
-          {currentPage === 1 ? 'Frontmatter' : goBackString()}
-        </Button>
-        <Button
-          className='pagination-button'
-          onClick={() => handlePageChange(event, Number(currentPage) + 1)}
-          disabled={currentPage === pages.length}
-          sx={{
-            justifySelf: 'flex-end',
-          }}
-        >
-          {currentPage === pages.length ? 'Frontmatter' : goForwardString()}
-          <ArrowForwardIcon />
-        </Button>
-      </div>
-    )
-  }
 
   useEffect(() => {
     if (currentPage === 1) {
-      props.setWorkshopHeader(false);
+      props.setWorkshopMode(false);
     }
     else {
-      props.setWorkshopHeader(true);
+      props.setWorkshopMode(true);
     }
   }, [currentPage])
 
@@ -273,36 +234,57 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  // if (isLoading) return <div>Loading...</div>
+  if (markdownError) return(
+    <>
+     <div
+      style={{
+        color: 'red',
+        fontSize: '20px',
+        textAlign: 'center',
+        marginTop: '20px',
+        marginBottom: '20px',
+        fontWeight: 'bold'
+      }}
+     >There was an error loading the markdown file. Please check the file and try again.
+     <div>{markdownError.message}</div>
+      </div>
+     </>)
   return (
     <Fragment>
-      {props.workshopHeader && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+      {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
         setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
         pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
-      />}
+        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo} 
+      />
+      || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+        workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+      />
+      }
       <Container
         disableGutters={true}
-        maxWidth={'md'}
+        maxWidth={
+          props.workshopMode ? 'md' : '100vw'
+        }
         sx={{
-          display: 'flex',
+          // position: 'relative',
           marginLeft: {
-            md: '100px',
+            md: '80px',
           },
-          display: 'flex',
-          flexDirection: 'column',
+          ...(props.workshopMode && {
+            marginLeft: {
+              md: '100px',
+            },
+            
+          })
         }}
       >
         <Head>
           <title>{title}</title>
         </Head>
         <Main open={editorOpen}
-          // sx={{
-          //   width: { xs: '100%', md: !editorOpen ? '100%' : '60%' },
-          // }}
-          sx={{
-            padding: '0px',
-          }}
+        style={{
+          paddingLeft:'0px'
+        }}
         >
           <div className="card-page">
             <div className="workshop-container">
@@ -345,7 +327,12 @@ export default function WorkshopPage({
         handleClose={() => setFacilitatorOpen(false)}
       /> */}
       </Container>
-      {PaginationComponent(currentPage)}
+      {props.workshopMode &&
+        <div className='workshop-footer'>
+          <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
+          <Footer workshopMode={props.workshopMode} />
+        </div>
+      }
     </Fragment>
   )
 }

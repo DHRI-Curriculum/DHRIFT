@@ -14,14 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
-
-const Drawer = dynamic(
-    () => import('./Drawer'),
-    { loading: function loading() { return <p>...</p> } }
-)
-
-export default function Header({ title }) {
-
+export default function Header({ title, instUser, instRepo, workshopsGitUser, workshopsGitRepo }) {
 
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
@@ -93,16 +86,13 @@ export default function Header({ title }) {
                         <MenuIcon />
                     </IconButton> */}
 
-                    {/* <div
-                        id='logo-container'
-                    > */}
+
                     <Link href='/'
                         passHref>
                         <Image
                             src={logo}
                             alt={'logo'}
-                            width={100}
-                            height={100}
+                            width={463.5}
                             className='logo' />
                     </Link>
                     <div
@@ -115,13 +105,20 @@ export default function Header({ title }) {
                             }}>
                             <Link href='/' passHref>
                                 {/* truncate to 80 characters */}
-                                {title &&
-                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>}
+                                {/* {title &&
+                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>} */}
                             </Link>
                         </Typography>
                         <ul className='links'>
+
+                            {instUser && instRepo && <li>
+                                <Link href={`/workshops/?user=${instUser}&repo=${instRepo}&wUser=${workshopsGitUser}&wGitRepo=${workshopsGitRepo}`} passHref>Workshops</Link>
+                            </li>}
                             <li>
                                 <Link href='/Glossary' passHref>Glossary</Link>
+                            </li>
+                            <li>
+                                <Link href='/About' passHref>About</Link>
                             </li>
                         </ul>
                         <IconButton sx={{ ml: 1 }}

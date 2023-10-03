@@ -1,6 +1,6 @@
 import React, { memo, use, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import UseWorkshopsComponent from '../components/Hooks/UseWorkshopsComponent';
+import UseWorkshopsComponent from './Hooks/UseWorkshopsCard';
 
 
 export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) {
@@ -9,7 +9,7 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
     const [totalWorkshops, setTotalWorkshops] = useState(0);
 
     let workshopsBuiltURL, headers;
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET != false) {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -35,17 +35,18 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
 
     useEffect(() => {
         if (allWorkshops) {
-            setWorkshops(allWorkshops);
+            // remove workshop from array if it starts with 'DHRIFT_'
+            const filteredWorkshops = allWorkshops.filter(item => !item.name.startsWith('DHRIFT_'));
+            setWorkshops(filteredWorkshops);
         }
-    }
-        , [allWorkshops])
-
+    }, [allWorkshops])
 
     useEffect(() => {
         if (allWorkshops) {
             setTotalWorkshops(allWorkshops.length);
         }
     }, [totalWorkshops, allWorkshops])
+
     const toLoop = Array(totalWorkshops)
         .fill()
         .map((v, i) => i);

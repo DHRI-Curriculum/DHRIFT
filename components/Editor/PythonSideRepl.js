@@ -191,7 +191,7 @@ export default function PythonSideREPLComponent(props) {
   return (
     <div className="PythonSideREPL">
       <div className='repl-header'>
-        <h1>Shell</h1>
+        <h3>Shell</h3>
       </div>
       <link href="https://cdn.jsdelivr.net/npm/jquery.terminal@2.27.1/css/jquery.terminal.css" rel="stylesheet"></link>
       <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />

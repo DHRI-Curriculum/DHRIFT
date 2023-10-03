@@ -6,13 +6,11 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools"
-import { useEffect, useRef } from "react";
 
 export default function CodeEditorComponent({ code, onChange, maxLines = null, minLines = 4, debounce = null, width = '100%', ...props }) {
 
-
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  const height = props.height || '250px';
+  const height = props.height || 'auto';
 
 
   return (
@@ -32,6 +30,7 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
       showGutter={true}
       highlightActiveLine={true}
       debounceChangePeriod={debounce}
+      height= {height}
       setOptions={{
         behavioursEnabled: true,
         wrapBehavioursEnabled: true,

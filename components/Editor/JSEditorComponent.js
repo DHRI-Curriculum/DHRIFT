@@ -45,95 +45,6 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         setIsError(false);
     }
 
-    // const outputComponent = () => {
-    //     return (
-    //         <div id='output'
-    //             style={{
-    //                 marginTop: "-30px",
-    //                 padding: "10px",
-    //                 backgroundColor: "#f5f5f5",
-    //                 color: "#32c259",
-    //                 fontSize: "20px",
-    //                 height: "200px",
-    //                 overflowY: "scroll",
-    //                 font: "1.3rem Inconsolata, monospace",
-    //                 whiteSpace: "pre-wrap",
-    //                 display: "flex",
-    //                 flexDirection: "row",
-    //                 justifyContent: "space-between",
-    //             }}
-    //         >
-    //             <div>
-    //                 <div
-    //                     style={{
-    //                         color: "#32c259",
-    //                         backgroundColor: "black",
-    //                     }}
-    //                 >
-    //                     Returned
-    //                 </div>
-    //                 {outputRef.current}
-    //             </div>
-    //             <div
-    //                 style={{
-    //                     borderLeft: "1px solid #32c259",
-    //                     paddingLeft: "10px",
-
-    //                 }}
-    //             >
-    //                 <div
-    //                     style={{
-    //                         color: "#32c259",
-    //                         backgroundColor: "black",
-    //                     }}
-    //                 >
-    //                     Console Log
-    //                 </div>
-    //                 {consoleRef.current}
-    //             </div>
-    //             <CloseIcon
-    //                 onClick={closeOutput}
-    //                 style={{
-    //                     float: "right",
-    //                     fontSize: "20px",
-    //                     color: "#32c259",
-    //                     marginRight: "10px",
-    //                     cursor: "pointer"
-    //                 }}
-    //             />
-    //         </div>
-    //     )
-    // }
-
-    // const errorComponent = () => {
-    //     return (
-    //         <div id="error"
-    //             style={{
-    //                 font: "1.3rem Inconsolata, monospace",
-    //                 margin: "10px",
-    //                 padding: "10px",
-    //                 border: "1px solid red",
-    //                 borderRadius: "5px",
-    //                 backgroundColor: "#f5f5f5",
-    //                 color: "red",
-    //                 fontSize: "20px",
-    //                 overflow: "auto",
-    //                 whiteSpace: "pre-wrap"
-    //             }}>
-    //             <CloseIcon
-    //                 onClick={closeError}
-    //                 style={{
-    //                     float: "right",
-    //                     fontSize: "20px",
-    //                     color: "#32c259",
-    //                     marginRight: "10px",
-    //                     cursor: "pointer"
-    //                 }}
-    //             />
-    //             {String(error)}
-    //         </div>
-    //     )
-    // }
 
     var JSoutput = function (a) {
         var str = "["
@@ -156,6 +67,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     var JSrun = function () {
         var str;
         setIsError(false);
+        setError(null);
         setIsoutput(false);
         setRunningCode(true);
         outputRef.current = "";
@@ -192,6 +104,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     const onChange = (newValue) => {
         setJSCode(newValue);
     };
+    const height = props.height ? props.height : '100%';
 
     return (
         <>
@@ -205,6 +118,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                 />
                 <EditorComponent code={JScode}
                     onChange={onChange} language={'javascript'}
+                    height={height}
                     {...props}
                 />
             </div>

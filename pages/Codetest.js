@@ -10,8 +10,10 @@ import JSTerminal from '../components/Editor/JSTerminal';
 import REditorComponent from '../components/Editor/REditorComponent';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
 import Webvm from '../components/Wasm/Webvm';
+// import MDX from '../components/WorkshopPieces/MDX';
 
 export default function Test() {
+
 
     return (
         <div>
@@ -58,7 +60,12 @@ export default function Test() {
             {/* <JSTerminal /> */}
             {/* {<REditorComponent />} */}
             {/* {<JSEditorComponent/>} */}
-            <Webvm />
+            {/* <Webvm /> */}
+            <div>
+
+                {/* <MDXComponent /> */}
+                {/* <MDX /> */}
+            </div>
         </div>
     )
 

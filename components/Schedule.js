@@ -52,16 +52,14 @@ export default function Schedule({
     }
   };
 
-
-
   return (
     <Fragment>
-      <div className='schedule'>
-        <div className='sectionTitle'>Schedule</div>
+      <div className=''>
+        <h1>Schedule</h1>
         <div className="accordion">
           {Object.keys(eventsByDate).map((date) => (
             <Accordion
-            square={true}
+              square={true}
               key={date}
               expanded={date === activeAccordion}
               onChange={(event) => handleAccordionChange(event, date)}
@@ -74,18 +72,18 @@ export default function Schedule({
               }}
             >
               <AccordionSummary className='schedule-item'
-              sx={{
-                boxShadow: 'none',
-                border: 'none',
-              }} 
-              expandIcon={<ExpandMore />}>
-                <h3 className="accordion-summary">{date}</h3>
+                sx={{
+                  boxShadow: 'none',
+                  border: 'none',
+                }}
+                expandIcon={<ExpandMore />}>
+                <h2 className="accordion-summary">{date}</h2>
               </AccordionSummary>
               <AccordionDetails>
                 <div className="accordion-details">
                   {eventsByDate[date].map((event, index) => (
                     <div key={index}>
-                      <h2>{event.title}
+                      <h3>{event.title}
                         {event.slug &&
                           <LaunchIcon className="launch-icon"
                             // onClick={() => window.open(`/workshops/${event.slug}`)} 
@@ -95,8 +93,8 @@ export default function Schedule({
                             }}
                           />
                         }
-                      </h2>
-                      <p>{event.time}</p>
+                      </h3>
+                      <p className='time'>{event.time}</p>
                       <p>{event.description}</p>
                     </div>
                   ))}
