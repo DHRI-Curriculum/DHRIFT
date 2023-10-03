@@ -1,14 +1,23 @@
-import { MDXRemote } from 'next-mdx-remote/rsc'
+"use client"
 
-// app/page.js
-export default function Hometest() {
-  return (
+import { compileMDX } from 'next-mdx-remote/rsc'
  
-      <MDXRemote
-        source={`# Hello World
 
-        This is from Server Components!
-        `}
-      />
+export default async function MDX() {
+  // Optionally provide a type for your frontmatter object
+  const { content, frontmatter } = await compileMDX({
+    source: `---
+      title: RSC Frontmatter Example
+      ---
+      # Hello World
+      This is from Server Components!
+    `,
+    options: { parseFrontmatter: true },
+  })
+  return (
+    <>
+      <h1>{frontmatter.title}</h1>
+      {content}
+    </>
   )
 }
