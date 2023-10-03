@@ -19,6 +19,9 @@ process.env.NEXT_PUBLIC_REPO_NAME = repoName
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
 
+
+
+
 // const imagesConfig = function(build, isGitHub) {
 //     if (isGitHub) {
 //         return {
@@ -37,8 +40,8 @@ process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
 const nextConfig = {
     output: "export",
     trailingSlash: true,
-    basePath: isGitHub ? '/' + repoName : '',
-    assetPrefix: isGitHub ? '/' + repoName : '',
+    // basePath: isGitHub ? '/' + repoName : '',
+    // assetPrefix: isGitHub ? '/' + repoName : '',
     images: {
         unoptimized: true,
     }
