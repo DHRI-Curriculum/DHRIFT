@@ -6,10 +6,10 @@ import Head from 'next/head';
 export default function Webvm(props) {
     return (
         <div className='webvm'>
-            {/* <Head>
-
-            </Head> */}
-            <Script
+            <Head>
+        <script src='/coi-service.js'></script>
+            </Head>
+            {/* <Script
                 id='coi-service'
                 strategy='beforeInteractive'
                 onLoad={() => {
@@ -19,7 +19,7 @@ export default function Webvm(props) {
                     console.log('COI error', err)}}
 
                 src={'../coi-service.js'}
-            />
+            /> */}
             <EditorTopbar {...props} />
             <iframe src='../../webvm/index.html' width='100%' height='95%'></iframe>
         </div>
