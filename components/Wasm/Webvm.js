@@ -18,7 +18,7 @@ export default function Webvm(props) {
                 onError={(err) => {
                     console.log('COI error', err)}}
 
-                src={'../../../coi-service.js'}
+                src={'/coi-service.js'}
             />
             <EditorTopbar {...props} />
             <iframe src='../../webvm/index.html' width='100%' height='95%'></iframe>
