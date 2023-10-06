@@ -7,7 +7,7 @@ export default function Webvm(props) {
     return (
         <div className='webvm'>
             <Head>
-        <script src='/coi-service.js'></script>
+        <script src='/coi-service.js' async></script>
             </Head>
             {/* <Script
                 id='coi-service'
