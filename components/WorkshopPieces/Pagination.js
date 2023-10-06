@@ -41,7 +41,7 @@ export default function Pagination({ pages, currentPage, handlePageChange, pageT
         } else {
             return (
                 <>
-                    {pageTitles[currentPage]?.title}
+                   <p>{pageTitles[currentPage]?.title}</p>
                 </>
             )
         }

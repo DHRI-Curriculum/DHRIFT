@@ -997,27 +997,16 @@ pre {
   border-radius: 5px;
   overflow-x: scroll;
   white-space: pre-wrap;
-}
 
-code {
-  background-color: $primary-color-white;
-  color: $primary-color-black;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 5px;
-  overflow-x: scroll;
-  white-space: pre-wrap;
-}
-
-// code block styles
-pre {
-  background-color: $primary-color-white;
-  color: $primary-color-black;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 5px;
-  overflow-x: scroll;
-  white-space: pre-wrap;
+  code {
+    background-color: $primary-color-white;
+    color: $primary-color-black;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    overflow-x: scroll;
+    white-space: pre-wrap;
+  }
 }
 
 // footer styles and imgs

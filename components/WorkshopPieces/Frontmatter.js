@@ -51,7 +51,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     const item = currentFile.data[key]
     const excludedKeys = ['prerequisites', 'workshops', 'insights', 'installations', 'description',
       'title', 'cover_image', 'content', 'slug', 'path', 'itemPath', 'programming_language',
-      'cover title', 'authors', 'editors', 'instructors']
+      'cover title', 'authors', 'editors', 'instructors', 'long_pages']
     if (excludedKeys.includes(key)) { return null }
     return {
       title: key,
