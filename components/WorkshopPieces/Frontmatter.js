@@ -51,7 +51,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     const item = currentFile.data[key]
     const excludedKeys = ['prerequisites', 'workshops', 'insights', 'installations', 'description',
       'title', 'cover_image', 'content', 'slug', 'path', 'itemPath', 'programming_language',
-      'cover title', 'authors', 'editors', 'teachers']
+      'cover title', 'authors', 'editors', 'instructors']
     if (excludedKeys.includes(key)) { return null }
     return {
       title: key,
@@ -72,7 +72,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
       }
       return (
         <div className="frontmatter-item" key={obj.title}>
-          <h2>{obj.title}</h2>
+          <h2>{obj.title.charAt(0).toUpperCase() + obj.title.slice(1)}</h2>
           <ul>
             {obj.items && Object.keys(obj.items).map(key => {
               const item = obj.items[key]
@@ -192,7 +192,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
       </Button>
       <FrontmatterFeature
         authors={currentFile.data.authors}
-        teachers={currentFile.data.teachers}
+        instructors={currentFile.data.instructors}
         editors={currentFile.data.editors}
         title={workshopTitle}
       />

@@ -1,3 +1,4 @@
+import Header from '../../components/Header';
 import { useState } from "react";
 
 export default function Form() {
@@ -21,6 +22,8 @@ export default function Form() {
 
 
     return (
+        <>
+        <Header />
         <form onSubmit={handleSubmit}>
              {/* <label>
                 GitHub username:
@@ -51,5 +54,6 @@ export default function Form() {
             </label>
             <input type="submit" value="Submit" />
         </form>
+        </>
     );
 }

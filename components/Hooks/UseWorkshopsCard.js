@@ -91,7 +91,7 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
                         }}
                         href={workshopLink}>
                             <div
-                            className='image-container'>
+                            className='stylized-image-container'>
                             <CardMedia
                                 component="img"
                                 height="240"

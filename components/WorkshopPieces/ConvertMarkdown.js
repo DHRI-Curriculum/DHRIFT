@@ -91,16 +91,31 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
 
 
     const CodeEditor = ({ children, ...props }) => {
-        var codeText
+        var codeText = '';
         if (children) {
             if (children.length > 0) {
-                if (typeof children[0] === 'object') {
-                    codeText = children[0].props.children.join('');
-                }
-                else {
-                    codeText = children.join('');
-                }
-                console.log('codeText', codeText)
+                // if any of the children are an object (i.e. a react component)
+                // then we need to join the children together
+                // if (typeof children[0] === 'object') {
+                //     codeText = children[0].props.children.join('');
+                // }
+                // else {
+                //     codeText = children.join('');
+                // }
+                children.forEach((child) => {
+                    if (typeof child === 'object') {
+                        child.props.children.forEach((line) => {
+                            if (typeof line === 'object') {
+                                codeText += line.props.children.join('');
+                            }
+                            codeText += line;
+                        })
+                    }
+                    else {
+                        codeText += child;
+                    }
+                })
+
                 return (
                     <div>
                         <CodeRunBox language={props.language} defaultCode={codeText} {...props} />

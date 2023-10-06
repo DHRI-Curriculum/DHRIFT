@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 
-export default function FrontmatterFeature({ authors, teachers, editors, coverImage, title }) {
+export default function FrontmatterFeature({ authors, instructors, editors, coverImage, title }) {
 
   const [src, setSrc] = useState(null);
   const randomNumberBetween1and7 = Math.floor(Math.random() * 7) + 1;
@@ -17,7 +17,7 @@ export default function FrontmatterFeature({ authors, teachers, editors, coverIm
   return (
     <div className='frontmatter-feature'>
       <div>
-        <div className='image-container'>
+        <div className='stylized-image-container'>
           <img
             src={src}
             width={500}
@@ -42,13 +42,13 @@ export default function FrontmatterFeature({ authors, teachers, editors, coverIm
             })}
           </ul>
         </div>}
-        {teachers && teachers.length > 0 && <div className='frontmatter-feature-teachers'>
-          <h2>Teachers</h2>
+        {instructors && instructors.length > 0 && <div className='frontmatter-feature-instructors'>
+          <h2>instructors</h2>
           <ul>
-            {teachers.map(teacher => {
+            {instructorsinstructors.map(teacher => {
               return (
-                <li key={teacher}>
-                  <a href={teacher.link}>{teacher}</a>
+                <li key={instructor}>
+                  <a href={instructor.link}>{instructor}</a>
                 </li>
               )
             })}
