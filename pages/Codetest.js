@@ -1,9 +1,4 @@
-
-import PythonREPLComponent from '../components/Editor/PythonREPLComponent';
-import CodeEditorComponent from '../components/Editor/PythonEditorComponent';
-// import UploadtoStorage from '../components/UploadtoStorage';
-import EditorWithTabs from '../components/Editor/EditorWithTabs';
-import { height } from '@mui/system';
+import React from 'react';
 // import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
@@ -11,9 +6,11 @@ import REditorComponent from '../components/Editor/REditorComponent';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
 import Webvm from '../components/Wasm/Webvm';
 // import MDX from '../components/WorkshopPieces/MDX';
+// import useWorkshop from '../components/Hooks/UseWorkshop';
+
+// const workshop = useWorkshop('szweibel', 'https://api.github.com/repos/szweibel/workshops/contents/python.md', false)
 
 export default function Test() {
-
 
     return (
         <div>
@@ -62,9 +59,11 @@ export default function Test() {
             {/* {<JSEditorComponent/>} */}
             {/* <Webvm /> */}
             <div>
-
-                {/* <MDXComponent /> */}
-                {/* <MDX /> */}
+                {/* <MDX mdxContent={`
+# Hello world
+## Hello world
+### Hello world
+`}/> */}
             </div>
         </div>
     )
