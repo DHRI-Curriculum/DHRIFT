@@ -45,7 +45,7 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
         {instructors && instructors.length > 0 && <div className='frontmatter-feature-instructors'>
           <h2>instructors</h2>
           <ul>
-            {instructorsinstructors.map(teacher => {
+            {instructors.map(teacher => {
               return (
                 <li key={instructor}>
                   <a href={instructor.link}>{instructor}</a>
