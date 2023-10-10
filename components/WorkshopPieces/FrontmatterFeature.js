@@ -22,12 +22,12 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
             src={src}
             width={500}
             alt={coverImage} />
-        <p 
-        className='centered'
-        style={{
-          top: '30%'
-        }}
-        >{title}</p>
+          <p
+            className='centered'
+            style={{
+              top: '30%'
+            }}
+          >{title}</p>
         </div>
 
         {authors && authors.length > 0 && <div className='frontpage-feature-authors'>
@@ -43,9 +43,9 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
           </ul>
         </div>}
         {instructors && instructors.length > 0 && <div className='frontmatter-feature-instructors'>
-          <h2>instructors</h2>
+          <h2>Instructors</h2>
           <ul>
-            {instructors.map(teacher => {
+            {instructors.map(instructor => {
               return (
                 <li key={instructor}>
                   <a href={instructor.link}>{instructor}</a>
