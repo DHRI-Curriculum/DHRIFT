@@ -19,51 +19,19 @@ process.env.NEXT_PUBLIC_REPO_NAME = repoName
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
 
-// const imagesConfig = function(build, isGitHub) {
-//     if (isGitHub) {
-//         return {
-//             unoptimized: true,
-//             // path: '../..',
-//         }
-//     } 
-//     else if (build) {
-//         return {
-//             unoptimized: true,
-//             // path: '../..',
-//         }
-//     }
-// }
-
 const nextConfig = {
     output: "export",
     trailingSlash: true,
-    basePath: isGitHub ? '/' + repoName : '',
-    assetPrefix: isGitHub ? '/' + repoName : '',
+    // basePath: isGitHub ? '/' + repoName : '',
+    // assetPrefix: isGitHub ? '/' + repoName : '',
     images: {
         unoptimized: true,
     }
-    // async headers() {
-    //     return [
-    //         {
-    //             source: '/(.*)',
-    //             headers: [
-    //                 {
-    //                     key: 'Cross-Origin-Opener-Policy',
-    //                     value: 'same-origin',
-    //                 },
-    //                 {
-    //                     key: 'Cross-Origin-Embedder-Policy',
-    //                     value: 'require-corp',
-    //                 },
-    //             ],
-    //         },
-    //     ]
-    // }
 }
 
 console.log(nextConfig);
 
 module.exports = withPlugins([
     [withYAML],
-    [withMDX],
+    // [withMDX],
 ], nextConfig);
