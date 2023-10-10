@@ -155,11 +155,11 @@ h6 {
 
 .button-white {
   background-color: $primary-color-white;
-  color: $primary-color-bark;
+  color: $primary-color-brown;
 
   &:hover {
-    background-color: $primary-color-brown;
-    color: $primary-color-white;
+    background-color: $primary-color-sky;
+    color: $primary-color-brown;
   }
 }
 
@@ -168,13 +168,13 @@ h6 {
   color: $primary-color-white;
 
   &:hover {
-    background-color: $primary-color-brown;
-    color: $primary-color-white;
+    background-color: $primary-color-sky;
+    color: $primary-color-brown;
   }
 }
 
 // stylized images 
-.image-container {
+.stylized-image-container {
   transition: background-color .2s;
   background-color: $primary-color-sky !important;
   position: relative;
@@ -931,6 +931,81 @@ nav.sidenav {
 
   .drawer-left.permanent {
     position: absolute !important;
+  }
+}
+
+// Forms 
+
+.form {
+  width: 100%;
+
+  &-group {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  label {
+    color: $primary-color-brown;
+    font-weight: 600;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid $primary-color-brown;
+    background-color: $primary-color-cream;
+    color: $primary-color-brown;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid $primary-color-brown;
+    background-color: $primary-color-cream;
+    color: $primary-color-brown;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: $primary-color-bark;
+    color: $primary-color-white;
+    font-size: 1rem;
+    margin-top: 10px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-color-sky;
+    }
+  }
+}
+
+// code block styles
+pre {
+  background-color: $primary-color-white;
+  color: $primary-color-black;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+  overflow-x: scroll;
+  white-space: pre-wrap;
+
+  code {
+    background-color: $primary-color-white;
+    color: $primary-color-black;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    overflow-x: scroll;
+    white-space: pre-wrap;
   }
 }
 

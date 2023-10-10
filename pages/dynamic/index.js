@@ -64,6 +64,7 @@ export default function WorkshopPage({
   const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [metadata, setMetadata] = useState(null);
   const [markdownError, setMarkdownError] = useState(false);
 
   const [allUploads, setAllUploads] = useState([]);
@@ -81,7 +82,7 @@ export default function WorkshopPage({
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
         // this changes from long pages to short ones 
-      } else if (curr.type === 'h2') {
+      } else if (curr.type === 'h2' && currentFile.data.long_pages === 'true') {
         allPages.push([curr]);
       } else {
         allPages[allPages.length - 1].push(curr);
@@ -128,14 +129,14 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data && !currentFile && typeof (data) === 'string') {
-      try{
-      const matterResult = matter(data)
-      setCurrentFile(matterResult)
-      setContent(matterResult.content)
-      setLanguage(matterResult.data.programming_language);
-      setWorkshopTitle(matterResult.data.title);
+      try {
+        const matterResult = matter(data)
+        setCurrentFile(matterResult)
+        setContent(matterResult.content)
+        setLanguage(matterResult.data.programming_language);
+        setWorkshopTitle(matterResult.data.title);
       }
-      catch(err){
+      catch (err) {
         console.log('err', err)
         console.log('data', data)
         setMarkdownError(err);
@@ -145,9 +146,9 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null && content != '') {
-      const frontPageContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent,
+      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent,
         pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
-      setPages([frontPageContent, ...convertContenttoHTML(content)]);
+      setPages([frontMatterContent, ...convertContenttoHTML(content)]);
     }
   }, [currentFile, content])
 
@@ -234,31 +235,31 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
-  if (markdownError) return(
+  if (markdownError) return (
     <>
-     <div
-      style={{
-        color: 'red',
-        fontSize: '20px',
-        textAlign: 'center',
-        marginTop: '20px',
-        marginBottom: '20px',
-        fontWeight: 'bold'
-      }}
-     >There was an error loading the markdown file. Please check the file and try again.
-     <div>{markdownError.message}</div>
+      <div
+        style={{
+          color: 'red',
+          fontSize: '20px',
+          textAlign: 'center',
+          marginTop: '20px',
+          marginBottom: '20px',
+          fontWeight: 'bold'
+        }}
+      >There was an error loading the markdown file. Please check the file and try again.
+        <div>{markdownError.message}</div>
       </div>
-     </>)
+    </>)
   return (
     <Fragment>
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
         setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
         pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo} 
+        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
       />
-      || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
-        workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
-      />
+        || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+          workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+        />
       }
       <Container
         disableGutters={true}
@@ -274,7 +275,7 @@ export default function WorkshopPage({
             marginLeft: {
               md: '100px',
             },
-            
+
           })
         }}
       >
@@ -282,9 +283,9 @@ export default function WorkshopPage({
           <title>{title}</title>
         </Head>
         <Main open={editorOpen}
-        style={{
-          paddingLeft:'0px'
-        }}
+          style={{
+            paddingLeft: '0px'
+          }}
         >
           <div className="card-page">
             <div className="workshop-container">

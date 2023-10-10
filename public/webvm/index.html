@@ -1,270 +1,257 @@
 <!DOCTYPE html>
 <html lang="en" style="height:100%;">
-  <meta property="og:image" content="https://webvm.io/assets/reddit.png"/>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=1100, initial-scale=1.0">
-    <title>WebVM - Linux virtualization in WebAssembly</title>
+<meta property="og:image" content="https://webvm.io/assets/reddit.png" />
 
-    <meta name="description" content="Server-less virtual machine, networking included, running browser-side in HTML5/WebAssembly. Code in any programming language inside this Linux terminal.">
-    <meta name="keywords" content="WebVM, Virtual Machine, CheerpX, x86 virtualization, WebAssembly, Tailscale, JIT">
-    <meta property="og:title" content="WebVM - Linux virtualization in WebAssembly" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="WebVM"/>
-    <meta property="og:image" content="https://webvm.io/assets/social.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@leaningtech" />
-    <meta name="twitter:title" content="WebVM - Linux virtualization in WebAssembly" />
-    <meta name="twitter:description" content="Server-less virtual machine, networking included, running browser-side in HTML5/WebAssembly. Code in any programming language inside this Linux terminal.">
-    <meta name="twitter:image" content="https://webvm.io/assets/social.png" />
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=1100, initial-scale=1.0">
+	<title>WebVM - Linux virtualization in WebAssembly</title>
 
-    <!-- Apple iOS web clip compatibility tags -->
-    <meta name="application-name" content="WebVM" />
-    <meta name="apple-mobile-web-app-title" content="WebVM" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	 
+	<meta name="description"
+		content="Server-less virtual machine, networking included, running browser-side in HTML5/WebAssembly. Code in any programming language inside this Linux terminal.">
+	<meta name="keywords" content="WebVM, Virtual Machine, CheerpX, x86 virtualization, WebAssembly, Tailscale, JIT">
+	<meta property="og:title" content="WebVM - Linux virtualization in WebAssembly" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="WebVM" />
+	<meta property="og:image" content="https://webvm.io/assets/social.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@leaningtech" />
+	<meta name="twitter:title" content="WebVM - Linux virtualization in WebAssembly" />
+	<meta name="twitter:description"
+		content="Server-less virtual machine, networking included, running browser-side in HTML5/WebAssembly. Code in any programming language inside this Linux terminal.">
+	<meta name="twitter:image" content="https://webvm.io/assets/social.png" />
 
-    <link rel="shortcut icon" href="./tower.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" id="us-fonts-css" href="https://fonts.googleapis.com/css?family=Montserrat%3A300%2C400%2C500%2C600%2C700&amp;display=swap&amp;ver=6.0.2" media="all">
-    <link rel="stylesheet" href="./xterm/xterm.css" />
-    <link rel="stylesheet" href="./scrollbar.css" />
-     <!-- Serviceworker script that adds the COI and CORS headers to the response headers in cases where the server does not support it. -->
-    <script src="serviceWorker.js"></script>
-    <script src="./xterm/xterm.js"></script>
-    <script src="./xterm/xterm-addon-fit.js"></script>
-  </head>
+	<!-- Apple iOS web clip compatibility tags -->
+	<meta name="application-name" content="WebVM" />
+	<meta name="apple-mobile-web-app-title" content="WebVM" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-  <body style="margin:0;height:100%;background:black;color:white;overflow:hidden; display:flex; flex-direction: column; justify-content: space-between; height: 100%;">
-    <main style="display: flex; flex-direction: row; justify-content: space-between; margin: 5px; height: 100%;">
-      <div style="flex-grow:1; height:100%;display:inline-block;margin:0;" class="scrollbar" id="console">
-      </div>
 
-    </main>
-    <script>
+	<link rel="shortcut icon" href="./tower.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" id="us-fonts-css"
+		href="https://fonts.googleapis.com/css?family=Montserrat%3A300%2C400%2C500%2C600%2C700&amp;display=swap&amp;ver=6.0.2"
+		media="all">
+	<link rel="stylesheet" href="./xterm/xterm.css" />
+	<link rel="stylesheet" href="./scrollbar.css" />
+	<!-- Serviceworker script that adds the COI and CORS headers to the response headers in cases where the server does not support it. -->
+	<script src="serviceWorker.js"></script>
+	<script src="./xterm/xterm.js"></script>
+	<script src="./xterm/xterm-addon-fit.js"></script>
+</head>
 
-	//Utility namespace to group all functionality related to printing (both error and non error) messages
-	const color= "\x1b[1;35m";
-	const bold= "\x1b[1;37m";
-	const underline= "\x1b[94;4m";
-	const normal= "\x1b[0m";
-	var printOnTerm = {
-		getAsciiTitle: function ()
-		{
-			var title = [
-				color + "                        __      __   _  __   ____  __       " + normal,
-				color + "                        \\ \\    / /__| |_\\ \\ / /  \\/  | " + normal,
-				color + "                         \\ \\/\\/ / -_) '_ \\ V /| |\\/| | " + normal,
-				color + "                          \\_/\\_/\\___|_.__/\\_/ |_|  |_|  " + normal,
+<body
+	style="margin:0;height:100%;background:black;color:white;overflow:hidden; display:flex; flex-direction: column; justify-content: space-between; height: 100%;">
+	<main style="display: flex; flex-direction: row; justify-content: space-between; margin: 5px; height: 100%;">
+		<div style="flex-grow:1; height:100%;display:inline-block;margin:0;" class="scrollbar" id="console">
+		</div>
 
-			];
-			return title;
-		},
-		getAsciiText: function ()
-		{
-			var text = [
+	</main>
+	<script>
 
-				"",
+		//Utility namespace to group all functionality related to printing (both error and non error) messages
+		const color = "\x1b[1;35m";
+		const bold = "\x1b[1;37m";
+		const underline = "\x1b[94;4m";
+		const normal = "\x1b[0m";
+		var printOnTerm = {
+			getAsciiTitle: function () {
+				var title = [
+					color + "                        __      __   _  __   ____  __       " + normal,
+					color + "                        \\ \\    / /__| |_\\ \\ / /  \\/  | " + normal,
+					color + "                         \\ \\/\\/ / -_) '_ \\ V /| |\\/| | " + normal,
+					color + "                          \\_/\\_/\\___|_.__/\\_/ |_|  |_|  " + normal,
+
 				];
-			return text;
-		},
-		getSharedArrayBufferMissingMessage: function ()
-		{
-			const text = [
-				"",
-				"",
-				color + "CheerpX could not start" + normal,
-				"",
-				"CheerpX depends on JavaScript's SharedArrayBuffer, that your browser",
-				"     does not support.",
-				"",
-				"SharedArrayBuffer is currently enabled by default on recent",
-				"     versions of Chrome, Edge, Firefox and Safari.",
-				"",
-				"",
-				"Give it a try from another browser!",
+				return title;
+			},
+			getAsciiText: function () {
+				var text = [
+
+					"",
+				];
+				return text;
+			},
+			getSharedArrayBufferMissingMessage: function () {
+				const text = [
+					"",
+					"",
+					color + "CheerpX could not start" + normal,
+					"",
+					"CheerpX depends on JavaScript's SharedArrayBuffer, that your browser",
+					"     does not support.",
+					"",
+					"SharedArrayBuffer is currently enabled by default on recent",
+					"     versions of Chrome, Edge, Firefox and Safari.",
+					"",
+					"",
+					"Give it a try from another browser!",
 				]
 
-			return text;
-		},
-		getErrorMessage: function (error_message)
-		{
-			const text = [
-				"",
-				"",
-				color + "CheerpX could not start" + normal,
-				"",
-				"CheerpX internal error message is:",
-				error_message,
-				"",
-				"",
-				"CheerpX is expected to work with recent desktop versions of Chrome, Edge, Firefox and Safari",
-				"",
-				"",
-				"Give it a try from a desktop version / another browser!",
+				return text;
+			},
+			getErrorMessage: function (error_message) {
+				const text = [
+					"",
+					"",
+					color + "CheerpX could not start" + normal,
+					"",
+					"CheerpX internal error message is:",
+					error_message,
+					"",
+					"",
+					"CheerpX is expected to work with recent desktop versions of Chrome, Edge, Firefox and Safari",
+					"",
+					"",
+					"Give it a try from a desktop version / another browser!",
 				]
 
-			return text;
-		},
-		printMessage: function (text) {
-			for (var i=0; i<text.length; i++)
-			{
-				term.write(text[i]);
-				term.write('\n');
-			}
-		},
-		printError: function (message)
-		{
-			this.printMessage(message);
+				return text;
+			},
+			printMessage: function (text) {
+				for (var i = 0; i < text.length; i++) {
+					term.write(text[i]);
+					term.write('\n');
+				}
+			},
+			printError: function (message) {
+				this.printMessage(message);
 
-			term.write("\n\n");
+				term.write("\n\n");
 
-			function writeCustom(something)
-			{
-				term.write(something);
-			}
-		},
-	};
+				function writeCustom(something) {
+					term.write(something);
+				}
+			},
+		};
 
-	var consoleDiv = document.getElementById("console");
+		var consoleDiv = document.getElementById("console");
 
-	//xterm.js related logic
-	var term = new Terminal({cursorBlink:true,convertEol:true, fontFamily:"monospace", fontWeight: 400, fontWeightBold: 700, fontSize: 24, lineHeight: 1.2, theme: {background: "#000000", foreground: "#ffffff"}});
-	var fitAddon = new FitAddon.FitAddon();
-	term.loadAddon(fitAddon);
-	term.open(consoleDiv);
-	term.scrollToTop();
+		//xterm.js related logic
+		var term = new Terminal({ cursorBlink: true, convertEol: true, fontFamily: "monospace", fontWeight: 400, fontWeightBold: 700, fontSize: 24, lineHeight: 1.2, theme: { background: "#000000", foreground: "#ffffff" } });
+		var fitAddon = new FitAddon.FitAddon();
+		term.loadAddon(fitAddon);
+		term.open(consoleDiv);
+		term.scrollToTop();
 
-	fitAddon.fit();
-	window.addEventListener("resize", function(ev){fitAddon.fit();}, false);
-	term.focus();
-	var cxReadFunc = null;
-	function writeData(buf)
-	{
-		term.write(new Uint8Array(buf));
-	}
-	function readData(str)
-	{
-		if(cxReadFunc == null)
-			return;
-		for(var i=0;i<str.length;i++)
-			cxReadFunc(str.charCodeAt(i));
-	}
-	term.onData(readData);
-
-	//Actual CheerpX and bash specific logic
-	function runBash()
-	{
-		// cmd, cwd, args and env are replaced by the Github actions workflow.
-		// var cmd = CMD;
-		// var args = ARGS;
-		// var env = ENV;
-		// var cwd = CWD;
-		// Reasonable defaults for local deployments
-		var cmd = "/bin/bash";
-		var args = ["--login"];
-		var env = ["HOME=/home/user", "TERM=xterm", "USER=user", "SHELL=/bin/bash", "EDITOR=vim", "LANG=en_US.UTF-8", "LC_ALL=C"];
-		var cwd = "/home/user";
-		const structure = {
-			cmd: cmd,
-			args: args,
-			env: env,
-			cwd: cwd
+		fitAddon.fit();
+		window.addEventListener("resize", function (ev) { fitAddon.fit(); }, false);
+		term.focus();
+		var cxReadFunc = null;
+		function writeData(buf) {
+			term.write(new Uint8Array(buf));
 		}
-		if (typeof SharedArrayBuffer === "undefined")
-		{
-			printOnTerm.printError(printOnTerm.getSharedArrayBufferMissingMessage());
-			return;
+		function readData(str) {
+			if (cxReadFunc == null)
+				return;
+			for (var i = 0; i < str.length; i++)
+				cxReadFunc(str.charCodeAt(i));
 		}
+		term.onData(readData);
 
-		// let networkInterface = setupNetworkInterface();
-
-		async function runTest(cx)
-		{
-			
-			term.scrollToBottom();
-
-			async function cxLogAndRun(cheerpx, cmd, args, env)
-			{
-				await cheerpx.run(cmd, args, env);
-				printOnTerm.printMessage(" ");
+		//Actual CheerpX and bash specific logic
+		function runBash() {
+			// cmd, cwd, args and env are replaced by the Github actions workflow.
+			// var cmd = CMD;
+			// var args = ARGS;
+			// var env = ENV;
+			// var cwd = CWD;
+			// Reasonable defaults for local deployments
+			var cmd = "/bin/bash";
+			var args = ["--login"];
+			var env = ["HOME=/home/user", "TERM=xterm", "USER=user", "SHELL=/bin/bash", "EDITOR=vim", "LANG=en_US.UTF-8", "LC_ALL=C"];
+			var cwd = "/home/user";
+			const structure = {
+				cmd: cmd,
+				args: args,
+				env: env,
+				cwd: cwd
+			}
+			if (typeof SharedArrayBuffer === "undefined") {
+				printOnTerm.printError(printOnTerm.getSharedArrayBufferMissingMessage());
+				return;
 			}
 
-			cxReadFunc = cx.setCustomConsole(writeData, term.cols, term.rows);
+			// let networkInterface = setupNetworkInterface();
 
-			function preventDefaults (e) {
-				e.preventDefault()
-				e.stopPropagation()
+			async function runTest(cx) {
+
+				term.scrollToBottom();
+
+				async function cxLogAndRun(cheerpx, cmd, args, env) {
+					await cheerpx.run(cmd, args, env);
+					printOnTerm.printMessage(" ");
+				}
+
+				cxReadFunc = cx.setCustomConsole(writeData, term.cols, term.rows);
+
+				function preventDefaults(e) {
+					e.preventDefault()
+					e.stopPropagation()
+				}
+				consoleDiv.addEventListener("dragover", preventDefaults, false);
+				consoleDiv.addEventListener("dragenter", preventDefaults, false);
+				consoleDiv.addEventListener("dragleave", preventDefaults, false);
+				consoleDiv.addEventListener("drop", preventDefaults, false);
+
+				var opts = { env: structure.env, cwd: structure.cwd, uid: 1000, gid: 1000 };
+				while (true) {
+					await cxLogAndRun(cx, structure.cmd, structure.args, opts);
+				}
 			}
-			consoleDiv.addEventListener("dragover", preventDefaults, false);
-			consoleDiv.addEventListener("dragenter", preventDefaults, false);
-			consoleDiv.addEventListener("dragleave", preventDefaults, false);
-			consoleDiv.addEventListener("drop", preventDefaults, false);
-
-			var opts = {env:structure.env, cwd:structure.cwd, uid: 1000, gid: 1000};
-			while (true)
-			{
-				await cxLogAndRun(cx, structure.cmd, structure.args, opts);
+			function failCallback(err) {
+				// printOnTerm.printError(printOnTerm.getErrorMessage(err));
 			}
+			function devCallback(state) {
+				// var h = document.getElementById("hddactivity");
+				// if(state == "ready")
+				// 	h.textContent = "\u{1F7E2}";
+				// else
+				// 	h.textContent = "\u{1F7E0}";
+			}
+			function cpuCallback(state) {
+				// var h = document.getElementById("cpuactivity");
+				// if(state == "ready")
+				// 	h.textContent = "\u{1F7E2}";
+				// else
+				// 	h.textContent = "\u{1F7E0}";
+			}
+			// The device url and type are replaced by Github Actions.
+			CheerpXApp.create({ devices: [{ type: "split", url: "https://zweibel.net/webvm/debian_mini_20231006_6433401595.ext2", name: "block1" }], mounts: [{ type: "ext2", dev: "block1", path: "/" }, { type: "cheerpOS", dev: "/app", path: "/app" }, { type: "cheerpOS", dev: "/str", path: "/data" }, { type: "devs", dev: "", path: "/dev" }], activityInterface: { cpu: cpuCallback, dev: devCallback } }).then(runTest, failCallback);
 		}
-		function failCallback(err)
-		{
-			// printOnTerm.printError(printOnTerm.getErrorMessage(err));
+		function initialMessage() {
+			printOnTerm.printMessage(printOnTerm.getAsciiText());
+			term.registerLinkMatcher(/https:\/\/leaningtech.com\/[a-z-]+/, function (mouseEvent, matchedString) {
+				window.open(matchedString, "_blank")
+			});
+			console.log("Welcome. We appreciate curiosity, but be warned that keeping the DevTools open causes significant performance degradation and crashes.");
 		}
-		function devCallback(state)
-		{
-			// var h = document.getElementById("hddactivity");
-			// if(state == "ready")
-			// 	h.textContent = "\u{1F7E2}";
-			// else
-			// 	h.textContent = "\u{1F7E0}";
+		initialMessage();
+		async function loadCX() {
+			// Find the latest build
+			var r = await fetch("https://cheerpxdemos.leaningtech.com/publicdeploy/LATEST.txt");
+			var url = await r.text();
+			url = url.trim();
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
+			script.addEventListener("load", runBash, false);
+			document.head.appendChild(script);
 		}
-		function cpuCallback(state)
-		{
-			// var h = document.getElementById("cpuactivity");
-			// if(state == "ready")
-			// 	h.textContent = "\u{1F7E2}";
-			// else
-			// 	h.textContent = "\u{1F7E0}";
-		}
-		// The device url and type are replaced by Github Actions.
-		CheerpXApp.create({devices:[{type:"block",url:"https://disks.webvm.io/debian_large_20230522_5044875331.ext2",name:"block1"}],mounts:[{type:"ext2",dev:"block1",path:"/"},{type:"cheerpOS",dev:"/app",path:"/app"},{type:"cheerpOS",dev:"/str",path:"/data"},{type:"devs",dev:"",path:"/dev"}], activityInterface: {cpu: cpuCallback, dev: devCallback}}).then(runTest, failCallback);
-	}
-	function initialMessage()
-	{
-		printOnTerm.printMessage(printOnTerm.getAsciiText());
-		term.registerLinkMatcher(/https:\/\/leaningtech.com\/[a-z-]+/, function(mouseEvent, matchedString) {
-			window.open(matchedString, "_blank")
-		});
-		console.log("Welcome. We appreciate curiosity, but be warned that keeping the DevTools open causes significant performance degradation and crashes.");
-	}
-	initialMessage();
-	async function loadCX()
-	{
-		// Find the latest build
-		var r = await fetch("https://cheerpxdemos.leaningtech.com/publicdeploy/LATEST.txt");
-		var url = await r.text();
-		url = url.trim();
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.addEventListener("load", runBash, false);
-		document.head.appendChild(script);
-	}
-	loadCX();
-    </script>
-<!-- Google tag (gtag.js) -->
-<script defer src="https://www.googletagmanager.com/gtag/js?id=G-818T3Y0PEY"></script>
-<script defer>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+		loadCX();
+	</script>
+	<!-- Google tag (gtag.js) -->
+	<script defer src="https://www.googletagmanager.com/gtag/js?id=G-818T3Y0PEY"></script>
+	<script defer>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
 
-  gtag('config', 'G-818T3Y0PEY');
-</script>
-  </body>
+		gtag('config', 'G-818T3Y0PEY');
+	</script>
+</body>
+
 </html>
-

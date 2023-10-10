@@ -1,23 +1,19 @@
-"use client"
+import { useEffect, useState } from "react";
+import * as runtime from "react/jsx-runtime";
+import { evaluate } from "@mdx-js/mdx";
 
-import { compileMDX } from 'next-mdx-remote/rsc'
- 
+function useMDX(content) {
+  const [exports, setExports] = useState({ default: runtime.Fragment });
 
-export default async function MDX() {
-  // Optionally provide a type for your frontmatter object
-  const { content, frontmatter } = await compileMDX({
-    source: `---
-      title: RSC Frontmatter Example
-      ---
-      # Hello World
-      This is from Server Components!
-    `,
-    options: { parseFrontmatter: true },
-  })
-  return (
-    <>
-      <h1>{frontmatter.title}</h1>
-      {content}
-    </>
-  )
+  useEffect(() => {
+    evaluate(content, { ...runtime }).then((exports) => setExports(exports));
+  }, [content]);
+
+  return exports;
+}
+
+export default function MDX({ mdxContent }) {
+  const exports = useMDX(mdxContent);
+  const Content = exports.default;
+  return <Content />;
 }
