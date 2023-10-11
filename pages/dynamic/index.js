@@ -68,7 +68,7 @@ export default function WorkshopPage({
   const [markdownError, setMarkdownError] = useState(false);
 
   const [allUploads, setAllUploads] = useState([]);
-  const uploads = useUploads(allUploads, setAllUploads, gitUser, gitRepo);
+  const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitFile });
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {

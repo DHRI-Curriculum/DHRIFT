@@ -206,24 +206,17 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
 
           }}
         /></>}
-      <div className="editorContainer">
-        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady) || runningCode)}
-          snippets={filteredSnippets} run={showValue}
-          defaultCode={startingCode} setCode={setCodeState}
-          language={props.language}
-          {...props}
-        />
-        <EditorComponent code={code}
-          onChange={onChange}
-          maxLines='Infinity'
-          minLines={minLines}
-          language={props.language}
-          height={height} />
-        {isError && <Alert id="error"
+      <div className="editorContainer"
+      style={{
+        overflowY: 'auto',
+      }}
+      >
+      {isError && <Alert id="error"
           severity="error"
           style={{
             font: "1.3rem Inconsolata, monospace",
-            whiteSpace: "pre-wrap"
+            whiteSpace: "pre-wrap",
+            zIndex: "1000",
           }}
         >
           <CloseIcon
@@ -238,6 +231,18 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
           />
           {String(error)}
         </Alert>}
+        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady) || runningCode)}
+          snippets={filteredSnippets} run={showValue}
+          defaultCode={startingCode} setCode={setCodeState}
+          language={props.language}
+          {...props}
+        />
+        <EditorComponent code={code}
+          onChange={onChange}
+          maxLines='Infinity'
+          minLines={minLines}
+          language={props.language}
+          height={height} />
         <div
           id='figHolder'
           style={{

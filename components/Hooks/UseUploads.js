@@ -1,12 +1,16 @@
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 
-export default function useUploads(allUploads, setAllUploads, gitUser, gitRepo) {
+export default function useUploads({setAllUploads, gitUser, gitRepo, 
+    gitFile, overrideURL}) {
 
     let headers;
-    const builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads`
+    let builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`
+    if (overrideURL) {
+        builtURL = overrideURL;
+    }
 
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -28,7 +32,8 @@ export default function useUploads(allUploads, setAllUploads, gitUser, gitRepo) 
         err => console.log('err', err)
     )
 
-    const { data: uploads, error } = useSWRImmutable(gitUser ? builtURL : null, fetcher(headers),
+    const { data: uploads, error } = useSWRImmutable(gitUser && gitRepo && gitFile
+         ? builtURL : null, fetcher(headers),
         { revalidateOnMount: true })
 
 

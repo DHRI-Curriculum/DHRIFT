@@ -997,21 +997,21 @@ nav.sidenav {
 
 // code block styles
 pre {
-  background-color: $primary-color-white;
+  background-color: $primary-color-cream;
   color: $primary-color-black;
-  padding: 20px;
-  margin: 20px;
+  // padding: 20px;
+  // margin: 20px;
   border-radius: 5px;
-  overflow-x: scroll;
+  // overflow-x: scroll;
   white-space: pre-wrap;
 
   code {
-    background-color: $primary-color-white;
+    background-color: $primary-color-cream;
     color: $primary-color-black;
     padding: 20px;
     margin: 20px;
     border-radius: 5px;
-    overflow-x: scroll;
+    // overflow-x: scroll;
     white-space: pre-wrap;
   }
 }
