@@ -6,7 +6,7 @@
 
 // primary colors (still need primary colors for dark mode)
 $primary-color-bark: #614F42;
-$primary-color-brown: #3d342f;
+$primary-color-brown: #3C342F;
 $primary-color-sun: #F9976A;
 $primary-color-cream: #FFF9F4;
 $primary-color-white: #FFFFFF;
@@ -151,25 +151,31 @@ h6 {
   font-weight: 700;
   font-size: 1.1rem;
   text-transform: none;
-}
 
-.button-white {
-  background-color: $primary-color-white;
-  color: $primary-color-brown;
-
-  &:hover {
-    background-color: $primary-color-sky;
+  &-white {
+    background-color: $primary-color-white;
     color: $primary-color-brown;
+
+    &:hover {
+      background-color: $primary-color-sky;
+      color: $primary-color-brown;
+    }
   }
-}
 
-.button-bark {
-  background-color: $primary-color-bark;
-  color: $primary-color-white;
+  &-bark {
+    background-color: $primary-color-bark;
+    color: $primary-color-white;
 
-  &:hover {
-    background-color: $primary-color-sky;
-    color: $primary-color-brown;
+    &:hover {
+      background-color: $primary-color-sky;
+      color: $primary-color-brown;
+    }
+  }
+
+  &-download {
+    >span {
+      margin-left: 10px;
+    }
   }
 }
 
@@ -195,7 +201,7 @@ h6 {
   font-family: 'Baloo', sans-serif;
   color: white;
   position: absolute;
-  top: 20%;
+  top: 16%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 3rem;
@@ -468,10 +474,11 @@ header {
     color: black;
     padding-top: 80px;
     padding-bottom: 80px;
-    margin-top: 80px;
-    margin-bottom: 80px;
+    margin-top: 40px;
+    margin-bottom: 40px;
     position: relative;
     width: 50vw;
+    align-self: center;
   }
 
   .button {

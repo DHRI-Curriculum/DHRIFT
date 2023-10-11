@@ -1,9 +1,9 @@
-// a component that lets users download a file. 
+import Button from '@mui/material/Button';
+import DownloadIcon from '@mui/icons-material/Download';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 export default function Download(props) {
-    console.log('props', props);
     const allUploads = props.allUploads;
 
     const chosenUploads = typeof props.files === 'string' ? props.files.split(',') : [];
@@ -16,10 +16,9 @@ export default function Download(props) {
             }
         })
     }
-    console.log('filteredUploads', filteredUploads);
 
     let headers;
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
                 'Content-Type': 'application/json',
@@ -82,14 +81,18 @@ export default function Download(props) {
                 // marginBottom: '10px',
             }}
         >
-            <button
-                className="brutalist-button"
+            <Button
+                className="button button-bark button-download"
                 style={{
                     cursor: 'pointer',
                 }}
-                onClick={() => handleDownload(filteredUploads)}>Download: {filteredUploads.map(file =>
-                    <span key={file.name}>{file.name} </span>
-                )}</button>
+                onClick={() => handleDownload(filteredUploads)}
+            >
+                <DownloadIcon />
+                {filteredUploads.map(file =>
+                    <span key={file.name}>{file.name}</span>
+                )}
+            </Button>
         </div>
     )
 }

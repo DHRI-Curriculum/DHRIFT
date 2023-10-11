@@ -178,7 +178,6 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
         </ul>
       </div>}
       {formattedObjects.length > 0 && <div className="frontmatter-item">
-        <h2>Details</h2>
         <ul>
           {formattedObjects}
         </ul>

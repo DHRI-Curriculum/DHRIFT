@@ -54,7 +54,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                             onClick={() => {
                                 clickAndClose(event, pages.index)
                             }}
-                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
+                            {...pages.active ? { style: { color: '#8dd0cd' } } : { style: { color: 'white' } }}
                         />
                     </ListItem>
                 }
@@ -63,7 +63,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
                             onClick={() => { clickAndClose(event, pages.index) }}
-                            {...pages.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
+                            {...pages.active ? { style: { color: '#8dd0cd' } } : { style: { color: 'white' } }}
                         />
                         <ListItemSecondaryAction onClick={handleClick}>
                             {open ? <ExpandLess
