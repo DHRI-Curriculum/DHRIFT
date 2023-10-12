@@ -1,5 +1,0 @@
-{
-    "name": "Pyodide Kernel",
-    "type": "pyodide",
-    "args": ["python", "-m", "pyodide.kernel"]
-  }
