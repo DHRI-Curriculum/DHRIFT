@@ -11,7 +11,7 @@ export default function Jupyter(props) {
                 <script src='../coi-service.js' async></script>
             </Head>
             <div>
-                <iframe src={'https://dhri-curriculum.github.io/jupyterlite/repl/index.html?kernel=python'}
+                <iframe src={'../../jupyterlite/repl/index.html?kernel=python'}
                     width='100%' height='100%' />
             </div>
         </>
