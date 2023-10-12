@@ -75,8 +75,8 @@ export default function DrawerEditor(props) {
         else if (language === 'computer') {
             return (
                 <Webvm
-                handleOpenClose={handleOpenClose}
-                runButtonNeeded={false}
+                    handleOpenClose={handleOpenClose}
+                    runButtonNeeded={false}
                 />
             )
         }
@@ -122,6 +122,16 @@ export default function DrawerEditor(props) {
                 }}
 
             >
+                <Button
+                    aria-label="open drawer"
+                    className={'editor-button'}
+                    onClick={handleOpenClose}
+                    style={{
+                        color: "#32c259",
+                    }}
+                >
+                    <CodeIcon />
+                </Button>
                 <div className='drawer-editor'>
                     {whichEditor()}
                 </div>
