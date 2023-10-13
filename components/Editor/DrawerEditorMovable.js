@@ -154,7 +154,7 @@ export default function DrawerEditor(props) {
 
     return (
         <Fragment>
-            <div className='editor-button-container'>
+            {/* <div className='editor-button-container'>
                 <Button
                     aria-label="open drawer"
                     className={'editor-button'}
@@ -165,7 +165,7 @@ export default function DrawerEditor(props) {
                 >
                     <CodeIcon />
                 </Button>
-            </div>
+            </div> */}
             <Drawer
                 variant="persistent"
                 anchor="right"
