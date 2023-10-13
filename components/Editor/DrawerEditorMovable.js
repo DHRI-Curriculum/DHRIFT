@@ -154,7 +154,7 @@ export default function DrawerEditor(props) {
 
     return (
         <Fragment>
-            {/* <div className='editor-button-container'>
+            <div className='editor-button-container'>
                 <Button
                     aria-label="open drawer"
                     className={'editor-button'}
@@ -165,7 +165,7 @@ export default function DrawerEditor(props) {
                 >
                     <CodeIcon />
                 </Button>
-            </div> */}
+            </div>
             <Drawer
                 variant="persistent"
                 anchor="right"
@@ -193,7 +193,6 @@ export default function DrawerEditor(props) {
             }}
             onClick={event => {
                 event.stopPropagation();
-                console.log('clicked')
             }}
             style={{
                 width: '5px',
@@ -208,7 +207,7 @@ export default function DrawerEditor(props) {
                 backgroundColor: '#f4f7f9'
             }}
         />
-                <Button
+                {/* <Button
                     aria-label="open drawer"
                     className={'editor-button'}
                     onClick={handleOpenClose}
@@ -217,7 +216,7 @@ export default function DrawerEditor(props) {
                     }}
                 >
                     <CodeIcon />
-                </Button>
+                </Button> */}
                 <div className='drawer-editor'>
                     {whichEditor()}
                 </div>
