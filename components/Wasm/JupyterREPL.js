@@ -12,9 +12,10 @@ export default function Jupyter(props) {
             </Head>
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={'../../jupyterlite/repl/index.html?kernel=python'}
+                    id='iframe'
                     width='100%' height='100%'
                     style={{ zoom: '1.8' }}
-                     />
+                />
             </div>
         </>
     )

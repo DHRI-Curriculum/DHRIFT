@@ -8,14 +8,76 @@ import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Webvm from '../Wasm/Webvm';
 import { useState, useEffect, useRef, Fragment } from 'react';
+import { Moving } from '@mui/icons-material';
 
 export default function DrawerEditor(props) {
+
     const language = props.language.toLowerCase();  // this is the language of the editor
     const text = props.text;  // this is the text in the editor
     const open = props.open;  // this is the state of the drawer
     const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
     const [show, setShow] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    const [lastDownX, setLastDownX] = useState(0);
+    const [newWidth, setNewWidth] = useState('45%');
 
+
+
+    const handleMousedown = e => {
+        setIsResizing(true);
+        setLastDownX(e.clientX);
+    };
+    
+    const handleMouseup = e => {
+        setIsResizing(false);
+        if (document.getElementById('iframe')) {
+            document.getElementById('iframe').style.pointerEvents = 'auto';
+        }
+        document.body.style.webkitUserSelect = 'auto';
+        document.body.style.mozUserSelect = 'auto';
+        document.body.style.msUserSelect = 'auto';
+        document.body.style.oUserSelect = 'auto';
+        document.body.style.userSelect = 'auto';
+    };
+
+    useEffect(() => {
+        const handleMousemove = e => {
+            // we don't want to do anything if we aren't resizing.
+            if (!isResizing) {
+                return;
+            }
+            // make the iframe  have pointer-events: none;
+            // so that the mousemove event is captured by the parent
+            // and not the iframe
+            if (document.getElementById('iframe')) {
+                document.getElementById('iframe').style.pointerEvents = 'none';
+            }
+            // disable select on everything
+            document.body.style.webkitUserSelect = 'none';
+            document.body.style.mozUserSelect = 'none';
+            document.body.style.msUserSelect = 'none';
+            document.body.style.oUserSelect = 'none';
+            document.body.style.userSelect = 'none';
+
+            
+            let offsetRight =
+                document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
+            let minWidth = 50;
+            let maxWidth = 1200;
+            console.log('offsetRight', offsetRight)
+            if (offsetRight > minWidth && offsetRight < maxWidth) {
+                setNewWidth(offsetRight);
+            }
+        };
+
+        document.addEventListener('mousemove', handleMousemove);
+        document.addEventListener('mouseup', handleMouseup);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMousemove);
+            document.removeEventListener('mouseup', handleMouseup);
+        }
+    }, [isResizing]);
 
     const handleOpenClose = () => {
         setOpen(!open);
@@ -117,11 +179,35 @@ export default function DrawerEditor(props) {
                 sx={{
                     width: { xs: '100%', sm: '100%', md: '45%' },
                     flexShrink: { xs: 1, sm: 0 },
-                    '& .MuiDrawer-paper': { width: { xs: '100%', sm: '100%', md: '45%' }, boxSizing: 'border-box' },
+                    '& .MuiDrawer-paper': {
+                        width: { xs: '100%', sm: '100%', md: newWidth }, boxSizing: 'border-box'
+                    },
                     display: !show ? 'none' : 'block',
                 }}
 
-            >
+            ><div
+            id="dragger"
+            onMouseDown={event => {
+                handleMousedown(event);
+                // setIsResizing(true);
+            }}
+            onClick={event => {
+                event.stopPropagation();
+                console.log('clicked')
+            }}
+            style={{
+                width: '5px',
+                cursor: 'ew-resize',
+                padding: '4px 0 0',
+                borderTop: '1px solid #ddd',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                zIndex: '100',
+                backgroundColor: '#f4f7f9'
+            }}
+        />
                 <Button
                     aria-label="open drawer"
                     className={'editor-button'}

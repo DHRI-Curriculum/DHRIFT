@@ -9,7 +9,8 @@ import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Footer from '../../components/Footer'
 import Container from '@mui/material/Container';
 import Skeleton from '@mui/material/Skeleton';
-import DrawerEditor from '../../components/Editor/DrawerEditor'
+// import DrawerEditor from '../../components/Editor/DrawerEditor'
+import DrawerEditorMovable from '../../components/Editor/DrawerEditorMovable'
 import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
@@ -268,6 +269,9 @@ export default function WorkshopPage({
         }
         sx={{
           // position: 'relative',
+          // display: 'flex',
+          // flexDirection: 'column',
+          // justifyContent: 'flex-end',
           marginLeft: {
             md: '80px',
           },
@@ -275,7 +279,7 @@ export default function WorkshopPage({
             marginLeft: {
               md: '100px',
             },
-
+            // marginBottom: '250px',
           })
         }}
       >
@@ -283,6 +287,7 @@ export default function WorkshopPage({
           <title>{title}</title>
         </Head>
         <Main open={editorOpen}
+          id='main'
           style={{
             paddingLeft: '0px'
           }}
@@ -308,7 +313,7 @@ export default function WorkshopPage({
           </div>
         </Main>
 
-        {language &&
+        {/* {language &&
           <DrawerEditor
             drawerWidth={drawerWidth}
             open={editorOpen}
@@ -319,20 +324,28 @@ export default function WorkshopPage({
             setAskToRun={setAskToRun}
             language={language}
             allUploads={uploads}
+          />} */}
+        {language &&
+          <DrawerEditorMovable
+            drawerWidth={drawerWidth}
+            open={editorOpen}
+            setEditorOpen={setEditorOpen}
+            text={code}
+            setText={setCode}
+            askToRun={askToRun}
+            setAskToRun={setAskToRun}
+            language={language}
+            allUploads={uploads}
           />}
-        {/* <ClassFacilitator
-        // You'll have to make state variables in the slug and pass them down
-        name={facilitators}
-        bio={'bio'}
-        facilitatorOpen={facilitatorOpen}
-        handleClose={() => setFacilitatorOpen(false)}
-      /> */}
+          {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
       </Container>
       {props.workshopMode &&
-        <div className='workshop-footer'>
+        <>
           <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
-          <Footer workshopMode={props.workshopMode} />
-        </div>
+          <div className='workshop-footer'>
+            <Footer workshopMode={props.workshopMode} />
+          </div>
+        </>
       }
     </Fragment>
   )

@@ -21,7 +21,7 @@ export default function Jupyter(props) {
                 <script src='../coi-service.js' async></script>
             </Head>
             <div style={{ width: '100%', height: '100%' }}>
-                <iframe src={jupyterSrc}
+                <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
                      />
             </div>

@@ -108,6 +108,7 @@ $breakpoints: (
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  min-height: 100%;
 }
 
 #__next {
@@ -120,7 +121,7 @@ html {
   color: $foreground;
   font-family: $body-font, sans-serif;
   font-size: 20px;
-  overflow: hidden;
+  // overflow: hidden;
 }
 
 .container {
@@ -128,7 +129,7 @@ html {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 h1,
@@ -290,7 +291,9 @@ header {
   align-items: flex-start;
   background-color: $primary-color-brown;
   z-index: 21;
-  position: relative;
+  position: fixed;
+  top: 0px;
+  width: 100%;
   height: 100px;
 
   h1 {
@@ -665,7 +668,7 @@ header {
 // page content styles
 .page-content {
 
-  margin-top: 100px;
+  margin-top: 200px;
   margin-bottom: 100px;
 
   h1 {
@@ -683,8 +686,8 @@ header {
   grid-template-columns: 1fr 1fr;
   margin-top: 20px;
   z-index: 12;
-  position: relative;
-  // bottom: 30;
+  position: sticky;
+  bottom: 0px;
 
   p {
     font-weight: 700;
@@ -1022,11 +1025,8 @@ pre {
 // container for footer and pagination in workshops
 .workshop-footer {
   z-index: 10;
-  min-height: 200px;
   width: 100%;
-  // position: absolute;
-  // bottom: 0;
-  // height: 340px;
+  bottom: 0px;
 }
 
 footer {
