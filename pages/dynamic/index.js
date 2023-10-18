@@ -10,7 +10,7 @@ import Footer from '../../components/Footer'
 import Container from '@mui/material/Container';
 import Skeleton from '@mui/material/Skeleton';
 // import DrawerEditor from '../../components/Editor/DrawerEditor'
-import DrawerEditorMovable from '../../components/Editor/DrawerEditorMovable'
+import DrawerEditorMovable from '../../components/Editor/DrawerEditor'
 import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';

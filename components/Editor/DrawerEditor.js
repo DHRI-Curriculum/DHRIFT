@@ -27,7 +27,7 @@ export default function DrawerEditor(props) {
         setIsResizing(true);
         setLastDownX(e.clientX);
     };
-    
+
     const handleMouseup = e => {
         setIsResizing(false);
         if (document.getElementById('iframe')) {
@@ -59,7 +59,7 @@ export default function DrawerEditor(props) {
             document.body.style.oUserSelect = 'none';
             document.body.style.userSelect = 'none';
 
-            
+
             let offsetRight =
                 document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
             let minWidth = 50;
@@ -160,10 +160,11 @@ export default function DrawerEditor(props) {
                     className={'editor-button'}
                     onClick={handleOpenClose}
                     style={{
-                        color: "#32c259",
+                        color: "white",
                     }}
                 >
                     <CodeIcon />
+                    Open Code Editor
                 </Button>
             </div>
             <Drawer
@@ -186,37 +187,37 @@ export default function DrawerEditor(props) {
                 }}
 
             ><div
-            id="dragger"
-            onMouseDown={event => {
-                handleMousedown(event);
-                // setIsResizing(true);
-            }}
-            onClick={event => {
-                event.stopPropagation();
-                console.log('clicked')
-            }}
-            style={{
-                width: '5px',
-                cursor: 'ew-resize',
-                padding: '4px 0 0',
-                borderTop: '1px solid #ddd',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                zIndex: '100',
-                backgroundColor: '#f4f7f9'
-            }}
-        />
+                    id="dragger"
+                    onMouseDown={event => {
+                        handleMousedown(event);
+                        // setIsResizing(true);
+                    }}
+                    onClick={event => {
+                        event.stopPropagation();
+                        console.log('clicked')
+                    }}
+                    style={{
+                        width: '5px',
+                        cursor: 'ew-resize',
+                        padding: '4px 0 0',
+                        borderTop: '1px solid #ddd',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        zIndex: '100',
+                        backgroundColor: '#f4f7f9'
+                    }}
+                />
                 <Button
                     aria-label="open drawer"
                     className={'editor-button'}
                     onClick={handleOpenClose}
                     style={{
-                        color: "#32c259",
+                        color: "white",
                     }}
                 >
-                    <CodeIcon />
+                    <CodeIcon /> Close Code Editor
                 </Button>
                 <div className='drawer-editor'>
                     {whichEditor()}
