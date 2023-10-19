@@ -290,7 +290,8 @@ export default function WorkshopPage({
             marginLeft: {
               md: '100px',
             },
-          })
+          }),
+          flexGrow: 1,
         }}
       >
         <Head>
@@ -322,19 +323,6 @@ export default function WorkshopPage({
             </div>
           </div>
         </Main>
-
-        {/* {language &&
-          <DrawerEditor
-            drawerWidth={drawerWidth}
-            open={editorOpen}
-            setEditorOpen={setEditorOpen}
-            text={code}
-            setText={setCode}
-            askToRun={askToRun}
-            setAskToRun={setAskToRun}
-            language={language}
-            allUploads={uploads}
-          />} */}
         {language && props.workshopMode &&
           <DrawerEditorMovable
             drawerWidth={drawerWidth}
