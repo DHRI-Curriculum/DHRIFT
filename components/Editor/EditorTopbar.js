@@ -11,7 +11,7 @@ export default function EditorTopbar(props) {
     return (
         <>
             <div className="editorTopBarButtonsContainer">
-                <Button
+                {/* <Button
                     color="primary"
                     aria-label="open drawer"
                     onClick={props.handleOpenClose}
@@ -21,7 +21,7 @@ export default function EditorTopbar(props) {
                             color: "#32c259",
                         }}
                     />
-                </Button>
+                </Button> */}
                 {(!spinnerNeeded && runButtonNeeded) && <Button
                     onClick={() => {
                         props.run();

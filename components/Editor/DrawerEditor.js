@@ -105,11 +105,15 @@ export default function DrawerEditor(props) {
     const whichEditor = () => {
         if (language === 'python') {
             return (
-                // <PythonEditorComponent language={language}
-                //     defaultCode={text}
-                //     handleOpenClose={handleOpenClose}
-                //     runButtonNeeded={true}
-                //     {...props} />
+                <PythonEditorComponent language={language}
+                    defaultCode={text}
+                    handleOpenClose={handleOpenClose}
+                    runButtonNeeded={true}
+                    {...props} />
+            )
+        }
+        else if (language === 'jupyter') {
+            return (
                 <Jupyter
                     handleOpenClose={handleOpenClose}
                     runButtonNeeded={false}

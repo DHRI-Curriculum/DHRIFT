@@ -3,13 +3,13 @@ import Head from 'next/head'
 import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
+import { useRouter } from 'next/router'
 import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
 import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
 import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Footer from '../../components/Footer'
 import Container from '@mui/material/Container';
 import Skeleton from '@mui/material/Skeleton';
-// import DrawerEditor from '../../components/Editor/DrawerEditor'
 import DrawerEditorMovable from '../../components/Editor/DrawerEditor'
 import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
@@ -71,6 +71,8 @@ export default function WorkshopPage({
   const [allUploads, setAllUploads] = useState([]);
   const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitFile });
 
+  const router = useRouter();
+
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
     const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
@@ -82,10 +84,17 @@ export default function WorkshopPage({
         return acc;
       } else if (curr.type === 'h1') {
         allPages.push([curr]);
-        // this changes from long pages to short ones 
-      } else if (curr.type === 'h2' && currentFile.data.long_pages === 'true') {
+      }
+      else if ((curr.type === 'h2' && currentFile.data.long_pages === 'false')
+        || (curr.type === 'h2' && currentFile.data.long_pages === undefined)) {
         allPages.push([curr]);
-      } else {
+      }
+      // this changes from long pages to short ones 
+      else if (curr.type === 'h2' && currentFile.data.long_pages === 'true') {
+        // pass
+      }
+      // else if (curr.type === 'h2' && currentFile.data.long_pages === 'false')
+      else {
         allPages[allPages.length - 1].push(curr);
       }
       return acc;
@@ -120,6 +129,7 @@ export default function WorkshopPage({
     setEditing(urlParams.get('edit'));
     setInstUser(urlParams.get('instUser'));
     setInstRepo(urlParams.get('instRepo'));
+    setCurrentPage(Number(urlParams.get('page')));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
     }
@@ -144,6 +154,12 @@ export default function WorkshopPage({
       }
     }
   }, [data])
+
+  useEffect(() => {
+    if (currentPage && pages.length > 0) {
+      setCurrentContent(pages[currentPage - 1]);
+    }
+  }, [currentPage, pages])
 
   useEffect(() => {
     if (currentFile != null && content != '') {
@@ -230,8 +246,7 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    // CHANGE THIS
-    // router.push(`/dynamic/${slug[0]}/${slug[1]}/${slug[2]}/?page=${valueAsNumber}`, undefined, { shallow: true, scroll: false });
+    router.push(`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
@@ -268,10 +283,6 @@ export default function WorkshopPage({
           props.workshopMode ? 'md' : '100vw'
         }
         sx={{
-          // position: 'relative',
-          // display: 'flex',
-          // flexDirection: 'column',
-          // justifyContent: 'flex-end',
           marginLeft: {
             md: '80px',
           },
@@ -279,7 +290,6 @@ export default function WorkshopPage({
             marginLeft: {
               md: '100px',
             },
-            // marginBottom: '250px',
           })
         }}
       >
@@ -325,7 +335,7 @@ export default function WorkshopPage({
             language={language}
             allUploads={uploads}
           />} */}
-        {language &&
+        {language && props.workshopMode &&
           <DrawerEditorMovable
             drawerWidth={drawerWidth}
             open={editorOpen}
@@ -337,7 +347,7 @@ export default function WorkshopPage({
             language={language}
             allUploads={uploads}
           />}
-          {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
+        {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
       </Container>
       {props.workshopMode &&
         <>
