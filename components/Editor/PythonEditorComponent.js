@@ -105,15 +105,23 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     namespace.set("print", (s) => {
       printList.push(s.toString());
     });
-    namespace.set("input", (s) => {
-      var response = prompt(s);
-      return response;
-    });
+    // namespace.set("input", (s) => {
+    //   var response = prompt(s);
+    //   return response;
+    // });
     namespace.set("log", (s) => {
       console.log(s);
     });
     await pyodide.runPythonAsync(checkImports(code),
       { globals: namespace });
+    await pyodide.runPythonAsync(
+`
+from js import prompt
+import builtins
+def input(p=""):
+  return prompt(p)
+builtins.input = input
+`, { globals: namespace });
     return await pyodide.runPythonAsync(code,
       { globals: namespace }
     ).then(result => {
