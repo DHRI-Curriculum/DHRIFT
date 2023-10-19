@@ -77,8 +77,6 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
         }
     }, [coverimage])
 
-    console.log(parsedWorkshop)
-
     const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
     return (
         <>

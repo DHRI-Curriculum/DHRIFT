@@ -130,6 +130,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  // flex-grow: 1;
 }
 
 h1,
@@ -840,13 +841,12 @@ nav.sidenav {
 
 .editor-button-container {
   /* on the far right  */
-  position: fixed !important;
-  right: 0;
+  position: fixed;
+  right: 0px;
   top: 100px;
-  margin: 10px;
-  height: 30px;
   z-index: 100;
-  background-color: #000;
+  background-color: #24272E;
+  color: white;
 }
 
 .editorTopBarButtonsContainer {
