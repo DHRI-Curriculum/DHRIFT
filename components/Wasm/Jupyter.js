@@ -34,12 +34,15 @@ export default function Jupyter(props) {
 
     return (
         <>
-            {/* <Head>
+            <Head>
                 <script src='../coi-service.js' async></script>
-            </Head> */}
+            </Head>
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
+                    // cors stuff
+                    sandbox='allow-scripts allow-same-origin allow-forms'
+                    
                 />
             </div>
         </>
