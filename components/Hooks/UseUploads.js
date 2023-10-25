@@ -5,11 +5,13 @@ export default function useUploads({setAllUploads, gitUser, gitRepo,
     gitFile, overrideURL}) {
 
     let headers;
-    let builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`
+    let builtURL;
+    if (gitUser && gitRepo && gitFile) {
+        builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`
+    }
     if (overrideURL) {
         builtURL = overrideURL;
     }
-
     if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {

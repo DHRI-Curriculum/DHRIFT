@@ -7,8 +7,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Webvm from '../Wasm/Webvm';
+import JupyterLoad from './JupyterLoad';
 import { useState, useEffect, useRef, Fragment } from 'react';
-import { Moving } from '@mui/icons-material';
 
 export default function DrawerEditor(props) {
 
@@ -20,8 +20,6 @@ export default function DrawerEditor(props) {
     const [isResizing, setIsResizing] = useState(false);
     const [lastDownX, setLastDownX] = useState(0);
     const [newWidth, setNewWidth] = useState('45%');
-
-
 
     const handleMousedown = e => {
         setIsResizing(true);
@@ -64,7 +62,6 @@ export default function DrawerEditor(props) {
                 document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
             let minWidth = 50;
             let maxWidth = 1200;
-            console.log('offsetRight', offsetRight)
             if (offsetRight > minWidth && offsetRight < maxWidth) {
                 setNewWidth(offsetRight);
             }
@@ -117,6 +114,7 @@ export default function DrawerEditor(props) {
                 <Jupyter
                     handleOpenClose={handleOpenClose}
                     runButtonNeeded={false}
+                    {...props}
                 />
             )
         }
@@ -198,7 +196,6 @@ export default function DrawerEditor(props) {
                     }}
                     onClick={event => {
                         event.stopPropagation();
-                        console.log('clicked')
                     }}
                     style={{
                         width: '5px',
@@ -223,6 +220,18 @@ export default function DrawerEditor(props) {
                 >
                     <CodeIcon /> Close Code Editor
                 </Button>
+                {language === 'jupyter' &&
+                    <Button
+                        aria-label="load notebook/data"
+                        className={'data-load-button'}
+                        onClick={() => {
+                            JupyterLoad(props);
+                        }}
+                        style={{
+                            color: "white",
+                        }}
+                    > Load Notebook/Data</Button>
+                }
                 <div className='drawer-editor'>
                     {whichEditor()}
                 </div>

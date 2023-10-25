@@ -67,6 +67,8 @@ export default function WorkshopPage({
   const [editing, setEditing] = useState(false);
   const [metadata, setMetadata] = useState(null);
   const [markdownError, setMarkdownError] = useState(false);
+  // const [jupyterSrc, setJupyterSrc] = useState('../../jupyterlite/lab/index.html?path=empty.ipynb');
+  const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
 
   const [allUploads, setAllUploads] = useState([]);
   const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitFile });
@@ -75,7 +77,8 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
+    // const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -334,6 +337,11 @@ export default function WorkshopPage({
             setAskToRun={setAskToRun}
             language={language}
             allUploads={uploads}
+            gitUser={gitUser}
+            gitRepo={gitRepo}
+            jupyterSrc={jupyterSrc}
+            setJupyterSrc={setJupyterSrc}
+            {...props}
           />}
         {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
       </Container>

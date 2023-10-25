@@ -105,10 +105,7 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     namespace.set("print", (s) => {
       printList.push(s.toString());
     });
-    // namespace.set("input", (s) => {
-    //   var response = prompt(s);
-    //   return response;
-    // });
+
     namespace.set("log", (s) => {
       console.log(s);
     });
@@ -116,11 +113,14 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
       { globals: namespace });
     await pyodide.runPythonAsync(
 `
+import sys
 from js import prompt
 import builtins
 def input(p=""):
   return prompt(p)
 builtins.input = input
+# dangerous?
+sys.tracebacklimit = 0
 `, { globals: namespace });
     return await pyodide.runPythonAsync(code,
       { globals: namespace }

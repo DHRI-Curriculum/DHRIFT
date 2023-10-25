@@ -18,7 +18,8 @@ import SecretComponent from './SecretComponent';
 // import he from 'he';
 
 
-export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
+export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc) {
+
 
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
