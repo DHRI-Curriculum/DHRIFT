@@ -5,7 +5,7 @@ import Script from 'next/script';
 export default function Jupyter(props) {
     const jupyterSrc = props.jupyterSrc;
     const setJupyterSrc = props.setJupyterSrc;
-    
+
 
 
     // useEffect(() => {
@@ -14,13 +14,19 @@ export default function Jupyter(props) {
     //     }
     // }, [uploads])
 
-    // useEffect(() => {
-    //     if (window.coi){
-    //         window.coi.shouldRegister = () => false;
-    //         window.crypto.shouldDeregister = () => true;
-    //         window.coi.doReload = () => false;
-    //     }
-    // }, [])
+    useEffect(() => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+                .then(function (registrations) {
+                    for (let registration of registrations) {
+                        console.log(registration);
+                        // if (registration.active.scriptURL == 'coi-serviceworker.js') {
+                        registration.unregister();
+                        window.location.reload()
+                    }
+                });
+        }
+    }, [])
 
     return (
         <>
@@ -28,7 +34,7 @@ export default function Jupyter(props) {
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
-                    // cors stuff
+                // cors stuff
 
                 />
             </div>

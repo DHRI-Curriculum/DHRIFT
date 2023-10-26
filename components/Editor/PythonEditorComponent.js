@@ -36,6 +36,20 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   } = useContext(PyodideContext)
 
   useEffect(() => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations()
+            .then(function (registrations) {
+                for (let registration of registrations) {
+                    console.log(registration);
+                    // if (registration.active.scriptURL == 'coi-serviceworker.js') {
+                    registration.unregister();
+                    window.location.reload()
+                }
+            });
+    }
+}, [])
+
+  useEffect(() => {
     if (isPyodideReady) {
       setIsPyodideLoading(false)
       setPyodideLoaded(true);
