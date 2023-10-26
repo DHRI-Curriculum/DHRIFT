@@ -7,9 +7,9 @@ export default function Jupyter(props) {
 
     return (
         <>
-            <Head>
+            {/* <Head>
                 <script src='../coi-service.js' async></script>
-            </Head>
+            </Head> */}
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={'../../jupyterlite/repl/index.html?kernel=python'}
                     id='iframe'

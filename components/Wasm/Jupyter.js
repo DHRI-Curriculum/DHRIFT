@@ -29,8 +29,7 @@ export default function Jupyter(props) {
                 <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
                     // cors stuff
-                    sandbox='allow-scripts allow-same-origin allow-forms'
-                    
+
                 />
             </div>
         </>

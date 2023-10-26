@@ -67,7 +67,6 @@ export default function WorkshopPage({
   const [editing, setEditing] = useState(false);
   const [metadata, setMetadata] = useState(null);
   const [markdownError, setMarkdownError] = useState(false);
-  // const [jupyterSrc, setJupyterSrc] = useState('../../jupyterlite/lab/index.html?path=empty.ipynb');
   const [jupyterSrc, setJupyterSrc] = useState('https://melodic-moonbeam-e29b67.netlify.app/lab/index.html');
 
   const [allUploads, setAllUploads] = useState([]);
