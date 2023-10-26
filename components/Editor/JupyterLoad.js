@@ -10,5 +10,5 @@ export default function JupyterLoad(props) {
         return `&fromURL=${upload.download_url}`
     }
     ).join('');
-    setJupyterSrc(`../../jupyterlite/lab/index.html?path=empty.ipynb${fromURLString}`);
+    setJupyterSrc(`https://melodic-moonbeam-e29b67.netlify.app/lab/index.html?${fromURLString}`);
 }

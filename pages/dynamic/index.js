@@ -77,8 +77,7 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    // const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -341,7 +340,6 @@ export default function WorkshopPage({
             gitRepo={gitRepo}
             jupyterSrc={jupyterSrc}
             setJupyterSrc={setJupyterSrc}
-            {...props}
           />}
         {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
       </Container>
