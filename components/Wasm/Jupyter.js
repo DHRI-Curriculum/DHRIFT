@@ -15,22 +15,21 @@ export default function Jupyter(props) {
     // }, [uploads])
 
     useEffect(() => {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations()
-                .then(function (registrations) {
-                    for (let registration of registrations) {
-                        console.log(registration);
-                        // if (registration.active.scriptURL == 'coi-serviceworker.js') {
-                        registration.unregister();
-                        window.location.reload()
-                    }
-                });
-        }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations()
+            .then(function (registrations) {
+                for (let registration of registrations) {
+                    console.log(registration);
+                    // if (registration.active.scriptURL == 'coi-serviceworker.js') {
+                    registration.unregister();
+                    window.location.reload()
+                }
+            });
+    }
     }, [])
 
     return (
         <>
-
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
