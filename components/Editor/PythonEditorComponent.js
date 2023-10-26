@@ -38,6 +38,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   useEffect(() => {
     if (isPyodideReady) {
       setIsPyodideLoading(false)
+      setPyodideLoaded(true);
     }
   }, [hasLoadPyodideBeenCalled, setIsPyodideLoading, isPyodideReady])
 
@@ -49,16 +50,6 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
     }
     props.setAskToRun(false);
   }, [props.askToRun])
-
-
-
-  /*useEffect(() => {
-    nltoolkit = await fetch('https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/tokenizers/punkt.zip')
-      .then(nltoolkit =>
-        if nltoolkit.)
-
-  }, [])
-  */
 
   const onChange = (newValue) => {
     setCodeState(newValue);
@@ -138,7 +129,6 @@ sys.tracebacklimit = 0
 
   function showValue() {
     if (pyodideLoaded) {
-      // closePlot();
       runPyodide(code);
     }
   }
