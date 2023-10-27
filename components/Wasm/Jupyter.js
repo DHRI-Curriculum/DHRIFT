@@ -7,13 +7,6 @@ export default function Jupyter(props) {
     const setJupyterSrc = props.setJupyterSrc;
 
 
-
-    // useEffect(() => {
-    //     if (uploads) {
-    //         setJupyterSrc(`../../jupyterlite/lab/index.html?path=empty.ipynb${fromURLString}`);
-    //     }
-    // }, [uploads])
-
     useEffect(() => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations()
@@ -33,8 +26,6 @@ export default function Jupyter(props) {
             <div style={{ width: '100%', height: '100%' }}>
                 <iframe src={jupyterSrc} id='iframe'
                     width='100%' height='100%'
-                // cors stuff
-
                 />
             </div>
         </>

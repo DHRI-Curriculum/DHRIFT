@@ -166,7 +166,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
             <p className='description'>{description}</p><br />
             <Button className='button button-white'
               onClick={() => { setCurrentPage(2) }}>
-              Get Started
+              Start the Workshop
             </Button>
           </>
         }

@@ -22,7 +22,6 @@ export default function useWorkshop(gitUser, builtURL, editing) {
     }
   }, [editing])
 
-  // console.log(process.env.NEXT_PUBLIC_GITHUBSECRET)
   if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') { 
     headers = new Headers(
       {
