@@ -220,7 +220,7 @@ export default function DrawerEditor(props) {
                 >
                     <CodeIcon /> Close Code Editor
                 </Button>
-                {language === 'jupyter' &&
+                {/* {language === 'jupyter' &&
                     <Button
                         aria-label="load notebook/data"
                         className={'data-load-button'}
@@ -231,7 +231,7 @@ export default function DrawerEditor(props) {
                             color: "white",
                         }}
                     > Load Notebook/Data</Button>
-                }
+                } */}
                 <div className='drawer-editor'>
                     {whichEditor()}
                 </div>
