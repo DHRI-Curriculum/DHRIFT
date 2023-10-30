@@ -7,19 +7,18 @@ import Image from 'next/image'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import PythonREPLComponent from '../Editor/PythonREPLComponent';
-import EditorWithTabsComponent from '../Editor/EditorWithTabs';
 import CodeRunBox from '../Editor/CodeRunBox';
 import Download from './Download';
 import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
+import JupyterLoad from './JupyterLoad';
 import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 // import { renderToStaticMarkup } from 'react-dom/server';
 // import he from 'he';
 
 
-export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile) {
-
+export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc) {
 
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
@@ -149,16 +148,6 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
     //     )
     // }
 
-
-    const EditorWithTabs = ({ className, children }) => {
-        const codeText = children.join('');
-        return (
-            <div>
-                <EditorWithTabsComponent defaultCode={codeText} />
-            </div>
-        )
-    }
-
     const PythonREPL = ({ className, children }) => {
         return (
             <div>
@@ -229,6 +218,16 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
         )
     }
 
+    const Jupyter = ({ className, children }) => {
+        return (
+            <div>
+                <JupyterLoad setJupyterSrc={setJupyterSrc}
+                gitFile={gitFile}
+                 />
+            </div>
+        )
+    }
+
     const Secret = ({ className, children }) => {
         return (
             <div>
@@ -284,11 +283,10 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                             className: 'info-alert',
                         }
                     },
-
+                    Jupyter,
                     Quiz,
                     PythonREPL,
                     Terminal,
-                    EditorWithTabs,
                     JSTerminal,
                     Secret
                     // HTMLEditor,

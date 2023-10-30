@@ -194,6 +194,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
         instructors={currentFile.data.instructors}
         editors={currentFile.data.editors}
         title={workshopTitle}
+        coverTitle={currentFile.data['cover title']}
       />
     </div>
   )

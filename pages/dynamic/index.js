@@ -76,7 +76,7 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile);
+    const htmlifiedContent = ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc);
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -164,8 +164,7 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (currentFile != null && content != '') {
-      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent,
-        pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
+      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
     }
   }, [currentFile, content])

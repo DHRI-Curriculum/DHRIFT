@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 
-export default function FrontmatterFeature({ authors, instructors, editors, coverImage, title }) {
+export default function FrontmatterFeature({ authors, instructors, editors, coverImage, title, coverTitle }) {
 
   const [src, setSrc] = useState(null);
   const randomNumberBetween1and7 = Math.floor(Math.random() * 7) + 1;
@@ -13,6 +13,9 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
       setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
     }
   }, [coverImage])
+
+  console.log(coverTitle)
+  const frontTitle = coverTitle ? coverTitle : title;
 
   return (
     <div className='frontmatter-feature'>
@@ -27,7 +30,7 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
             style={{
               top: '30%'
             }}
-          >{title}</p>
+          >{frontTitle}</p>
         </div>
 
         {authors && authors.length > 0 && <div className='frontpage-feature-authors'>
