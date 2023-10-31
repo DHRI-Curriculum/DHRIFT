@@ -11,6 +11,8 @@ const Footer = dynamic(() => import('../components/Footer'))
 import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
+import NextNProgress from 'nextjs-progressbar';
+import { useRouter } from 'next/router';
 
 
 function MyApp({ Component, pageProps }) {
@@ -55,6 +57,29 @@ function MyApp({ Component, pageProps }) {
     return () => cache.current;
   }
 
+  // function Loading() {
+  //   const router = useRouter();
+  //   const [loading, setLoading] = useState(false);
+
+  //   useEffect(() => {
+  //     const handleStart = (url) => (url !== router.asPath) && setLoading(true);
+  //     const handleComplete = (url) => (url === router.asPath) && setTimeout(() => { setLoading(false) }, 2000);
+
+  //     router.events.on('routeChangeStart', handleStart)
+  //     router.events.on('routeChangeComplete', handleComplete)
+  //     router.events.on('routeChangeError', handleComplete)
+
+  //     return () => {
+  //       router.events.off('routeChangeStart', handleStart)
+  //       router.events.off('routeChangeComplete', handleComplete)
+  //       router.events.off('routeChangeError', handleComplete)
+  //     }
+  //   })
+
+  //   return loading
+  // }
+
+
   // use hook in SWRConfig
   const provider = useCacheProvider();
 
@@ -66,22 +91,17 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          {/* {!workshopMode &&
-            <Header
-              title={title}
-              instUser={instUser}
-              instRepo={instRepo}
-            />} */}
           <main className='container'>
-              <SWRConfig value={{ provider }}>
-                <PyodideProvider>
-                  <Component {...pageProps} />
-                </PyodideProvider>
-              </SWRConfig>
+            <SWRConfig value={{ provider }}>
+              <PyodideProvider>
+                <NextNProgress
+                options={{ easing: 'ease', speed: 200 }} />
+                <Component {...pageProps} />
+              </PyodideProvider>
+            </SWRConfig>
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      {/* <BackToTop /> */}
       {!workshopMode &&
         <Footer />}
     </>

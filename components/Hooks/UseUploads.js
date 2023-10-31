@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 export default function useUploads({setAllUploads, gitUser, gitRepo, 
     gitFile, overrideURL}) {
 
+    const [shouldFetch, setShouldFetch] = useState(false);
+
     let headers;
     let builtURL;
     if (gitUser && gitRepo && gitFile) {
@@ -34,7 +36,14 @@ export default function useUploads({setAllUploads, gitUser, gitRepo,
         err => console.log('err', err)
     )
 
-    const { data: uploads, error } = useSWRImmutable(gitUser && gitRepo && gitFile
+    
+  useEffect(() => {
+    if(gitUser && gitFile && gitRepo) {
+      setShouldFetch(true)
+    }
+  }, [gitUser, gitFile, gitRepo])
+
+    const { data: uploads, error } = useSWRImmutable(shouldFetch
          ? builtURL : null, fetcher(headers),
         { revalidateOnMount: true })
 

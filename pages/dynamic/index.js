@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
+import { Fade } from '@mui/material'
 
 const drawerWidth = '-30%';
 
@@ -54,7 +55,6 @@ export default function WorkshopPage({
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
   const [code, setCode] = useState(null);
-  // communicates with the editor to run code
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
@@ -120,7 +120,7 @@ export default function WorkshopPage({
     )
   }
 
-  const data = useWorkshop(gitUser, builtURL, editing);
+  const data = useWorkshop(gitUser, gitFile, builtURL, editing);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -166,6 +166,7 @@ export default function WorkshopPage({
     if (currentFile != null && content != '') {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
+      setCurrentContentLoaded(true);
     }
   }, [currentFile, content])
 
@@ -210,7 +211,6 @@ export default function WorkshopPage({
     } else {
       setCurrentContent(pages[0]);
       setCurrentPage(1);
-      setCurrentContentLoaded(true);
     }
   }, [pages])
 
@@ -230,7 +230,7 @@ export default function WorkshopPage({
 
 
   useEffect(() => {
-    if (currentPage === 1) {
+    if (currentPage === 1 || currentPage === 0) {
       props.setWorkshopMode(false);
     }
     else {
@@ -266,6 +266,7 @@ export default function WorkshopPage({
         <div>{markdownError.message}</div>
       </div>
     </>)
+
   return (
     <Fragment>
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
@@ -273,78 +274,81 @@ export default function WorkshopPage({
         pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
         handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
       />
-        || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+        ||
+        <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
           workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
         />
       }
-      <Container
-        disableGutters={true}
-        maxWidth={
-          props.workshopMode ? 'md' : '100vw'
-        }
-        sx={{
-          marginLeft: {
-            md: '80px',
-          },
-          ...(props.workshopMode && {
+      <Fade in={currentContentLoaded} timeout={500}>
+        <Container
+          disableGutters={true}
+          maxWidth={
+            props.workshopMode ? 'md' : '100vw'
+          }
+          sx={{
             marginLeft: {
-              md: '100px',
+              md: '80px',
             },
-          }),
-          flexGrow: 1,
-        }}
-      >
-        <Head>
-          <title>{title}</title>
-        </Head>
-        <Main open={editorOpen}
-          id='main'
-          style={{
-            paddingLeft: '0px'
+            ...(props.workshopMode && {
+              marginLeft: {
+                md: '100px',
+              },
+            }),
+            flexGrow: 1,
           }}
         >
-          <div className="card-page">
-            <div className="workshop-container">
-              {currentContentLoaded ? (
-                currentContent
-              ) : (
+          <Head>
+            <title>{title}</title>
+          </Head>
+          <Main open={editorOpen}
+            id='main'
+            style={{
+              paddingLeft: '0px'
+            }}
+          >
+            <div className="card-page">
+              <div className="workshop-container">
+                {currentContentLoaded ? (
+                  currentContent
+                ) : (
 
-                <div className='skeleton-container'
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                  {
-                    Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-                </div>
-              )}
+                  <div className='skeleton-container'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                    {
+                      Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Main>
-        {language && props.workshopMode &&
-          <DrawerEditorMovable
-            drawerWidth={drawerWidth}
-            open={editorOpen}
-            setEditorOpen={setEditorOpen}
-            text={code}
-            setText={setCode}
-            askToRun={askToRun}
-            setAskToRun={setAskToRun}
-            language={language}
-            allUploads={uploads}
-            gitUser={gitUser}
-            gitRepo={gitRepo}
-            jupyterSrc={jupyterSrc}
-            setJupyterSrc={setJupyterSrc}
-          />}
-        {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
-      </Container>
+          </Main>
+          {language && props.workshopMode &&
+            <DrawerEditorMovable
+              drawerWidth={drawerWidth}
+              open={editorOpen}
+              setEditorOpen={setEditorOpen}
+              text={code}
+              setText={setCode}
+              askToRun={askToRun}
+              setAskToRun={setAskToRun}
+              language={language}
+              allUploads={uploads}
+              gitUser={gitUser}
+              gitRepo={gitRepo}
+              jupyterSrc={jupyterSrc}
+              setJupyterSrc={setJupyterSrc}
+            />}
+          {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
+        </Container>
+      </Fade>
       {props.workshopMode &&
         <>
-          <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
           <div className='workshop-footer'>
+            <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
             <Footer workshopMode={props.workshopMode} />
           </div>
         </>
