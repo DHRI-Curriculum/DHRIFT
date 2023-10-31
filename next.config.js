@@ -41,7 +41,10 @@ const nextConfig = {
     // assetPrefix: isGitHub ? '/' + repoName : '',
     images: {
         unoptimized: true,
-    }
+    },
+    experimental: {
+        optimizeCss: true,
+    },
 }
 
 console.log(nextConfig);

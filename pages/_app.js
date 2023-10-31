@@ -12,6 +12,7 @@ import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
 
+
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
@@ -72,11 +73,11 @@ function MyApp({ Component, pageProps }) {
               instRepo={instRepo}
             />} */}
           <main className='container'>
-            <SWRConfig value={{ provider }}>
-              <PyodideProvider>
-                <Component {...pageProps} />
-              </PyodideProvider>
-            </SWRConfig>
+              <SWRConfig value={{ provider }}>
+                <PyodideProvider>
+                  <Component {...pageProps} />
+                </PyodideProvider>
+              </SWRConfig>
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
