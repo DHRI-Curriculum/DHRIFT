@@ -273,6 +273,7 @@ export default function WorkshopPage({
       style={{
         display: 'flex',
         flexDirection: 'column',
+        minHeight: '100vh',
       }}
     >
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
