@@ -268,7 +268,13 @@ export default function WorkshopPage({
     </>)
 
   return (
-    <Fragment>
+    <Fade in={currentContentLoaded} timeout={500}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
         setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
         pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
@@ -279,7 +285,7 @@ export default function WorkshopPage({
           workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
         />
       }
-      <Fade in={currentContentLoaded} timeout={500}>
+      
         <Container
           disableGutters={true}
           maxWidth={
@@ -344,7 +350,6 @@ export default function WorkshopPage({
             />}
           {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
         </Container>
-      </Fade>
       {props.workshopMode &&
         <>
           <div className='workshop-footer'>
@@ -353,6 +358,7 @@ export default function WorkshopPage({
           </div>
         </>
       }
-    </Fragment>
+    </div>
+      </Fade>
   )
 }

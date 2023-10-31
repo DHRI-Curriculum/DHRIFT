@@ -23,7 +23,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
     }
   }, [editing])
 
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') { 
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers = new Headers(
       {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
   )
 
   useEffect(() => {
-    if(gitUser && gitFile) {
+    if (gitUser && gitFile) {
       setShouldFetch(true)
     }
   }, [gitUser, gitFile])
@@ -56,8 +56,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
     {
       onError(err) {
         console.log('workshop.url', builtURL)
-        // get the cached version of the data
-
+        console.log('workshop.err', err)
       }
     },
     {
