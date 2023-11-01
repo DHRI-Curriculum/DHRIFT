@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
+import format from 'date-fns/format';
 
 export default function Institute(props) {
 
@@ -77,8 +78,8 @@ export default function Institute(props) {
                 const dateStart = new Date(parsedYAML.datestart)
                 const dateEnd = new Date(parsedYAML.enddate)
                 // make the dates look nice, long month names, etc
-                const cleanDateStart = dateStart.toDateString()
-                const cleanDateEnd = dateEnd.toDateString()
+                const cleanDateStart = format(dateStart, 'MMMM do, yyyy')
+                const cleanDateEnd = format(dateEnd, 'MMMM do, yyyy')
                 // if the dates are the same, just show one
                 if (cleanDateStart === cleanDateEnd) {
                     setDate(cleanDateStart)
