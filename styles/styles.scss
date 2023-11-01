@@ -171,6 +171,14 @@ h6 {
       background-color: $primary-color-sky;
       color: $primary-color-brown;
     }
+    >a{
+      color: $primary-color-white;
+      text-decoration: none;
+      &:hover {
+        color: $primary-color-brown;
+      }
+    }
+
   }
 
   &-download {
@@ -343,6 +351,10 @@ header {
       padding-left: 5px;
       color: $primary-color-white;
     }
+    a{
+      color: $primary-color-white;
+      text-decoration: none;
+    }
 
 
   }
@@ -480,7 +492,7 @@ header {
     margin-top: 40px;
     margin-bottom: 40px;
     position: relative;
-    width: 50vw;
+    width: 80vw;
     align-self: center;
   }
 
@@ -613,6 +625,9 @@ header {
 
   &-item {
     grid-column: 1;
+    h2,h3{
+      font-weight: 900;
+    }
 
     ul {
       padding: 0px;
@@ -620,7 +635,6 @@ header {
 
     li {
       margin-bottom: 10px;
-      list-style: none;
     }
   }
 
@@ -642,6 +656,10 @@ header {
       justify-self: right;
       position: absolute;
       display: block;
+    }
+
+    &-authors{
+      margin-top: 20px;
     }
 
     >div {

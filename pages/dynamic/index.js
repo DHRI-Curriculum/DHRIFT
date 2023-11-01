@@ -65,7 +65,6 @@ export default function WorkshopPage({
   const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
-  const [metadata, setMetadata] = useState(null);
   const [markdownError, setMarkdownError] = useState(false);
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
 
@@ -162,9 +161,13 @@ export default function WorkshopPage({
     }
   }, [currentPage, pages])
 
+  const [secondPageLink, setSecondPageLink] = useState('');
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set('page', 2);
+      setSecondPageLink(`${window.location.pathname}?${urlParams}`);
     if (currentFile != null && content != '') {
-      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
+      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
       setCurrentContentLoaded(true);
     }
@@ -174,6 +177,7 @@ export default function WorkshopPage({
   useEffect(() => {
     setTitle(workshopTitle);
     let mostRecentH1 = null;
+    let mostRecentH1Index = null;
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
       // if it's the frontpage vs not
@@ -183,17 +187,21 @@ export default function WorkshopPage({
       }
       let tag = page.props.children[0].props.children.type;
       let parent = undefined;
+      let parentIndex = undefined;
       if (tag === 'h1') {
         mostRecentH1 = header;
+        mostRecentH1Index = index;
       }
       if (tag === 'h2') {
         parent = mostRecentH1;
+        parentIndex = mostRecentH1Index;
       }
       header = {
         title: header,
         index: index + 1,
         active: index + 1 === currentPage ? true : false,
-        parent: parent
+        parent: parent,
+        parentIndex: parentIndex,
       }
       return (header)
     })
@@ -269,24 +277,24 @@ export default function WorkshopPage({
 
   return (
     <Fade in={currentContentLoaded} timeout={500}>
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-      }}
-    >
-      {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
-        setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
-        pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
-      />
-        ||
-        <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
-          workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+      >
+        {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+          setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+          pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
+          handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
         />
-      }
-      
+          ||
+          <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+            workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+          />
+        }
+
         <Container
           disableGutters={true}
           maxWidth={
@@ -351,15 +359,15 @@ export default function WorkshopPage({
             />}
           {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
         </Container>
-      {props.workshopMode &&
-        <>
-          <div className='workshop-footer'>
-            <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
-            <Footer workshopMode={props.workshopMode} />
-          </div>
-        </>
-      }
-    </div>
-      </Fade>
+        {props.workshopMode &&
+          <>
+            <div className='workshop-footer'>
+              <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
+              <Footer workshopMode={props.workshopMode} />
+            </div>
+          </>
+        }
+      </div>
+    </Fade>
   )
 }

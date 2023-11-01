@@ -19,6 +19,8 @@ export default function Institute(props) {
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
+    const [shouldFetch, setShouldFetch] = useState(false);
+    const [date, setDate] = useState(null);
 
     let headers;
 
@@ -51,7 +53,13 @@ export default function Institute(props) {
         setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/config.yml`)
     }, [gitUser, gitRepo])
 
-    const { data: config, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
+    useEffect(() => {
+        if (gitUser && gitRepo) {
+            setShouldFetch(true)
+        }
+    }, [gitUser, gitRepo])
+
+    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
 
     useEffect(() => {
@@ -68,8 +76,18 @@ export default function Institute(props) {
             if (parsedYAML.datestart && parsedYAML.enddate) {
                 const dateStart = new Date(parsedYAML.datestart)
                 const dateEnd = new Date(parsedYAML.enddate)
+                // make the dates look nice, long month names, etc
                 const cleanDateStart = dateStart.toDateString()
                 const cleanDateEnd = dateEnd.toDateString()
+                // if the dates are the same, just show one
+                if (cleanDateStart === cleanDateEnd) {
+                    setDate(cleanDateStart)
+                } else {
+                    setDate(`${cleanDateStart} - ${cleanDateEnd}`)
+                }
+
+                
+
             }
         }
     }, [parsedYAML])
@@ -108,7 +126,7 @@ export default function Institute(props) {
                                 parsedYAML && parsedYAML.event
                             }</h1>
                             <h2>{
-                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${new Date(parsedYAML.datestart).toDateString()} - ${new Date(parsedYAML.enddate).toDateString()}`
+                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${date}`
                             }</h2>
                             <p>
                                 {
