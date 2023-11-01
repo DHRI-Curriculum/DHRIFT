@@ -110,7 +110,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                 if (item?.description) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
-                      <p>{itemHtml}</p>
+                      <p key={key} >{itemHtml}</p>
                   )
                 }
                 try {
