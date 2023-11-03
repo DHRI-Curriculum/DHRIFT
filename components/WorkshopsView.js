@@ -58,7 +58,7 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
                 if (workshops[v] && workshops[v].type != 'dir' && workshops[v].name != 'README.md') {
                     return (
                         <div key={v}>
-                            {gitUser && gitRepo &&
+                            {
                                 <UseWorkshopsComponent workshop={workshops[v]} gitUser={gitUser}
                                     gitRepo={gitRepo} instRepo={instRepo} instUser={instUser} />
                             }

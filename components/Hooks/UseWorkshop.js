@@ -1,5 +1,4 @@
 import useSWRImmutable from "swr/immutable";
-import { useSWRConfig } from "swr";
 import { useState, useEffect } from "react";
 import { GitHub } from "@mui/icons-material";
 
@@ -7,22 +6,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
 
   let headers;
   const [shouldFetch, setShouldFetch] = useState(false);
-  const [cacheCleared, setCacheCleared] = useState(false);
-  const { cache, mutate } = useSWRConfig()
-  const clearCache = () => {
-    cache.clear()
-  }
-
-  useEffect(() => {
-    if (editing == 'true' && cacheCleared == false) {
-      localStorage.removeItem('app-cache');
-      localStorage.removeItem('app-cache-time');
-      clearCache()
-      setCacheCleared(true)
-      console.log('cache cleared')
-    }
-  }, [editing])
-
+  
   if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers = new Headers(
       {

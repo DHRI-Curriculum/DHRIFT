@@ -12,8 +12,8 @@ import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
 import NextNProgress from 'nextjs-progressbar';
+import { useSWRConfig } from "swr";
 import { useRouter } from 'next/router';
-
 
 function MyApp({ Component, pageProps }) {
 
@@ -23,7 +23,12 @@ function MyApp({ Component, pageProps }) {
   const [gitRepo, setGitRepo] = useState(null);
   const [instGitUser, setInstGitUser] = useState(null);
   const [instGitRepo, setInstGitRepo] = useState(null);
+  const [cacheCleared, setCacheCleared] = useState(false);
+  const { cache, mutate } = useSWRConfig()
   const router = useRouter();
+  const clearCache = () => {
+    cache.clear()
+  }
 
 
   useEffect(() => {
@@ -35,6 +40,15 @@ function MyApp({ Component, pageProps }) {
     if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
       router.push('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
     }
+    if (urlParams.get('edit') === 'true') {
+    if (cacheCleared == false) {
+      localStorage.removeItem('app-cache');
+      localStorage.removeItem('app-cache-time');
+      clearCache()
+      setCacheCleared(true)
+      console.log('cache cleared')
+    }
+  }
   }, [router])
 
   pageProps.title = title

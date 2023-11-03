@@ -145,7 +145,7 @@ export default function Institute(props) {
                         </div>
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>
-                            {props.gitUser && props.gitRepo && parsedYAML &&
+                            {parsedYAML &&
                                 <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
                             }
                         </div>
