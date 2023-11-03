@@ -29,6 +29,7 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
     ).catch(
         err => console.log('err', err)
     )
+
     workshopsBuiltURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/`
     const { data: allWorkshops, isLoading, error } = useSWR(gitUser ? workshopsBuiltURL : null, allFetcher(headers),
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })

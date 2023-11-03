@@ -9,9 +9,11 @@ import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Header from '../../components/Header';
 
 
-export default function Glossary({ glossary }) {
+export default function Glossary({ glossary, ...props }) {
+
 
     const [currentTerm, setCurrentTerm] = useState(null)
     useEffect(() => {
@@ -140,6 +142,10 @@ export default function Glossary({ glossary }) {
 
 
     return (
+        <>
+        <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo}
+            gitUser={props.gitUser} gitRepo={props.gitRepo}
+          />
         <div className="glossary mui-container">
             <div className="glossary-header">
                 <h1>Glossary</h1>
@@ -151,6 +157,7 @@ export default function Glossary({ glossary }) {
                 {currentGlossaryPage}
             </div>
         </div>
+        </>
     )
 }
 
@@ -215,7 +222,6 @@ export async function getStaticProps() {
 
     return {
         props: {
-            workshop: workshopFiles[0],
             glossary: glossary,
         },
     }

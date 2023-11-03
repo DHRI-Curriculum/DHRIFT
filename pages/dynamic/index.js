@@ -58,11 +58,20 @@ export default function WorkshopPage({
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
-  const [gitUser, setGitUser] = useState(null);
-  const [gitRepo, setGitRepo] = useState(null);
+  // const [gitUser, setGitUser] = useState(null);
+  // const [gitRepo, setGitRepo] = useState(null);
+  // const [instUser, setInstUser] = useState(null);
+  // const [instRepo, setInstRepo] = useState(null);
+const gitUser = props.gitUser
+const setGitUser = props.setGitUser
+const gitRepo = props.gitRepo
+const setGitRepo = props.setGitRepo
+const instUser = props.instGitUser
+const setInstUser = props.setInstGitUser
+const instRepo = props.instGitRepo
+const setInstRepo = props.setInstGitRepo
+
   const [gitFile, setGitFile] = useState(null);
-  const [instUser, setInstUser] = useState(null);
-  const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
   const [markdownError, setMarkdownError] = useState(false);
@@ -291,7 +300,7 @@ export default function WorkshopPage({
         />
           ||
           <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
-            workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
+            gitUser={gitUser} gitRepo={gitRepo}
           />
         }
 

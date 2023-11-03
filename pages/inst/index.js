@@ -14,10 +14,10 @@ import { Fade } from '@mui/material';
 export default function Institute(props) {
 
     props.setWorkshopMode(false)
-    const [gitUser, setGitUser] = useState(null);
-    const [gitRepo, setGitRepo] = useState(null);
-    const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
-    const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
+    // const [gitUser, setGitUser] = useState(null);
+    // const [gitRepo, setGitRepo] = useState(null);
+    // const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
+    // const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
@@ -48,18 +48,13 @@ export default function Institute(props) {
         // decode from base64
         res => Buffer.from(res.content, 'base64').toString()
     )
+    
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setGitUser(urlParams.get('user'));
-        setGitRepo(urlParams.get('repo'));
-        setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/config.yml`)
-    }, [gitUser, gitRepo])
-
-    useEffect(() => {
-        if (gitUser && gitRepo) {
+        setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
+        if (props.instGitUser && props.instGitRepo) {
             setShouldFetch(true)
         }
-    }, [gitUser, gitRepo])
+    }, [props.instGitUser, props.instGitRepo])
 
     const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
@@ -73,8 +68,8 @@ export default function Institute(props) {
     useEffect(() => {
         if (parsedYAML) {
             setSessions(parsedYAML.sessions)
-            setWorkshopsGitUser(parsedYAML.workshopsuser)
-            setWorkshopsGitRepo(parsedYAML.workshopsrepo)
+            props.setGitUser(parsedYAML.workshopsuser)
+            props.setGitRepo(parsedYAML.workshopsrepo)
             if (parsedYAML.datestart && parsedYAML.enddate) {
                 const dateStart = new Date(parsedYAML.datestart)
                 const dateEnd = new Date(parsedYAML.enddate)
@@ -87,18 +82,18 @@ export default function Institute(props) {
                 } else {
                     setDate(`${cleanDateStart} - ${cleanDateEnd}`)
                 }
-
-
-
             }
         }
     }, [parsedYAML])
 
     return (
         <>
-            <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
+            {/* <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
                 workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
-            />
+            /> */}
+            <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
+                gitUser={props.gitUser} gitRepo={props.gitRepo}
+             />
             <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
                 <Container
                     disableGutters={true}
@@ -157,8 +152,8 @@ export default function Institute(props) {
                         </div>
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>
-                            {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
+                            {props.gitUser && props.gitRepo && parsedYAML &&
+                                <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
                             }
                         </div>
                     </div>

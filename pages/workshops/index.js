@@ -6,12 +6,9 @@ import Header from '../../components/Header';
 import WorkshopsView from '../../components/WorkshopsView';
 
 export default function Workshops(props) {
-
+    console.log('props', props)
     props.setWorkshopMode(false)
-    const [gitUser, setGitUser] = useState(null);
-    const [gitRepo, setGitRepo] = useState(null);
-    const [workshopUser, setworkshopUser] = useState(null);
-    const [workshopRepo, setworkshopRepo] = useState(null);
+    const [shouldFetch, setShouldFetch] = useState(false);
     const [builtURL, setBuiltURL] = useState(null);
     let headers;
 
@@ -38,22 +35,32 @@ export default function Workshops(props) {
         res => Buffer.from(res.content, 'base64').toString()
     )
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setGitUser(urlParams.get('user'));
-        setGitRepo(urlParams.get('repo'));
-        setworkshopUser(urlParams.get('wUser'));
-        setworkshopRepo(urlParams.get('wGitRepo'));
-        setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/config.yml`)
-    }, [gitUser, gitRepo])
+        setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
+        if (props.instGitUser && props.instGitRepo) {
+            setShouldFetch(true)
+        }
+    }, [props.instGitUser, props.instGitRepo])
 
-    const { data: config, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
+    useEffect(() => {
+    //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
+    // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
+        console.log('props.gitUser', props.gitUser)
+        console.log('props.gitRepo', props.gitRepo)
+        console.log('props.instGitUser', props.instGitUser)
+        console.log('props.instGitRepo', props.instGitRepo)
+    }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
+
+    
+
+
+    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
 
     return (
         <>
-            <Header title={'Workshops'} instUser={gitUser} instRepo={gitRepo}
-                workshopsGitUser={workshopUser} workshopsGitRepo={workshopRepo}
-            />
+            <Header title={'Workshops'} instUser={props.instGitUser} instRepo={props.instGitRepo}
+                gitUser={props.gitUser} gitRepo={props.gitRepo}
+             />
             <Container
                 disableGutters={true}
                 maxWidth={'xl'}
@@ -70,8 +77,8 @@ export default function Workshops(props) {
                 </Head>
                 <div className='inst-workshops'>
                     <h1>Workshops</h1>
-                    {gitUser && gitRepo && workshopUser && workshopRepo &&
-                        <WorkshopsView gitUser={workshopUser} gitRepo={workshopRepo} instUser={gitUser} instRepo={gitRepo} />
+                    {props.gitUser && props.gitRepo && props.instGitUser && props.instGitRepo &&
+                        <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
                     }
                 </div>
             </Container>

@@ -13,7 +13,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
     const [firstPageLink, setFirstPageLink] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const router = useRouter();
-    const instURL = '../inst/?user=' + instUser + '&repo=' + instRepo;
+    const instURL = '../inst/?instUser=' + instUser + '&instRepo=' + instRepo;
     const currentPageParent = pageTitles[currentPage - 1]?.parent ? pageTitles[currentPage - 1].parent : null;
 
     const currentPageParentPage = (pageTitles[currentPage - 1]?.parentIndex ? pageTitles[currentPage - 1].parentIndex : null) + 1;

@@ -19,6 +19,37 @@ function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
   const [workshopMode, setWorkshopMode] = useState(false);
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+  const [instGitUser, setInstGitUser] = useState(null);
+  const [instGitRepo, setInstGitRepo] = useState(null);
+  const router = useRouter();
+
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setInstGitUser(urlParams.get('instUser'));
+    setInstGitRepo(urlParams.get('instRepo'));
+    setGitUser(urlParams.get('user'));
+    setGitRepo(urlParams.get('repo'));
+    if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
+      router.push('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
+    }
+  }, [router])
+
+  pageProps.title = title
+  pageProps.setTitle = setTitle
+  pageProps.workshopMode = workshopMode
+  pageProps.setWorkshopMode = setWorkshopMode
+  pageProps.gitUser = gitUser
+  pageProps.setGitUser = setGitUser
+  pageProps.gitRepo = gitRepo
+  pageProps.setGitRepo = setGitRepo
+  pageProps.instGitUser = instGitUser
+  pageProps.setInstGitUser = setInstGitUser
+  pageProps.instGitRepo = instGitRepo
+  pageProps.setInstGitRepo = setInstGitRepo
+
   Object.assign(pageProps, {
     title, setTitle, workshopMode, setWorkshopMode,
   })
@@ -57,28 +88,6 @@ function MyApp({ Component, pageProps }) {
     return () => cache.current;
   }
 
-  // function Loading() {
-  //   const router = useRouter();
-  //   const [loading, setLoading] = useState(false);
-
-  //   useEffect(() => {
-  //     const handleStart = (url) => (url !== router.asPath) && setLoading(true);
-  //     const handleComplete = (url) => (url === router.asPath) && setTimeout(() => { setLoading(false) }, 2000);
-
-  //     router.events.on('routeChangeStart', handleStart)
-  //     router.events.on('routeChangeComplete', handleComplete)
-  //     router.events.on('routeChangeError', handleComplete)
-
-  //     return () => {
-  //       router.events.off('routeChangeStart', handleStart)
-  //       router.events.off('routeChangeComplete', handleComplete)
-  //       router.events.off('routeChangeError', handleComplete)
-  //     }
-  //   })
-
-  //   return loading
-  // }
-
 
   // use hook in SWRConfig
   const provider = useCacheProvider();
@@ -95,7 +104,7 @@ function MyApp({ Component, pageProps }) {
             <SWRConfig value={{ provider }}>
               <PyodideProvider>
                 <NextNProgress
-                options={{ easing: 'ease', speed: 200 }} />
+                  options={{ easing: 'ease', speed: 200 }} />
                 <Component {...pageProps} />
               </PyodideProvider>
             </SWRConfig>

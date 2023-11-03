@@ -139,7 +139,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     })
 
   // check if formattedObjects or formattedDeps is empty, if so, return null
-  const route = instRepo && instUser ? `/inst/?user=${instUser}&repo=${instRepo}` : '/'
+  const route = instRepo && instUser ? `/inst/?instUser=${instUser}&instRepo=${instRepo}` : '/'
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
