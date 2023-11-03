@@ -13,6 +13,7 @@ import { useTheme } from 'next-themes';
 import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { Fade } from '@mui/material';
 
 export default function Header({ title, instUser, instRepo, workshopsGitUser, workshopsGitRepo }) {
 
@@ -38,6 +39,7 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
     }
 
     return (
+        <Fade in={title} timeout={500}>
         <Box
             className=''
             id="back-to-top-anchor"
@@ -130,5 +132,6 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                 </Toolbar>
             </AppBar>
         </Box>
+        </Fade>
     );
 }

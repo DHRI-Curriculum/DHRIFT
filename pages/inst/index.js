@@ -9,6 +9,7 @@ import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
 import format from 'date-fns/format';
+import { Fade } from '@mui/material';
 
 export default function Institute(props) {
 
@@ -87,7 +88,7 @@ export default function Institute(props) {
                     setDate(`${cleanDateStart} - ${cleanDateEnd}`)
                 }
 
-                
+
 
             }
         }
@@ -98,69 +99,71 @@ export default function Institute(props) {
             <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
                 workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
             />
-            <Container
-                disableGutters={true}
-                maxWidth={'md'}
-                sx={{
-                    display: 'flex',
-                    marginLeft: {
-                        md: '0px',
-                    },
-                }}
-            >
-                <Head>
-                    <title>{parsedYAML && parsedYAML.event}</title>
-                </Head>
-                <div className="inst">
-                    <div className='inst-hero'
-                        style={{
-                            height: '600px',
-                            width: '100vw',
-                            position: 'relative',
-                            backgroundSize: 'cover',
-                            backgroundPosition: '50% 50%',
-                            backgroundImage: `url(${heroImage.src})`,
-                            // paddingLeft: '100px',
-                        }}>
-                        <div className='inst-hero-overlay'>
-                            <h1>{
-                                parsedYAML && parsedYAML.event
-                            }</h1>
-                            <h2>{
-                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${date}`
-                            }</h2>
-                            <p>
-                                {
-                                    parsedYAML && parsedYAML.venue
-                                }
-                            </p>
+            <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
+                <Container
+                    disableGutters={true}
+                    maxWidth={'md'}
+                    sx={{
+                        display: 'flex',
+                        marginLeft: {
+                            md: '0px',
+                        },
+                    }}
+                >
+                    <Head>
+                        <title>{parsedYAML && parsedYAML.event}</title>
+                    </Head>
+                    <div className="inst">
+                        <div className='inst-hero'
+                            style={{
+                                height: '600px',
+                                width: '100vw',
+                                position: 'relative',
+                                backgroundSize: 'cover',
+                                backgroundPosition: '50% 50%',
+                                backgroundImage: `url(${heroImage.src})`,
+                                // paddingLeft: '100px',
+                            }}>
+                            <div className='inst-hero-overlay'>
+                                <h1>{
+                                    parsedYAML && parsedYAML.event
+                                }</h1>
+                                <h2>{
+                                    parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${date}`
+                                }</h2>
+                                <p>
+                                    {
+                                        parsedYAML && parsedYAML.venue
+                                    }
+                                </p>
+                                <p>{
+                                    parsedYAML && parsedYAML.registerlink &&
+                                    // <a href={parsedYAML.registerlink}>Register</a>
+                                    <Button
+                                        className='button button-white'
+                                        href={parsedYAML.registerlink}
+                                    >Register</Button>
+                                }</p>
+                            </div>
+                        </div>
+                        <div className='inst-description'>
                             <p>{
-                                parsedYAML && parsedYAML.registerlink &&
-                                // <a href={parsedYAML.registerlink}>Register</a>
-                                <Button
-                                    className='button button-white'
-                                    href={parsedYAML.registerlink}
-                                >Register</Button>
+                                parsedYAML && parsedYAML.description
                             }</p>
                         </div>
+                        <div className='schedule'>
+                            {sessions &&
+                                <Schedule schedule={sessions} />}
+                        </div>
+                        <div className='inst-workshops'>
+                            <h1>Workshops</h1>
+                            {workshopsGitUser && workshopsGitRepo && parsedYAML &&
+                                <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
+                            }
+                        </div>
                     </div>
-                    <div className='inst-description'>
-                        <p>{
-                            parsedYAML && parsedYAML.description
-                        }</p>
-                    </div>
-                    <div className='schedule'>
-                        {sessions &&
-                            <Schedule schedule={sessions} />}
-                    </div>
-                    <div className='inst-workshops'>
-                        <h1>Workshops</h1>
-                        {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                            <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
-                        }
-                    </div>
-                </div>
-            </Container>
+                </Container>
+            </Fade>
         </>
     )
 }
