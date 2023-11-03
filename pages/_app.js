@@ -35,20 +35,22 @@ function MyApp({ Component, pageProps }) {
     const urlParams = new URLSearchParams(window.location.search);
     setInstGitUser(urlParams.get('instUser'));
     setInstGitRepo(urlParams.get('instRepo'));
-    setGitUser(urlParams.get('user'));
-    setGitRepo(urlParams.get('repo'));
     if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
       router.push('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
     }
-    if (urlParams.get('edit') === 'true') {
-    if (cacheCleared == false) {
-      localStorage.removeItem('app-cache');
-      localStorage.removeItem('app-cache-time');
-      clearCache()
-      setCacheCleared(true)
-      console.log('cache cleared')
+    if (urlParams.get('user') && urlParams.get('repo')) {
+      setGitUser(urlParams.get('user'));
+      setGitRepo(urlParams.get('repo'));
     }
-  }
+    if (urlParams.get('edit') === 'true') {
+      if (cacheCleared == false) {
+        localStorage.removeItem('app-cache');
+        localStorage.removeItem('app-cache-time');
+        clearCache()
+        setCacheCleared(true)
+        console.log('cache cleared')
+      }
+    }
   }, [router])
 
   pageProps.title = title

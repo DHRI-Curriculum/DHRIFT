@@ -67,6 +67,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                     {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
                 </IconButton>
             </ButtonAppBarCollapse> */}
+            {gitRepo && gitUser && instRepo && instUser &&
             <AppBar
                 position="static"
                 sx={{
@@ -132,6 +133,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                     </div>
                 </Toolbar>
             </AppBar>
+            }
         </Box>
         </Fade>
     );
