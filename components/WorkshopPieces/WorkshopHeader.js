@@ -41,9 +41,12 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
     return (
         <div className='workshop-header'>
             <div className='workshop-header-left'>
-                <h1
-                    className='workshop-header-title'
-                >DHRIFT</h1>
+                {pages && instUser && instRepo &&
+                    <Link href={instURL}>
+                        <h1 className='workshop-header-title'
+                        >DHRIFT</h1>
+                    </Link>
+                }
                 <div className='workshop-header-breadcrumbs'>
                     {pages && instUser && instRepo &&
                         <Link href={instURL}>
@@ -72,9 +75,9 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                         <>
                             <p className='crumb'>
                                 <Link href={parentLink}
-                                onClick={() => {
-                                    setCurrentPage(currentPageParentPage);
-                                }}
+                                    onClick={() => {
+                                        setCurrentPage(currentPageParentPage);
+                                    }}
                                 >
                                     {currentPageParent}
                                 </Link>

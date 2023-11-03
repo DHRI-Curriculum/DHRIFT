@@ -63,6 +63,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
+      dedupingInterval: 10000000000,
 
     })
 

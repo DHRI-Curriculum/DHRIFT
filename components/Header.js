@@ -87,7 +87,7 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                     </IconButton> */}
 
 
-                    <Link href='/'
+                    <Link href={`/inst/?user=${instUser}&repo=${instRepo}`}
                         passHref>
                         <Image
                             src={logo}
@@ -110,7 +110,6 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                             </Link>
                         </Typography>
                         <ul className='links'>
-
                             {instUser && instRepo && <li>
                                 <Link href={`/workshops/?user=${instUser}&repo=${instRepo}&wUser=${workshopsGitUser}&wGitRepo=${workshopsGitRepo}`} passHref>Workshops</Link>
                             </li>}

@@ -10,7 +10,7 @@ export default function Footer({ workshopMode }) {
     return (
         <footer className={footerClass}>
             <div className="footer-logo">
-                <Link href="/">
+                <Link href="http://www.dhrift.org">
                     <Image
                         src={DHRIFTLogo}
                         width={'400'}
