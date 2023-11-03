@@ -58,10 +58,7 @@ export default function WorkshopPage({
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
-  // const [gitUser, setGitUser] = useState(null);
-  // const [gitRepo, setGitRepo] = useState(null);
-  // const [instUser, setInstUser] = useState(null);
-  // const [instRepo, setInstRepo] = useState(null);
+
 const gitUser = props.gitUser
 const setGitUser = props.setGitUser
 const gitRepo = props.gitRepo
@@ -132,12 +129,8 @@ const setInstRepo = props.setInstGitRepo
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    setGitUser(urlParams.get('user'));
-    setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
     setEditing(urlParams.get('edit'));
-    setInstUser(urlParams.get('instUser'));
-    setInstRepo(urlParams.get('instRepo'));
     setCurrentPage(Number(urlParams.get('page')));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
@@ -218,7 +211,6 @@ const setInstRepo = props.setInstGitRepo
   }, [currentPage, pages]);
 
   useEffect(() => {
-    // setCurrentPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     const page = Number(urlParams.get('page'));
     if (page) {

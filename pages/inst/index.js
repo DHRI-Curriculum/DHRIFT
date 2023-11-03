@@ -14,10 +14,6 @@ import { Fade } from '@mui/material';
 export default function Institute(props) {
 
     props.setWorkshopMode(false)
-    // const [gitUser, setGitUser] = useState(null);
-    // const [gitRepo, setGitRepo] = useState(null);
-    // const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
-    // const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
@@ -88,9 +84,6 @@ export default function Institute(props) {
 
     return (
         <>
-            {/* <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
-                workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
-            /> */}
             <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
                 gitUser={props.gitUser} gitRepo={props.gitRepo}
              />
