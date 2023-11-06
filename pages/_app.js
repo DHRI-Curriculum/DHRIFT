@@ -30,7 +30,6 @@ function MyApp({ Component, pageProps }) {
     cache.clear()
   }
 
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setInstGitUser(urlParams.get('instUser'));

@@ -3,6 +3,7 @@ import Sidebar from './ToC';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { Breadcrumbs } from '@mui/material';
 
 
 export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles, pages, workshopTitle,
@@ -48,6 +49,10 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                     </Link>
                 }
                 <div className='workshop-header-breadcrumbs'>
+                    <Breadcrumbs
+                        className='breadcrumbs'
+                        separator="›"
+                        aria-label="breadcrumb">
                     {pages && instUser && instRepo &&
                         <Link href={instURL}>
                             <HomeIcon
@@ -58,9 +63,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                             />
                         </Link>
                     }
-                    <p>/</p>
                     {workshopTitle &&
-                        <p className='crumb'>
                             <Link href={firstPageLink}
                                 onClick={() => {
                                     setCurrentPage(1);
@@ -68,12 +71,8 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                             >
                                 {workshopTitle}
                             </Link>
-                        </p>
                     }
-                    <p>/</p>
                     {currentPageParent &&
-                        <>
-                            <p className='crumb'>
                                 <Link href={parentLink}
                                     onClick={() => {
                                         setCurrentPage(currentPageParentPage);
@@ -81,15 +80,14 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                                 >
                                     {currentPageParent}
                                 </Link>
-                            </p>
-                            <p>/</p>
-                        </>
                     }
                     {pageTitles[currentPage - 1] &&
-                        <p className='crumb'>
-                            {pageTitles[currentPage - 1].title}
-                        </p>
+                            // {pageTitles[currentPage - 1].title}
+                            <div>
+                                {pageTitles[currentPage - 1].title}
+                            </div>
                     }
+                    </Breadcrumbs>
                 </div>
             </div>
             <div className={drawerOpen ? 'workshop-header-right drawer-open' : 'workshop-header-right'}>

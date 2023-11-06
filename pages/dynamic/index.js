@@ -59,14 +59,14 @@ export default function WorkshopPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
 
-const gitUser = props.gitUser
-const setGitUser = props.setGitUser
-const gitRepo = props.gitRepo
-const setGitRepo = props.setGitRepo
-const instUser = props.instGitUser
-const setInstUser = props.setInstGitUser
-const instRepo = props.instGitRepo
-const setInstRepo = props.setInstGitRepo
+  const gitUser = props.gitUser
+  const setGitUser = props.setGitUser
+  const gitRepo = props.gitRepo
+  const setGitRepo = props.setGitRepo
+  const instUser = props.instGitUser
+  const setInstUser = props.setInstGitUser
+  const instRepo = props.instGitRepo
+  const setInstRepo = props.setInstGitRepo
 
   const [gitFile, setGitFile] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
@@ -166,8 +166,8 @@ const setInstRepo = props.setInstGitRepo
   const [secondPageLink, setSecondPageLink] = useState('');
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-      urlParams.set('page', 2);
-      setSecondPageLink(`${window.location.pathname}?${urlParams}`);
+    urlParams.set('page', 2);
+    setSecondPageLink(`${window.location.pathname}?${urlParams}`);
     if (currentFile != null && content != '') {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
