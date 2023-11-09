@@ -12,6 +12,7 @@ export default function CodeRunBox(props) {
     highlighted = hljs.highlight(props.defaultCode, { language: props.language, ignoreIllegals: true });
     } catch (e) {
         console.log(e);
+        highlighted = props.defaultCode;
     }
 
     var returnedComponent = null;

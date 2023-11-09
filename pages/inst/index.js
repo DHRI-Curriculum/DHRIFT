@@ -141,7 +141,9 @@ export default function Institute(props) {
                         </div>
                         <div className='schedule'>
                             {sessions &&
-                                <Schedule schedule={sessions} />}
+                                <Schedule schedule={sessions} 
+                                {...props}
+                                 />}
                         </div>
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>

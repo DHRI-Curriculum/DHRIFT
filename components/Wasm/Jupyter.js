@@ -6,19 +6,18 @@ export default function Jupyter(props) {
     const jupyterSrc = props.jupyterSrc;
     const setJupyterSrc = props.setJupyterSrc;
 
-
     useEffect(() => {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations()
-            .then(function (registrations) {
-                for (let registration of registrations) {
-                    console.log(registration);
-                    // if (registration.active.scriptURL == 'coi-serviceworker.js') {
-                    registration.unregister();
-                    window.location.reload()
-                }
-            });
-    }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+                .then(function (registrations) {
+                    for (let registration of registrations) {
+                        console.log(registration);
+                        // if (registration.active.scriptURL == 'coi-serviceworker.js') {
+                        registration.unregister();
+                        window.location.reload()
+                    }
+                });
+        }
     }, [])
 
     return (

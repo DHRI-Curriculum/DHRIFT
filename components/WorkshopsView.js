@@ -1,6 +1,6 @@
 import React, { memo, use, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import UseWorkshopsComponent from './Hooks/UseWorkshopsCard';
+import UseWorkshopsCard from './Hooks/UseWorkshopsCard';
 
 
 export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) {
@@ -57,12 +57,14 @@ export default function WorkshopsView({ gitUser, gitRepo, instUser, instRepo }) 
             {toLoop.map(v => {
                 if (workshops[v] && workshops[v].type != 'dir' && workshops[v].name != 'README.md') {
                     return (
-                        <div key={v}>
+                        <>
                             {
-                                <UseWorkshopsComponent workshop={workshops[v]} gitUser={gitUser}
-                                    gitRepo={gitRepo} instRepo={instRepo} instUser={instUser} />
+                                <UseWorkshopsCard workshop={workshops[v]} gitUser={gitUser}
+                                    gitRepo={gitRepo} instRepo={instRepo} instUser={instUser}
+                                     key={v}
+                                />
                             }
-                        </div>
+                        </>
                     )
                 }
             }

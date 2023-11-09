@@ -61,8 +61,15 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
         const childClassName = children.props.className;
         if (childClassName !== undefined) {
             const language = childClassName.replace('lang-', '');
-            const highlighted = hljs.highlight(html, { language: language, ignoreIllegals: true });
-            const getLang = hljs.getLanguage(highlighted.language).name
+            let highlighted;
+            try {
+                highlighted = hljs.highlight(html, { language: language, ignoreIllegals: true });
+            } catch (err) {
+                console.log('err', err)
+                console.log('language not found', language)
+                highlighted = hljs.highlightAuto(html);
+                highlighted.value = html;
+            }
             return (
                 <div className="code-block"
                     onMouseEnter={() => setIsShown(true)}
@@ -222,8 +229,8 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
         return (
             <div>
                 <JupyterLoad setJupyterSrc={setJupyterSrc}
-                gitFile={gitFile}
-                 />
+                    gitFile={gitFile}
+                />
             </div>
         )
     }

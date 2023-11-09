@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import HomeIcon from '@mui/icons-material/Home';
 import FrontmatterFeature from './FrontmatterFeature';
 import Link from 'next/link';
+import { Breadcrumbs } from '@mui/material';
 
 export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router,
   secondPageLink
@@ -110,7 +111,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                 if (item?.description) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
-                      <p key={key} >{itemHtml}</p>
+                    <p key={key} >{itemHtml}</p>
                   )
                 }
                 try {
@@ -143,21 +144,22 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
-        <div className='frontmatter-hero-breadcrumbs'>
-          <a href={route}>
-            <HomeIcon
-              sx={{
-                color: 'white',
-                zIndex: 1000,
-                position: 'relative',
-                marginTop: '32px',
-              }}
-              className='home-icon' />
-          </a>
-          <p>/</p>
-          {workshopTitle &&
-            <p className='crumb'>{workshopTitle}</p>}
-        </div>
+        {/* <div className='frontmatter-hero-breadcrumbs'>
+          <Breadcrumbs>
+            <Link href={route}>
+              <HomeIcon
+                sx={{
+                  color: 'white',
+                  zIndex: 1000,
+                  position: 'relative',
+                  marginTop: '32px',
+                }}
+                className='home-icon' />
+            </Link>
+            {workshopTitle &&
+              <p className='crumb'>{workshopTitle}</p>}
+          </Breadcrumbs>
+        </div> */}
         <h1>{title}</h1>
         {description &&
           <>
