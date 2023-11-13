@@ -30,13 +30,14 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                     position: 'relative',
                 }}
             >
-                <Zoom>
+                {/* <Zoom> */}
                     <div className='markdown-image-container'
                         style={{
                             position: 'relative',
                             // height: '400px',
                             // width: '100%',
                         }}
+                        aria-label={newProps.alt}
                     >
                         <Image
                             className='markdown-image'
@@ -46,10 +47,11 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                             src={src}
                             alt={newProps.alt}
                             onError={() => setSrc(builtURL)}
+                            title={newProps.alt}
                             style={{ width: '100%', height: 'auto' }}
                         />
                     </div>
-                </Zoom>
+                {/* </Zoom> */}
             </div>
         )
     }
