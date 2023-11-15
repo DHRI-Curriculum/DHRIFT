@@ -873,7 +873,7 @@ nav.sidenav {
   flex-direction: column;
   align-items: left;
   width: 100%;
-  height: 70vh;
+  height: 64vh;
   background-color: black;
   /* margin-top: 30px; */
 }
@@ -907,6 +907,9 @@ nav.sidenav {
 .shellContainer {
   height: auto;
   background-color: rgb(39, 40, 34);
+  .terminal::-webkit-scrollbar {
+    width: 20px;
+  }
 }
 
 .editor-button {
@@ -957,7 +960,6 @@ nav.sidenav {
   background: rgb(39, 40, 34);
   animation: terminal-bar;
   padding-left: 10px;
-  padding-top: 10px;
 }
 
 .console-error {

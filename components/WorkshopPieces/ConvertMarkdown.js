@@ -18,7 +18,7 @@ import SecretComponent from './SecretComponent';
 // import he from 'he';
 
 
-export default function ConvertMarkdown(markdown, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, setJupyterSrc) {
+export default function ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc) {
 
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
@@ -31,26 +31,26 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                 }}
             >
                 {/* <Zoom> */}
-                    <div className='markdown-image-container'
-                        style={{
-                            position: 'relative',
-                            // height: '400px',
-                            // width: '100%',
-                        }}
-                        aria-label={newProps.alt}
-                    >
-                        <Image
-                            className='markdown-image'
-                            // fill={true}
-                            width={0}
-                            height={0}
-                            src={src}
-                            alt={newProps.alt}
-                            onError={() => setSrc(builtURL)}
-                            title={newProps.alt}
-                            style={{ width: '100%', height: 'auto' }}
-                        />
-                    </div>
+                <div className='markdown-image-container'
+                    style={{
+                        position: 'relative',
+                        // height: '400px',
+                        // width: '100%',
+                    }}
+                    aria-label={newProps.alt}
+                >
+                    <Image
+                        className='markdown-image'
+                        // fill={true}
+                        width={0}
+                        height={0}
+                        src={src}
+                        alt={newProps.alt}
+                        onError={() => setSrc(builtURL)}
+                        title={newProps.alt}
+                        style={{ width: '100%', height: 'auto' }}
+                    />
+                </div>
                 {/* </Zoom> */}
             </div>
         )
@@ -245,9 +245,22 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
         )
     }
 
-    if (!markdown) return null;
+    const Link = ({ className, children, ...props }) => {
+        // constructs a link to a different page in the institute
+        const workshop = props.workshop;
+        const pageNumber = props.page;
+        return (
+            <a href={`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${workshop}&page=${pageNumber}&instUser=${instUser}&instRepo=${instRepo}`}>
+                {children}
+            </a>
+        )
+    }
+
+
+
+    if (!content) return null;
     return (
-        compiler(markdown,
+        compiler(content,
             {
                 overrides: {
                     pre: {
@@ -297,7 +310,8 @@ export default function ConvertMarkdown(markdown, uploads, workshopTitle, langua
                     PythonREPL,
                     Terminal,
                     JSTerminal,
-                    Secret
+                    Secret,
+                    Link
                     // HTMLEditor,
 
                 }

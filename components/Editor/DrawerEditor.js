@@ -185,6 +185,7 @@ export default function DrawerEditor(props) {
                         width: { xs: '100%', sm: '100%', md: newWidth }, boxSizing: 'border-box'
                     },
                     display: !show ? 'none' : 'block',
+                    overflow: 'hidden',
                 }}
 
             ><div
