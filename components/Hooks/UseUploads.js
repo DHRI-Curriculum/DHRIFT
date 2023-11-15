@@ -2,7 +2,7 @@ import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 
 export default function useUploads({setAllUploads, gitUser, gitRepo, 
-    gitFile, overrideURL}) {
+    gitFile, ...props}) {
 
     const [shouldFetch, setShouldFetch] = useState(false);
 
@@ -11,8 +11,8 @@ export default function useUploads({setAllUploads, gitUser, gitRepo,
     if (gitUser && gitRepo && gitFile) {
         builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`
     }
-    if (overrideURL) {
-        builtURL = overrideURL;
+    if (props.uploads_dir) {
+        builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${props.uploads_dir}`
     }
     if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(

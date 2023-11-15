@@ -46,6 +46,9 @@ export default function WorkshopPage({
 }) {
 
   const [content, setContent] = useState('');
+  props.content = content;
+  const [metadata, setMetadata] = useState(null);
+  props.metadata = metadata;
   const [currentFile, setCurrentFile] = useState(null);
   const [currentContent, setCurrentContent] = useState([]);
   const [language, setLanguage] = useState('');
@@ -75,7 +78,7 @@ export default function WorkshopPage({
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
 
   const [allUploads, setAllUploads] = useState([]);
-  const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitFile });
+  const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitFile, ...props });
 
   const router = useRouter();
 
@@ -146,6 +149,7 @@ export default function WorkshopPage({
         const matterResult = matter(data)
         setCurrentFile(matterResult)
         setContent(matterResult.content)
+        setMetadata(matterResult.data)
         setLanguage(matterResult.data.programming_language);
         setWorkshopTitle(matterResult.data.title);
       }
