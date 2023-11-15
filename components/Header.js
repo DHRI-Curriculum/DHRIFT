@@ -13,11 +13,13 @@ import { useTheme } from 'next-themes';
 import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { Fade } from '@mui/material';
 
-export default function Header({ title, instUser, instRepo, workshopsGitUser, workshopsGitRepo }) {
+export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) {
 
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
+
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -38,6 +40,7 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
     }
 
     return (
+        <Fade in={title} timeout={500}>
         <Box
             className=''
             id="back-to-top-anchor"
@@ -64,6 +67,7 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                     {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
                 </IconButton>
             </ButtonAppBarCollapse> */}
+            {gitRepo && gitUser && instRepo && instUser &&
             <AppBar
                 position="static"
                 sx={{
@@ -87,7 +91,7 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                     </IconButton> */}
 
 
-                    <Link href='/'
+                    <Link href={`/inst/?instUser=${instUser}&instRepo=${instRepo}`}
                         passHref>
                         <Image
                             src={logo}
@@ -110,12 +114,11 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                             </Link>
                         </Typography>
                         <ul className='links'>
-
                             {instUser && instRepo && <li>
-                                <Link href={`/workshops/?user=${instUser}&repo=${instRepo}&wUser=${workshopsGitUser}&wGitRepo=${workshopsGitRepo}`} passHref>Workshops</Link>
+                                <Link href={`/workshops/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Workshops</Link>
                             </li>}
                             <li>
-                                <Link href='/Glossary' passHref>Glossary</Link>
+                                <Link href={`/glossary/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Glossary</Link>
                             </li>
                             <li>
                                 <Link href='/About' passHref>About</Link>
@@ -130,6 +133,8 @@ export default function Header({ title, instUser, instRepo, workshopsGitUser, wo
                     </div>
                 </Toolbar>
             </AppBar>
+            }
         </Box>
+        </Fade>
     );
 }

@@ -37,17 +37,17 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations()
-            .then(function (registrations) {
-                for (let registration of registrations) {
-                    console.log(registration);
-                    // if (registration.active.scriptURL == 'coi-serviceworker.js') {
-                    registration.unregister();
-                    window.location.reload()
-                }
-            });
+      navigator.serviceWorker.getRegistrations()
+        .then(function (registrations) {
+          for (let registration of registrations) {
+            console.log(registration);
+            // if (registration.active.scriptURL == 'coi-serviceworker.js') {
+            registration.unregister();
+            window.location.reload()
+          }
+        });
     }
-}, [])
+  }, [])
 
   useEffect(() => {
     if (isPyodideReady) {
@@ -97,10 +97,14 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     setError(null);
     outputRef.current = "";
 
+    if (code === null) {
+      setRunningCode(false);
+      return;
+    }
+
     await pyodide.loadPackagesFromImports(code);
 
     let namespace = pyodide.globals.get("dict")();
-
 
     if (filteredSnippets?.length > 0) {
       filteredSnippets.forEach((snippet, index) => {
@@ -114,10 +118,11 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     namespace.set("log", (s) => {
       console.log(s);
     });
+
     await pyodide.runPythonAsync(checkImports(code),
       { globals: namespace });
     await pyodide.runPythonAsync(
-`
+      `
 import sys
 from js import prompt
 import builtins
@@ -219,11 +224,11 @@ sys.tracebacklimit = 0
           }}
         /></>}
       <div className="editorContainer"
-      style={{
-        overflowY: 'auto',
-      }}
+        style={{
+          overflowY: 'auto',
+        }}
       >
-      {isError && <Alert id="error"
+        {isError && <Alert id="error"
           severity="error"
           style={{
             font: "1.3rem Inconsolata, monospace",

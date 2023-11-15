@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
 export default function FrontmatterFeature({ authors, instructors, editors, coverImage, title, coverTitle }) {
 
   const [src, setSrc] = useState(null);
@@ -14,7 +13,6 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
     }
   }, [coverImage])
 
-  console.log(coverTitle)
   const frontTitle = coverTitle ? coverTitle : title;
 
   return (
@@ -33,7 +31,7 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
           >{frontTitle}</p>
         </div>
 
-        {authors && authors.length > 0 && <div className='frontpage-feature-authors'>
+        {authors && authors.length > 0 && <div className='frontmatter-feature-authors'>
           <h2>Authors</h2>
           <ul>
             {authors.map(author => {

@@ -15,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
+import { Fade } from '@mui/material'
 
 const drawerWidth = '-30%';
 
@@ -54,18 +55,22 @@ export default function WorkshopPage({
   const [editorOpen, setEditorOpen] = useState(false);
   const [workshopTitle, setWorkshopTitle] = useState('');
   const [code, setCode] = useState(null);
-  // communicates with the editor to run code
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
-  const [gitUser, setGitUser] = useState(null);
-  const [gitRepo, setGitRepo] = useState(null);
+
+  const gitUser = props.gitUser
+  const setGitUser = props.setGitUser
+  const gitRepo = props.gitRepo
+  const setGitRepo = props.setGitRepo
+  const instUser = props.instGitUser
+  const setInstUser = props.setInstGitUser
+  const instRepo = props.instGitRepo
+  const setInstRepo = props.setInstGitRepo
+
   const [gitFile, setGitFile] = useState(null);
-  const [instUser, setInstUser] = useState(null);
-  const [instRepo, setInstRepo] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [editing, setEditing] = useState(false);
-  const [metadata, setMetadata] = useState(null);
   const [markdownError, setMarkdownError] = useState(false);
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
 
@@ -120,16 +125,12 @@ export default function WorkshopPage({
     )
   }
 
-  const data = useWorkshop(gitUser, builtURL, editing);
+  const data = useWorkshop(gitUser, gitFile, builtURL, editing);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    setGitUser(urlParams.get('user'));
-    setGitRepo(urlParams.get('repo'));
     setGitFile(urlParams.get('file'));
     setEditing(urlParams.get('edit'));
-    setInstUser(urlParams.get('instUser'));
-    setInstRepo(urlParams.get('instRepo'));
     setCurrentPage(Number(urlParams.get('page')));
     if (gitFile === null) {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
@@ -162,10 +163,15 @@ export default function WorkshopPage({
     }
   }, [currentPage, pages])
 
+  const [secondPageLink, setSecondPageLink] = useState('');
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('page', 2);
+    setSecondPageLink(`${window.location.pathname}?${urlParams}`);
     if (currentFile != null && content != '') {
-      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage);
+      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
+      setCurrentContentLoaded(true);
     }
   }, [currentFile, content])
 
@@ -173,6 +179,7 @@ export default function WorkshopPage({
   useEffect(() => {
     setTitle(workshopTitle);
     let mostRecentH1 = null;
+    let mostRecentH1Index = null;
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
       // if it's the frontpage vs not
@@ -182,17 +189,21 @@ export default function WorkshopPage({
       }
       let tag = page.props.children[0].props.children.type;
       let parent = undefined;
+      let parentIndex = undefined;
       if (tag === 'h1') {
         mostRecentH1 = header;
+        mostRecentH1Index = index;
       }
       if (tag === 'h2') {
         parent = mostRecentH1;
+        parentIndex = mostRecentH1Index;
       }
       header = {
         title: header,
         index: index + 1,
         active: index + 1 === currentPage ? true : false,
-        parent: parent
+        parent: parent,
+        parentIndex: parentIndex,
       }
       return (header)
     })
@@ -200,7 +211,6 @@ export default function WorkshopPage({
   }, [currentPage, pages]);
 
   useEffect(() => {
-    // setCurrentPage(1);
     const urlParams = new URLSearchParams(window.location.search);
     const page = Number(urlParams.get('page'));
     if (page) {
@@ -210,7 +220,6 @@ export default function WorkshopPage({
     } else {
       setCurrentContent(pages[0]);
       setCurrentPage(1);
-      setCurrentContentLoaded(true);
     }
   }, [pages])
 
@@ -230,7 +239,7 @@ export default function WorkshopPage({
 
 
   useEffect(() => {
-    if (currentPage === 1) {
+    if (currentPage === 1 || currentPage === 0) {
       props.setWorkshopMode(false);
     }
     else {
@@ -266,89 +275,100 @@ export default function WorkshopPage({
         <div>{markdownError.message}</div>
       </div>
     </>)
+
   return (
-    <Fragment>
-      {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
-        setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
-        pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-        handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
-      />
-        || <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
-          workshopsGitUser={gitUser} workshopsGitRepo={gitRepo}
-        />
-      }
-      <Container
-        disableGutters={true}
-        maxWidth={
-          props.workshopMode ? 'md' : '100vw'
-        }
-        sx={{
-          marginLeft: {
-            md: '80px',
-          },
-          ...(props.workshopMode && {
-            marginLeft: {
-              md: '100px',
-            },
-          }),
-          flexGrow: 1,
+    <Fade in={currentContentLoaded} timeout={500}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
         }}
       >
-        <Head>
-          <title>{title}</title>
-        </Head>
-        <Main open={editorOpen}
-          id='main'
-          style={{
-            paddingLeft: '0px'
+        {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+          setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+          pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
+          handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
+        />
+          ||
+          <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+            gitUser={gitUser} gitRepo={gitRepo}
+          />
+        }
+
+        <Container
+          disableGutters={true}
+          maxWidth={
+            props.workshopMode ? 'md' : '100vw'
+          }
+          sx={{
+            marginLeft: {
+              md: '80px',
+            },
+            ...(props.workshopMode && {
+              marginLeft: {
+                md: '100px',
+              },
+            }),
+            flexGrow: 1,
           }}
         >
-          <div className="card-page">
-            <div className="workshop-container">
-              {currentContentLoaded ? (
-                currentContent
-              ) : (
+          <Head>
+            <title>{title}</title>
+          </Head>
+          <Main open={editorOpen}
+            id='main'
+            style={{
+              paddingLeft: '0px'
+            }}
+          >
+            <div className="card-page">
+              <div className="workshop-container">
+                {currentContentLoaded ? (
+                  currentContent
+                ) : (
 
-                <div className='skeleton-container'
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                  {
-                    Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-                </div>
-              )}
+                  <div className='skeleton-container'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                    {
+                      Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Main>
-        {language && props.workshopMode &&
-          <DrawerEditorMovable
-            drawerWidth={drawerWidth}
-            open={editorOpen}
-            setEditorOpen={setEditorOpen}
-            text={code}
-            setText={setCode}
-            askToRun={askToRun}
-            setAskToRun={setAskToRun}
-            language={language}
-            allUploads={uploads}
-            gitUser={gitUser}
-            gitRepo={gitRepo}
-            jupyterSrc={jupyterSrc}
-            setJupyterSrc={setJupyterSrc}
-          />}
-        {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
-      </Container>
-      {props.workshopMode &&
-        <>
-          <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
-          <div className='workshop-footer'>
-            <Footer workshopMode={props.workshopMode} />
-          </div>
-        </>
-      }
-    </Fragment>
+          </Main>
+          {language && props.workshopMode &&
+            <DrawerEditorMovable
+              drawerWidth={drawerWidth}
+              open={editorOpen}
+              setEditorOpen={setEditorOpen}
+              text={code}
+              setText={setCode}
+              askToRun={askToRun}
+              setAskToRun={setAskToRun}
+              language={language}
+              allUploads={uploads}
+              gitUser={gitUser}
+              gitRepo={gitRepo}
+              jupyterSrc={jupyterSrc}
+              setJupyterSrc={setJupyterSrc}
+            />}
+          {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
+        </Container>
+        {props.workshopMode &&
+          <>
+            <div className='workshop-footer'>
+              <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
+              <Footer workshopMode={props.workshopMode} />
+            </div>
+          </>
+        }
+      </div>
+    </Fade>
   )
 }

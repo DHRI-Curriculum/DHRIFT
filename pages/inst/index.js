@@ -8,17 +8,17 @@ import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
+import format from 'date-fns/format';
+import { Fade } from '@mui/material';
 
 export default function Institute(props) {
 
     props.setWorkshopMode(false)
-    const [gitUser, setGitUser] = useState(null);
-    const [gitRepo, setGitRepo] = useState(null);
-    const [workshopsGitUser, setWorkshopsGitUser] = useState(null);
-    const [workshopsGitRepo, setWorkshopsGitRepo] = useState(null);
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
+    const [shouldFetch, setShouldFetch] = useState(false);
+    const [date, setDate] = useState(null);
 
     let headers;
 
@@ -44,14 +44,15 @@ export default function Institute(props) {
         // decode from base64
         res => Buffer.from(res.content, 'base64').toString()
     )
+    
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setGitUser(urlParams.get('user'));
-        setGitRepo(urlParams.get('repo'));
-        setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/config.yml`)
-    }, [gitUser, gitRepo])
+        setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
+        if (props.instGitUser && props.instGitRepo) {
+            setShouldFetch(true)
+        }
+    }, [props.instGitUser, props.instGitRepo])
 
-    const { data: config, isLoading, error } = useSWR(gitUser ? builtURL : null, fetcher(headers),
+    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
 
     useEffect(() => {
@@ -63,85 +64,96 @@ export default function Institute(props) {
     useEffect(() => {
         if (parsedYAML) {
             setSessions(parsedYAML.sessions)
-            setWorkshopsGitUser(parsedYAML.workshopsuser)
-            setWorkshopsGitRepo(parsedYAML.workshopsrepo)
+            props.setGitUser(parsedYAML.workshopsuser)
+            props.setGitRepo(parsedYAML.workshopsrepo)
             if (parsedYAML.datestart && parsedYAML.enddate) {
                 const dateStart = new Date(parsedYAML.datestart)
                 const dateEnd = new Date(parsedYAML.enddate)
-                const cleanDateStart = dateStart.toDateString()
-                const cleanDateEnd = dateEnd.toDateString()
+                // make the dates look nice, long month names, etc
+                const cleanDateStart = format(dateStart, 'MMMM do, yyyy')
+                const cleanDateEnd = format(dateEnd, 'MMMM do, yyyy')
+                // if the dates are the same, just show one
+                if (cleanDateStart === cleanDateEnd) {
+                    setDate(cleanDateStart)
+                } else {
+                    setDate(`${cleanDateStart} - ${cleanDateEnd}`)
+                }
             }
         }
     }, [parsedYAML])
 
     return (
         <>
-            <Header title={parsedYAML && parsedYAML.event} instUser={gitUser} instRepo={gitRepo}
-                workshopsGitUser={workshopsGitUser} workshopsGitRepo={workshopsGitRepo}
-            />
-            <Container
-                disableGutters={true}
-                maxWidth={'md'}
-                sx={{
-                    display: 'flex',
-                    marginLeft: {
-                        md: '0px',
-                    },
-                }}
-            >
-                <Head>
-                    <title>{parsedYAML && parsedYAML.event}</title>
-                </Head>
-                <div className="inst">
-                    <div className='inst-hero'
-                        style={{
-                            height: '600px',
-                            width: '100vw',
-                            position: 'relative',
-                            backgroundSize: 'cover',
-                            backgroundPosition: '50% 50%',
-                            backgroundImage: `url(${heroImage.src})`,
-                            // paddingLeft: '100px',
-                        }}>
-                        <div className='inst-hero-overlay'>
-                            <h1>{
-                                parsedYAML && parsedYAML.event
-                            }</h1>
-                            <h2>{
-                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${new Date(parsedYAML.datestart).toDateString()} - ${new Date(parsedYAML.enddate).toDateString()}`
-                            }</h2>
-                            <p>
-                                {
-                                    parsedYAML && parsedYAML.venue
-                                }
-                            </p>
+            <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
+                gitUser={props.gitUser} gitRepo={props.gitRepo}
+             />
+            <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
+                <Container
+                    disableGutters={true}
+                    maxWidth={'md'}
+                    sx={{
+                        display: 'flex',
+                        marginLeft: {
+                            md: '0px',
+                        },
+                    }}
+                >
+                    <Head>
+                        <title>{parsedYAML && parsedYAML.event}</title>
+                    </Head>
+                    <div className="inst">
+                        <div className='inst-hero'
+                            style={{
+                                height: '600px',
+                                width: '100vw',
+                                position: 'relative',
+                                backgroundSize: 'cover',
+                                backgroundPosition: '50% 50%',
+                                backgroundImage: `url(${heroImage.src})`,
+                                // paddingLeft: '100px',
+                            }}>
+                            <div className='inst-hero-overlay'>
+                                <h1>{
+                                    parsedYAML && parsedYAML.event
+                                }</h1>
+                                <h2>{
+                                    parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${date}`
+                                }</h2>
+                                <p>
+                                    {
+                                        parsedYAML && parsedYAML.venue
+                                    }
+                                </p>
+                                <p>{
+                                    parsedYAML && parsedYAML.registerlink &&
+                                    // <a href={parsedYAML.registerlink}>Register</a>
+                                    <Button
+                                        className='button button-white'
+                                        href={parsedYAML.registerlink}
+                                    >Register</Button>
+                                }</p>
+                            </div>
+                        </div>
+                        <div className='inst-description'>
                             <p>{
-                                parsedYAML && parsedYAML.registerlink &&
-                                // <a href={parsedYAML.registerlink}>Register</a>
-                                <Button
-                                    className='button button-white'
-                                    href={parsedYAML.registerlink}
-                                >Register</Button>
+                                parsedYAML && parsedYAML.description
                             }</p>
                         </div>
+                        <div className='schedule'>
+                            {sessions &&
+                                <Schedule schedule={sessions} 
+                                {...props}
+                                 />}
+                        </div>
+                        <div className='inst-workshops'>
+                            <h1>Workshops</h1>
+                            {parsedYAML &&
+                                <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
+                            }
+                        </div>
                     </div>
-                    <div className='inst-description'>
-                        <p>{
-                            parsedYAML && parsedYAML.description
-                        }</p>
-                    </div>
-                    <div className='schedule'>
-                        {sessions &&
-                            <Schedule schedule={sessions} />}
-                    </div>
-                    <div className='inst-workshops'>
-                        <h1>Workshops</h1>
-                        {workshopsGitUser && workshopsGitRepo && parsedYAML &&
-                            <WorkshopsView gitUser={workshopsGitUser} gitRepo={workshopsGitRepo} instUser={gitUser} instRepo={gitRepo} />
-                        }
-                    </div>
-                </div>
-            </Container>
+                </Container>
+            </Fade>
         </>
     )
 }

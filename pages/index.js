@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 export default function Home() {
 
   useEffect(() => {
-    window.location = '/inst?user=dhri-curriculum&repo=dhrift-site-template'
+    window.location = '/inst?instUser=dhri-curriculum&instRepo=dhrift-site-template'
   })
 
   return (

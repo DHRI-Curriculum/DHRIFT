@@ -2,11 +2,10 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import LaunchIcon from '@mui/icons-material/Launch';
+import Link from 'next/link';
 
-export default function Schedule({
-  schedule,
-  // workshops 
-}) {
+export default function Schedule({ schedule, ...props }) {
+  console.log('props', props)
 
   const [activeAccordion, setActiveAccordion] = useState(null);
   const formattedDate = (date) => {
@@ -20,10 +19,6 @@ export default function Schedule({
   // group events by date
   const eventsByDate = schedule.reduce((acc, event) => {
     const date = formattedDate(event.date);
-    // if(event.workshop !== undefined) {
-    //   // search for the workshop in the workshops array by slug 
-    //   event.slug =  workshops.find((workshop) => workshop.slug === event.workshop).slug;
-    // }
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -53,7 +48,7 @@ export default function Schedule({
   };
 
   return (
-    <Fragment>
+    <>
       <div className=''>
         <h1>Schedule</h1>
         <div className="accordion">
@@ -84,14 +79,17 @@ export default function Schedule({
                   {eventsByDate[date].map((event, index) => (
                     <div key={index}>
                       <h3>{event.title}
-                        {event.slug &&
+                        {event.workshop &&
+                    <Link href={`dynamic/?user=${props.gitUser}&repo=${props.gitRepo}&file=${event.workshop}&instUser=${props.instGitUser}&instRepo=${props.instGitRepo}`}>
                           <LaunchIcon className="launch-icon"
-                            // onClick={() => window.open(`/workshops/${event.slug}`)} 
+                            
                             style={{
                               cursor: 'pointer',
                               paddingTop: '5px',
+                              color: '#000000',
                             }}
                           />
+                        </Link>
                         }
                       </h3>
                       <p className='time'>{event.time}</p>
@@ -104,6 +102,6 @@ export default function Schedule({
           ))}
         </div>
       </div>
-    </Fragment>
+    </>
   );
 }

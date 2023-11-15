@@ -7,7 +7,7 @@ import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 
-export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instUser, instRepo }) {
+export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, instRepo, totalWorkshops }) {
 
     const [parsedWorkshop, setParsedWorkshop] = useState(null);
 
@@ -78,9 +78,14 @@ export default function UseWorkshopComponent({ workshop, gitUser, gitRepo, instU
     }, [coverimage])
 
     const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
+
+    if(parsedWorkshop?.data?.published === false){
+        console.log('not published', parsedWorkshop.data.title)
+        return null;
+    }
     return (
         <>
-            {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description &&
+            {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description && (parsedWorkshop.data.published === 'true' || !parsedWorkshop.data.published) &&
                 <div>
                     <Card className='workshop-card'>
                         <CardActionArea 

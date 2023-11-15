@@ -11,11 +11,60 @@ const Footer = dynamic(() => import('../components/Footer'))
 import PyodideProvider from '../components/Wasm/PyodideProvider';
 import { SWRConfig } from 'swr';
 import { useRef } from 'react';
+import NextNProgress from 'nextjs-progressbar';
+import { useSWRConfig } from "swr";
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
 
   const [title, setTitle] = useState('');
   const [workshopMode, setWorkshopMode] = useState(false);
+  const [gitUser, setGitUser] = useState(null);
+  const [gitRepo, setGitRepo] = useState(null);
+  const [instGitUser, setInstGitUser] = useState(null);
+  const [instGitRepo, setInstGitRepo] = useState(null);
+  const [cacheCleared, setCacheCleared] = useState(false);
+  const { cache, mutate } = useSWRConfig()
+  const router = useRouter();
+  const clearCache = () => {
+    cache.clear()
+  }
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setInstGitUser(urlParams.get('instUser'));
+    setInstGitRepo(urlParams.get('instRepo'));
+    if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
+      router.push('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
+    }
+    if (urlParams.get('user') && urlParams.get('repo')) {
+      setGitUser(urlParams.get('user'));
+      setGitRepo(urlParams.get('repo'));
+    }
+    if (urlParams.get('edit') === 'true') {
+      if (cacheCleared == false) {
+        localStorage.removeItem('app-cache');
+        localStorage.removeItem('app-cache-time');
+        clearCache()
+        setCacheCleared(true)
+        console.log('cache cleared')
+      }
+    }
+  }, [router])
+
+  pageProps.title = title
+  pageProps.setTitle = setTitle
+  pageProps.workshopMode = workshopMode
+  pageProps.setWorkshopMode = setWorkshopMode
+  pageProps.gitUser = gitUser
+  pageProps.setGitUser = setGitUser
+  pageProps.gitRepo = gitRepo
+  pageProps.setGitRepo = setGitRepo
+  pageProps.instGitUser = instGitUser
+  pageProps.setInstGitUser = setInstGitUser
+  pageProps.instGitRepo = instGitRepo
+  pageProps.setInstGitRepo = setInstGitRepo
+
   Object.assign(pageProps, {
     title, setTitle, workshopMode, setWorkshopMode,
   })
@@ -54,6 +103,7 @@ function MyApp({ Component, pageProps }) {
     return () => cache.current;
   }
 
+
   // use hook in SWRConfig
   const provider = useCacheProvider();
 
@@ -65,22 +115,17 @@ function MyApp({ Component, pageProps }) {
       <CssBaseline />
       <ThemeProvider>
         <StyledEngineProvider>
-          {/* {!workshopMode &&
-            <Header
-              title={title}
-              instUser={instUser}
-              instRepo={instRepo}
-            />} */}
           <main className='container'>
             <SWRConfig value={{ provider }}>
               <PyodideProvider>
+                <NextNProgress
+                  options={{ easing: 'ease', speed: 200 }} />
                 <Component {...pageProps} />
               </PyodideProvider>
             </SWRConfig>
           </main>
         </StyledEngineProvider>
       </ThemeProvider>
-      {/* <BackToTop /> */}
       {!workshopMode &&
         <Footer />}
     </>

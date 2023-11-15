@@ -1,28 +1,13 @@
 import useSWRImmutable from "swr/immutable";
-import { useSWRConfig } from "swr";
 import { useState, useEffect } from "react";
+import { GitHub } from "@mui/icons-material";
 
-export default function useWorkshop(gitUser, builtURL, editing) {
+export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
 
   let headers;
-
-  const [cacheCleared, setCacheCleared] = useState(false);
-  const { cache, mutate } = useSWRConfig()
-  const clearCache = () => {
-    cache.clear()
-  }
-
-  useEffect(() => {
-    if (editing == 'true' && cacheCleared == false) {
-      localStorage.removeItem('app-cache');
-      localStorage.removeItem('app-cache-time');
-      clearCache()
-      setCacheCleared(true)
-      console.log('cache cleared')
-    }
-  }, [editing])
-
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') { 
+  const [shouldFetch, setShouldFetch] = useState(false);
+  
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers = new Headers(
       {
         'Content-Type': 'application/json',
@@ -45,17 +30,24 @@ export default function useWorkshop(gitUser, builtURL, editing) {
     res => Buffer.from(res.content, 'base64').toString()
   )
 
-  const { data, isLoading, error } = useSWRImmutable(gitUser != null ? builtURL : null, fetcher(headers),
+  useEffect(() => {
+    if (gitUser && gitFile) {
+      setShouldFetch(true)
+    }
+  }, [gitUser, gitFile])
+
+  const { data, isLoading, error } = useSWRImmutable(shouldFetch ? builtURL : null, fetcher(headers),
     {
-      onFailure(err) {
-        console.log('err', err)
+      onError(err) {
         console.log('workshop.url', builtURL)
+        console.log('workshop.err', err)
       }
     },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
+      dedupingInterval: 10000000000,
 
     })
 

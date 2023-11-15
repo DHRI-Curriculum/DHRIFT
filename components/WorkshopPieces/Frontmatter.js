@@ -1,13 +1,14 @@
-
-import ConvertMarkdown from './ConvertMarkdown'
-import { useEffect } from 'react';
+import ConvertMarkdown from './ConvertMarkdown';
 import Button from '@mui/material/Button';
 import HomeIcon from '@mui/icons-material/Home';
 import FrontmatterFeature from './FrontmatterFeature';
+import Link from 'next/link';
+import { Breadcrumbs } from '@mui/material';
 
-export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages,
-  instUser, instRepo, workshopTitle, pageTitles, currentPage
+export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router,
+  secondPageLink
 ) {
+
   const description = currentFile.data.description
   const title = currentFile.data.title
   const prerequisites = currentFile.data.prerequisites || []
@@ -37,7 +38,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
       const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
       return (
         <div className='frontmatter-item dependency' key={dep.title}>
-          <h2>{dep.title}</h2>
+          <h3>{dep.title}</h3>
           <p className={requiredOrRecommended}>
             {/* <Link href={workshopObject.link}>{item.title}</Link> */}
             <p>{workshopHtmldescription}</p>
@@ -65,14 +66,14 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
         const itemHtml = ConvertMarkdown(obj.items)
         return (
           <div key={obj.title} className='frontmatter-item'>
-            <h2>{obj.title}</h2>
+            <h3>{obj.title}</h3>
             <p>{itemHtml}</p>
           </div>
         )
       }
       return (
         <div className="frontmatter-item" key={obj.title}>
-          <h2>{obj.title.charAt(0).toUpperCase() + obj.title.slice(1)}</h2>
+          <h3>{obj.title.charAt(0).toUpperCase() + obj.title.slice(1)}</h3>
           <ul>
             {obj.items && Object.keys(obj.items).map(key => {
               const item = obj.items[key]
@@ -110,9 +111,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                 if (item?.description) {
                   const itemHtml = ConvertMarkdown(item.description)
                   return (
-                    <li key={key}>
-                      <p>{itemHtml}</p>
-                    </li>
+                    <p key={key} >{itemHtml}</p>
                   )
                 }
                 try {
@@ -141,33 +140,38 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
     })
 
   // check if formattedObjects or formattedDeps is empty, if so, return null
-  const route = instRepo && instUser ? `/inst/?user=${instUser}&repo=${instRepo}` : '/'
+  const route = instRepo && instUser ? `/inst/?instUser=${instUser}&instRepo=${instRepo}` : '/'
   return (
     <div className="frontmatter">
       <div className="frontmatter-hero">
-        <div className='frontmatter-hero-breadcrumbs'>
-          <a href={route}>
-            <HomeIcon
-              sx={{
-                color: 'white',
-                zIndex: 1000,
-                position: 'relative',
-                marginTop: '32px',
-              }}
-              className='home-icon' />
-          </a>
-          <p>/</p>
-          {workshopTitle &&
-            <p className='crumb'>{workshopTitle}</p>}
-        </div>
+        {/* <div className='frontmatter-hero-breadcrumbs'>
+          <Breadcrumbs>
+            <Link href={route}>
+              <HomeIcon
+                sx={{
+                  color: 'white',
+                  zIndex: 1000,
+                  position: 'relative',
+                  marginTop: '32px',
+                }}
+                className='home-icon' />
+            </Link>
+            {workshopTitle &&
+              <p className='crumb'>{workshopTitle}</p>}
+          </Breadcrumbs>
+        </div> */}
         <h1>{title}</h1>
         {description &&
           <>
             <p className='description'>{description}</p><br />
-            <Button className='button button-white'
-              onClick={() => { setCurrentPage(2) }}>
-              Start the Workshop
-            </Button>
+            <Link href={secondPageLink}
+              onClick={() => {
+                setCurrentPage(2);
+              }}>
+              <Button className='button button-white'>
+                Start the Workshop
+              </Button>
+            </Link>
           </>
         }
       </div>
@@ -182,12 +186,13 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
           {formattedObjects}
         </ul>
       </div>}
-      <Button className='button button-bark'
-        onClick={() => {
-          setCurrentPage(2)
-          window.scrollTo(0, 0)
-        }}>
-        Start the Workshop
+      <Button className='button button-bark'>
+        <Link href={secondPageLink}
+          onClick={() => {
+            setCurrentPage(2);
+          }}>
+          Start the Workshop
+        </Link>
       </Button>
       <FrontmatterFeature
         authors={currentFile.data.authors}
