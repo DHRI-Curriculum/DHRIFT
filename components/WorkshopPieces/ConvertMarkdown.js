@@ -164,13 +164,51 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     }
 
     const Keywords = ({ className, children }) => {
-        console.log('children', children)
+        let termsAndDefinitions = [];
+        children.forEach((child) => {
+            let items = child.props.children;
+            items.forEach((item) => {
+                let termAndDef;
+                if (item.props.children.props !== undefined) {
+                    termAndDef = item.props.children.props.children[0].props.children;
+                    // termAndDef = termAndDef.join('');
+                    
+                } else {
+                    termAndDef = item.props.children[0].props.children;
+                    // termAndDef = termAndDef.join('')
+                }
+                console.log('termAndDef', termAndDef)
+                // term is before the newline
+                let term = termAndDef[0].slice(0, termAndDef.indexOf('\n'))
+                term = term.split('\n')[0]
+                console.log('term', term)
+                let definition = termAndDef.slice(termAndDef.indexOf('\n') + 1)
+                definition = definition.map((line, index) => {
+                    if (index === 0){
+                    return line.split('\n')[1]
+                    }
+                    return line
+                })
+                
+                console.log('definition', definition)
+                termsAndDefinitions.push({ term, definition })
+            })
+        })
         return (
-            <div>
-                {children}
+            <div className="keywords">
+                <h2>Keywords</h2>
+                <ul>
+                    {termsAndDefinitions.map((termAndDefinition) => {
+                        return (
+                            <li>
+                                <strong>{termAndDefinition.term}</strong> - {termAndDefinition.definition}
+                            </li>
+                        )
+                    })}
+                </ul>
             </div>
         )
-    }    
+    }
 
 
     // const HTMLEditor = ({ className, children }) => {
@@ -226,7 +264,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         )
     }
 
-    const Secret = ({ className, children}) => {
+    const Secret = ({ className, children }) => {
         return (
             <div>
                 <SecretComponent text={children} />
@@ -300,7 +338,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                             className: 'info-alert',
                         }
                     },
-                    Secret:{
+                    Secret: {
                         component: Secret,
                         props: {
                             className: 'secret',
@@ -311,7 +349,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                             forceInline: true,
                         }
                     },
-                    
+
                     Jupyter,
                     Quiz,
                     PythonREPL,

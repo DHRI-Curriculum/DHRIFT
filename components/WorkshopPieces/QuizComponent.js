@@ -97,6 +97,10 @@ export default function QuizComponent({ className, children }) {
                             label={li.li}
                             className={`${componentUniqueId}-checkbox`}
                             disabled={disabled}
+                            style={{
+                                // no bullet 
+                                listStyleType: 'none',
+                            }}
                         />
 
                     ))}

@@ -55,29 +55,31 @@ export default async function MDX({ content, allUploads, workshopTitle, language
     return (<div className="keywords">{props.children}</div>)
   }
 
-  // function moveFootnotes() {
-  //   return function (tree) {
-  //     let footnotes = []
-  //     // console.log('tree', tree) 
+  function moveFootnotes() {
+    return function (tree) {
+      let footnotes = []
+      // console.log('tree', tree) 
 
-  //     visit(tree, (node) => {
-  //       if (node.properties.dataFootnoteRef === true){
-  //       console.log('node', node)
-  //       }
-  //       // footnotes.push(node)}
-  //     })
-  //     visit(tree, (node) => {
-  //       let footnoteDef = node.children?.find((c) => c.properties?.id === '')
-  //       let footnote = footnotes.find((f) => f.identifier === node.identifier)
-  //       if (footnote) {
-  //         node.type = 'element'
-  //         node.tagName = 'sup'
-  //         node.children = footnote.children
-  //         console.log('node', node)
-  //       }
-  //     })
-  //   }
-  // }
+      visit(tree, (node) => {
+    //     console.log('node', node)
+    //     if (node.properties.dataFootnoteRef === true){
+    //     }
+    //     // footnotes.push(node)}
+    //   })
+    //   visit(tree, (node) => {
+    //     let footnoteDef = node.children?.find((c) => c.properties?.id === '')
+    //     let footnote = footnotes.find((f) => f.identifier === node.identifier)
+    //     if (footnote) {
+    //       node.type = 'element'
+    //       node.tagName = 'sup'
+    //       node.children = footnote.children
+    //       console.log('node', node)
+    //     }
+    //   })
+    // }
+  })   
+  }
+}
 
   // function MDXTagPlugin() {
   //   return function (tree) {
@@ -145,7 +147,7 @@ export default async function MDX({ content, allUploads, workshopTitle, language
             },
           }
           )
-          // .use(moveFootnotes)
+          .use(moveFootnotes)
       .process(await content).then((file) => {
         return file
       })
