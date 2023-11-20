@@ -200,7 +200,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                 <ul>
                     {termsAndDefinitions.map((termAndDefinition) => {
                         return (
-                            <li>
+                            <li key={termAndDefinition.term}>
                                 <strong>{termAndDefinition.term}</strong> - {termAndDefinition.definition}
                             </li>
                         )
