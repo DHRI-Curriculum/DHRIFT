@@ -1,19 +1,20 @@
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
+import { set } from "date-fns";
 
-export default function useUploads({setAllUploads, gitUser, gitRepo, 
-    gitFile, ...props}) {
+export default function useUploads({ setAllUploads, allUploads, gitUser, gitRepo, gitFile, uploadsURL, setUploadsURL, ...props }) {
 
     const [shouldFetch, setShouldFetch] = useState(false);
 
     let headers;
-    let builtURL;
-    if (gitUser && gitRepo && gitFile) {
-        builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`
-    }
-    if (props.uploads_dir) {
-        builtURL = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${props.uploads_dir}`
-    }
+    let builtURL = uploadsURL;
+
+    useEffect(() => {
+        if (uploadsURL) {
+            setShouldFetch(true)
+        }
+    }, [uploadsURL])
+
     if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
         headers = new Headers(
             {
@@ -36,17 +37,10 @@ export default function useUploads({setAllUploads, gitUser, gitRepo,
         err => console.log('err', err)
     )
 
-    
-  useEffect(() => {
-    if(gitUser && gitFile && gitRepo) {
-      setShouldFetch(true)
-    }
-  }, [gitUser, gitFile, gitRepo])
 
     const { data: uploads, error } = useSWRImmutable(shouldFetch
-         ? builtURL : null, fetcher(headers),
+        ? builtURL : null, fetcher(headers),
         { revalidateOnMount: true })
-
 
     useEffect(() => {
         if (uploads) {
@@ -55,5 +49,4 @@ export default function useUploads({setAllUploads, gitUser, gitRepo,
     }, [uploads])
 
     return uploads
-
 }

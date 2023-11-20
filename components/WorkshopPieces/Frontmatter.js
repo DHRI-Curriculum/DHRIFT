@@ -32,7 +32,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
   const formedDeps =
     formattedDependencies.map(dep => {
       const workshopObject = dep
-      const workshopHtmldescription = ConvertMarkdown(workshopObject.description)
+      const workshopHtmldescription = ConvertMarkdown({ content: workshopObject.description })
       const required = workshopObject.required
       const recommended = workshopObject.recommended
       const requiredOrRecommended = required ? 'required' : recommended ? 'recommended' : ''
@@ -63,7 +63,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
   const formattedObjects = allObjects.
     filter(item => item !== null).map(obj => {
       if (typeof obj.items === 'string') {
-        const itemHtml = ConvertMarkdown(obj.items)
+        const itemHtml = ConvertMarkdown({ content: obj.items })
         return (
           <div key={obj.title} className='frontmatter-item'>
             <h3>{obj.title}</h3>
@@ -80,7 +80,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
               // console.log(item)
               // if there's a description, show it
               if (key === 'description') {
-                const description = ConvertMarkdown(item)
+                const description = ConvertMarkdown({content: item})
                 return (
                   <li key={key}>
                     <p>{description}</p>
@@ -91,7 +91,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                 // console.log(item)
               }
               if (typeof item === 'string') {
-                const itemHtml = ConvertMarkdown(item)
+                const itemHtml = ConvertMarkdown({content: item})
                 return (
                   <li key={key} className='frontmatter-list'>
                     {itemHtml}
@@ -100,7 +100,8 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
               }
               if (typeof item === 'object' && item !== null) {
                 if (item?.link || item['workshop prerequisites']) {
-                  const itemHtml = ConvertMarkdown(item.description)
+                  const itemHtml = ConvertMarkdown({content: item.description})
+                  con
                   return (
                     <li key={key}>
                       <a href={item.link}>{key}</a>
@@ -109,7 +110,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                   )
                 }
                 if (item?.description) {
-                  const itemHtml = ConvertMarkdown(item.description)
+                  const itemHtml = ConvertMarkdown({content: item.description})
                   return (
                     <p key={key} >{itemHtml}</p>
                   )
@@ -119,7 +120,7 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
                     <div key={key}>
                       {Object.keys(item).map(key => {
                         // console.log(key)
-                        const term = ConvertMarkdown(item[key].description)
+                        const term = ConvertMarkdown({content: item[key].description})
                         return (
                           <div key={key}>
                             <h3><a href={item[key].link}>{key}</a></h3>

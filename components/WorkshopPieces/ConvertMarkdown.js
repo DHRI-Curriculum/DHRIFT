@@ -14,12 +14,9 @@ import Info from './Info';
 import JupyterLoad from './JupyterLoad';
 import SecretComponent from './SecretComponent';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
-// import { renderToStaticMarkup } from 'react-dom/server';
-// import he from 'he';
 
 
-export default function ConvertMarkdown(content, uploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc) {
-
+export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc }) {
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
@@ -103,14 +100,6 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
         var codeText = '';
         if (children) {
             if (children.length > 0) {
-                // if any of the children are an object (i.e. a react component)
-                // then we need to join the children together
-                // if (typeof children[0] === 'object') {
-                //     codeText = children[0].props.children.join('');
-                // }
-                // else {
-                //     codeText = children.join('');
-                // }
                 children.forEach((child) => {
                     if (typeof child === 'object') {
                         child.props.children.forEach((line) => {
@@ -124,7 +113,6 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
                         codeText += child;
                     }
                 })
-
                 return (
                     <div>
                         <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
@@ -147,15 +135,6 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
             )
         }
     }
-
-    // const Downloader = ({ className, children, ...props }) => {
-    //     if (uploads == undefined) return null;
-    //     return (
-    //         <div>
-    //             <Download {...props} />
-    //         </div>
-    //     )
-    // }
 
     const PythonREPL = ({ className, children }) => {
         return (
@@ -183,6 +162,16 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
             </div>
         )
     }
+
+    const Keywords = ({ className, children }) => {
+        console.log('children', children)
+        return (
+            <div>
+                {children}
+            </div>
+        )
+    }    
+
 
     // const HTMLEditor = ({ className, children }) => {
     //     var html, css;
@@ -237,11 +226,17 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
         )
     }
 
-    const Secret = ({ className, children }) => {
+    const Secret = ({ className, children}) => {
         return (
             <div>
                 <SecretComponent text={children} />
             </div>
+            // <p>
+            //     <details>
+            //         <summary>Reveal</summary>
+            //         {children}
+            //     </details>
+            // </p>
         )
     }
 
@@ -281,7 +276,7 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
                     CodeEditor: {
                         component: CodeEditor,
                         props: {
-                            allUploads: uploads,
+                            allUploads: allUploads,
                             language: language,
                             setCode: setCode,
                             setEditorOpen: setEditorOpen,
@@ -296,7 +291,7 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
                         component: Download,
                         props: {
                             workshopTitle: workshopTitle,
-                            allUploads: uploads,
+                            allUploads: allUploads,
                         }
                     },
                     Info: {
@@ -305,12 +300,25 @@ export default function ConvertMarkdown(content, uploads, workshopTitle, languag
                             className: 'info-alert',
                         }
                     },
+                    Secret:{
+                        component: Secret,
+                        props: {
+                            className: 'secret',
+                        },
+                        options: {
+                            wrapper: 'p',
+                            forceWrapper: true,
+                            forceInline: true,
+                        }
+                    },
+                    
                     Jupyter,
                     Quiz,
                     PythonREPL,
                     Terminal,
                     JSTerminal,
-                    Secret,
+                    Keywords,
+                    // Secret,
                     Link
                     // HTMLEditor,
 

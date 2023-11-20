@@ -4,7 +4,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function Pagination({ pages, currentPage, handlePageChange, pageTitles }) {
 
-
     const sectionTitle = function () {
         let theMostRecentH1 = null;
         if (pageTitles[currentPage - 2]?.parent) {

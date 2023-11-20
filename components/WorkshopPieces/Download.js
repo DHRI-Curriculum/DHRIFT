@@ -1,3 +1,4 @@
+import { use, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import JSZip from "jszip";
@@ -5,10 +6,16 @@ import { saveAs } from "file-saver";
 
 export default function Download(props) {
     const allUploads = props.allUploads;
+    useEffect(() => {
+        if (allUploads) {
+        console.log('allUploads', allUploads)
+        }
+    }, [allUploads])
+
 
     const chosenUploads = typeof props.files === 'string' ? props.files.split(',') : [];
     var filteredUploads = [];
-    if (chosenUploads != undefined && allUploads.length > 0) {
+    if (chosenUploads != undefined && allUploads?.length > 0) {
         chosenUploads.forEach(upload => {
             const currentFile = allUploads?.find(file => file.name === upload.trim());
             if (currentFile != undefined) {

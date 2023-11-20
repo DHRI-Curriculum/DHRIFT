@@ -1,6 +1,6 @@
 import useSWRImmutable from "swr/immutable";
+import useSWR from "swr";
 import { useState, useEffect } from "react";
-import { GitHub } from "@mui/icons-material";
 
 export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
 
@@ -36,7 +36,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
     }
   }, [gitUser, gitFile])
 
-  const { data, isLoading, error } = useSWRImmutable(shouldFetch ? builtURL : null, fetcher(headers),
+  const { data, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
     {
       onError(err) {
         console.log('workshop.url', builtURL)
@@ -48,7 +48,6 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
       revalidateOnReconnect: false,
       revalidateIfStale: false,
       dedupingInterval: 10000000000,
-
     })
 
   return data

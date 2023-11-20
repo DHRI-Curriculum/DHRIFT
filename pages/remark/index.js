@@ -4,7 +4,8 @@ import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
 import { useRouter } from 'next/router'
-import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
+// import ConvertMarkdown from '../../components/WorkshopPieces/ConvertMarkdown'
+import MDX from '../../components/WorkshopPieces/MDX'
 import Frontmatter from '../../components/WorkshopPieces/Frontmatter';
 import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Footer from '../../components/Footer'
@@ -86,11 +87,10 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown({content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc});
+
     // split react element array into pages
     const allPages = [];
-    console.log('htmlifiedContent', htmlifiedContent)
-    const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
+    const pages = content.result.props.children.reduce((acc, curr) => {
       // allPages = [[h1, p, p][h1, p, div]]
       if (typeof curr === 'string') {
         return acc;
@@ -171,13 +171,24 @@ export default function WorkshopPage({
   }, [currentPage, pages])
 
   const [secondPageLink, setSecondPageLink] = useState('');
+  const [processedContent, setProcessedContent] = useState(null)
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('page', 2);
     setSecondPageLink(`${window.location.pathname}?${urlParams}`);
+
+    const getMDX = async () => {
+      if (data) {
+        let processed = await MDX({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, setfileFrontmatter: setMetadata });
+        setProcessedContent(processed)
+      }
+    }
+    getMDX()
+
     if (currentFile != null && content != '' && metadata != null && allUploads != undefined) {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
-      setPages([frontMatterContent, ...convertContenttoHTML(content)]);
+      setPages([frontMatterContent, ...convertContenttoHTML(processedContent)]);
       setCurrentContentLoaded(true);
     }
   }, [currentFile, content, metadata, currentPage, secondPageLink, allUploads])
@@ -190,7 +201,7 @@ export default function WorkshopPage({
     const pageTitlesGet = pages.map((page, index) => {
       let header = undefined;
       // if it's the frontpage vs not
-      index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children.props.children[0]
+      index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children
       if (typeof header === 'object') {
         header = header.props.children;
       }
@@ -244,7 +255,6 @@ export default function WorkshopPage({
     }
   }, [currentPage])
 
-
   useEffect(() => {
     if (currentPage === 1 || currentPage === 0) {
       props.setWorkshopMode(false);
@@ -273,7 +283,7 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    router.push(`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: true, scroll: false });
+    router.push(`/remark/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: true, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
