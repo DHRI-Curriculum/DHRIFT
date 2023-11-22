@@ -89,7 +89,6 @@ export default function WorkshopPage({
     const htmlifiedContent = ConvertMarkdown({content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc});
     // split react element array into pages
     const allPages = [];
-    console.log('htmlifiedContent', htmlifiedContent)
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
       // allPages = [[h1, p, p][h1, p, div]]
       if (typeof curr === 'string') {

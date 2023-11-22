@@ -13,6 +13,7 @@ import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import JupyterLoad from './JupyterLoad';
 import SecretComponent from './SecretComponent';
+import { Children } from 'react'
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 
 
@@ -163,36 +164,26 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         )
     }
 
+
     const Keywords = ({ className, children }) => {
         let termsAndDefinitions = [];
+        // if its a list item it is the term, anything else is the definition
         children.forEach((child) => {
             let items = child.props.children;
-            items.forEach((item) => {
-                let termAndDef;
-                if (item.props.children.props !== undefined) {
-                    termAndDef = item.props.children.props.children[0].props.children;
-                    // termAndDef = termAndDef.join('');
-                    
-                } else {
-                    termAndDef = item.props.children[0].props.children;
-                    // termAndDef = termAndDef.join('')
-                }
-                console.log('termAndDef', termAndDef)
-                // term is before the newline
-                let term = termAndDef[0].slice(0, termAndDef.indexOf('\n'))
-                term = term.split('\n')[0]
-                console.log('term', term)
-                let definition = termAndDef.slice(termAndDef.indexOf('\n') + 1)
-                definition = definition.map((line, index) => {
-                    if (index === 0){
-                    return line.split('\n')[1]
-                    }
-                    return line
-                })
-                
-                console.log('definition', definition)
+            console.log('items', items)
+            if (items[0].type == 'li') {
+                let termHolder = items[0].props.children[0]
+                let term = termHolder.slice(0, termHolder.indexOf('\n'))
+                // now cut off the term from the termHolder
+                termHolder = termHolder.slice(termHolder.indexOf('\n') + 1)
+                items[0].props.children[0] = termHolder
+                let definition = items[0].props.children
                 termsAndDefinitions.push({ term, definition })
-            })
+            }
+            else {
+                let mostRecentTerm = termsAndDefinitions[termsAndDefinitions.length - 1]
+                mostRecentTerm.definition.push(child)
+            }
         })
         return (
             <div className="keywords">
@@ -209,6 +200,69 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             </div>
         )
     }
+
+
+
+    // const Keywords = ({ className, children }) => {
+    //     let termsAndDefinitions = [];
+    //     children.forEach((child) => {
+    //         let items = child.props.children;
+    //         let mostRecentTerm = '';
+    //         items.forEach((item) => {
+    //             console.log('item', item)
+    //             let termAndDef;
+    //             if (item.props?.children?.props !== undefined) {
+    //                 termAndDef = item.props.children.props.children[0].props.children;
+    //                 mostRecentTerm = item
+    //             } else if (item.props?.children?.props?.children !== undefined) {
+    //                 termAndDef = item.props.children[0].props.children;
+    //                 mostRecentTerm = item
+    //             }
+    //             else if (item.props?.children !== undefined) {
+    //                 termAndDef = item.props.children;
+    //                 console.log('termAndDef', termAndDef)
+    //             }
+
+    //             // term is before the newline
+    //             if (item.type === 'li' && item.props.children) {
+    //                 console.log('item', item)
+    //                 console.log('termAndDef', termAndDef)
+    //                 let term = termAndDef[0].slice(0, termAndDef.indexOf('\n'))
+    //                 term = term.split('\n')[0]
+    //                 console.log('term', term)
+    //                 let definition = termAndDef.slice(termAndDef.indexOf('\n') + 1)
+    //                 definition = definition.map((line, index) => {
+    //                     if (index === 0) {
+    //                         return line.split('\n')[1]
+    //                     }
+    //                     return line
+    //                 })
+    //                 termsAndDefinitions.push({ term, definition })
+    //             }
+
+    //             else {
+    //                 // add to the most recent term
+    //                 console.log('mostRecentTerm', mostRecentTerm)
+    //                 mostRecentTerm.props.children.push(item)
+    //             }
+    //                 // console.log('definition', definition)
+    //             })
+    //     })
+    //     return (
+    //         <div className="keywords">
+    //             <h2>Keywords</h2>
+    //             <ul>
+    //                 {termsAndDefinitions.map((termAndDefinition) => {
+    //                     return (
+    //                         <li key={termAndDefinition.term}>
+    //                             <strong>{termAndDefinition.term}</strong> - {termAndDefinition.definition}
+    //                         </li>
+    //                     )
+    //                 })}
+    //             </ul>
+    //         </div>
+    //     )
+    // }
 
 
     // const HTMLEditor = ({ className, children }) => {
