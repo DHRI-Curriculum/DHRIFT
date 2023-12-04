@@ -5,6 +5,7 @@ import { ArrowDropDown } from '@mui/material/';
 export default function SecretComponent(props) {
   const [show, setShow] = useState(false);
   const children = props.text;
+  console.log(children);
 
   return (
     <div className="secret">

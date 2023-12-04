@@ -15,6 +15,7 @@ import JupyterLoad from './JupyterLoad';
 import SecretComponent from './SecretComponent';
 import { Children } from 'react'
 import { NewLineKind } from 'typescript';
+import { autocompleteClasses } from '@mui/material';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 
 
@@ -22,6 +23,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
+
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`
         return (
             <div className="image-container"
@@ -34,7 +36,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     style={{
                         position: 'relative',
                         // height: '400px',
-                        // width: '100%',
+                        // width: {width || '100%'},
                     }}
                     aria-label={newProps.alt}
                 >
@@ -47,7 +49,14 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                         alt={newProps.alt}
                         onError={() => setSrc(builtURL)}
                         title={newProps.alt}
-                        style={{ width: '100%', height: 'auto' }}
+                        style={{
+                                width: 'auto',
+                                maxWidth: '100%',
+                                height: 'auto',
+                                display: 'block',
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
+                            }}
                     />
                 </div>
                 {/* </Zoom> */}
