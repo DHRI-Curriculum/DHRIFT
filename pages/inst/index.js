@@ -130,7 +130,9 @@ export default function Institute(props) {
                                     <Button
                                         className='button button-white'
                                         href={parsedYAML.registerlink}
-                                    >Register</Button>
+                                    >{
+                                            parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                                    </Button>
                                 }</p>
                             </div>
                         </div>
