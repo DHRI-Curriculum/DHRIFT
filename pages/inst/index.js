@@ -44,7 +44,7 @@ export default function Institute(props) {
         // decode from base64
         res => Buffer.from(res.content, 'base64').toString()
     )
-    
+
     useEffect(() => {
         setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
         if (props.instGitUser && props.instGitRepo) {
@@ -86,7 +86,7 @@ export default function Institute(props) {
         <>
             <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
                 gitUser={props.gitUser} gitRepo={props.gitRepo}
-             />
+            />
             <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
                 <Container
                     disableGutters={true}
@@ -101,51 +101,64 @@ export default function Institute(props) {
                     <Head>
                         <title>{parsedYAML && parsedYAML.event}</title>
                     </Head>
+
                     <div className="inst">
-                        <div className='inst-hero'
-                            style={{
-                                height: '600px',
-                                width: '100vw',
-                                position: 'relative',
-                                backgroundSize: 'cover',
-                                backgroundPosition: '50% 50%',
-                                backgroundImage: `url(${heroImage.src})`,
-                                // paddingLeft: '100px',
-                            }}>
-                            <div className='inst-hero-overlay'>
-                                <h1>{
-                                    parsedYAML && parsedYAML.event
-                                }</h1>
-                                <h2>{
-                                    parsedYAML && parsedYAML.datestart && parsedYAML.enddate && `${date}`
-                                }</h2>
-                                <p>
+                        {
+                            <>
+                                <div className='inst-hero'
+                                    style={{
+                                        height: '600px',
+                                        width: '100vw',
+                                        position: 'relative',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: '50% 50%',
+                                        backgroundImage: `url(${heroImage.src})`,
+                                        // paddingLeft: '100px',
+                                    }}>
+                                    <div className='inst-hero-overlay'>
+                                        <div> {
+                                            parsedYAML && <h1>{parsedYAML.event}</h1>
+                                        }
+                                            {
+                                                parsedYAML && parsedYAML.datestart && parsedYAML.enddate &&
+                                                <h2>{date}</h2>
+                                            }
+                                            {
+
+                                                parsedYAML && <p>{parsedYAML.venue}</p>
+                                            }
+
+                                        </div>
+                                        <div>
+
+                                            {
+                                                parsedYAML && <div className='inst-hero-description'>
+                                                    <p>{parsedYAML.herodescription}</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='inst-description'>
+                                    {parsedYAML && <p>{parsedYAML.description}</p>}
                                     {
-                                        parsedYAML && parsedYAML.venue
+                                        parsedYAML && parsedYAML.registerlink &&
+                                        // <a href={parsedYAML.registerlink}>Register</a>
+                                        <p><Button
+                                            className='button button-bark'
+                                            href={parsedYAML.registerlink}
+                                        >{
+                                                parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                                        </Button></p>
                                     }
-                                </p>
-                                <p>{
-                                    parsedYAML && parsedYAML.registerlink &&
-                                    // <a href={parsedYAML.registerlink}>Register</a>
-                                    <Button
-                                        className='button button-white'
-                                        href={parsedYAML.registerlink}
-                                    >{
-                                            parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
-                                    </Button>
-                                }</p>
-                            </div>
-                        </div>
-                        <div className='inst-description'>
-                            <p>{
-                                parsedYAML && parsedYAML.description
-                            }</p>
-                        </div>
+                                </div>
+                            </>
+                        }
                         <div className='schedule'>
                             {sessions &&
-                                <Schedule schedule={sessions} 
-                                {...props}
-                                 />}
+                                <Schedule schedule={sessions}
+                                    {...props}
+                                />}
                         </div>
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>

@@ -442,12 +442,10 @@ header {
   flex-direction: column;
   justify-content: center;
 
-  // sets the padding for the apge
   >div {
-    @include respond-above(md) {
       padding-left: 100px;
       padding-right: 100px;
-    }
+    
   }
 
   &-hero {
@@ -455,6 +453,7 @@ header {
     margin-bottom: 20px;
     margin-top: 20px;
     align-self: flex-start;
+    max-height: 500px;
 
     &-overlay {
       @include respond-above(md) {
@@ -464,16 +463,28 @@ header {
 
       padding: 0px 20px 0px 20px;
       position: absolute;
-      height: 600px;
+      height: 500px;
       width: 100%;
       left: 0px;
       top: 0px;
-      background: linear-gradient(to right, $primary-color-brown, rgba(0, 0, 0, 0.5));
+      background: linear-gradient(to right, $primary-color-brown, rgba(0, 0, 0, 0.6));
       color: white;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    &-description {
+      padding-top: 0px;
+      padding-bottom: 0px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+      position: relative;
+      max-width: 40vw;
+      align-self: center;
+      font-weight: 500;
+      // background: $primary-color-bark;
     }
 
     h1 {
@@ -482,7 +493,7 @@ header {
       font-size: 3rem;
       margin-bottom: 20px;
       margin-top: 0px;
-      padding-top: 50px;
+      padding-bottom: 30px;
       color: $primary-color-white;
       position: relative;
     }
@@ -495,23 +506,27 @@ header {
 
   }
 
+  &-description {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: relative;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      max-width: 60%;
+    }
+  }
+
 
   &-workshops {
     padding-top: 20px;
     width: 100vw;
     background-color: $primary-color-cream;
     z-index: 100;
-  }
-
-  &-description {
-    color: black;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    position: relative;
-    width: 80vw;
-    align-self: center;
   }
 
   .button {
@@ -907,6 +922,7 @@ nav.sidenav {
 .shellContainer {
   height: auto;
   background-color: rgb(39, 40, 34);
+
   .terminal::-webkit-scrollbar {
     width: 20px;
   }
