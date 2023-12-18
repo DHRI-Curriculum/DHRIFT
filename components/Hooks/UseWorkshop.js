@@ -1,12 +1,13 @@
 import useSWRImmutable from "swr/immutable";
 import useSWR from "swr";
 import { useState, useEffect } from "react";
+import { set } from "date-fns";
 
 export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
 
   let headers;
   const [shouldFetch, setShouldFetch] = useState(false);
-  const [fetchError, setFetchError] = useState(null);
+  const [fetchError, setFetchError] = useState(false);
   
   if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers = new Headers(
@@ -42,14 +43,13 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
     }
   }, [gitUser, gitFile])
 
-  var errMessage = 'There has been an error fetching the workshop. Please try again later.'
   const { data, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
     {
       onError(err) {
         console.log('workshop.url', builtURL)
         console.log('workshop.err', err)
-        setFetchError(err)
-        
+        setShouldFetch(false)
+        setFetchError(true)
       }
     },
     {
@@ -59,6 +59,6 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
       dedupingInterval: 10000000000,
     })
 
-  return data ? data : errMessage
+  return data
 
 }
