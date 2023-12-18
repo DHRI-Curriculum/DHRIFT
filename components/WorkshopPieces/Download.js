@@ -55,7 +55,7 @@ export default function Download(props) {
                             var resContent = Buffer.from(res.content, 'base64').toString();
                             if (resContent === '' || resContent === undefined || resContent === null) {
                                 var alt = altDownloadFile(res.download_url, filename);
-                                resContent = alt;
+                                reject(alt);
                             }
                             return resContent;
                         }
@@ -74,15 +74,22 @@ export default function Download(props) {
             }
 
             var altDownloadFile = function (url, filename) {
-                fetch(url, {
-                    headers: headers,
-                    method: 'GET',
-                }).then(
-                    res => res.text()
-                )
-                    .catch(err => {
-                        console.log('err', err)
-                    })
+                // creat a popup window with the download url
+                // this is a workaround for the github api not returning the content of the file
+                // if the file is empty
+                return new Promise((resolve, reject) => {
+                    var popup = window.open(url, '_blank');
+                    if (popup == null) {
+                        reject('Please disable your popup blocker and try again.');
+                    } else {
+                        popup.onload = function () {
+                            popup.document.title = filename;
+                            popup.document.execCommand("SaveAs", true, filename);
+                            popup.close();
+                            resolve();
+                        }
+                    }
+                })
             }
 
             var downloadAllFiles = async function (files) {
