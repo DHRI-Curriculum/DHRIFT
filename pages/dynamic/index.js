@@ -87,7 +87,6 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    try{
     const htmlifiedContent = ConvertMarkdown({content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc});
     // split react element array into pages
     const allPages = [];
@@ -130,11 +129,6 @@ export default function WorkshopPage({
       }
       )
     )
-    }
-    catch(err){
-      console.log('err', err)
-      console.log('content', content)
-    }
   }
 
   const data = useWorkshop(gitUser, gitFile, builtURL, editing);
