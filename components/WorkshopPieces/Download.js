@@ -8,7 +8,6 @@ export default function Download(props) {
     const allUploads = props.allUploads;
     useEffect(() => {
         if (allUploads) {
-        console.log('allUploads', allUploads)
         }
     }, [allUploads])
 
@@ -43,6 +42,7 @@ export default function Download(props) {
             // download all files as a zip
             const zip = new JSZip();
             var downloadFile = function (url, filename) {
+                console.log('url', url)
                 return new Promise((resolve, reject) => {
                     fetch(url, {
                         headers: headers,
@@ -51,7 +51,14 @@ export default function Download(props) {
                         res => res.json()
                     ).then(
                         // decode from base64
-                        res => Buffer.from(res.content, 'base64').toString()
+                        res => {
+                            var resContent = Buffer.from(res.content, 'base64').toString();
+                            if (resContent === '' || resContent === undefined || resContent === null) {
+                                var alt = altDownloadFile(res.download_url, filename);
+                                resContent = alt;
+                            }
+                            return resContent;
+                        }
                     ).then(
                         res => {
                             zip.file(filename, res);
@@ -66,8 +73,21 @@ export default function Download(props) {
                 })
             }
 
+            var altDownloadFile = function (url, filename) {
+                fetch(url, {
+                    headers: headers,
+                    method: 'GET',
+                }).then(
+                    res => res.text()
+                )
+                    .catch(err => {
+                        console.log('err', err)
+                    })
+            }
+
             var downloadAllFiles = async function (files) {
                 for (let i = 0; i < files.length; i++) {
+                    console.log('files[i].url', files[i].url)
                     await downloadFile(files[i].url, files[i].name);
                 }
             }

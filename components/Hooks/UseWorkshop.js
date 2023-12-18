@@ -6,6 +6,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
 
   let headers;
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
   
   if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers = new Headers(
@@ -28,19 +29,27 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
   ).then(
     // decode from base64
     res => Buffer.from(res.content, 'base64').toString()
+  ).catch(
+    err => {
+      console.log('err', err)
+      console.log('workshop.url', builtURL)
+    }
   )
 
   useEffect(() => {
-    if (gitUser && gitFile) {
+    if (gitUser && gitFile && !fetchError) {
       setShouldFetch(true)
     }
   }, [gitUser, gitFile])
 
+  var errMessage = 'There has been an error fetching the workshop. Please try again later.'
   const { data, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
     {
       onError(err) {
         console.log('workshop.url', builtURL)
         console.log('workshop.err', err)
+        setFetchError(err)
+        
       }
     },
     {
@@ -50,6 +59,6 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
       dedupingInterval: 10000000000,
     })
 
-  return data
+  return data ? data : errMessage
 
 }

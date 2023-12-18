@@ -16,6 +16,7 @@ import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
+import {ErrorBoundary} from "react-error-boundary";
 
 const drawerWidth = '-30%';
 
@@ -86,6 +87,7 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
+    try{
     const htmlifiedContent = ConvertMarkdown({content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc});
     // split react element array into pages
     const allPages = [];
@@ -128,6 +130,11 @@ export default function WorkshopPage({
       }
       )
     )
+    }
+    catch(err){
+      console.log('err', err)
+      console.log('content', content)
+    }
   }
 
   const data = useWorkshop(gitUser, gitFile, builtURL, editing);
@@ -293,7 +300,17 @@ export default function WorkshopPage({
       </div>
     </>)
 
+function ErrorFallback({error}) {
   return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{color: 'red'}}>{error.message}</pre>
+    </div>
+  )
+}
+
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
     <Fade in={currentContentLoaded} timeout={500}>
       <div
         style={{
@@ -387,5 +404,6 @@ export default function WorkshopPage({
         }
       </div>
     </Fade>
+    </ErrorBoundary>
   )
 }
