@@ -74,7 +74,7 @@ export default function Download(props) {
             }
 
             var altDownloadFile = function (url, filename) {
-                // creat a popup window with the download url
+                // create a popup window with the download url
                 // this is a workaround for the github api not returning the content of the file
                 // if the file is empty
                 return new Promise((resolve, reject) => {
