@@ -263,11 +263,12 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         )
     }
 
-    const Jupyter = ({ className, children }) => {
+    const Jupyter = ({ className, ...props }) => {
         return (
             <div>
                 <JupyterLoad setJupyterSrc={setJupyterSrc}
-                    gitFile={gitFile}
+                    IPYNB={props.IPYNB}
+                    {...props}
                 />
             </div>
         )

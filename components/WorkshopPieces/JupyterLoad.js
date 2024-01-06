@@ -2,18 +2,17 @@ import { useEffect } from 'react';
 import { Button } from '@mui/material';
 
 
-export default function JupyterLoad(props) {
-    console.log('props', props);
+export default function JupyterLoad({ ...props }) {
     const jupyterSrc = props.jupyterSrc;
     const setJupyterSrc = props.setJupyterSrc;
+    const desiredFile = props.IPYNB;
+    console.log('desiredFile', desiredFile);
 
-    const uploads = props.allUploads;
-    // const fromURLString = uploads.map((upload) => {
-    //     return `&fromURL=${upload.download_url}`
-    // }
-    // ).join('');
-    const fromURLString = `&fromURL='https://raw.githubusercontent.com/${props.gitUser}/${props.gitRepo}/main/notebooks/${props.gitFile}.ipynb`
+    // const fromURLString = `&fromURL='https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/notebooks/${desiredFile}`
 
+    // const finalURL = `https://dhri-curriculum.github.io/jupyterlite/lab/index.html?${fromURLString}`;
+    // console.log('props', props);
+    // console.log('finalURL', finalURL);
 
     return (
         <div className="download-button"
@@ -21,15 +20,20 @@ export default function JupyterLoad(props) {
                 marginTop: '20px',
             }}
         >
-            <Button
-                className="button button-bark button-download"
-                style={{
-                    cursor: 'pointer',
-                }}
-                onClick={() => setJupyterSrc(`https://dhri-curriculum.github.io/jupyterlite/lab/index.html?${fromURLString}`)}
-            >
-            Import Jupyter Notebook
-            </Button>
+                <Button
+                    className="button button-bark button-download"
+                    style={{
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                        const fromURLString = `&fromURL=${desiredFile}`
+                        const finalURL = `https://dhri-curriculum.github.io/jupyterlite/lab/index.html?${fromURLString}`;
+                        setJupyterSrc(finalURL)
+                    }}
+                >
+                    Import Jupyter Notebook
+                </Button>
+            
         </div>
     )
 }
