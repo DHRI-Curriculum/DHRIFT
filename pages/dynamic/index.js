@@ -278,6 +278,26 @@ export default function WorkshopPage({
     setCurrentContent(pages[valueAsNumber - 1]);
   }
 
+  useEffect(() => {
+    window.onpopstate = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = Number(urlParams.get('page'));
+      if (page) {
+        setCurrentPage((page));
+        setCurrentContent(pages[page - 1]);
+        setCurrentContentLoaded(true);
+      } else {
+        setCurrentContent(pages[0]);
+        setCurrentPage(1);
+      }
+      // scroll to top 
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }  
+  })
+
   if (markdownError) return (
     <>
       <div
