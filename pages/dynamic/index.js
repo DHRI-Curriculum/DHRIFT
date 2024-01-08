@@ -273,7 +273,7 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    router.push(`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: true, scroll: false });
+    router.push(`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: false, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }
