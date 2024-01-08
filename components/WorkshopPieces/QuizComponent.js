@@ -15,7 +15,8 @@ export default function QuizComponent({ className, children }) {
     const [correct, setCorrect] = useState(0);
 
     // list of lis in children 
-    const lis = children[0].props.children.map((child, index) => {
+    console.log('children', children);
+    const lis = children[0].props?.children.map((child, index) => {
         const flattened = ReactDOMServer.renderToString(child);
         // remove <li data-reactroot="">
         // strip last 5 characters '</li>'
@@ -72,7 +73,7 @@ export default function QuizComponent({ className, children }) {
     };
 
     // if at least one item is correct, it's a quiz
-    const isQuiz = lis.some(li => li.correct);
+    const isQuiz = lis?.some(li => li.correct);
     if (!isQuiz) {
         return (<ul>{children}</ul>);
     }
