@@ -179,7 +179,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         let termsAndDefinitions = [];
         // if its a list item it is the term, anything else is the definition
         let mostRecentTerm = {}
-        children.forEach((child) => {
+        children?.forEach((child) => {
             let items = child.props.children;
             items.forEach((item) => {
                 if (item.type == 'li') {
@@ -204,7 +204,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         })
         return (
             <div className="keywords">
-                <h2>Keywords</h2>
+                <h3>Keywords</h3>
                 <ul>
                     {termsAndDefinitions.map((termAndDefinition) => {
                         return (
