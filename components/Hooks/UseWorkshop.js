@@ -10,7 +10,6 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
   const [fetchError, setFetchError] = useState(false);
   
   if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-    console.log('secret used')
     headers = new Headers(
       {
         'Content-Type': 'application/json',
@@ -35,6 +34,7 @@ export default function useWorkshop(gitUser, gitFile, builtURL, editing) {
     err => {
       console.log('err', err)
       console.log('workshop.url', builtURL)
+      setShouldFetch(false)
     }
   )
 

@@ -6,7 +6,6 @@ import Header from '../../components/Header';
 import WorkshopsView from '../../components/WorkshopsView';
 
 export default function Workshops(props) {
-    console.log('props', props)
     props.setWorkshopMode(false)
     const [shouldFetch, setShouldFetch] = useState(false);
     const [builtURL, setBuiltURL] = useState(null);
@@ -44,10 +43,6 @@ export default function Workshops(props) {
     useEffect(() => {
     //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
     // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
-        console.log('props.gitUser', props.gitUser)
-        console.log('props.gitRepo', props.gitRepo)
-        console.log('props.instGitUser', props.instGitUser)
-        console.log('props.instGitRepo', props.instGitRepo)
     }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
 
     

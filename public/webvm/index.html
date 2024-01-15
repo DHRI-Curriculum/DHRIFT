@@ -220,7 +220,7 @@
 				// 	h.textContent = "\u{1F7E0}";
 			}
 			// The device url and type are replaced by Github Actions.
-			CheerpXApp.create({ devices: [{ type: "split", url: "https://dhri-curriculum.github.io/webvm/debian_mini_20240112_7504794627.ext2", name: "block1" }], mounts: [{ type: "ext2", dev: "block1", path: "/" }, { type: "cheerpOS", dev: "/app", path: "/app" }, { type: "cheerpOS", dev: "/str", path: "/data" }, { type: "devs", dev: "", path: "/dev" }], activityInterface: { cpu: cpuCallback, dev: devCallback } }).then(runTest, failCallback);
+			CheerpXApp.create({ devices: [{ type: "split", url: "https://dhri-curriculum.github.io/webvm/debian_mini_20240115_7532105650.ext2", name: "block1" }], mounts: [{ type: "ext2", dev: "block1", path: "/" }, { type: "cheerpOS", dev: "/app", path: "/app" }, { type: "cheerpOS", dev: "/str", path: "/data" }, { type: "devs", dev: "", path: "/dev" }], activityInterface: { cpu: cpuCallback, dev: devCallback } }).then(runTest, failCallback);
 		}
 		function initialMessage() {
 			printOnTerm.printMessage(printOnTerm.getAsciiText());

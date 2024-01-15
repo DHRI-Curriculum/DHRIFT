@@ -20,6 +20,7 @@ import { autocompleteClasses } from '@mui/material';
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc }) {
+    
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
@@ -298,8 +299,6 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             </a>
         )
     }
-
-
 
     if (!content) return null;
     return (

@@ -34,7 +34,9 @@ export default function useUploads({ setAllUploads, allUploads, gitUser, gitRepo
     }).then(
         res => res.json()
     ).catch(
-        err => console.log('err', err)
+        err => {
+            setShouldFetch(false)
+            console.log('err', err)}
     )
 
 
