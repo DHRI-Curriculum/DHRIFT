@@ -15,7 +15,7 @@ export default function QuizComponent({ className, children }) {
     const [correct, setCorrect] = useState(0);
 
     // list of lis in children 
-    console.log('children', children);
+    // console.log('children', children);
     const lis = children[0].props?.children.map((child, index) => {
         const flattened = ReactDOMServer.renderToString(child);
         // remove <li data-reactroot="">
