@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
-import format from 'date-fns/format';
+const { format } = require("date-fns");
 import { Fade } from '@mui/material';
 
 export default function Institute(props) {
@@ -61,17 +61,24 @@ export default function Institute(props) {
         }
     }, [config])
 
+    function formatDate(date, utcOffsetHrs) {
+        const baseTzOffset = utcOffsetHrs * 60;
+        const tzOffset = date.getTimezoneOffset();
+        const d = new Date(date.valueOf() + (baseTzOffset + tzOffset) * 60 * 1000);
+        return format(d, 'MMMM do, yyyy');
+      }
+
     useEffect(() => {
         if (parsedYAML) {
             setSessions(parsedYAML.sessions)
             props.setGitUser(parsedYAML.workshopsuser)
             props.setGitRepo(parsedYAML.workshopsrepo)
             if (parsedYAML.datestart && parsedYAML.enddate) {
-                const dateStart = new Date(parsedYAML.datestart)
-                const dateEnd = new Date(parsedYAML.enddate)
+                // var dateStart = parse(parsedYAML.datestart)
+                // var dateEnd = parse(parsedYAML.enddate)
                 // make the dates look nice, long month names, etc
-                const cleanDateStart = format(dateStart, 'MMMM do, yyyy')
-                const cleanDateEnd = format(dateEnd, 'MMMM do, yyyy')
+                const cleanDateStart = formatDate(new Date(parsedYAML.datestart), 0)
+                const cleanDateEnd = formatDate(new Date(parsedYAML.enddate), 0)
                 // if the dates are the same, just show one
                 if (cleanDateStart === cleanDateEnd) {
                     setDate(cleanDateStart)
