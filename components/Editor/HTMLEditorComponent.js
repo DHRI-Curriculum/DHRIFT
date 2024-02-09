@@ -16,10 +16,17 @@ import "allotment/dist/style.css";
 import { Console, Hook, Unhook } from 'console-feed';
 import { html } from "js-beautify";
 import { ReactDOM } from "react";
+import { Padding } from "@mui/icons-material";
 
 
 export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
     defaultJS = '// Write Javascript Here' }, includeFrames = '[html, css, javascript]') {
+
+    // check if user has text in local storage
+    const memoryCode = window.localStorage.getItem('code') || defaultCode;
+    const memoryCss = window.localStorage.getItem('css') || defaultCSS;
+    const memoryJavascript = window.localStorage.getItem('javascript') || defaultJS;
+
     const [output, setOutput] = useState([]);
     const [frameKey, setFrameKey] = useState(Math.random());
     const [outputKey, setOutputKey] = useState(Math.random());
@@ -31,9 +38,9 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     const [toShow, setToShow] = useState(false);
     const [initialContent, setInitialContent] = useState('<!DOCTYPE html><html><head></head><body><div id="mountHere"></div></body></html>');
     const frameScripts = useRef([]);
-    const javascript = useRef(defaultJS);
-    const code = useRef(defaultCode);
-    const css = useRef(defaultCSS);
+    const javascript = useRef(memoryJavascript);
+    const code = useRef(memoryCode);
+    const css = useRef(memoryCss);
     const consoleRef = useRef(null);
 
 
@@ -165,6 +172,10 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
             doParsing(code.current);
             setTimeout(() => {
                 frameEval(javascript.current);
+                // set the user local storage
+                window.localStorage.setItem('code', code.current);
+                window.localStorage.setItem('css', css.current);
+                window.localStorage.setItem('javascript', javascript.current);
             }, 2000);
         }
     }
@@ -250,12 +261,15 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
                 <Allotment.Pane minSize={100}>
                     <Allotment vertical>
                         <Allotment.Pane minSize={20}>
+                            <div style={{ color:'white', paddingLeft:'10px' }}>HTML</div>
                             {HtmlPane()}
                         </Allotment.Pane>
                         <Allotment.Pane minSize={10}>
+                            <div style={{ color:'white', paddingLeft:'10px' }}>CSS</div>
                             {CssPane()}
                         </Allotment.Pane>
                         <Allotment.Pane >
+                            <div style={{ color:'white', paddingLeft:'10px' }}>Javascript</div>
                             {JavascriptPane()}
                         </Allotment.Pane>
                     </Allotment>
