@@ -14,10 +14,8 @@ const Frame = dynamic(
 import { FrameContextConsumer } from "react-frame-component";
 import "allotment/dist/style.css";
 import { Console, Hook, Unhook } from 'console-feed';
-import { html } from "js-beautify";
-import { ReactDOM } from "react";
-import { Padding } from "@mui/icons-material";
-
+import JSZip from 'jszip';
+import { saveAs } from "file-saver";
 
 export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
     defaultJS = '// Write Javascript Here' }, includeFrames = '[html, css, javascript]') {
@@ -240,7 +238,6 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
         )
     }
 
-
     const HtmlPane = () => {
         return (
             <EditorComponent code={code.current} onChange={onChangeHTML} language={'html'} debounce={1000} height={'100%'} />)
@@ -252,24 +249,45 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
         return (<EditorComponent code={javascript.current} onChange={onChangeJavascript} language={'javascript'} debounce={1000} height={'100%'} />)
     }
 
-    const panes = [HtmlPane, CssPane, JavascriptPane, FramePane, ConsolePane];
+    // download html, css, and javascript in a zip file
+    const downloadAll = () => {
+        const htmlAdded = '<!DOCTYPE html><html><head><style>' + css.current + '</style></head><body>' + code.current + '<script>' + javascript.current + '</script></body></html>';
+        // const htmlBlob = new Blob([code.current], { type: 'text/html' });
+        // const cssBlob = new Blob([css.current], { type: 'text/css' });
+        // const javascriptBlob = new Blob([javascript.current], { type: 'text/javascript' });
+        const htmlBlob = new Blob([htmlAdded], { type: 'text/html' });
+        saveAs(htmlBlob, 'webpage.html');
+        // const zip = new JSZip();
+        // zip.file('index.html', htmlBlob);
+        // // zip.file('styles.css', cssBlob);
+        // // zip.file('scripts.js', javascriptBlob);
+        // zip.generateAsync({ type: 'blob' }).then((content) => {
+        //     saveAs(content, 'webpage.zip');
+        // });
+    }
 
+    const downloadButton = () => {
+        return (
+            <button onClick={downloadAll} style={{ position: 'relative', marginTop:'10px', marginLeft:'10px' }}>Download</button>
+        )
+    }
 
     return (
         <div style={{ height: '100vh', width: '100%' }}>
+            {downloadButton()}
             <Allotment minSize={90} >
                 <Allotment.Pane minSize={100}>
                     <Allotment vertical>
                         <Allotment.Pane minSize={20}>
-                            <div style={{ color:'white', paddingLeft:'10px' }}>HTML</div>
+                            <div style={{ color: 'white', paddingLeft: '10px' }}>HTML</div>
                             {HtmlPane()}
                         </Allotment.Pane>
                         <Allotment.Pane minSize={10}>
-                            <div style={{ color:'white', paddingLeft:'10px' }}>CSS</div>
+                            <div style={{ color: 'white', paddingLeft: '10px' }}>CSS</div>
                             {CssPane()}
                         </Allotment.Pane>
                         <Allotment.Pane >
-                            <div style={{ color:'white', paddingLeft:'10px' }}>Javascript</div>
+                            <div style={{ color: 'white', paddingLeft: '10px' }}>Javascript</div>
                             {JavascriptPane()}
                         </Allotment.Pane>
                     </Allotment>
