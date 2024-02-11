@@ -257,13 +257,6 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
         // const javascriptBlob = new Blob([javascript.current], { type: 'text/javascript' });
         const htmlBlob = new Blob([htmlAdded], { type: 'text/html' });
         saveAs(htmlBlob, 'webpage.html');
-        // const zip = new JSZip();
-        // zip.file('index.html', htmlBlob);
-        // // zip.file('styles.css', cssBlob);
-        // // zip.file('scripts.js', javascriptBlob);
-        // zip.generateAsync({ type: 'blob' }).then((content) => {
-        //     saveAs(content, 'webpage.zip');
-        // });
     }
 
     const downloadButton = () => {
@@ -300,6 +293,7 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
                                 {FramePane()}
                             </Allotment.Pane>
                             <Allotment.Pane className={'JS-console'}>
+                            <div style={{ color: 'white', paddingLeft: '10px' }}>Console</div>
                                 {ConsolePane()}
                             </Allotment.Pane>
                         </Allotment>
