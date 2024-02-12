@@ -1,6 +1,6 @@
 import React, { use } from 'react';
 import { useEffect, useState } from 'react';
-import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
+// import HTMLEditorComponent from '../components/Editor/HTMLEditorComponent';
 import fileList from '../components/Editor/FileList';
 import JSTerminal from '../components/Editor/JSTerminal';
 import REditorComponent from '../components/Editor/REditorComponent';
@@ -32,7 +32,7 @@ export default function Test() {
             <h1>Test</h1>
             <div>
               {/* {processedContent?.result && processedContent.result} */}
-            <HTMLEditorComponent />
+            {/* <HTMLEditorComponent /> */}
             </div>
         </div>
     )
