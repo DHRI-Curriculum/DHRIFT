@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
-import dynamic from 'next/dynamic';
 import Image from 'next/image'
 import logo from '../public/images/logos/logo.png';
 import ButtonAppBarCollapse from "./ButtonAppBarCollapse";
@@ -14,12 +13,53 @@ import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { Fade } from '@mui/material';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
 
 export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) {
 
     const { theme, setTheme } = useTheme()
     const [darkMode, setDarkMode] = useState();
 
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleDrawerToggle = () => {
+        setMobileOpen((prevState) => !prevState);
+    };
+    const drawerWidth = 240;
+
+    const navItems = ['Workshops', 'Glossary', 'About'];
+
+    const drawer = (
+        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+            <Link href={`/inst/?instUser=${instUser}&instRepo=${instRepo}`}
+                passHref>
+                <Image
+                    src={logo}
+                    alt={'logo'}
+                    width={243}
+                    className='logo' />
+            </Link>
+            <Divider />
+            <List>
+                {navItems.map((item) => (
+                    <ListItem key={item} disablePadding
+                        component="a"
+                        href={`/${item.toLowerCase()}/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`}
+                    >
+                        <ListItemButton sx={{ textAlign: 'center' }}>
+                            <ListItemText primary={item} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -41,100 +81,113 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
 
     return (
         <Fade in={title} timeout={500}>
-        <Box
-            className=''
-            id="back-to-top-anchor"
-            sx={{ display: 'flex' }}
-        >
-            <CssBaseline />
-            {/* <ButtonAppBarCollapse
-                className='topBar-container'
-                sx={{
-                    display: {
-                        xs: 'block',
-                        md: 'none',
-                        lg: 'none',
-                        xl: 'none',
-                        xxl: 'none',
-                    }
-                }}
+            <Box
+                className=''
+                id="back-to-top-anchor"
+                sx={{ display: 'flex' }}
             >
-                <IconButton sx={{ ml: 1 }}
-                    id="dark-mode-toggle"
-                    onClick={(e) => themeToggle(e)}
-
-                    color="inherit">
-                    {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                </IconButton>
-            </ButtonAppBarCollapse> */}
-            {gitRepo && gitUser && instRepo && instUser &&
-            <AppBar
-                position="static"
-                sx={{
-                    display: {
-                        xs: 'none',
-                        md: 'block'
-                    },
-                    // Zindex: 10000,
-                }}
-                className='topBar-container'>
-                <Toolbar
-                    className='topBar'>
-                    {/* <IconButton
-                        size="large"
-                        edge="start"
+                <CssBaseline />
+                {/* {gitRepo && gitUser && instRepo && instUser && <><p>DHRIFT</p><ButtonAppBarCollapse
+                    className='topBar-container'
+                    sx={{
+                        display: {
+                            xs: 'block',
+                            sm: 'none'
+                        }
+                    }}>
+                </ButtonAppBarCollapse></>} */}
+                {gitRepo && gitUser && instRepo && instUser &&
+                    <> <IconButton
                         color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                        >
-                        <MenuIcon />
-                    </IconButton> */}
-
-
-                    <Link href={`/inst/?instUser=${instUser}&instRepo=${instRepo}`}
-                        passHref>
-                        <Image
-                            src={logo}
-                            alt={'logo'}
-                            width={463.5}
-                            className='logo' />
-                    </Link>
-                    <div
-                        id='nav-container'
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerToggle}
+                        sx={{ mr: 2, display: { sm: 'none' } }}
                     >
-                        <Typography variant="h6" component="div"
+                        <MenuIcon />
+                    </IconButton>
+                        <AppBar
+                            position="static"
                             sx={{
-                                flexGrow: 1,
-                                flexShrink: 0,
-                            }}>
-                            <Link href='/' passHref>
-                                {/* truncate to 80 characters */}
-                                {/* {title &&
+                                display: {
+                                    xs: 'none',
+                                    sm: 'block'
+                                }
+                            }}
+                            component='nav'
+                            className='topBar-container'>
+                            <Toolbar
+                                className='topBar'>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="start"
+                                    onClick={handleDrawerToggle}
+                                    sx={{ mr: 2, display: { sm: 'none' } }}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                                <Link href={`/inst/?instUser=${instUser}&instRepo=${instRepo}`}
+                                    passHref>
+                                    <Image
+                                        src={logo}
+                                        alt={'logo'}
+                                        width={463.5}
+                                        className='logo' />
+                                </Link>
+                                <div
+                                    id='nav-container'
+                                >
+                                    <Typography variant="h6" component="div"
+                                        sx={{
+                                            flexGrow: 1,
+                                            flexShrink: 0,
+                                        }}>
+                                        <Link href='/' passHref>
+                                            {/* truncate to 80 characters */}
+                                            {/* {title &&
                                     <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>} */}
-                            </Link>
-                        </Typography>
-                        <ul className='links'>
-                            {instUser && instRepo && <li>
-                                <Link href={`/workshops/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Workshops</Link>
-                            </li>}
-                            <li>
-                                <Link href={`/glossary/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Glossary</Link>
-                            </li>
-                            <li>
-                                <Link href='/About' passHref>About</Link>
-                            </li>
-                        </ul>
-                        <IconButton sx={{ ml: 1 }}
-                            id="dark-mode-toggle"
-                            onClick={(e) => themeToggle(e)}
-                            color="inherit">
-                            {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                        </IconButton>
-                    </div>
-                </Toolbar>
-            </AppBar>
-            }
-        </Box>
+                                        </Link>
+                                    </Typography>
+                                    <ul className='links'>
+                                        {instUser && instRepo && <li>
+                                            <Link href={`/workshops/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Workshops</Link>
+                                        </li>}
+                                        <li>
+                                            <Link href={`/glossary/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Glossary</Link>
+                                        </li>
+                                        <li>
+                                            <Link href='/About' passHref>About</Link>
+                                        </li>
+                                    </ul>
+                                    <IconButton sx={{ ml: 1 }}
+                                        id="dark-mode-toggle"
+                                        onClick={(e) => themeToggle(e)}
+                                        color="inherit">
+                                        {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
+                                    </IconButton>
+                                </div>
+                            </Toolbar>
+                        </AppBar>
+                    </>
+                }
+                <nav>
+                    <Drawer
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        ModalProps={{
+                            keepMounted: true, // Better open performance on mobile.
+                        }}
+                        sx={{
+                            display: { xs: 'block', sm: 'none' },
+                            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        }}
+                    >
+                        {drawer}
+                    </Drawer>
+                </nav>
+            </Box>
         </Fade>
     );
 }

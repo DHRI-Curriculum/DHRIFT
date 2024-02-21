@@ -2,6 +2,7 @@ import React from "react";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
+import MenuIcon from "@mui/icons-material/Menu";
 
 
 class ButtonAppBarCollapse extends React.Component {
@@ -25,29 +26,24 @@ class ButtonAppBarCollapse extends React.Component {
 
         return (
             <div className={'buttonCollapse'}
+
             >
                 <IconButton
                     onClick={this.handleMenu}
-                    style={{
+                    sx={{
                         display: {
                             xs: 'block',
-                            md: 'none',
-                            lg: 'none',
-                            xl: 'none',
-                            xxl: 'none',
+                            sm: 'none',
                         }
                     }}
                 >
-                    <HomeIcon />
+                    <MenuIcon />
                 </IconButton>
                 <Menu
                 sx={{
                     display: {
                         xs: 'block',
-                        md: 'none',
-                        lg: 'none',
-                        xl: 'none',
-                        xxl: 'none',
+                        sm: 'none',
                     }
                 }}
                     id="menu-appbar"
