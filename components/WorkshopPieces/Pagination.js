@@ -4,7 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Box from '@mui/material/Box';
 
 export default function Pagination({ pages, currentPage, handlePageChange, pageTitles,
-editorOpen }) {
+    editorOpen }) {
 
     const sectionTitle = function () {
         let theMostRecentH1 = null;
@@ -42,7 +42,7 @@ editorOpen }) {
         } else {
             return (
                 <>
-                   <p>{pageTitles[currentPage]?.title}</p>
+                    <p>{pageTitles[currentPage]?.title}</p>
                 </>
             )
         }
@@ -50,59 +50,59 @@ editorOpen }) {
 
     return (
         <Box className='pagination'
-        sx={{
-            // width: {  md:!editorOpen ? '100%' : '60%' },
-          }}
+            sx={{
+                // width: {  md:!editorOpen ? '100%' : '60%' },
+            }}
         >{!editorOpen &&
             <>
-                        <Button
-                className='pagination-button'
-                onClick={() => handlePageChange(event, Number(currentPage) - 1)}
-                disabled={currentPage === 1}
-            >
-                <ArrowBackIcon />
-                {currentPage === 1 ? 'Frontmatter' : goBackString()}
-            </Button>
-            <Button
-                className='pagination-button'
-                onClick={() => handlePageChange(event, Number(currentPage) + 1)}
-                disabled={currentPage === pages.length}
-                sx={{
-                    justifySelf: 'flex-end',
-                }}
-            >
-                {currentPage === pages.length ? 'Frontmatter' : goForwardString()}
-                <ArrowForwardIcon />
-            </Button>
+                <Button
+                    className='pagination-button'
+                    onClick={() => handlePageChange(event, Number(currentPage) - 1)}
+                    disabled={currentPage === 1}
+                >
+                    <ArrowBackIcon />
+                    {currentPage === 1 ? 'Frontmatter' : goBackString()}
+                </Button>
+                <Button
+                    className='pagination-button'
+                    onClick={() => handlePageChange(event, Number(currentPage) + 1)}
+                    disabled={currentPage === pages.length}
+                    sx={{
+                        justifySelf: 'flex-end',
+                    }}
+                >
+                    {currentPage === pages.length ? 'Frontmatter' : goForwardString()}
+                    <ArrowForwardIcon />
+                </Button>
             </>}
             {editorOpen &&
-            <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                width: '80%',
-            }}
-            >
-            <Button
-                className='pagination-button'
-                onClick={() => handlePageChange(event, Number(currentPage) - 1)}
-                disabled={currentPage === 1}
-            >
-                <ArrowBackIcon />
-                {currentPage === 1 ? 'Frontmatter' : 'Previous'}
-            </Button>
-            <Button
-                className='pagination-button'
-                onClick={() => handlePageChange(event, Number(currentPage) + 1)}
-                disabled={currentPage === pages.length}
-                sx={{
-                    justifySelf: 'flex-end',
-                }}
-            >
-                {currentPage === pages.length ? 'Frontmatter' : 'Next'}
-                <ArrowForwardIcon />
-            </Button>
-            </Box>}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '80%',
+                    }}
+                >
+                    <Button
+                        className='pagination-button'
+                        onClick={() => handlePageChange(event, Number(currentPage) - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        <ArrowBackIcon />
+                        {currentPage === 1 ? 'Frontmatter' : 'Previous'}
+                    </Button>
+                    <Button
+                        className='pagination-button'
+                        onClick={() => handlePageChange(event, Number(currentPage) + 1)}
+                        disabled={currentPage === pages.length}
+                        sx={{
+                            justifySelf: 'flex-end',
+                        }}
+                    >
+                        {currentPage === pages.length ? 'Frontmatter' : 'Next'}
+                        <ArrowForwardIcon />
+                    </Button>
+                </Box>}
         </Box>
     )
 }
