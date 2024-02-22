@@ -366,7 +366,7 @@ function ErrorFallback({error}) {
           </Head>
           <Main open={editorOpen}
             id='main'
-            style={{
+            sx={{
               paddingLeft: '0px'
             }}
           >
@@ -411,7 +411,17 @@ function ErrorFallback({error}) {
         {props.workshopMode &&
           <>
             <div className='workshop-footer'>
-              <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />
+              <Pagination 
+              currentPage={currentPage} 
+              pageTitles={pageTitles} 
+              handlePageChange={handlePageChange} 
+              pages={pages}
+              editorOpen={editorOpen}
+              // sx={{
+              //   backgroundColor: 'white',
+              //   width: {  md:!editorOpen ? '100%' : '10%' },
+              // }}
+               />
               <Footer workshopMode={props.workshopMode} />
             </div>
           </>

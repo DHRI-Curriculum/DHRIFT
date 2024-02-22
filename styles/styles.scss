@@ -273,7 +273,7 @@ header {
     flex-direction: row;
     align-content: center;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     width: 50%;
     background-color: $primary-color-cream;
     padding-top: 20px;
@@ -1096,7 +1096,7 @@ pre {
 // container for footer and pagination in workshops
 .workshop-footer {
   z-index: 10;
-  width: 100%;
+  // width: 100%;
   bottom: 0px;
 }
 

@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 import Image from 'next/image'
 import logo from '../public/images/logos/logo.png';
-import ButtonAppBarCollapse from "./ButtonAppBarCollapse";
 import { useTheme } from 'next-themes';
 import IconButton from '@mui/material/IconButton';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -87,22 +86,13 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                 sx={{ display: 'flex' }}
             >
                 <CssBaseline />
-                {/* {gitRepo && gitUser && instRepo && instUser && <><p>DHRIFT</p><ButtonAppBarCollapse
-                    className='topBar-container'
-                    sx={{
-                        display: {
-                            xs: 'block',
-                            sm: 'none'
-                        }
-                    }}>
-                </ButtonAppBarCollapse></>} */}
                 {gitRepo && gitUser && instRepo && instUser &&
                     <> <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         edge="start"
                         onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+                        sx={{ mr: 2, display: { md: 'none' }, marginTop: '10px', marginLeft: '10px'}}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -111,7 +101,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                             sx={{
                                 display: {
                                     xs: 'none',
-                                    sm: 'block'
+                                    md: 'block',
                                 }
                             }}
                             component='nav'
@@ -143,11 +133,6 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                             flexGrow: 1,
                                             flexShrink: 0,
                                         }}>
-                                        <Link href='/' passHref>
-                                            {/* truncate to 80 characters */}
-                                            {/* {title &&
-                                    <h2 className='headerLink'>{title.length > 80 ? title.substring(0, 80) + '...' : title}</h2>} */}
-                                        </Link>
                                     </Typography>
                                     <ul className='links'>
                                         {instUser && instRepo && <li>
@@ -160,12 +145,12 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                             <Link href='/About' passHref>About</Link>
                                         </li>
                                     </ul>
-                                    <IconButton sx={{ ml: 1 }}
+                                    {/* <IconButton sx={{ ml: 1 }}
                                         id="dark-mode-toggle"
                                         onClick={(e) => themeToggle(e)}
                                         color="inherit">
                                         {darkMode === true ? <Brightness7Icon /> : <DarkModeIcon />}
-                                    </IconButton>
+                                    </IconButton> */}
                                 </div>
                             </Toolbar>
                         </AppBar>

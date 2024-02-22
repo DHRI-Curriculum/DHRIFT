@@ -48,22 +48,28 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                         >DHRIFT</h1>
                     </Link>
                 }
-                <div className='workshop-header-breadcrumbs'>
+                <div className='workshop-header-breadcrumbs' >
                     <Breadcrumbs
+                        sx={{
+                            display: {
+                                xs: 'none',
+                                md: 'flex',
+                            }
+                        }}
                         className='breadcrumbs'
                         separator="›"
                         aria-label="breadcrumb">
-                    {pages && instUser && instRepo &&
-                        <Link href={instURL}>
-                            <HomeIcon
-                                className='home-icon'
-                                sx={{
-                                    cursor: 'pointer',
-                                }}
-                            />
-                        </Link>
-                    }
-                    {workshopTitle &&
+                        {pages && instUser && instRepo &&
+                            <Link href={instURL}>
+                                <HomeIcon
+                                    className='home-icon'
+                                    sx={{
+                                        cursor: 'pointer',
+                                    }}
+                                />
+                            </Link>
+                        }
+                        {workshopTitle &&
                             <Link href={firstPageLink}
                                 onClick={() => {
                                     setCurrentPage(1);
@@ -71,22 +77,21 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                             >
                                 {workshopTitle}
                             </Link>
-                    }
-                    {currentPageParent &&
-                                <Link href={parentLink}
-                                    onClick={() => {
-                                        setCurrentPage(currentPageParentPage);
-                                    }}
-                                >
-                                    {currentPageParent}
-                                </Link>
-                    }
-                    {pageTitles[currentPage - 1] &&
-                            // {pageTitles[currentPage - 1].title}
+                        }
+                        {currentPageParent &&
+                            <Link href={parentLink}
+                                onClick={() => {
+                                    setCurrentPage(currentPageParentPage);
+                                }}
+                            >
+                                {currentPageParent}
+                            </Link>
+                        }
+                        {pageTitles[currentPage - 1] &&
                             <div>
                                 {pageTitles[currentPage - 1].title}
                             </div>
-                    }
+                        }
                     </Breadcrumbs>
                 </div>
             </div>
