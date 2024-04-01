@@ -2,7 +2,7 @@ import Header from '../../components/Header';
 import { useEffect, useState } from "react";
 import { Octokit } from '@octokit/rest';
 import { Button } from '@mui/material';
-import { useEffect } from 'react';}
+import { useEffect } from 'react';
 
 export default function Form() {
     const [user, setUser] = useState("");
