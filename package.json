@@ -18,6 +18,8 @@
     "@mui/lab": "^5.0.0-alpha.61",
     "@mui/material": "^5.2.1",
     "@next/mdx": "^12.3.4",
+    "@octokit/core": "^6.0.1",
+    "@octokit/rest": "^20.0.2",
     "@r-wasm/webr": "^0.1.1",
     "@uiw/react-codemirror": "^4.4.0",
     "ace-builds": "^1.4.13",
