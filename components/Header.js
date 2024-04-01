@@ -86,7 +86,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                 sx={{ display: 'flex' }}
             >
                 <CssBaseline />
-                {gitRepo && gitUser && instRepo && instUser &&
+                {gitRepo && gitUser && 
                     <> <IconButton
                         color="inherit"
                         aria-label="open drawer"
