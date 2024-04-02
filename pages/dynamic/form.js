@@ -1,12 +1,12 @@
 import Header from '../../components/Header';
 import { useEffect, useState } from "react";
 import { Container } from '@mui/material';
-import { Octokit } from '@octokit/rest';
 import { Button } from '@mui/material';
 
 export default function Form() {
-    const [octokit, setOctokit] = useState(null);
-
+    const [instCreated, setInstCreated] = useState(false);
+    const [instUrl, setInstUrl] = useState('');
+    const [instName, setInstName] = useState('');
     const [formData, setFormData] = useState({
         organizerName: 'Lisa Rhody',
         DHRIFTfrontpage: true,
@@ -45,24 +45,35 @@ export default function Form() {
                 location: 'The Graduate Center, CUNY',
                 instructors: ['']
             },
-            // Add more sessions as needed
-        ]
+        ],
+        origin: window.location.hostname
     });
 
-    // useEffect(() => {
-    // const urlParams = new URLSearchParams(window.location.search);
-    // setToken(urlParams.get('token'));
-    // setOctokit(new Octokit({
-    //     auth: token
-    // }));
-    // }
-    // , [token]);
-
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        setInstCreated(urlParams.get('instCreated') === 'true');
+        setInstUrl(urlParams.get('instUrl'));
+        setInstName(urlParams.get('instName'));
+    }
+        , []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const permRequest = 'https://github.com/login/oauth/authorize?scope=repo&client_id=b5be98ebcdc9cdf67526&state=' + { formData };
-        window.location.href = permRequest;
+        // serialize form data 
+        // send to github
+        const formDataForGithub = {
+            ...formData,
+            sessions: formData.sessions.map(session => ({
+                ...session,
+                instructors: session.instructors.map(instructor => ({ name: instructor }))
+            })),
+            instructors: formData.instructors.map(instructor => ({ name: instructor.name })),
+            helpers: formData.helpers.map(helper => ({ name: helper.name }))
+        };
+        // convert to base64
+        const converted = Buffer.from(JSON.stringify(formDataForGithub)).toString('base64');
+        const permRequest = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + converted; 
+        window.location.href = permRequest
     }
 
 
@@ -206,6 +217,13 @@ export default function Form() {
         </form>
     );
 
+    const instCreatedSuccess = (
+        <div>
+            <h2>Your institute has been created!</h2>
+            <p>Check it out <a href={`/inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a></p>
+        </div>
+    );
+
 
     return (
         <>
@@ -214,10 +232,10 @@ export default function Form() {
             />
             <Container>
                 <h1>Create your own DHRIFT Institute</h1>
-                {githubForm}
-                {/* {token!=null ? <p>connected</p> :
-        
-    } */}
+
+                {instCreated && <p>Your institute has been created!</p>}
+                {!instCreated && githubForm}
+               
 
             </Container>
         </>
