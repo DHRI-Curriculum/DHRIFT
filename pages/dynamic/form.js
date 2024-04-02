@@ -46,14 +46,13 @@ export default function Form() {
                 instructors: ['']
             },
         ],
-        origin: window.location.hostname
     });
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         setInstCreated(urlParams.get('instCreated') === 'true');
-        setInstUrl(urlParams.get('instUrl'));
-        setInstName(urlParams.get('instName'));
+        setInstName(urlParams.get('instUser'));
+        setInstUrl(urlParams.get('instRepo'));
     }
         , []);
 
@@ -68,7 +67,8 @@ export default function Form() {
                 instructors: session.instructors.map(instructor => ({ name: instructor }))
             })),
             instructors: formData.instructors.map(instructor => ({ name: instructor.name })),
-            helpers: formData.helpers.map(helper => ({ name: helper.name }))
+            helpers: formData.helpers.map(helper => ({ name: helper.name })),
+            origin: window.location.origin
         };
         // convert to base64
         const converted = Buffer.from(JSON.stringify(formDataForGithub)).toString('base64');
@@ -233,7 +233,9 @@ export default function Form() {
             <Container>
                 <h1>Create your own DHRIFT Institute</h1>
 
-                {instCreated && <p>Your institute has been created!</p>}
+                {instCreated && 
+                    instCreatedSuccess
+                }
                 {!instCreated && githubForm}
                
 
