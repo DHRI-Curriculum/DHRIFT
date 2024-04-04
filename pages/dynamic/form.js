@@ -8,13 +8,13 @@ export default function Form() {
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
     const [formData, setFormData] = useState({
-        organizerName: 'Lisa Rhody',
+        organizername: 'Lisa Rhody',
         institution: 'CUNY Graduate Center',
         event: 'Learn.',
-        heroDescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
+        herodescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
         description: 'DHRIFT can be customized to your pedagogical needs.',
-        registerLink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
-        registerText: 'See a Demonstration Institute',
+        registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
+        registertext: 'See a Demonstration Institute',
         venue: 'Graduate Center',
         address: '365 5th Ave, New York, NY 10016',
         language: 'en',
@@ -23,8 +23,9 @@ export default function Form() {
         instructors: [{ name: 'Steve Zweibel' }, { name: 'Leanne Fan' }],
         helpers: [{ name: 'Zachary Lloyd' }],
         emails: 'example@example.com',
-        workshopsUser: 'dhri-curriculum',
-        workshopsRepo: 'workshops',
+        workshopsuser: 'dhri-curriculum',
+        workshopsrepo: 'workshops',
+
         sessions: [
             {
                 date: '2023-03-01',
@@ -116,7 +117,7 @@ export default function Form() {
         <form onSubmit={handleSubmit}>
             <div>
                 <label>Organizer Name:</label>
-                <input type="text" name="organizerName" value={formData.organizerName} onChange={handleInputChange} />
+                <input type="text" name="organizerName" value={formData.organizername} onChange={handleInputChange} />
             </div>
             <div>
                 <label>Institution:</label>
@@ -128,7 +129,7 @@ export default function Form() {
             </div>
             <div>
                 <label>Hero Description:</label>
-                <textarea name="heroDescription" value={formData.heroDescription} onChange={handleInputChange} />
+                <textarea name="heroDescription" value={formData.herodescription} onChange={handleInputChange} />
             </div>
             <div>
                 <label>Description:</label>
@@ -136,11 +137,11 @@ export default function Form() {
             </div>
             <div>
                 <label>Register Link:</label>
-                <input type="url" name="registerLink" value={formData.registerLink} onChange={handleInputChange} />
+                <input type="url" name="registerLink" value={formData.registerlink} onChange={handleInputChange} />
             </div>
             <div>
                 <label>Register Text:</label>
-                <input type="text" name="registerText" value={formData.registerText} onChange={handleInputChange} />
+                <input type="text" name="registerText" value={formData.registertext} onChange={handleInputChange} />
             </div>
             <div>
                 <label>Venue:</label>
@@ -188,11 +189,11 @@ export default function Form() {
             </div>
             <div>
                 <label>Workshops User:</label>
-                <input type="text" name="workshopsUser" value={formData.workshopsUser} onChange={handleInputChange} />
+                <input type="text" name="workshopsuser" value={formData.workshopsuser} onChange={handleInputChange} />
             </div>
             <div>
                 <label>Workshops Repo:</label>
-                <input type="text" name="workshopsRepo" value={formData.workshopsRepo} onChange={handleInputChange} />
+                <input type="text" name="workshopsrepo" value={formData.workshopsrepo} onChange={handleInputChange} />
             </div>
             {formData.sessions.map((session, index) => (
                 <div key={index}>
@@ -201,7 +202,12 @@ export default function Form() {
                     <input type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
                     <label>Time:</label>
                     <input type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                    {/* Repeat for other session fields */}
+                    <label>Title:</label>
+                    <input type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)} />
+                    <label>Description:</label>
+                    <textarea value={session.description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} />
+                    <label>Workshop:</label>
+                    <input type="text" value={session.workshop} onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)} />
                     {formData.sessions.length > 1 && (
                         <button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</button>
                     )}
