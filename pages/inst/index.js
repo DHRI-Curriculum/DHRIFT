@@ -70,6 +70,7 @@ export default function Institute(props) {
 
     useEffect(() => {
         if (parsedYAML) {
+            console.log(parsedYAML)
             setSessions(parsedYAML.sessions)
             props.setGitUser(parsedYAML.workshopsuser)
             props.setGitRepo(parsedYAML.workshopsrepo)

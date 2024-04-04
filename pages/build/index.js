@@ -75,10 +75,10 @@ export default function Form() {
                     <label htmlFor="emails">Emails:</label>
                     <input type="text" id="emails" name="emails" value={emails} onChange={(e) => setEmails(e.target.value)} />
 
-                    <label htmlFor="workshopsuser">Workshops User:</label>
+                    <label htmlFor="workshopsUser">Workshops User:</label>
                     <input type="text" id="workshopsuser" name="workshopsuser" value={workshopsUser} onChange={(e) => setWorkshopsUser(e.target.value)} />
 
-                    <label htmlFor="workshopsrepo">Workshops Repo:</label>
+                    <label htmlFor="workshopsRepo">Workshops Repo:</label>
                     <input type="text" id="workshopsrepo" name="workshopsrepo" value={workshopsRepo} onChange={(e) => setWorkshopsRepo(e.target.value)} />
 
                     <label htmlFor="sessions">Sessions:</label>

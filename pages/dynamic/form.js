@@ -9,7 +9,6 @@ export default function Form() {
     const [instName, setInstName] = useState('');
     const [formData, setFormData] = useState({
         organizerName: 'Lisa Rhody',
-        DHRIFTfrontpage: true,
         institution: 'CUNY Graduate Center',
         event: 'Learn.',
         heroDescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
@@ -120,10 +119,6 @@ export default function Form() {
                 <input type="text" name="organizerName" value={formData.organizerName} onChange={handleInputChange} />
             </div>
             <div>
-                <label>DHRIFT Front Page:</label>
-                <input type="checkbox" name="DHRIFTfrontpage" checked={formData.DHRIFTfrontpage} onChange={handleInputChange} />
-            </div>
-            <div>
                 <label>Institution:</label>
                 <input type="text" name="institution" value={formData.institution} onChange={handleInputChange} />
             </div>
@@ -223,7 +218,6 @@ export default function Form() {
             <p>Check it out <a href={`/inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a></p>
         </div>
     );
-
 
     return (
         <>
