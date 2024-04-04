@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import HomeIcon from '@mui/icons-material/Home';
 import FrontmatterFeature from './FrontmatterFeature';
 import Link from 'next/link';
-import { Breadcrumbs } from '@mui/material';
 
 export default function Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router,
   secondPageLink
