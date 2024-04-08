@@ -9,14 +9,13 @@ export default function Form() {
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
     const [formData, setFormData] = useState({
-        organizerName: 'Lisa Rhody',
-        DHRIFTfrontpage: true,
+        organizername: 'Lisa Rhody',
         institution: 'CUNY Graduate Center',
         event: 'Learn.',
-        heroDescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
+        herodescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
         description: 'DHRIFT can be customized to your pedagogical needs.',
-        registerLink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
-        registerText: 'See a Demonstration Institute',
+        registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
+        registertext: 'See a Demonstration Institute',
         venue: 'Graduate Center',
         address: '365 5th Ave, New York, NY 10016',
         language: 'en',
@@ -25,8 +24,9 @@ export default function Form() {
         instructors: [{ name: 'Steve Zweibel' }, { name: 'Leanne Fan' }],
         helpers: [{ name: 'Zachary Lloyd' }],
         emails: 'example@example.com',
-        workshopsUser: 'dhri-curriculum',
-        workshopsRepo: 'workshops',
+        workshopsuser: 'dhri-curriculum',
+        workshopsrepo: 'workshops',
+
         sessions: [
             {
                 date: '2023-03-01',

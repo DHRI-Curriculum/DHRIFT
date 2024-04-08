@@ -70,9 +70,12 @@ export default function Institute(props) {
 
     useEffect(() => {
         if (parsedYAML) {
+            console.log(parsedYAML)
             setSessions(parsedYAML.sessions)
             props.setGitUser(parsedYAML.workshopsuser)
             props.setGitRepo(parsedYAML.workshopsrepo)
+            console.log(parsedYAML.workshopsrepo)
+            console.log(parsedYAML.workshopsuser)
             if (parsedYAML.datestart && parsedYAML.enddate) {
                 // var dateStart = parse(parsedYAML.datestart)
                 // var dateEnd = parse(parsedYAML.enddate)
