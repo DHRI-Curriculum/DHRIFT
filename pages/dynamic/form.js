@@ -1,7 +1,8 @@
 import Header from '../../components/Header';
 import { useEffect, useState } from "react";
-import { Container } from '@mui/material';
-import { Button } from '@mui/material';
+// import { FormControl, InputLabel, Input, Button } from '@mui/material';
+// import { TextField, Container, Stack } from '@mui/material';
+import { Stack, TextField, Button, Container } from '@mui/material';
 
 export default function Form() {
     const [instCreated, setInstCreated] = useState(false);
@@ -72,7 +73,7 @@ export default function Form() {
         };
         // convert to base64
         const converted = Buffer.from(JSON.stringify(formDataForGithub)).toString('base64');
-        const permRequest = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + converted; 
+        const permRequest = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + converted;
         window.location.href = permRequest
     }
 
@@ -112,119 +113,6 @@ export default function Form() {
         });
     };
 
-
-    const githubForm = (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Organizer Name:</label>
-                <input type="text" name="organizerName" value={formData.organizerName} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>DHRIFT Front Page:</label>
-                <input type="checkbox" name="DHRIFTfrontpage" checked={formData.DHRIFTfrontpage} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Institution:</label>
-                <input type="text" name="institution" value={formData.institution} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Event:</label>
-                <input type="text" name="event" value={formData.event} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Hero Description:</label>
-                <textarea name="heroDescription" value={formData.heroDescription} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Description:</label>
-                <textarea name="description" value={formData.description} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Register Link:</label>
-                <input type="url" name="registerLink" value={formData.registerLink} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Register Text:</label>
-                <input type="text" name="registerText" value={formData.registerText} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Venue:</label>
-                <input type="text" name="venue" value={formData.venue} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Address:</label>
-                <input type="text" name="address" value={formData.address} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Language:</label>
-                <input type="text" name="language" value={formData.language} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Date Start:</label>
-                <input type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>End Date:</label>
-                <input type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-            </div>
-            {formData.instructors.map((instructor, index) => (
-                <div key={index}>
-                    <label>Instructor {index + 1}:</label>
-                    <input type="text" value={instructor.name} onChange={(e) => handleArrayFieldChange('instructors', index, 'name', e.target.value)} />
-                    {formData.instructors.length > 1 && (
-                        <button type="button" onClick={() => handleRemove('instructors', index)}>Remove Instructor</button>
-                    )}
-                </div>
-            ))}
-            <Button onClick={() => handleAdd('instructors')} variant='contained' >Add Instructor</Button>
-            {formData.helpers.map((helper, index) => (
-                <div key={index}>
-                    <label>Helper {index + 1}:</label>
-                    <input type="text" value={helper.name} onChange={(e) => handleArrayFieldChange('helpers', index, 'name', e.target.value)} />
-                    {formData.helpers.length > 1 && (
-                        <button type="button" onClick={() => handleRemove('helpers', index)}>Remove Helper</button>
-                    )}
-                </div>
-            ))}
-            <Button onClick={() => handleAdd('helpers')} variant='contained' >Add Helper</Button>
-            <div>
-                <label>Emails:</label>
-                <input type="email" name="emails" value={formData.emails} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Workshops User:</label>
-                <input type="text" name="workshopsUser" value={formData.workshopsUser} onChange={handleInputChange} />
-            </div>
-            <div>
-                <label>Workshops Repo:</label>
-                <input type="text" name="workshopsRepo" value={formData.workshopsRepo} onChange={handleInputChange} />
-            </div>
-            {formData.sessions.map((session, index) => (
-                <div key={index}>
-                    <h4>Session {index + 1}</h4>
-                    <label>Date:</label>
-                    <input type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
-                    <label>Time:</label>
-                    <input type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                    {/* Repeat for other session fields */}
-                    {formData.sessions.length > 1 && (
-                        <button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</button>
-                    )}
-                </div>
-            ))}
-            <button type="button" onClick={() => handleAdd('sessions')}>Add Session</button>
-            <button type="submit">Submit</button>
-        </form>
-    );
-
-    const instCreatedSuccess = (
-        <div>
-            <h2>Your institute has been created!</h2>
-            <p>Check it out <a href={`/inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a></p>
-        </div>
-    );
-
-
     return (
         <>
             <Header title={'Dhrift'} instUser={'dhri-curriculum'} instRepo={'dhrift-site-template'}
@@ -232,14 +120,60 @@ export default function Form() {
             />
             <Container>
                 <h1>Create your own DHRIFT Institute</h1>
-
-                {instCreated && 
+                {instCreated &&
                     instCreatedSuccess
                 }
-                {!instCreated && githubForm}
-               
-
+                {!instCreated && (
+                    <form>
+                        <Stack spacing={2}>
+                            <TextField label="Register Text" type="text" name="registerText" value={formData.registerText} onChange={handleInputChange} />
+                            <TextField label="Venue" type="text" name="venue" value={formData.venue} onChange={handleInputChange} />
+                            <TextField label="Address" type="text" name="address" value={formData.address} onChange={handleInputChange} />
+                            <TextField label="Language" type="text" name="language" value={formData.language} onChange={handleInputChange} />
+                            <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange} />
+                            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
+                            {formData.instructors.map((instructor, index) => (
+                                <div key={index}>
+                                    <TextField label={`Instructor ${index + 1}`} type="text" value={instructor.name} onChange={(e) => handleArrayFieldChange('instructors', index, 'name', e.target.value)} />
+                                    {formData.instructors.length > 1 && (
+                                        <Button type="button" onClick={() => handleRemove('instructors', index)}>Remove Instructor</Button>
+                                    )}
+                                </div>
+                            ))}
+                            <Button onClick={() => handleAdd('instructors')} variant='contained' >Add Instructor</Button>
+                            {formData.helpers.map((helper, index) => (
+                                <div key={index}>
+                                    <TextField label={`Helper ${index + 1}`} type="text" value={helper.name} onChange={(e) => handleArrayFieldChange('helpers', index, 'name', e.target.value)} />
+                                    {formData.helpers.length > 1 && (
+                                        <Button type="button" onClick={() => handleRemove('helpers', index)}>Remove Helper</Button>
+                                    )}
+                                </div>
+                            ))}
+                            <Button onClick={() => handleAdd('helpers')} variant='contained' >Add Helper</Button>
+                            <TextField label="Emails" type="email" name="emails" value={formData.emails} onChange={handleInputChange} />
+                            <TextField label="Workshops User" type="text" name="workshopsUser" value={formData.workshopsUser} onChange={handleInputChange} />
+                            <TextField label="Workshops Repo" type="text" name="workshopsRepo" value={formData.workshopsRepo} onChange={handleInputChange} />
+                            {formData.sessions.map((session, index) => (
+                                <div key={index}>
+                                    <h4>Session {index + 1}</h4>
+                                    <Stack spacing={2}>
+                                    <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
+                                    <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
+                                    <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)} />
+                                    <TextField label="Description" type="text" value={session.description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} />
+                                    {formData.sessions.length > 1 && (
+                                        <Button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</Button>
+                                    )}
+                                    </Stack>
+                                </div>
+                            ))}
+                            <Button type="button" onClick={() => handleAdd('sessions')}>Add Session</Button>
+                            <Button type="submit" onClick={handleSubmit}>Create Institute</Button>
+                        </Stack>
+                    </form>
+                )}
             </Container>
         </>
     );
 }
+
