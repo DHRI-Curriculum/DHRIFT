@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
-const { format } = require("date-fns");
+const { format, parse } = require("date-fns");
 import { Fade } from '@mui/material';
 
 export default function Institute(props) {
@@ -74,12 +74,7 @@ export default function Institute(props) {
             setSessions(parsedYAML.sessions)
             props.setGitUser(parsedYAML.workshopsuser)
             props.setGitRepo(parsedYAML.workshopsrepo)
-            console.log(parsedYAML.workshopsrepo)
-            console.log(parsedYAML.workshopsuser)
             if (parsedYAML.datestart && parsedYAML.enddate) {
-                // var dateStart = parse(parsedYAML.datestart)
-                // var dateEnd = parse(parsedYAML.enddate)
-                // make the dates look nice, long month names, etc
                 const cleanDateStart = formatDate(new Date(parsedYAML.datestart), 0)
                 const cleanDateEnd = formatDate(new Date(parsedYAML.enddate), 0)
                 // if the dates are the same, just show one
@@ -153,7 +148,6 @@ export default function Institute(props) {
                                     {parsedYAML && <p>{parsedYAML.description}</p>}
                                     {
                                         parsedYAML && parsedYAML.registerlink &&
-                                        // <a href={parsedYAML.registerlink}>Register</a>
                                         <p><Button
                                             className='button button-bark'
                                             href={parsedYAML.registerlink}
@@ -170,12 +164,12 @@ export default function Institute(props) {
                                     {...props}
                                 />}
                         </div>
+                            {parsedYAML && (!parsedYAML.showWorkshops === false || parsedYAML.showWorkshops == null) &&
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>
-                            {parsedYAML &&
                                 <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
-                            }
                         </div>
+                            }
                     </div>
                 </Container>
             </Fade>
