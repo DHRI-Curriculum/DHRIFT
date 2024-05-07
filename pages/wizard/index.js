@@ -5,21 +5,17 @@ import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
 import { Add, Remove } from '@mui/icons-material';
 
-export default function Form(props) {
+export default function Form() {
     const [instCreated, setInstCreated] = useState(false);
     const [authComplete, setAuthComplete] = useState(false);
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
-    const [firstStage, setFirstStage] = useState(true);
-    const [secondStage, setSecondStage] = useState(false);
-    const [thirdStage, setThirdStage] = useState(false);
-    const [fourthStage, setFourthStage] = useState(false);
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
         institution: 'CUNY Graduate Center',
-        event: 'Digital Research Institute',
-        herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
-        description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
+        event: 'Learn.',
+        herodescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
+        description: 'DHRIFT can be customized to your pedagogical needs.',
         // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
         // registertext: 'See a Demonstration Institute',
         venue: '',
@@ -171,8 +167,6 @@ export default function Form(props) {
 
 
     const createInstitute = async () => {
-        console.log(props);
-        props.clearCache();
         const formDataForGithub = {
             ...formData,
             sessions: formData.sessions.map(session => ({
@@ -493,7 +487,6 @@ export default function Form(props) {
                         direction={'row'}>
                         <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
                         <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                        <TextField label="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
                         <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
                         />
@@ -598,59 +591,19 @@ export default function Form(props) {
     //     </div>
     // );
 
-    const dateSection = (
-        <>
-        <h2>Date(s)</h2>
-        <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
-                style={{ marginRight: '10px' }}
-            />
-            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-        </>
-    );
 
-    const firstStageSection = (
-        <>
-            {formExplanation}
-            {dateSection}
-            {registrationDescription}
-            {eventDescriptionSection}
-            {checkboxtoHaveRegistration}
-            {formatSection}
-            {organizersSection}
-            {locationSection()}
-            <Button onClick={() => { setFirstStage(false); setSecondStage(true) }}>Next</Button>
-        </>
-    );
-
-    const secondStageSection = (
-        <>
-            {sessionsSection}
-            <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
-            <Button onClick={() => { setSecondStage(false); setThirdStage(true) }}>Next</Button>
-        </>
-    );
-
-    const thirdStageSection = (
-        <>
-            {logoUpload}
-            {heroImageUpload}
-            Show all workshops?
-            <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
-            <Button onClick={handleSubmit}>Create Institute</Button>
-            <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
-        </>
-    );
-
-    // const fourthStageSection = (
-    //     <>
-
-    //     </>
-    // );
 
     return (
         <>
             {instCreated &&
                 instCreatedSuccess
+            }
+            {/* {!instCreated && !authComplete && getAuthenticationSection}
+            {!instCreated && !authComplete && checkAuthSection} */}
+            {authComplete &&
+                <>
+                    {heroImageUpload}
+                </>
             }
             {!instCreated && (
                 <>
@@ -661,10 +614,27 @@ export default function Form(props) {
                         <div
                             className='form'
                         >
-                            {firstStage && firstStageSection}
-                            {secondStage && secondStageSection}
-                            {thirdStage && thirdStageSection}
-                            {/* {fourthStage && fourthStageSection} */}
+                            {formExplanation}
+                            {registrationDescription}
+                            {eventDescriptionSection}
+                            {logoUpload}
+                            {heroImageUpload}
+                            <>
+                                {checkboxtoHaveRegistration}
+                                {formatSection}
+                                {locationSection()}
+                                <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
+                                    style={{ marginRight: '10px' }}
+                                />
+                                <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
+
+                                {organizersSection}
+                                {sessionsSection}
+
+                                Show all workshops?
+                                <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
+                                <Button onClick={handleSubmit}>Create Institute</Button>
+                            </>
                         </div>
                     </Container>
                 </>

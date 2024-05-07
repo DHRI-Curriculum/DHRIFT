@@ -378,7 +378,7 @@ header {
 // institute styles
 .schedule {
   position: relative;
-  // padding-top: 40px;
+  padding-top: 40px;
   margin-bottom: 40px;
   width: 100vw;
   background-color: rgb(239 231 225);
@@ -1030,6 +1030,7 @@ nav.sidenav {
     background-color: $primary-color-bark;
     color: $primary-color-white;
     margin: 10px;
+    margin: 10px;
     font-weight: 600;
     cursor: pointer;
 
@@ -1038,7 +1039,10 @@ nav.sidenav {
     }
   }
 
+
 }
+
+
 
 
 
