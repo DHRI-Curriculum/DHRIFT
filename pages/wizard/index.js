@@ -10,6 +10,10 @@ export default function Form() {
     const [authComplete, setAuthComplete] = useState(false);
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
+    const [firstStage, setFirstStage] = useState(true);
+    const [secondStage, setSecondStage] = useState(false);
+    const [thirdStage, setThirdStage] = useState(false);
+    const [fourthStage, setFourthStage] = useState(false);
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
         institution: 'CUNY Graduate Center',
@@ -591,19 +595,55 @@ export default function Form() {
     //     </div>
     // );
 
+    const firstStageSection = (
+        <>
+            {formExplanation}
+            {registrationDescription}
+            {eventDescriptionSection}
+            {checkboxtoHaveRegistration}
+            {formatSection}
+            {organizersSection}
+            {locationSection()}
+            <Button onClick={() => { setFirstStage(false); setSecondStage(true) }}>Next</Button>
+        </>
+    );
+
+    const secondStageSection = (
+        <>
+            {sessionsSection}
+            <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
+            <Button onClick={() => { setSecondStage(false); setThirdStage(true) }}>Next</Button>
+        </>
+    );
+
+    const thirdStageSection = (
+        <>
+            {logoUpload}
+            {heroImageUpload}
+            <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
+            <Button onClick={() => { setThirdStage(false); setFourthStage(true) }}>Next</Button>
+        </>
+    );
+
+    const fourthStageSection = (
+        <>
+            <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
+                style={{ marginRight: '10px' }}
+            />
+            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
+
+            Show all workshops?
+            <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
+            <Button onClick={() => { setThirdStage(true); setFourthStage(false) }}>Back</Button>
+            <Button onClick={handleSubmit}>Create Institute</Button>
+        </>
+    );
 
 
     return (
         <>
             {instCreated &&
                 instCreatedSuccess
-            }
-            {/* {!instCreated && !authComplete && getAuthenticationSection}
-            {!instCreated && !authComplete && checkAuthSection} */}
-            {authComplete &&
-                <>
-                    {heroImageUpload}
-                </>
             }
             {!instCreated && (
                 <>
@@ -614,27 +654,10 @@ export default function Form() {
                         <div
                             className='form'
                         >
-                            {formExplanation}
-                            {registrationDescription}
-                            {eventDescriptionSection}
-                            {logoUpload}
-                            {heroImageUpload}
-                            <>
-                                {checkboxtoHaveRegistration}
-                                {formatSection}
-                                {locationSection()}
-                                <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
-                                    style={{ marginRight: '10px' }}
-                                />
-                                <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-
-                                {organizersSection}
-                                {sessionsSection}
-
-                                Show all workshops?
-                                <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
-                                <Button onClick={handleSubmit}>Create Institute</Button>
-                            </>
+                            {firstStage && firstStageSection}
+                            {secondStage && secondStageSection}
+                            {thirdStage && thirdStageSection}
+                            {fourthStage && fourthStageSection}
                         </div>
                     </Container>
                 </>
