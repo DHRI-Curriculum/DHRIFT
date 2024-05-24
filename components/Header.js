@@ -117,7 +117,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                 >
                                     <MenuIcon />
                                 </IconButton>
-                                <Link href={`/inst/?instUser=${instUser}&instRepo=${instRepo}`}
+                                <Link href={`https://www.dhrift.org`}
                                     passHref>
                                     <Image
                                         src={logo}
@@ -142,7 +142,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                             <Link href={`/glossary/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Glossary</Link>
                                         </li>
                                         <li>
-                                            <Link href='/About' passHref>About</Link>
+                                            <Link href='https://www.dhrift.org/about' passHref>About</Link>
                                         </li>
                                     </ul>
                                     {/* <IconButton sx={{ ml: 1 }}

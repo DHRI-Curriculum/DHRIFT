@@ -43,7 +43,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
         <div className='workshop-header'>
             <div className='workshop-header-left'>
                 {pages && instUser && instRepo &&
-                    <Link href={instURL}>
+                    <Link href='https://www.dhrift.org'>
                         <h1 className='workshop-header-title'
                         >DHRIFT</h1>
                     </Link>
