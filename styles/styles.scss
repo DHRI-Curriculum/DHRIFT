@@ -379,6 +379,7 @@ header {
 .schedule {
   position: relative;
   // padding-top: 40px;
+  // padding-top: 40px;
   margin-bottom: 40px;
   width: 100vw;
   background-color: rgb(239 231 225);
@@ -461,6 +462,7 @@ header {
         padding-left: 100px;
         padding-right: 100px;
       }
+
       // padding: 0px 20px 0px 20px;
       position: absolute;
       height: 500px;
@@ -471,6 +473,7 @@ header {
       color: white;
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       justify-content: space-between;
       align-items: center;
     }
@@ -517,13 +520,15 @@ header {
   &-description {
     padding-top: 0px;
     padding-bottom: 20px;
+    padding-bottom: 20px;
     position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
+    // align-items: center;
+    width: 90vw;
 
     p {
-      padding-right: 8cap;
       max-width: 100%;
     }
   }
@@ -538,6 +543,7 @@ header {
 
   .button {
     margin-top: -10px;
+    margin-top: -10px;
   }
 
 }
@@ -551,6 +557,7 @@ header {
     // grid-template-columns: repeat(3, 1fr);
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     // bit of space 
+    grid-gap: 30px;
     grid-gap: 30px;
     margin-bottom: 30px;
   }
