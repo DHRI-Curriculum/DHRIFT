@@ -151,19 +151,19 @@ export default function Institute(props) {
                                         <p><Button
                                             className='button button-bark'
                                             href={parsedYAML.registerlink}
-                                        >{
-                                                parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                                        >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
                                         </Button></p>
                                     }
                                 </div>
                             </>
                         }
+                            {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
                         <div className='schedule'>
-                            {sessions &&
                                 <Schedule schedule={sessions}
                                     {...props}
-                                />}
+                                />
                         </div>
+                            }
                             {parsedYAML && (!parsedYAML.showWorkshops === false || parsedYAML.showWorkshops == null) &&
                         <div className='inst-workshops'>
                             <h1>Workshops</h1>

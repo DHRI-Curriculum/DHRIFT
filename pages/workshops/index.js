@@ -41,11 +41,11 @@ export default function Workshops(props) {
     }, [props.instGitUser, props.instGitRepo])
 
     useEffect(() => {
-    //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
-    // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
+        //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
+        // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
     }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
 
-    
+
 
 
     const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
@@ -55,7 +55,7 @@ export default function Workshops(props) {
         <>
             <Header title={'Workshops'} instUser={props.instGitUser} instRepo={props.instGitRepo}
                 gitUser={props.gitUser} gitRepo={props.gitRepo}
-             />
+            />
             <Container
                 disableGutters={true}
                 maxWidth={'xl'}
@@ -70,11 +70,13 @@ export default function Workshops(props) {
                 <Head>
                     <title>Workshops</title>
                 </Head>
-                <div className='inst-workshops'>
-                    <h1>Workshops</h1>
-                    {props.gitUser && props.gitRepo && props.instGitUser && props.instGitRepo &&
-                        <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
-                    }
+                <div className='inst'>
+                    <div className='inst-workshops'>
+                        <h1>Workshops</h1>
+                        {props.gitUser && props.gitRepo && props.instGitUser && props.instGitRepo &&
+                            <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
+                        }
+                    </div>
                 </div>
             </Container>
         </>
