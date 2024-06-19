@@ -491,6 +491,7 @@ export default function Form() {
                         direction={'row'}>
                         <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
                         <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
+                        <TextField label="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
                         <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
                         />
