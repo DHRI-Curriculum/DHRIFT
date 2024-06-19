@@ -378,7 +378,7 @@ header {
 // institute styles
 .schedule {
   position: relative;
-  padding-top: 40px;
+  // padding-top: 40px;
   margin-bottom: 40px;
   width: 100vw;
   background-color: rgb(239 231 225);
@@ -462,7 +462,7 @@ header {
         padding-right: 100px;
       }
 
-      padding: 0px 20px 0px 20px;
+      // padding: 0px 20px 0px 20px;
       position: absolute;
       height: 500px;
       width: 100%;
@@ -472,7 +472,7 @@ header {
       color: white;
       display: flex;
       flex-direction: row;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
     }
 
@@ -509,16 +509,16 @@ header {
 
   &-description {
     padding-top: 0px;
-    padding-bottom: 0px;
+    padding-bottom: 20px;
     position: relative;
-    align-self: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    // align-items: center;
+    width: 90vw;
 
     p {
-      max-width: 60%;
+      max-width: 100%;
     }
   }
 
@@ -531,8 +531,7 @@ header {
   }
 
   .button {
-    margin-bottom: 50px;
-    position: relative;
+    margin-top: -10px;
   }
 
 }
@@ -546,7 +545,7 @@ header {
     // grid-template-columns: repeat(3, 1fr);
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     // bit of space 
-    grid-gap: 40px;
+    grid-gap: 30px;
     margin-bottom: 30px;
   }
 
