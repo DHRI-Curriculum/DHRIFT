@@ -236,35 +236,22 @@ export default function Institute(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='inst-description'>
-                                    {parsedYAML && <p>{parsedYAML.description}</p>}
-                                    {
-                                        parsedYAML && parsedYAML.registerlink &&
-                                        <p><Button
-                                            className='button button-bark'
-                                            href={parsedYAML.registerlink}
-                                        >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
-                                        </Button></p>
-                                    }
-                                </div>
-                            </>
-                        }
-                            {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
-                        <div className='schedule'>
-                                <Schedule schedule={sessions}
-                                    {...props}
-                                />
-                        </div>
-                            }
-                            {parsedYAML && (!parsedYAML.showWorkshops === false || parsedYAML.showWorkshops == null) &&
-                        <div className='inst-workshops'>
-                            <h1>Workshops</h1>
-                                <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
-                        </div>
-                            }
-                    </div>
-                </Container>
-            </Fade>
+                            </div>
+                            {showAbout ? about : inst}
+                        </>
+                    }
+                </div>
+            </Container>
+        </Fade>
+
+    )
+
+    return (
+        <>
+            <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
+                gitUser={props.gitUser} gitRepo={props.gitRepo}
+            />
+            {instContainer}
         </>
     )
 }

@@ -461,7 +461,6 @@ header {
         padding-left: 100px;
         padding-right: 100px;
       }
-
       // padding: 0px 20px 0px 20px;
       position: absolute;
       height: 500px;
@@ -523,11 +522,10 @@ header {
     position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    // align-items: center;
-    width: 90vw;
+    justify-content: flex-start;
 
     p {
+      padding-right: 8cap;
       max-width: 100%;
     }
   }
