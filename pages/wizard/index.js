@@ -5,7 +5,7 @@ import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
 import { Add, Remove } from '@mui/icons-material';
 
-export default function Form() {
+export default function Form(props) {
     const [instCreated, setInstCreated] = useState(false);
     const [authComplete, setAuthComplete] = useState(false);
     const [instUrl, setInstUrl] = useState('');
@@ -17,9 +17,9 @@ export default function Form() {
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
         institution: 'CUNY Graduate Center',
-        event: 'Learn.',
-        herodescription: 'DHRIFT curriculum have been developed, used, and tested in classrooms at over twenty colleges and universities. DHRIFT provides sites for your technical intensives and workshops that help you to teach technical topics effectively. DHRIFT is created by humanists, for humanists. We value inclusivity and openness in the design of our curriculum and platform.',
-        description: 'DHRIFT can be customized to your pedagogical needs.',
+        event: 'Digital Research Institute',
+        herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
+        description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
         // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
         // registertext: 'See a Demonstration Institute',
         venue: '',
@@ -171,6 +171,8 @@ export default function Form() {
 
 
     const createInstitute = async () => {
+        console.log(props);
+        props.clearCache();
         const formDataForGithub = {
             ...formData,
             sessions: formData.sessions.map(session => ({
@@ -596,9 +598,20 @@ export default function Form() {
     //     </div>
     // );
 
+    const dateSection = (
+        <>
+        <h2>Date(s)</h2>
+        <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
+                style={{ marginRight: '10px' }}
+            />
+            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
+        </>
+    );
+
     const firstStageSection = (
         <>
             {formExplanation}
+            {dateSection}
             {registrationDescription}
             {eventDescriptionSection}
             {checkboxtoHaveRegistration}
@@ -621,25 +634,18 @@ export default function Form() {
         <>
             {logoUpload}
             {heroImageUpload}
-            <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
-            <Button onClick={() => { setThirdStage(false); setFourthStage(true) }}>Next</Button>
-        </>
-    );
-
-    const fourthStageSection = (
-        <>
-            <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
-                style={{ marginRight: '10px' }}
-            />
-            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-
             Show all workshops?
             <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
-            <Button onClick={() => { setThirdStage(true); setFourthStage(false) }}>Back</Button>
             <Button onClick={handleSubmit}>Create Institute</Button>
+            <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
         </>
     );
 
+    // const fourthStageSection = (
+    //     <>
+
+    //     </>
+    // );
 
     return (
         <>
@@ -658,7 +664,7 @@ export default function Form() {
                             {firstStage && firstStageSection}
                             {secondStage && secondStageSection}
                             {thirdStage && thirdStageSection}
-                            {fourthStage && fourthStageSection}
+                            {/* {fourthStage && fourthStageSection} */}
                         </div>
                     </Container>
                 </>

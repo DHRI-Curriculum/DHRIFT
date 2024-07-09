@@ -64,6 +64,7 @@ function MyApp({ Component, pageProps }) {
   pageProps.setInstGitUser = setInstGitUser
   pageProps.instGitRepo = instGitRepo
   pageProps.setInstGitRepo = setInstGitRepo
+  pageProps.clearCache = clearCache
 
   Object.assign(pageProps, {
     title, setTitle, workshopMode, setWorkshopMode,

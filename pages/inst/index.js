@@ -19,6 +19,7 @@ export default function Institute(props) {
     const [sessions, setSessions] = useState(null);
     const [shouldFetch, setShouldFetch] = useState(false);
     const [date, setDate] = useState(null);
+    const [showAbout, setShowAbout] = useState(false);
 
     let headers;
 
@@ -66,7 +67,7 @@ export default function Institute(props) {
         const tzOffset = date.getTimezoneOffset();
         const d = new Date(date.valueOf() + (baseTzOffset + tzOffset) * 60 * 1000);
         return format(d, 'MMMM do, yyyy');
-      }
+    }
 
     useEffect(() => {
         if (parsedYAML) {
@@ -87,40 +88,132 @@ export default function Institute(props) {
         }
     }, [parsedYAML])
 
-    return (
+    const about = (
         <>
-            <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
-                gitUser={props.gitUser} gitRepo={props.gitRepo}
-            />
-            <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
-                <Container
-                    disableGutters={true}
-                    maxWidth={'md'}
-                    sx={{
-                        display: 'flex',
-                        marginLeft: {
-                            md: '0px',
-                        },
-                    }}
-                >
-                    <Head>
-                        <title>{parsedYAML && parsedYAML.event}</title>
-                    </Head>
+            <div>
+                <h1>About</h1>
+                <p>{parsedYAML && parsedYAML.description}</p>
+                {parsedYAML && parsedYAML.organizers &&
+                    <>
+                        <h2>Organizers</h2>
+                        <ul>
+                            {parsedYAML.organizers.map((organizer, index) => {
+                                return <li key={index}>{organizer}</li>
+                            })}
+                        </ul>
+                    </>
+                }
+                {parsedYAML && parsedYAML.sponsors &&
+                    <>
+                        <h2>Sponsors</h2>
+                        <ul>
+                            {parsedYAML.sponsors.map((sponsor, index) => {
+                                return <li key={index}>{sponsor}</li>
+                            })}
+                        </ul>
+                    </>
+                }
+                {parsedYAML && parsedYAML.location &&
+                    <>
+                        <h2>Location</h2>
+                        <p>{parsedYAML.location}</p>
+                    </>
+                }
+                {parsedYAML && parsedYAML.contact &&
+                    <>
+                        <h2>Contact</h2>
+                        <p>{parsedYAML.contact}</p>
+                    </>
+                }
+                {parsedYAML && parsedYAML.registerlink &&
+                    <p><Button
+                        className='button button-bark'
+                        href={parsedYAML.registerlink}
+                    >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                    </Button></p>
+                }
+                <h2>Event Details</h2>
+                <p>{date}</p>
+                <p>{parsedYAML && parsedYAML.venue && parsedYAML.venue}</p>
+            </div>
+        </>
+    )
 
-                    <div className="inst">
-                        {
-                            <>
-                                <div className='inst-hero'
-                                    style={{
-                                        height: '600px',
-                                        width: '100vw',
-                                        position: 'relative',
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: '50% 50%',
-                                        backgroundImage: `url(${heroImage.src})`,
-                                        // paddingLeft: '100px',
-                                    }}>
-                                    <div className='inst-hero-overlay'>
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const aboutParam = urlParams.get('about');
+        if (aboutParam === 'true') {
+            setShowAbout(true)
+        }
+    }, [])
+
+    const inst = (
+        <>
+            <div className='inst-description'>
+                {parsedYAML && <p>{parsedYAML.description}</p>}
+                {
+                    parsedYAML && parsedYAML.registerlink &&
+                    <p><Button
+                        className='button button-bark'
+                        href={parsedYAML.registerlink}
+                    >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                    </Button></p>
+                }
+            </div>
+            {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
+                <div className='schedule'>
+                    <Schedule schedule={sessions}
+                        {...props}
+                    />
+                </div>
+            }
+            {parsedYAML && (!parsedYAML.showWorkshops === false || parsedYAML.showWorkshops == null) &&
+                <div className='inst-workshops'>
+                    {/* hack to get the workshops to show up higher on the page */}
+                    {parsedYAML.showSchedule === false || !parsedYAML.showSchedule ?
+                        <div style={{ marginBottom: '-60px' }}>
+                        </div>
+                        : null
+                    }
+                    <h1>Workshops</h1>
+                    <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
+                </div>
+            }
+        </>
+    )
+
+    const instContainer = (
+        <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
+            <Container
+                disableGutters={true}
+                maxWidth={'md'}
+                sx={{
+                    display: 'flex',
+                    marginLeft: {
+                        md: '0px',
+                    },
+                }}
+            >
+                <Head>
+                    <title>{parsedYAML && parsedYAML.event}</title>
+                </Head>
+
+                <div className="inst">
+                    {
+                        <>
+                            <div className='inst-hero'
+                                style={{
+                                    height: '600px',
+                                    width: '100vw',
+                                    position: 'relative',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: '50% 50%',
+                                    backgroundImage: `url(${heroImage.src})`,
+                                }}>
+                                <div className='inst-hero-overlay'>
+                                    <div
+                                        className='inst-hero-text'
+                                    >
                                         <div> {
                                             parsedYAML && <h1>{parsedYAML.event}</h1>
                                         }
@@ -132,10 +225,8 @@ export default function Institute(props) {
 
                                                 parsedYAML && <p>{parsedYAML.venue}</p>
                                             }
-
                                         </div>
                                         <div>
-
                                             {
                                                 parsedYAML && <div className='inst-hero-description'>
                                                     <p>{parsedYAML.herodescription}</p>
@@ -144,35 +235,22 @@ export default function Institute(props) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='inst-description'>
-                                    {parsedYAML && <p>{parsedYAML.description}</p>}
-                                    {
-                                        parsedYAML && parsedYAML.registerlink &&
-                                        <p><Button
-                                            className='button button-bark'
-                                            href={parsedYAML.registerlink}
-                                        >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
-                                        </Button></p>
-                                    }
-                                </div>
-                            </>
-                        }
-                            {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
-                        <div className='schedule'>
-                                <Schedule schedule={sessions}
-                                    {...props}
-                                />
-                        </div>
-                            }
-                            {parsedYAML && (!parsedYAML.showWorkshops === false || parsedYAML.showWorkshops == null) &&
-                        <div className='inst-workshops'>
-                            <h1>Workshops</h1>
-                                <WorkshopsView gitUser={props.gitUser} gitRepo={props.gitRepo} instUser={props.instGitUser} instRepo={props.instGitRepo} />
-                        </div>
-                            }
-                    </div>
-                </Container>
-            </Fade>
+                            </div>
+                            {showAbout ? about : inst}
+                        </>
+                    }
+                </div>
+            </Container>
+        </Fade>
+
+    )
+
+    return (
+        <>
+            <Header title={parsedYAML && parsedYAML.event} instUser={props.instGitUser} instRepo={props.instGitRepo}
+                gitUser={props.gitUser} gitRepo={props.gitRepo}
+            />
+            {instContainer}
         </>
     )
 }
