@@ -472,7 +472,6 @@ header {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      justify-content: space-between;
       align-items: center;
     }
 
@@ -518,7 +517,6 @@ header {
   &-description {
     padding-top: 0px;
     padding-bottom: 20px;
-    padding-bottom: 20px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -540,7 +538,6 @@ header {
 
   .button {
     margin-top: -10px;
-    margin-top: -10px;
   }
 
 }
@@ -554,7 +551,6 @@ header {
     // grid-template-columns: repeat(3, 1fr);
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     // bit of space 
-    grid-gap: 30px;
     grid-gap: 30px;
     margin-bottom: 30px;
   }
@@ -1034,7 +1030,6 @@ nav.sidenav {
     background-color: $primary-color-bark;
     color: $primary-color-white;
     margin: 10px;
-    margin: 10px;
     font-weight: 600;
     cursor: pointer;
 
@@ -1043,10 +1038,7 @@ nav.sidenav {
     }
   }
 
-
 }
-
-
 
 
 
