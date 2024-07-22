@@ -8,7 +8,6 @@ import { Button } from '@mui/material';
 import heroImage from '../../public/images/learn.jpg';
 import Header from '../../components/Header';
 import Head from 'next/head';
-const { format, parse } = require("date-fns");
 import { Fade } from '@mui/material';
 
 export default function Institute(props) {
