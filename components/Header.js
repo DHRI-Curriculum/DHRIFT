@@ -117,7 +117,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                 >
                                     <MenuIcon />
                                 </IconButton>
-                                <Link href={`https://dhrift.org`}
+                                <Link href={`http://www.dhrift.org`}
                                     passHref>
                                     <Image
                                         src={logo}
