@@ -12,8 +12,8 @@ export default function Form(props) {
     const [instName, setInstName] = useState('');
     const [firstStage, setFirstStage] = useState(true);
     const [secondStage, setSecondStage] = useState(false);
-    const [thirdStage, setThirdStage] = useState(false);
-    const [fourthStage, setFourthStage] = useState(false);
+    // const [thirdStage, setThirdStage] = useState(false);
+    // const [fourthStage, setFourthStage] = useState(false);
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
         institution: 'CUNY Graduate Center',
@@ -450,7 +450,7 @@ export default function Form(props) {
                 onChange={handleInputChange} />
             <TextField label="Hero Description" type="text" name="heroDescription" value={formData.herodescription}
                 onChange={handleInputChange} />
-            <TextField label="Description" type="text" name="description" value={formData.description}
+            <TextField label="Description" type="text" name="description" value={formData.description} multiline rows={4}
                 onChange={handleInputChange} />
         </Stack>
     );
@@ -625,21 +625,21 @@ export default function Form(props) {
     const secondStageSection = (
         <>
             {sessionsSection}
-            <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
-            <Button onClick={() => { setSecondStage(false); setThirdStage(true) }}>Next</Button>
-        </>
-    );
-
-    const thirdStageSection = (
-        <>
             {logoUpload}
             {heroImageUpload}
             Show all workshops?
             <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
             <Button onClick={handleSubmit}>Create Institute</Button>
-            <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
+            <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
         </>
     );
+
+    // const thirdStageSection = (
+    //     <>
+
+    //         <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
+    //     </>
+    // );
 
     // const fourthStageSection = (
     //     <>
@@ -663,7 +663,7 @@ export default function Form(props) {
                         >
                             {firstStage && firstStageSection}
                             {secondStage && secondStageSection}
-                            {thirdStage && thirdStageSection}
+                            {/* {thirdStage && thirdStageSection} */}
                             {/* {fourthStage && fourthStageSection} */}
                         </div>
                     </Container>
