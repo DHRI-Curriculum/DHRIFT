@@ -24,8 +24,8 @@ export default function Form(props) {
         // registertext: 'See a Demonstration Institute',
         venue: '',
         address: '365 5th Ave, New York, NY 10016',
-        dateStart: '2023-01-01',
-        endDate: '2023-01-01',
+        dateStart: '2025-01-01',
+        endDate: '2025-01-01',
         workshopsuser: 'dhri-curriculum',
         workshopsrepo: 'workshops',
 
@@ -215,10 +215,11 @@ export default function Form(props) {
             body: JSON.stringify({ formDataForGithub })
         });
         if (response.ok) {
-            // const data = await response.json();
+            const data = await response
+            console.log(data.body);
             setInstCreated(true);
-            // setInstUrl(data.instUrl);
-            // setInstName(data.instName);
+            setInstUrl(data.instUrl);
+            setInstName(data.instName);
             uploadFiles(imagesToSend);
         }
         else {
