@@ -4,6 +4,8 @@ import { FormControl, InputLabel, Input } from '@mui/material';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
 import { Add, Remove } from '@mui/icons-material';
+import { da } from 'date-fns/locale';
+import { add } from 'date-fns';
 
 export default function Form(props) {
     const [instCreated, setInstCreated] = useState(false);
@@ -69,8 +71,8 @@ export default function Form(props) {
         const urlParams = new URLSearchParams(window.location.search);
         setInstCreated(urlParams.get('instCreated') === 'true');
         setAuthComplete(urlParams.get('authComplete') === 'true');
-        setInstName(urlParams.get('instUser'));
-        setInstUrl(urlParams.get('instRepo'));
+        // setInstName(urlParams.get('instUser'));
+        // setInstUrl(urlParams.get('instRepo'));
     }
         , []);
 
@@ -120,6 +122,7 @@ export default function Form(props) {
             console.log(data);
             if (data.auth === 'complete') {
                 setAuthComplete(true);
+                createInstitute();
             }
         }
         const bc = new BroadcastChannel('auth');
@@ -136,11 +139,12 @@ export default function Form(props) {
             credentials: 'include',
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
         });
         if (response.ok) {
             setAuthComplete(true);
+            createInstitute();
         }
         else {
             permRequest();
@@ -157,7 +161,7 @@ export default function Form(props) {
 
 
     const permRequest = async () => {
-        const APIURL = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=DHRIFT';
+        const APIURL = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + window.location.origin;
         window.authWindow = window.open(APIURL, 'authWindow', 'width=600,height=600', 'rel=opener');
         window.authWindow.focus();
     }
@@ -165,8 +169,13 @@ export default function Form(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // checkAuth();
-        createInstitute();
+        checkAuth();
+    //     if (authComplete) {
+    //         createInstitute();
+    //     }
+    //     else {
+    //         console.log('Not authenticated');
+    // }
     }
 
 
@@ -193,7 +202,7 @@ export default function Form(props) {
         };
         let imageDatas = [logo, heroImage];
         if (!imageDatas.some(image => image.image)) {
-            console.log('No images to add');
+            // console.log('No images to add');
         }
         let imagesToSend = imageDatas.filter(image => image.image);
         imagesToSend = imagesToSend.map((image) => {
@@ -215,15 +224,16 @@ export default function Form(props) {
             body: JSON.stringify({ formDataForGithub })
         });
         if (response.ok) {
-            const data = await response
-            console.log(data.body);
+            console.log(response);
+            const data = await response.json();
+            setInstUrl(data.repoName);
+            setInstName(data.instUser);
             setInstCreated(true);
-            setInstUrl(data.instUrl);
-            setInstName(data.instName);
             uploadFiles(imagesToSend);
         }
         else {
             console.log('Error creating institute');
+            console.log(response);
         }
     }
 
