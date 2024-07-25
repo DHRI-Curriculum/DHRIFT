@@ -10,6 +10,10 @@ import Header from '../../components/Header';
 import Head from 'next/head';
 import { format } from 'date-fns';
 import { Fade } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
 export default function Institute(props) {
 
@@ -19,7 +23,7 @@ export default function Institute(props) {
     const [sessions, setSessions] = useState(null);
     const [shouldFetch, setShouldFetch] = useState(false);
     const [date, setDate] = useState(null);
-    const [showAbout, setShowAbout] = useState(false);
+    const [showAbout, setShowAbout] = useState(true);
 
     let headers;
 
@@ -91,61 +95,89 @@ export default function Institute(props) {
     const about = (
         <>
             <div>
-                <h1>About</h1>
-                <p>{parsedYAML && parsedYAML.description}</p>
                 {parsedYAML && parsedYAML.organizers &&
                     <>
-                        <h2>Organizers</h2>
+                        <h3>Organizers</h3>
                         <ul>
                             {parsedYAML.organizers.map((organizer, index) => {
-                                return <li key={index}>{organizer}</li>
+                                return <li key={index}>{organizer.name}</li>
                             })}
                         </ul>
                     </>
                 }
                 {parsedYAML && parsedYAML.sponsors &&
                     <>
-                        <h2>Sponsors</h2>
+                        <h3>Sponsors</h3>
                         <ul>
                             {parsedYAML.sponsors.map((sponsor, index) => {
-                                return <li key={index}>{sponsor}</li>
+                                return <li key={index}><a href={sponsor.link}>{sponsor.name}</a></li>
                             })}
                         </ul>
                     </>
                 }
                 {parsedYAML && parsedYAML.location &&
                     <>
-                        <h2>Location</h2>
+                        <h3>Location</h3>
                         <p>{parsedYAML.location}</p>
                     </>
                 }
                 {parsedYAML && parsedYAML.contact &&
                     <>
-                        <h2>Contact</h2>
-                        <p>{parsedYAML.contact}</p>
+                        <h3>Contact</h3>
+                        {parsedYAML.contact.map((contact, index) => {
+                            return <><p key={index}>{contact.name}</p>
+                                    <p>{contact.email}</p>
+                                    </>
+                        }
+                        )}
                     </>
                 }
-                {parsedYAML && parsedYAML.registerlink &&
-                    <p><Button
-                        className='button button-bark'
-                        href={parsedYAML.registerlink}
-                    >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
-                    </Button></p>
-                }
-                <h2>Event Details</h2>
                 <p>{date}</p>
-                <p>{parsedYAML && parsedYAML.venue && parsedYAML.venue}</p>
+                <p>{parsedYAML && parsedYAML.venue}</p>
             </div>
         </>
     )
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const aboutParam = urlParams.get('about');
-        if (aboutParam === 'true') {
-            setShowAbout(true)
-        }
-    }, [])
+    const aboutAccordion = (
+        <div className='accordion'
+            sx={{
+                marginBottom: '40px',
+            }}
+        >
+            <Accordion
+                sx={{
+                    boxShadow: 'none',
+                    marginBottom: '40px',
+                    '&:before': {
+                        display: 'none',
+                    },
+                }}
+            >
+                <AccordionSummary
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    className='schedule-item'
+                    sx={{
+                        paddingLeft: '76px',
+                    }}
+                    expandIcon={<ExpandMore />}>
+                    <h2
+                        className="accordion-summary"
+                        style={{
+                            fontWeight: '700',
+                        }}
+                    >Details</h2>
+                </AccordionSummary>
+                <AccordionDetails
+                    sx={{
+                        paddingLeft: '76px',
+                    }}
+                >
+                    {about}
+                </AccordionDetails>
+            </Accordion>
+        </div>
+    )
 
     const inst = (
         <>
@@ -160,6 +192,7 @@ export default function Institute(props) {
                     </Button></p>
                 }
             </div>
+            {parsedYAML && parsedYAML.DHRIFTfrontpage === false || parsedYAML && !parsedYAML.DHRIFTfrontpage ? aboutAccordion : null}
             {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
                 <div className='schedule'>
                     <Schedule schedule={sessions}
@@ -181,6 +214,7 @@ export default function Institute(props) {
             }
         </>
     )
+
 
     const instContainer = (
         <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
@@ -236,7 +270,7 @@ export default function Institute(props) {
                                     </div>
                                 </div>
                             </div>
-                            {showAbout ? about : inst}
+                            {inst}
                         </>
                     }
                 </div>

@@ -27,8 +27,8 @@ export default function Form(props) {
         herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
         // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
         // registertext: 'See a Demonstration Institute',
-        venue: '',
-        address: '365 5th Ave, New York, NY 10016',
+        venue: 'The Graduate Center, CUNY',
+        location: '365 5th Ave, New York, NY 10016',
         dateStart: '2025-01-01',
         endDate: '2025-01-01',
         workshopsuser: 'dhri-curriculum',
@@ -36,6 +36,9 @@ export default function Form(props) {
 
         // format: 'online, hybrid, in-person',
         format: 'online',
+        sponsors: [{ name: 'GCDRI', link: 'https://gcdri.commons.gc.cuny.edu/' }],
+        organizers: [{ name: 'Digital Research Institute', email: 'email@gc.cuny.edu'}],
+        contact: [{ name: 'Digital Research Institute', email: 'contact@gc.cuny.edu' }],
 
         sessions: [
             {
@@ -448,7 +451,7 @@ export default function Form(props) {
                         onChange={handleInputChange} />
                     <p>Enter the venue and address for your event below. This will be displayed on your DHRIFT landing page.</p>
                     <TextField label="Venue" type="text" name="venue" value={formData.venue} onChange={handleInputChange} />
-                    <TextField label="Address" type="text" name="address" value={formData.address} onChange={handleInputChange} />
+                    <TextField label="Location" type="text" name="location" value={formData.location} onChange={handleInputChange} />
                 </Stack>
             );
         }
@@ -463,7 +466,7 @@ export default function Form(props) {
                             marginRight: '10px'
                         }}
                         onChange={handleInputChange} />
-                    <TextField label="Address" type="text" name="address" value={formData.address}
+                    <TextField label="Location" type="text" name="location" value={formData.location}
                         style={{
                             width: '400px',
                             marginBottom: '10px'
