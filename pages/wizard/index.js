@@ -4,8 +4,11 @@ import { FormControl, InputLabel, Input } from '@mui/material';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
 import { Add, Remove } from '@mui/icons-material';
-import { da } from 'date-fns/locale';
-import { add } from 'date-fns';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 
 export default function Form(props) {
     const [instCreated, setInstCreated] = useState(false);
@@ -20,8 +23,8 @@ export default function Form(props) {
         organizers: [{ name: '', email: '' }],
         institution: 'CUNY Graduate Center',
         event: 'Digital Research Institute',
-        herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
         description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
+        herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
         // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
         // registertext: 'See a Demonstration Institute',
         venue: '',
@@ -57,6 +60,10 @@ export default function Form(props) {
             },
         ],
     });
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [showProgress, setShowProgress] = useState(false);
+
+
 
     const realAPIURL = 'https://run-dhrift-d5tkoh5ciq-uc.a.run.app/';
     const localAPIURL = 'http://localhost:8080/';
@@ -71,8 +78,6 @@ export default function Form(props) {
         const urlParams = new URLSearchParams(window.location.search);
         setInstCreated(urlParams.get('instCreated') === 'true');
         setAuthComplete(urlParams.get('authComplete') === 'true');
-        // setInstName(urlParams.get('instUser'));
-        // setInstUrl(urlParams.get('instRepo'));
     }
         , []);
 
@@ -119,10 +124,12 @@ export default function Form(props) {
     useEffect(() => {
         function handle_auth_complete(event) {
             const data = JSON.parse(event.data);
-            console.log(data);
             if (data.auth === 'complete') {
                 setAuthComplete(true);
                 createInstitute();
+            }
+            else{
+                setShowProgress(false);
             }
         }
         const bc = new BroadcastChannel('auth');
@@ -159,28 +166,19 @@ export default function Form(props) {
         </div>
     );
 
-
     const permRequest = async () => {
         const APIURL = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + window.location.origin;
         window.authWindow = window.open(APIURL, 'authWindow', 'width=600,height=600', 'rel=opener');
         window.authWindow.focus();
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setShowProgress(true);
         checkAuth();
-    //     if (authComplete) {
-    //         createInstitute();
-    //     }
-    //     else {
-    //         console.log('Not authenticated');
-    // }
     }
 
-
     const createInstitute = async () => {
-        console.log(props);
         props.clearCache();
         const formDataForGithub = {
             ...formData,
@@ -228,15 +226,17 @@ export default function Form(props) {
             const data = await response.json();
             setInstUrl(data.repoName);
             setInstName(data.instUser);
-            setInstCreated(true);
             uploadFiles(imagesToSend);
+            setInstCreated(true);
+            setDialogOpen(true);
+            setShowProgress(false);
         }
         else {
             console.log('Error creating institute');
             console.log(response);
+            setShowProgress(false);
         }
     }
-
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -380,11 +380,32 @@ export default function Form(props) {
         </div>
     );
 
-    const instCreatedSuccess = (
-        <div>
+    const progress = (
+        <>
+        {showProgress &&
+        <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+        </Box>
+        }
+        </>
+    );
+
+    const instCreatedSuccessDialog = (
+        <>
+            <Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
             <h2>Success!</h2>
             <p>Your institute has been created. You can view it <a href={`../../inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a>.</p>
-        </div>
+
+                <DialogActions>
+                    <Button onClick={() => setDialogOpen(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 
     const formatSection = (
@@ -459,10 +480,12 @@ export default function Form(props) {
             <TextField label="Event Title" type="text" name="event" value={formData.event}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
-            <TextField label="Hero Description" type="text" name="heroDescription" value={formData.herodescription}
+            <TextField  type="text" name='herodescription' label="Hero Description"
+            value={formData.herodescription}
                 onChange={handleInputChange} />
             <TextField label="Description" type="text" name="description" value={formData.description} multiline rows={4}
                 onChange={handleInputChange} />
+                <TextField label='Institution' type='text' name='institution' value={formData.institution} onChange={handleInputChange} />
         </Stack>
     );
 
@@ -611,8 +634,8 @@ export default function Form(props) {
 
     const dateSection = (
         <>
-        <h2>Date(s)</h2>
-        <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
+            <h2>Date(s)</h2>
+            <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
                 style={{ marginRight: '10px' }}
             />
             <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
@@ -640,7 +663,13 @@ export default function Form(props) {
             {heroImageUpload}
             Show all workshops?
             <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
-            <Button onClick={handleSubmit}>Create Institute</Button>
+            <Box sx={{ display: 'flex' }}>
+            <Button 
+            onClick={handleSubmit}
+            disabled={showProgress}
+            >Create Institute</Button>
+            {progress}
+            </Box>
             <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
         </>
     );
@@ -660,10 +689,9 @@ export default function Form(props) {
 
     return (
         <>
-            {instCreated &&
-                instCreatedSuccess
-            }
-            {!instCreated && (
+
+            {instCreatedSuccessDialog}
+            {(
                 <>
                     <Header title={'Dhrift'} instUser={'dhri-curriculum'} instRepo={'dhrift-site-template'}
                         gitUser={'dhri-curriculum'} gitRepo={'workshops'}
