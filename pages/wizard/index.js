@@ -518,6 +518,58 @@ export default function Form(props) {
         </Stack>
     );
 
+    const sponsorsSection = (
+        <Stack spacing={2}>
+            <h4>Sponsors</h4>
+            {formData.sponsors.map((sponsor, index) => (
+                <div key={index}>
+                    <TextField label={`Sponsor ${index + 1}`} type="text" value={sponsor.name}
+                        style={{
+                            width: '400px',
+                            marginRight: '10px'
+                        }}
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'name', e.target.value)} />
+                    <TextField label={`Sponsor ${index + 1} Link`} type="text" value={sponsor.link}
+                        style={{ width: '400px' }}
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)} />
+                    {formData.sponsors.length > 1 && (
+                        <Button type="button" onClick={() => handleRemove('sponsors', index)}>Remove Sponsor</Button>
+                    )}
+
+                    {index === formData.sponsors.length - 1 && (
+                        <Button type="button" onClick={() => handleAdd('sponsors')}><Add /></Button>
+                    )}
+                </div>
+            ))}
+        </Stack>
+    );
+
+    const contactSection = (
+        <Stack spacing={2}>
+            <h4>Contact</h4>
+            {formData.contact.map((contact, index) => (
+                <div key={index}>
+                    <TextField label={`Contact ${index + 1}`} type="text" value={contact.name}
+                        style={{
+                            width: '400px',
+                            marginRight: '10px'
+                        }}
+                        onChange={(e) => handleArrayFieldChange('contact', index, 'name', e.target.value)} />
+                    <TextField label={`Contact ${index + 1} Email`} type="email" value={contact.email}
+                        style={{ width: '400px' }}
+                        onChange={(e) => handleArrayFieldChange('contact', index, 'email', e.target.value)} />
+                    {formData.contact.length > 1 && (
+                        <Button type="button" onClick={() => handleRemove('contact', index)}>Remove Contact</Button>
+                    )}
+
+                    {index === formData.contact.length - 1 && (
+                        <Button type="button" onClick={() => handleAdd('contact')}><Add /></Button>
+                    )}
+                </div>
+            ))}
+        </Stack>
+    );
+
     const sessionsSection = (
         <Stack spacing={2}>
             <h4>Sessions</h4>
@@ -651,6 +703,8 @@ export default function Form(props) {
             {dateSection}
             {registrationDescription}
             {eventDescriptionSection}
+            {sponsorsSection}
+            {contactSection}
             {checkboxtoHaveRegistration}
             {formatSection}
             {organizersSection}

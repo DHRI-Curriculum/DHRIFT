@@ -100,7 +100,9 @@ export default function Institute(props) {
                         <h3>Organizers</h3>
                         <ul>
                             {parsedYAML.organizers.map((organizer, index) => {
+                                if (organizer.name !== ''){
                                 return <li key={index}>{organizer.name}</li>
+                                }
                             })}
                         </ul>
                     </>
@@ -110,7 +112,9 @@ export default function Institute(props) {
                         <h3>Sponsors</h3>
                         <ul>
                             {parsedYAML.sponsors.map((sponsor, index) => {
+                                if (sponsor.name !== ''){
                                 return <li key={index}><a href={sponsor.link}>{sponsor.name}</a></li>
+                                }
                             })}
                         </ul>
                     </>
@@ -125,9 +129,12 @@ export default function Institute(props) {
                     <>
                         <h3>Contact</h3>
                         {parsedYAML.contact.map((contact, index) => {
-                            return <><p key={index}>{contact.name}</p>
+                            if (contact.name !== undefined) {
+                                return <>
+                                    <p key={index}>{contact.name}</p>
                                     <p>{contact.email}</p>
-                                    </>
+                                </>
+                            }
                         }
                         )}
                     </>
