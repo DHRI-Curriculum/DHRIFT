@@ -33,11 +33,12 @@ export default function Form(props) {
         endDate: '2025-01-01',
         workshopsuser: 'dhri-curriculum',
         workshopsrepo: 'workshops',
+        cloneWorkshops: 'false',
 
         // format: 'online, hybrid, in-person',
         format: 'online',
         sponsors: [{ name: 'GCDRI', link: 'https://gcdri.commons.gc.cuny.edu/' }],
-        organizers: [{ name: 'Digital Research Institute', email: 'email@gc.cuny.edu'}],
+        organizers: [{ name: 'Digital Research Institute', email: 'email@gc.cuny.edu' }],
         contact: [{ name: 'Digital Research Institute', email: 'contact@gc.cuny.edu' }],
 
         sessions: [
@@ -131,7 +132,7 @@ export default function Form(props) {
                 setAuthComplete(true);
                 createInstitute();
             }
-            else{
+            else {
                 setShowProgress(false);
             }
         }
@@ -181,6 +182,25 @@ export default function Form(props) {
         checkAuth();
     }
 
+    const cloneWorkshopsRepo = async (formDataForGithub) => {
+        const cloneAPIURL = APIURL + 'make_workshop_repo';
+        const response = await fetch(cloneAPIURL, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ formDataForGithub })
+        });
+        if (response.ok) {
+            console.log('Workshops repo cloned');
+        }
+        else {
+            console.log('Error cloning workshops repo');
+            console.log(response);
+        }
+    }
+
     const createInstitute = async () => {
         props.clearCache();
         const formDataForGithub = {
@@ -215,6 +235,14 @@ export default function Form(props) {
                 extension: imageExtension
             };
         });
+        if (formData.cloneWorkshops) {
+            formDataForGithub.cloneWorkshops = true;
+        }
+        else {
+            formDataForGithub.cloneWorkshops = false;
+            formDataForGithub.workshopsuser = 'dhri-curriculum';
+            formDataForGithub.workshopsrepo = 'workshops';
+        }
         const createAPIURL = APIURL + 'create_institute';
         const response = await fetch(createAPIURL, {
             method: 'POST',
@@ -225,11 +253,15 @@ export default function Form(props) {
             body: JSON.stringify({ formDataForGithub })
         });
         if (response.ok) {
-            console.log(response);
             const data = await response.json();
             setInstUrl(data.repoName);
             setInstName(data.instUser);
             uploadFiles(imagesToSend);
+            if (formData.cloneWorkshops) {
+                console.log('Cloning workshops repo');
+                cloneWorkshopsRepo(formDataForGithub);
+            }
+
             setInstCreated(true);
             setDialogOpen(true);
             setShowProgress(false);
@@ -239,6 +271,7 @@ export default function Form(props) {
             console.log(response);
             setShowProgress(false);
         }
+
     }
 
     const handleInputChange = (e) => {
@@ -383,13 +416,22 @@ export default function Form(props) {
         </div>
     );
 
+    const cloneWorkshopsSection = (
+        <>
+            <div>
+                <input type="checkbox" name="cloneWorkshops" checked={formData.cloneWorkshops} onChange={handleInputChange} />
+                <label>Clone Workshops Repository</label>
+            </div>
+        </>
+    );
+
     const progress = (
         <>
-        {showProgress &&
-        <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-        </Box>
-        }
+            {showProgress &&
+                <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                </Box>
+            }
         </>
     );
 
@@ -401,8 +443,8 @@ export default function Form(props) {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-            <h2>Success!</h2>
-            <p>Your institute has been created. You can view it <a href={`../../inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a>.</p>
+                <h2>Success!</h2>
+                <p>Your institute has been created. You can view it <a href={`../../inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a>.</p>
 
                 <DialogActions>
                     <Button onClick={() => setDialogOpen(false)}>Close</Button>
@@ -483,12 +525,12 @@ export default function Form(props) {
             <TextField label="Event Title" type="text" name="event" value={formData.event}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
-            <TextField  type="text" name='herodescription' label="Hero Description"
-            value={formData.herodescription}
+            <TextField type="text" name='herodescription' label="Hero Description"
+                value={formData.herodescription}
                 onChange={handleInputChange} />
             <TextField label="Description" type="text" name="description" value={formData.description} multiline rows={4}
                 onChange={handleInputChange} />
-                <TextField label='Institution' type='text' name='institution' value={formData.institution} onChange={handleInputChange} />
+            <TextField label='Institution' type='text' name='institution' value={formData.institution} onChange={handleInputChange} />
         </Stack>
     );
 
@@ -678,15 +720,6 @@ export default function Form(props) {
     );
 
 
-    // const changeRepoSection = (
-    //     <div>
-    //         <h2>Change Repository</h2>
-    //         <p>Enter the GitHub user and repository where your workshops are stored.</p>
-    //         <TextField label="GitHub User" type="text" name="workshopsuser" value={formData.workshopsuser} onChange={handleInputChange} />
-    //         <TextField label="GitHub Repository" type="text" name="workshopsrepo" value={formData.workshopsrepo} onChange={handleInputChange} />
-    //     </div>
-    // );
-
     const dateSection = (
         <>
             <h2>Date(s)</h2>
@@ -709,6 +742,7 @@ export default function Form(props) {
             {formatSection}
             {organizersSection}
             {locationSection()}
+            {cloneWorkshopsSection}
             <Button onClick={() => { setFirstStage(false); setSecondStage(true) }}>Next</Button>
         </>
     );
@@ -721,11 +755,11 @@ export default function Form(props) {
             Show all workshops?
             <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
             <Box sx={{ display: 'flex' }}>
-            <Button 
-            onClick={handleSubmit}
-            disabled={showProgress}
-            >Create Institute</Button>
-            {progress}
+                <Button
+                    onClick={handleSubmit}
+                    disabled={showProgress}
+                >Create Institute</Button>
+                {progress}
             </Box>
             <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
         </>
