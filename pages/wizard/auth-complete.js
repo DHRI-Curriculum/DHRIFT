@@ -6,7 +6,7 @@ export default function AuthComplete() {
     const urlParams = new URLSearchParams(window.location.search);
     const bc = new BroadcastChannel('auth');
     localStorage.setItem('githubToken', urlParams.get('token'));
-    localStorage.setItem('githubTokenExpiry', dateFns.addDays(new Date(), 1).getTime());
+    localStorage.setItem('githubTokenExpiry', Date.now() + 1000 * 60 * 60 * 24 * 2);
     const message = '{"auth":"complete"}';
     bc.postMessage(message);
     window.close();
