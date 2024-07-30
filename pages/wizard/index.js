@@ -173,6 +173,7 @@ export default function Form(props) {
     );
 
     const permRequest = async () => {
+        console.log('Requesting permissions');
         const APIURL = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + window.location.origin;
         window.authWindow = window.open(APIURL, 'authWindow', 'width=600,height=600', 'rel=opener');
         window.authWindow.focus();
