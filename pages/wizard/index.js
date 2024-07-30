@@ -78,12 +78,6 @@ export default function Form(props) {
     let displayWorkshops = data.workshops.filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'));
     displayWorkshops = displayWorkshops.map(workshop => ({ name: workshop.name.replace('.md', '') }));
 
-    // useEffect(() => {
-    //     const urlParams = new URLSearchParams(window.location.search);
-    //     setInstCreated(urlParams.get('instCreated') === 'true');
-    //     setAuthComplete(urlParams.get('authComplete') === 'true');
-    // }
-    //     , []);
 
     const uploadFiles = async (files) => {
         const addAPIURL = APIURL + 'add_file';
@@ -108,7 +102,7 @@ export default function Form(props) {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify({ token: localStorage.getItem('githubToken'), data })
                     });
                 }
             }
@@ -119,7 +113,7 @@ export default function Form(props) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ token: localStorage.getItem('githubToken'), file })
                 });
             }
         });
@@ -129,6 +123,7 @@ export default function Form(props) {
         function handle_auth_complete(event) {
             const data = JSON.parse(event.data);
             if (data.auth === 'complete') {
+                console.log(localStorage.getItem('githubToken'));
                 checkAuth();
             }
             else {
@@ -144,23 +139,25 @@ export default function Form(props) {
         , []);
 
     const checkAuth = async () => {
-        const cookieAPIURL = APIURL + 'cookie_test';
+        const cookieAPIURL = APIURL + 'session_test';
         const response = await fetch(cookieAPIURL, {
             credentials: 'include',
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({ token: localStorage.getItem('githubToken') })
+        }).then(function (response) {
+           return response.text();
+        }).then(function (data) {
+            if (data === 'Authenticated') {
+                setAuthComplete(true);
+                createInstitute();
+            }
+            else {
+                permRequest();
+            }
         });
-        if (response.ok) {
-            console.log('Authenticated');
-            setAuthComplete(true);
-            // createInstitute();
-        }
-        else {
-            console.log('Not authenticated');
-            // permRequest();
-        }
     }
 
     const permRequest = async () => {
@@ -184,7 +181,7 @@ export default function Form(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ formDataForGithub })
+            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub })
         });
         if (response.ok) {
             console.log('Workshops repo cloned');
@@ -244,7 +241,7 @@ export default function Form(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ formDataForGithub })
+            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub })
         });
         if (response.ok) {
             const data = await response.json();
@@ -736,9 +733,6 @@ export default function Form(props) {
             setSecondStage(false);
         }
     }
-
-
-
 
     const firstStageSection = (
         <>
