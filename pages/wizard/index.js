@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FormControl, InputLabel, Input } from '@mui/material';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, Cookie, Remove } from '@mui/icons-material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -78,12 +78,12 @@ export default function Form(props) {
     let displayWorkshops = data.workshops.filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'));
     displayWorkshops = displayWorkshops.map(workshop => ({ name: workshop.name.replace('.md', '') }));
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setInstCreated(urlParams.get('instCreated') === 'true');
-        setAuthComplete(urlParams.get('authComplete') === 'true');
-    }
-        , []);
+    // useEffect(() => {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     setInstCreated(urlParams.get('instCreated') === 'true');
+    //     setAuthComplete(urlParams.get('authComplete') === 'true');
+    // }
+    //     , []);
 
     const uploadFiles = async (files) => {
         const addAPIURL = APIURL + 'add_file';
@@ -129,8 +129,7 @@ export default function Form(props) {
         function handle_auth_complete(event) {
             const data = JSON.parse(event.data);
             if (data.auth === 'complete') {
-                setAuthComplete(true);
-                createInstitute();
+                checkAuth();
             }
             else {
                 setShowProgress(false);
@@ -156,21 +155,13 @@ export default function Form(props) {
         if (response.ok) {
             console.log('Authenticated');
             setAuthComplete(true);
-            createInstitute();
+            // createInstitute();
         }
         else {
             console.log('Not authenticated');
             permRequest();
         }
     }
-
-    const checkAuthSection = (
-        <div>
-            <h2>Check Authentication</h2>
-            <p>Click the button below to check if you are authenticated with GitHub.</p>
-            <Button onClick={checkAuth}>Check Authentication</Button>
-        </div>
-    );
 
     const permRequest = async () => {
         console.log('Requesting permissions');
@@ -784,6 +775,13 @@ export default function Form(props) {
         </>
     );
 
+    const cookieTestButton = (
+        <>{authComplete ? <div>You are authenticated</div> : <Button onClick={checkAuth}>Check Authentication</Button>}
+
+        </>
+    );
+
+
     // const thirdStageSection = (
     //     <>
 
@@ -810,6 +808,7 @@ export default function Form(props) {
                         <div
                             className='form'
                         >
+                            {cookieTestButton}
                             {firstStage && firstStageSection}
                             {secondStage && secondStageSection}
                             {/* {thirdStage && thirdStageSection} */}
