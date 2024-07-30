@@ -147,7 +147,7 @@ export default function Institute(props) {
 
     const aboutAccordion = (
         <div className='accordion'
-            sx={{
+            style={{
                 marginBottom: '40px',
             }}
         >
