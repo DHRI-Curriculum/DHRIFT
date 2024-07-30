@@ -154,10 +154,12 @@ export default function Form(props) {
             },
         });
         if (response.ok) {
+            console.log('Authenticated');
             setAuthComplete(true);
             createInstitute();
         }
         else {
+            console.log('Not authenticated');
             permRequest();
         }
     }
