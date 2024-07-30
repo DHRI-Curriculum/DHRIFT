@@ -159,7 +159,7 @@ export default function Form(props) {
         }
         else {
             console.log('Not authenticated');
-            permRequest();
+            // permRequest();
         }
     }
 
