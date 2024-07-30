@@ -138,6 +138,13 @@ export default function Form(props) {
     }
         , []);
 
+    useEffect(() => {
+        if (localStorage.getItem('githubTokenExpiry') < new Date().getTime()) {
+            localStorage.removeItem('githubToken');
+            localStorage.removeItem('githubTokenExpiry');
+        }
+    }, []);
+
     const checkAuth = async () => {
         const cookieAPIURL = APIURL + 'session_test';
         const response = await fetch(cookieAPIURL, {
