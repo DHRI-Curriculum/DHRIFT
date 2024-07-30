@@ -730,6 +730,22 @@ export default function Form(props) {
         </>
     );
 
+    const handleStageChange = (e) => {
+        // jump to top of page
+        window.scrollTo(0, 0);
+        if (firstStage) {
+            setFirstStage(false);
+            setSecondStage(true);
+        }
+        else {
+            setFirstStage(true);
+            setSecondStage(false);
+        }
+    }
+
+
+
+
     const firstStageSection = (
         <>
             {formExplanation}
@@ -743,7 +759,7 @@ export default function Form(props) {
             {organizersSection}
             {locationSection()}
             {cloneWorkshopsSection}
-            <Button onClick={() => { setFirstStage(false); setSecondStage(true) }}>Next</Button>
+            <Button onClick={() => { handleStageChange() }}>Next</Button>
         </>
     );
 
@@ -761,7 +777,7 @@ export default function Form(props) {
                 >Create Institute</Button>
                 {progress}
             </Box>
-            <Button onClick={() => { setFirstStage(true); setSecondStage(false) }}>Back</Button>
+            <Button onClick={() => { handleStageChange() }}>Back</Button>
         </>
     );
 
