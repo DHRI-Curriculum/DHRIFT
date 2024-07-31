@@ -224,7 +224,7 @@ export default function Institute(props) {
 
 
     const instContainer = (
-        <Fade in={parsedYAML && parsedYAML.event} timeout={500}>
+        <Fade in={parsedYAML && parsedYAML.event || parsedYAML ? true : false}>
             <Container
                 disableGutters={true}
                 maxWidth={'md'}

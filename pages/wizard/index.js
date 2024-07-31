@@ -11,7 +11,10 @@ import { Add, Remove } from '@mui/icons-material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import CircularProgress from '@mui/material/CircularProgress';
+import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
+import { useRef } from 'react';
 
 
 export default function Form(props) {
@@ -20,27 +23,21 @@ export default function Form(props) {
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
     const [firstStage, setFirstStage] = useState(true);
-    const [secondStage, setSecondStage] = useState(false);
-    // const [thirdStage, setThirdStage] = useState(false);
-    // const [fourthStage, setFourthStage] = useState(false);
+    const [formError, setFormError] = useState(false);
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
-        // institution: 'CUNY Graduate Center',
-        // event: 'Digital Research Institute',
-        // description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
-        // herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
-        // // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
-        // // registertext: 'See a Demonstration Institute',
-        // venue: 'The Graduate Center, CUNY',
-        // location: '365 5th Ave, New York, NY 10016',
-        // dateStart: '2025-01-01',
-        // endDate: '2025-01-01',
-        // workshopsuser: 'dhri-curriculum',
-        // workshopsrepo: 'workshops',
-        // cloneWorkshops: 'false',
+        institution: '',
+        event: '',
+        description: '',
+        herodescription: '',
+        venue: '',
+        location: '',
+        dateStart: '',
+        endDate: '',
+        workshopsuser: 'dhri-curriculum',
+        workshopsrepo: 'workshops',
 
-        // // format: 'online, hybrid, in-person',
-        // format: 'online',
+        format: '',
         sponsors: [{ name: '', link: '' }],
         organizers: [{ name: '', email: '' }],
         contact: [{ name: '', email: '' }],
@@ -61,6 +58,7 @@ export default function Form(props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
+    const formRef = useRef();
 
     const realAPIURL = 'https://run-dhrift-d5tkoh5ciq-uc.a.run.app/';
     const localAPIURL = 'http://localhost:8080/';
@@ -167,9 +165,22 @@ export default function Form(props) {
     }
 
     const handleSubmit = async (e) => {
+        setFormError(false);
         e.preventDefault();
-        setShowProgress(true);
-        checkAuth();
+        if (formRef.current.reportValidity()) {
+            setShowProgress(true);
+            // if (!localStorage.getItem('githubToken')) {
+            //     permRequest();
+            // }
+            // else {
+            //     checkAuth();
+            // }
+        }
+        else {
+            setFormError(true);
+            // for form item if required and empty, set error
+            console.log(formRef.current);
+        }
     }
 
     const cloneWorkshopsRepo = async (formDataForGithub) => {
@@ -401,7 +412,13 @@ export default function Form(props) {
     const checkboxtoHaveRegistration = (
         <div>
             <h3>Registration Information</h3>
-            <input type="checkbox" name="haveRegistration" checked={formData.haveRegistration} onChange={handleInputChange} />
+            {/* <input type="checkbox" name="haveRegistration" checked={formData.haveRegistration} onChange={handleInputChange} /> */}
+            <Switch
+                checked={formData.haveRegistration}
+                onChange={handleInputChange}
+                name="haveRegistration"
+                inputProps={{ 'aria-label': 'controlled' }}
+            />
             <label>Include Registration Information</label>
             {formData.haveRegistration && registrationFormSection}
         </div>
@@ -410,7 +427,12 @@ export default function Form(props) {
     const cloneWorkshopsSection = (
         <>
             <div>
-                <input type="checkbox" name="cloneWorkshops" checked={formData.cloneWorkshops} onChange={handleInputChange} />
+                <Checkbox
+                    checked={formData.cloneWorkshops}
+                    onChange={handleInputChange}
+                    name="cloneWorkshops"
+                    inputProps={{ 'aria-label': 'controlled' }}
+                />
                 <label>Clone Workshops Repository</label>
             </div>
         </>
@@ -445,14 +467,14 @@ export default function Form(props) {
     );
 
     const formatSection = (
-        <FormControl component="fieldset">
+        <>
             <FormLabel component="legend">Format</FormLabel>
             <RadioGroup row aria-label="format" name="format" value={formData.format} onChange={handleInputChange}>
                 <FormControlLabel value="online" control={<Radio />} label="Online" />
                 <FormControlLabel value="hybrid" control={<Radio />} label="Hybrid" />
                 <FormControlLabel value="in-person" control={<Radio />} label="In-Person" />
             </RadioGroup>
-        </FormControl>
+        </>
     );
 
     const locationSection = function () {
@@ -509,6 +531,20 @@ export default function Form(props) {
         }
     }
 
+    const longDescriptionSection = (
+        <Stack spacing={2}>
+            <h3>Long Description</h3>
+            <p>
+                Write an up to 150 word description of your institute for attendees. This space may describe what the desired outcome of the event will be, what kind of skills or projects your event will focus on, or the purpose of the institute.
+            </p>
+            <TextField label="Long Description" type="text" name="longDescription" value={formData.longdescription} multiline rows={4}
+                onChange={handleInputChange} />
+            <h3>Social Media</h3>
+            <TextField label="Social Media" type="text" name="socialMedia" value={formData.socialMedia} onChange={handleInputChange} />
+            <TextField label="link" type="text" name="socialmedialink" value={formData.socialmedialink} onChange={handleInputChange} />
+        </Stack>
+    );
+
     const generalInfoSection = (
         <Stack
             spacing={2}>
@@ -516,25 +552,33 @@ export default function Form(props) {
             <p>The information from this page will appear at the top of the page overlaid on the hero-image. See Creating a DHRIFT Landing Page (?) for an example. Fields with an * are required.</p>
             <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formData.event}
                 required
+                error={formError && !formData.event}
+                helperText={formError && !formData.event ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
             <Stack spacing={2} direction={'row'}>
-                <TextField label="Start Date" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange} />
-                <TextField label="End Date" type="date" name="endDate" value={formData.endDate}
+                <TextField type="date" name="dateStart" value={formData.dateStart}
+                    helperText="Start Date" onChange={handleInputChange} />
+                <TextField
+                    helperText="End Date" type="date" name="endDate" value={formData.endDate}
                     onChange={handleInputChange} />
                 <TextField type="text" name='herodescription' label="Tagline"
                     value={formData.herodescription}
+                    helperText="Max 10 words"
                     style={{ width: '400px' }}
-                    helperText="Please enter your name"
                     onChange={handleInputChange} />
                 {formatSection}
             </Stack>
             <TextField label='Host Organization' type='text' name='institution' value={formData.institution}
                 required
+                error={formError && !formData.institution}
+                helperText={formError && !formData.institution ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
             <TextField label="Short Description" type="text" name="description" value={formData.description} multiline rows={3}
                 required
+                error={formError && !formData.description}
+                helperText={formError && !formData.description ? 'This field is required' : ''}
                 onChange={handleInputChange} />
         </Stack>
     );
@@ -643,41 +687,44 @@ export default function Form(props) {
                         <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
                         />
-                        <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
-                        <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                        <TextField label="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
+                        <TextField
+                            helperText="Date"
+                            type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
+                        <TextField
+                            helperText="Start Time"
+                            type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
+                        <TextField helperText="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
                     </Stack>
                     <br />
                     <Stack
                         spacing={2}>
                         <TextField label="Description" type="text" value={session.description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} multiline rows={4}
                         />
-                        <FormControl>
-                            <Stack
-                                spacing={2}
-                                direction={'row'}>
-                                <TextField
-                                    select
-                                    label="DHRIFT Workshop"
-                                    value={session.workshop}
-                                    style={{ width: '400px' }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
-                                >
-                                    {displayWorkshops && displayWorkshops.map((workshop, i) => (
-                                        <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
-                                    ))}
-                                    <MenuItem value={''}>None</MenuItem>
-                                </TextField>
-                                <TextField label="Location" type="text" value={session.location} onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
-                                    style={{ width: '400px' }}
-                                />
-                            </Stack>
-                        </FormControl>
+                        <Stack
+                            spacing={2}
+                            direction={'row'}>
+                            <TextField
+                                select
+                                label="DHRIFT Workshop"
+                                value={session.workshop}
+                                style={{ width: '400px' }}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
+                            >
+                                {displayWorkshops && displayWorkshops.map((workshop, i) => (
+                                    <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
+                                ))}
+                                <MenuItem value={''}>None</MenuItem>
+                            </TextField>
+                            <TextField label="Location" type="text" value={session.location} onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
+                                style={{ width: '400px' }}
+                            />
+                        </Stack>
+                        <br />
                     </Stack>
 
                     {session.instructors && session.instructors.map((instructor, i) => (
                         <Stack
-                            spacing={2}
+                            spacing={1}
                             direction={'row'}
                             key={'instructor' + i}>
                             <TextField label={`Instructor ${i + 1}`} type="text" value={instructor.name}
@@ -700,7 +747,10 @@ export default function Form(props) {
                     </Button>
                     {session.helpers && session.helpers.map((helper, i) => (
                         <>
-                            <div key={'helper' + i}>
+                            <Stack
+                                spacing={1}
+                                direction={'row'}
+                                key={'helper' + i}>
                                 <TextField label={`Assistant ${i + 1}`} type="text" value={helper.name}
                                     style={{
                                         width: '400px',
@@ -711,7 +761,7 @@ export default function Form(props) {
                                     style={{ width: '400px' }}
                                     onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)} />
                                 <Button type="button" onClick={() => handleRemove('helpers', i, index)}><Remove /></Button>
-                            </div>
+                            </Stack>
                         </>
                     ))}
                     <Button type="button" onClick={() => handleAdd('helpers', index)}>
@@ -750,13 +800,21 @@ export default function Form(props) {
             {checkboxtoHaveRegistration}
             {organizersSection}
             {locationSection()}
+            {longDescriptionSection}
             {instituteDetailsSection}
-            {cloneWorkshopsSection}
             {sessionsSection}
             {logoUpload}
             {heroImageUpload}
-            Show all workshops?
-            <input type="checkbox" name="showWorkshops" checked={formData.showworkshops} onChange={handleInputChange} />
+            {cloneWorkshopsSection}
+            <div>
+                <Checkbox
+                    checked={formData.showWorkshops}
+                    onChange={handleInputChange}
+                    name="showWorkshops"
+                    inputProps={{ 'aria-label': 'controlled' }}
+                />
+                <label>Show Workshops</label>
+            </div>
             <Box sx={{ display: 'flex' }}>
                 <Button
                     onClick={handleSubmit}
@@ -766,7 +824,6 @@ export default function Form(props) {
             </Box>
         </>
     );
-
 
     return (
         <>
@@ -778,13 +835,14 @@ export default function Form(props) {
                         gitUser={'dhri-curriculum'} gitRepo={'workshops'}
                     />
                     <Container>
-                        <div
+                        <form
                             className='form'
+                            ref={formRef}
                         >
-                            {firstStage && firstStageSection}
-                            {/* {thirdStage && thirdStageSection} */}
-                            {/* {fourthStage && fourthStageSection} */}
-                        </div>
+                            <FormControl>
+                                {firstStage && firstStageSection}
+                            </FormControl>
+                        </form>
                     </Container>
                 </>
             )}
