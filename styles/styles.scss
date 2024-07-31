@@ -1031,6 +1031,19 @@ nav.sidenav {
 
 // Forms 
 .form {
+  h2{
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  h4 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
 
   button {
     background-color: $primary-color-bark;
@@ -1041,6 +1054,15 @@ nav.sidenav {
 
     &:hover {
       background-color: $primary-color-sky;
+    }
+  }
+  .sessions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    h4{
+      margin-bottom: 20px;
     }
   }
 

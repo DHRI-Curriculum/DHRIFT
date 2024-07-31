@@ -1,9 +1,13 @@
 import Header from '../../components/Header';
 import { useEffect, useState } from "react";
 import { FormControl, InputLabel, Input } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
-import { Add, Cookie, Remove } from '@mui/icons-material';
+import { Add, Remove } from '@mui/icons-material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -21,52 +25,41 @@ export default function Form(props) {
     // const [fourthStage, setFourthStage] = useState(false);
     const [formData, setFormData] = useState({
         organizers: [{ name: '', email: '' }],
-        institution: 'CUNY Graduate Center',
-        event: 'Digital Research Institute',
-        description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
-        herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
-        // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
-        // registertext: 'See a Demonstration Institute',
-        venue: 'The Graduate Center, CUNY',
-        location: '365 5th Ave, New York, NY 10016',
-        dateStart: '2025-01-01',
-        endDate: '2025-01-01',
-        workshopsuser: 'dhri-curriculum',
-        workshopsrepo: 'workshops',
-        cloneWorkshops: 'false',
+        // institution: 'CUNY Graduate Center',
+        // event: 'Digital Research Institute',
+        // description: 'The Digital Research Institute is a week-long event that introduces participants to digital research methods and tools. Participants will learn how to use the command line, work with data, and create visualizations. The institute is open to all skill levels, from beginners to advanced users.',
+        // herodescription: 'Learn digital research methods and tools at the Digital Research Institute.',
+        // // registerlink: 'https://app.dhrift.org/inst/?instUser=GC-DRI&instRepo=GCDRI24Schedule',
+        // // registertext: 'See a Demonstration Institute',
+        // venue: 'The Graduate Center, CUNY',
+        // location: '365 5th Ave, New York, NY 10016',
+        // dateStart: '2025-01-01',
+        // endDate: '2025-01-01',
+        // workshopsuser: 'dhri-curriculum',
+        // workshopsrepo: 'workshops',
+        // cloneWorkshops: 'false',
 
-        // format: 'online, hybrid, in-person',
-        format: 'online',
-        sponsors: [{ name: 'GCDRI', link: 'https://gcdri.commons.gc.cuny.edu/' }],
-        organizers: [{ name: 'Digital Research Institute', email: 'email@gc.cuny.edu' }],
-        contact: [{ name: 'Digital Research Institute', email: 'contact@gc.cuny.edu' }],
+        // // format: 'online, hybrid, in-person',
+        // format: 'online',
+        sponsors: [{ name: '', link: '' }],
+        organizers: [{ name: '', email: '' }],
+        contact: [{ name: '', email: '' }],
 
         sessions: [
             {
-                date: '2023-03-01',
-                time: '09:00',
-                title: 'Welcome to the DHRI',
-                description: 'This is the first day of the DHRI. We will introduce ourselves and the DHRI, and discuss the goals of the institute.',
+                date: '',
+                time: '',
+                title: '',
+                description: '',
                 workshop: '',
-                location: 'The Graduate Center, CUNY',
-                instructors: [{ name: 'Steve Zweibel', email: '' }],
-                helpers: [{ name: 'Zachary Lloyd', email: '' }]
-            },
-            {
-                date: '2023-03-01',
-                time: '11:00',
-                title: 'Introduction to the Command Line',
-                description: 'This workshop will introduce you to the command line, a text-based interface for interacting with your computer. We will cover basic commands, file management, and navigating the file system.',
-                workshop: 'command-line',
-                location: 'The Graduate Center, CUNY',
-                instructors: [{ name: 'Stephen Zweibel', email: '' }],
-                helpers: [{ name: 'Zachary Lloyd', email: '' }]
+                location: '',
+                instructors: [{ name: '', email: '' }],
+                helpers: [{ name: '', email: '' }]
             },
         ],
     });
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
-
 
 
     const realAPIURL = 'https://run-dhrift-d5tkoh5ciq-uc.a.run.app/';
@@ -155,7 +148,7 @@ export default function Form(props) {
             },
             body: JSON.stringify({ token: localStorage.getItem('githubToken') })
         }).then(function (response) {
-           return response.text();
+            return response.text();
         }).then(function (data) {
             if (data === 'Authenticated') {
                 setAuthComplete(true);
@@ -168,7 +161,6 @@ export default function Form(props) {
     }
 
     const permRequest = async () => {
-        console.log('Requesting permissions');
         const APIURL = 'https://github.com/login/oauth/authorize?scope=repo, read:user&client_id=b5be98ebcdc9cdf67526&state=' + window.location.origin;
         window.authWindow = window.open(APIURL, 'authWindow', 'width=600,height=600', 'rel=opener');
         window.authWindow.focus();
@@ -355,22 +347,20 @@ export default function Form(props) {
     const formExplanation = (
         <div>
             <h2>Create a DHRIFT Community Landing Page</h2>
-            <p>The following form can be used to generate a landing page for organizing and leading workshops based on DHRIFT’s menu of workshops. By completing the fields below, you will produce a web page that can be used to organize a digital humanities learning event, which might include a single workshop on one day or scale to a multi-day event with multiple instructors, workshops, and even locations. For examples, please see the DHRIFT Gallery. Once generated, the resulting page will display the information you provide below.</p>
+            <p>The following wizard can be used to generate a website for organizing and leading workshops based on the DHRIFT Core curricula. It will prompt you to answer questions about your event, then ask you to provide DHRIFT with access to your GitHub account. The process will end by creating a new repository in your GitHub account with a DHRIFT repository that will combine your answers with DHRIFT content.</p>
 
-            <h2>Getting Started</h2>
-            <p>The wizard will require you to log into your GitHub account, and the generated page will live as a github page in your git-hub account; however, all of the workshops you add will continue to be hosted on the DHRIFT site.</p>
-            <p>The information you provide below will be stored in a file in your repository, and the resulting page will be hosted on GitHub Pages.</p>
-            <p>
-                NOTE: You may use this page to update previous information on your DHRIFT landing page; however, this form currently overwrites all of the content on any previous DHRIFT page you may have saved in the same location.
-                What you will need:
-                Basic information about your institute
-                Dates and times for workshops and events
-                Names of instructors and helpers
-                A github account and all of your login information on hand
+            <h2>Before You Begin</h2>
+            <p>For an optimal experience, assemble key information about your institute in advance. Institute landing pages can be recreated; however, each new iteration will currently overwrite a previous institute, so you will want to save copies of your previous answers.</p>
 
-                For more information about how to make the most out of your DHRIFT landing page, please see our documentation here… wherever we do that. </p>
+            <p>Information you will need includes:</p>
+            <ul>
+                <li>A title, description, format, location, and contact information for your event.</li>
+                <li>Dates, times, and locations for workshops</li>
+                <li>Names of instructors and assistants</li>
+                <li>A GitHub account and login information</li>
+            </ul>
 
-
+            <p>For more information about how to make the most out of your DHRIFT landing page, please see our documentation. </p>
         </div>
     );
 
@@ -390,24 +380,27 @@ export default function Form(props) {
         </div>
     );
 
-    const registrationDescription = (
-        <div>
-            <h2>Participant Application and / or Registration Information</h2>
-            <p>You can customize your DHRIFT landing page to include links to an application or registration page. DHRIFT does not include a registration page. We recommend that you use another service, such as a Google form or Zoom registration; however, you can turn this section on or off here. Any information provided in this section will appear directly below the event description.</p>
-        </div>
-    );
-
     const registrationFormSection = (
-        <div>
-            <h2>Registration Information</h2>
-            <p>Enter the URL for your registration page below. This will be displayed on your DHRIFT landing page.</p>
-            <TextField label="Registration Link" type="text" name="registerLink" value={formData.registerLink} onChange={handleInputChange} />
-            <TextField label="Registration Text" type="text" name="registerText" value={formData.registerText} onChange={handleInputChange} />
-        </div>
+        <Stack
+            direction={'row'}
+            spacing={2}
+        >
+            <TextField label="Registration or Application Link" type="text" name="registerLink" value={formData.registerLink} onChange={handleInputChange}
+                style={{
+                    width: '400px',
+                }}
+            />
+            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formData.registerText} onChange={handleInputChange}
+                style={{
+                    width: '400px',
+                }}
+            />
+        </Stack>
     );
 
     const checkboxtoHaveRegistration = (
         <div>
+            <h3>Registration Information</h3>
             <input type="checkbox" name="haveRegistration" checked={formData.haveRegistration} onChange={handleInputChange} />
             <label>Include Registration Information</label>
             {formData.haveRegistration && registrationFormSection}
@@ -452,16 +445,14 @@ export default function Form(props) {
     );
 
     const formatSection = (
-        <div>
-            <h2>Format</h2>
-            <p>What is the format of your event?</p>
-            <input type="radio" name="format" value="online" checked={formData.format === 'online'} onChange={handleInputChange} />
-            <label>Online</label>
-            <input type="radio" name="format" value="hybrid" checked={formData.format === 'hybrid'} onChange={handleInputChange} />
-            <label>Hybrid</label>
-            <input type="radio" name="format" value="in-person" checked={formData.format === 'in-person'} onChange={handleInputChange} />
-            <label>In-Person</label>
-        </div>
+        <FormControl component="fieldset">
+            <FormLabel component="legend">Format</FormLabel>
+            <RadioGroup row aria-label="format" name="format" value={formData.format} onChange={handleInputChange}>
+                <FormControlLabel value="online" control={<Radio />} label="Online" />
+                <FormControlLabel value="hybrid" control={<Radio />} label="Hybrid" />
+                <FormControlLabel value="in-person" control={<Radio />} label="In-Person" />
+            </RadioGroup>
+        </FormControl>
     );
 
     const locationSection = function () {
@@ -469,37 +460,37 @@ export default function Form(props) {
             return (
                 <Stack
                     spacing={2}>
-                    <h2>Location</h2>
-                    <p>Enter the URL for your online platform below. This will be displayed on your DHRIFT landing page.</p>
-                    <TextField label="Online Platform Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
+                    <h3>Location</h3>
+                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
                         style={{
                             width: '400px',
                             marginRight: '10px',
                             marginBottom: '10px'
                         }}
                         onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
                 </Stack>
             );
         }
         if (formData.format === 'hybrid') {
             return (
                 <Stack spacing={2}>
-                    <h2>Location</h2>
-                    <p>Enter the URL for your online platform below. This will be displayed on your DHRIFT landing page.</p>
-                    <TextField label="Online Platform Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
+                    <h3>Location</h3>
+                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
                         style={{ width: '400px' }}
                         onChange={handleInputChange} />
                     <p>Enter the venue and address for your event below. This will be displayed on your DHRIFT landing page.</p>
                     <TextField label="Venue" type="text" name="venue" value={formData.venue} onChange={handleInputChange} />
                     <TextField label="Location" type="text" name="location" value={formData.location} onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
                 </Stack>
             );
         }
-        else {
+        if (formData.format === 'in-person') {
             return (
                 <Stack spacing={2}>
-                    <h2>Location</h2>
-                    <p>Enter the venue and address for your event below. This will be displayed on your DHRIFT landing page.</p>
+                    <h3>Location</h3>
+
                     <TextField label="Venue" type="text" name="venue" value={formData.venue}
                         style={{
                             width: '400px',
@@ -512,23 +503,39 @@ export default function Form(props) {
                             marginBottom: '10px'
                         }}
                         onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
                 </Stack>
             );
         }
     }
 
-    const eventDescriptionSection = (
+    const generalInfoSection = (
         <Stack
             spacing={2}>
-            <TextField label="Event Title" type="text" name="event" value={formData.event}
+            <h2>General Information</h2>
+            <p>The information from this page will appear at the top of the page overlaid on the hero-image. See Creating a DHRIFT Landing Page (?) for an example. Fields with an * are required.</p>
+            <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formData.event}
+                required
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
-            <TextField type="text" name='herodescription' label="Hero Description"
-                value={formData.herodescription}
+            <Stack spacing={2} direction={'row'}>
+                <TextField label="Start Date" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange} />
+                <TextField label="End Date" type="date" name="endDate" value={formData.endDate}
+                    onChange={handleInputChange} />
+                <TextField type="text" name='herodescription' label="Tagline"
+                    value={formData.herodescription}
+                    style={{ width: '400px' }}
+                    helperText="Please enter your name"
+                    onChange={handleInputChange} />
+                {formatSection}
+            </Stack>
+            <TextField label='Host Organization' type='text' name='institution' value={formData.institution}
+                required
+                style={{ width: '400px' }}
                 onChange={handleInputChange} />
-            <TextField label="Description" type="text" name="description" value={formData.description} multiline rows={4}
+            <TextField label="Short Description" type="text" name="description" value={formData.description} multiline rows={3}
+                required
                 onChange={handleInputChange} />
-            <TextField label='Institution' type='text' name='institution' value={formData.institution} onChange={handleInputChange} />
         </Stack>
     );
 
@@ -572,6 +579,9 @@ export default function Form(props) {
                     <TextField label={`Sponsor ${index + 1} Link`} type="text" value={sponsor.link}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)} />
+                    <TextField label={`Sponsor ${index + 1} Notes`} type="text" value={sponsor.notes}
+                        style={{ width: '400px' }}
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'notes', e.target.value)} />
                     {formData.sponsors.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('sponsors', index)}>Remove Sponsor</Button>
                     )}
@@ -610,9 +620,19 @@ export default function Form(props) {
         </Stack>
     );
 
-    const sessionsSection = (
+    const instituteDetailsSection = (
         <Stack spacing={2}>
-            <h4>Sessions</h4>
+            <h2>Institute Details</h2>
+            {sponsorsSection}
+            {contactSection}
+        </Stack>
+    );
+
+    const sessionsSection = (
+        <Stack
+            className='sessions'
+            spacing={2}>
+            <h2>Sessions</h2>
             {formData.sessions.map((session, index) => (
                 <div
                     style={{ border: '1px solid black', padding: '10px', margin: '10px' }}
@@ -620,67 +640,60 @@ export default function Form(props) {
                     <h4>Session {index + 1}</h4>
                     <Stack spacing={2}
                         direction={'row'}>
-                        <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
-                        <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                        <TextField label="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
                         <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
                         />
+                        <TextField label="Date" type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
+                        <TextField label="Time" type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
+                        <TextField label="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
                     </Stack>
                     <br />
-                    <Stack spacing={2}>
+                    <Stack
+                        spacing={2}>
                         <TextField label="Description" type="text" value={session.description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} multiline rows={4}
                         />
                         <FormControl>
-                            <TextField
-                                select
-                                label="Workshop"
-                                value={session.workshop}
-                                style={{ width: '400px' }}
-                                onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
-                            >
-                                {displayWorkshops && displayWorkshops.map((workshop, i) => (
-                                    <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
-                                ))}
-                                <MenuItem value={''}>None</MenuItem>
-                            </TextField>
+                            <Stack
+                                spacing={2}
+                                direction={'row'}>
+                                <TextField
+                                    select
+                                    label="DHRIFT Workshop"
+                                    value={session.workshop}
+                                    style={{ width: '400px' }}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
+                                >
+                                    {displayWorkshops && displayWorkshops.map((workshop, i) => (
+                                        <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
+                                    ))}
+                                    <MenuItem value={''}>None</MenuItem>
+                                </TextField>
+                                <TextField label="Location" type="text" value={session.location} onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
+                                    style={{ width: '400px' }}
+                                />
+                            </Stack>
                         </FormControl>
-                        <Stack
-                            direction={'row'}
-                            spacing={2}
-                            style={{ marginBottom: '10px' }}
-                        >
-
-                            <TextField label="Location" type="text" value={session.location} onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
-                                style={{ width: '400px' }}
-                            />
-                        </Stack>
                     </Stack>
 
                     {session.instructors && session.instructors.map((instructor, i) => (
-                        <>
-                            <div
-                                key={'instructor' + i}
+                        <Stack
+                            spacing={2}
+                            direction={'row'}
+                            key={'instructor' + i}>
+                            <TextField label={`Instructor ${i + 1}`} type="text" value={instructor.name}
                                 style={{
-                                    display: 'flex', flexDirection: 'row', justifyContent: '', alignItems: 'flex-start', marginTop: '10px',
-                                    marginBottom: '10px'
+                                    width: '400px',
+                                    marginRight: '10px'
                                 }}
-                            >
-                                <TextField label={`Instructor ${i + 1}`} type="text" value={instructor.name}
-                                    style={{
-                                        width: '400px',
-                                        marginRight: '10px'
-                                    }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'name', i)}
-                                />
-                                <TextField label={`Instructor ${i + 1} Email`} type="email" value={instructor.email}
-                                    style={{ width: '400px' }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', 1)} />
-                                {session.instructors.length > 1 && (
-                                    <Button type="button" onClick={() => handleRemove('instructors', i, index)}><Remove /></Button>
-                                )}
-                            </div>
-                        </>
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'name', i)}
+                            />
+                            <TextField label={`Instructor ${i + 1} Email`} type="email" value={instructor.email}
+                                style={{ width: '400px' }}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', 1)} />
+                            {session.instructors.length > 1 && (
+                                <Button type="button" onClick={() => handleRemove('instructors', i, index)}><Remove /></Button>
+                            )}
+                        </Stack>
                     ))}
                     <Button type="button" onClick={() => handleAdd('instructors', index)}>
                         <Add />
@@ -688,13 +701,13 @@ export default function Form(props) {
                     {session.helpers && session.helpers.map((helper, i) => (
                         <>
                             <div key={'helper' + i}>
-                                <TextField label={`Helper ${i + 1}`} type="text" value={helper.name}
+                                <TextField label={`Assistant ${i + 1}`} type="text" value={helper.name}
                                     style={{
                                         width: '400px',
                                         marginRight: '10px'
                                     }}
                                     onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)} />
-                                <TextField label={`Helper ${i + 1} Email`} type="email" value={helper.email}
+                                <TextField label={`Assistant ${i + 1} Email`} type="email" value={helper.email}
                                     style={{ width: '400px' }}
                                     onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)} />
                                 <Button type="button" onClick={() => handleRemove('helpers', i, index)}><Remove /></Button>
@@ -717,17 +730,6 @@ export default function Form(props) {
         </Stack>
     );
 
-
-    const dateSection = (
-        <>
-            <h2>Date(s)</h2>
-            <TextField label="Date Start" type="date" name="dateStart" value={formData.dateStart} onChange={handleInputChange}
-                style={{ marginRight: '10px' }}
-            />
-            <TextField label="End Date" type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} />
-        </>
-    );
-
     const handleStageChange = (e) => {
         // jump to top of page
         window.scrollTo(0, 0);
@@ -744,22 +746,12 @@ export default function Form(props) {
     const firstStageSection = (
         <>
             {formExplanation}
-            {dateSection}
-            {registrationDescription}
-            {eventDescriptionSection}
-            {sponsorsSection}
-            {contactSection}
+            {generalInfoSection}
             {checkboxtoHaveRegistration}
-            {formatSection}
             {organizersSection}
             {locationSection()}
+            {instituteDetailsSection}
             {cloneWorkshopsSection}
-            <Button onClick={() => { handleStageChange() }}>Next</Button>
-        </>
-    );
-
-    const secondStageSection = (
-        <>
             {sessionsSection}
             {logoUpload}
             {heroImageUpload}
@@ -772,29 +764,9 @@ export default function Form(props) {
                 >Create Institute</Button>
                 {progress}
             </Box>
-            <Button onClick={() => { handleStageChange() }}>Back</Button>
         </>
     );
 
-    const cookieTestButton = (
-        <>{authComplete ? <div>You are authenticated</div> : <Button onClick={checkAuth}>Check Authentication</Button>}
-
-        </>
-    );
-
-
-    // const thirdStageSection = (
-    //     <>
-
-    //         <Button onClick={() => { setSecondStage(true); setThirdStage(false) }}>Back</Button>
-    //     </>
-    // );
-
-    // const fourthStageSection = (
-    //     <>
-
-    //     </>
-    // );
 
     return (
         <>
@@ -809,9 +781,7 @@ export default function Form(props) {
                         <div
                             className='form'
                         >
-                            {cookieTestButton}
                             {firstStage && firstStageSection}
-                            {secondStage && secondStageSection}
                             {/* {thirdStage && thirdStageSection} */}
                             {/* {fourthStage && fourthStageSection} */}
                         </div>
