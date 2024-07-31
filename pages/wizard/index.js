@@ -169,17 +169,15 @@ export default function Form(props) {
         e.preventDefault();
         if (formRef.current.reportValidity()) {
             setShowProgress(true);
-            // if (!localStorage.getItem('githubToken')) {
-            //     permRequest();
-            // }
-            // else {
-            //     checkAuth();
-            // }
+            if (!localStorage.getItem('githubToken')) {
+                permRequest();
+            }
+            else {
+                checkAuth();
+            }
         }
         else {
             setFormError(true);
-            // for form item if required and empty, set error
-            console.log(formRef.current);
         }
     }
 
