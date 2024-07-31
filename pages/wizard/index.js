@@ -734,7 +734,8 @@ export default function Form(props) {
                             />
                             <TextField label={`Instructor ${i + 1} Email`} type="email" value={instructor.email}
                                 style={{ width: '400px' }}
-                                onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', 1)} />
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', i)}
+                            />
                             {session.instructors.length > 1 && (
                                 <Button type="button" onClick={() => handleRemove('instructors', i, index)}><Remove /></Button>
                             )}
