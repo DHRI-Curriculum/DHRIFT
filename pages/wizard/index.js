@@ -1,10 +1,6 @@
 import Header from '../../components/Header';
 import { useEffect, useState } from "react";
-import { FormControl, InputLabel, Input } from '@mui/material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+import { FormControl, InputLabel } from '@mui/material';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
 import { Add, Remove } from '@mui/icons-material';
@@ -93,7 +89,7 @@ export default function Form(props) {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ token: localStorage.getItem('githubToken'), data })
+                        body: JSON.stringify({ token: localStorage.getItem('githubToken'), data: data })
                     });
                 }
             }
@@ -104,7 +100,7 @@ export default function Form(props) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ token: localStorage.getItem('githubToken'), file })
+                    body: JSON.stringify({ token: localStorage.getItem('githubToken'), file: file })
                 });
             }
         });
@@ -466,12 +462,19 @@ export default function Form(props) {
 
     const formatSection = (
         <>
-            <FormLabel component="legend">Format</FormLabel>
-            <RadioGroup row aria-label="format" name="format" value={formData.format} onChange={handleInputChange}>
-                <FormControlLabel value="online" control={<Radio />} label="Online" />
-                <FormControlLabel value="hybrid" control={<Radio />} label="Hybrid" />
-                <FormControlLabel value="in-person" control={<Radio />} label="In-Person" />
-            </RadioGroup>
+        <InputLabel id="format">Format</InputLabel>
+        <TextField
+            select
+            label="Format"
+            value={formData.format}
+            onChange={handleInputChange}
+            name="format"
+            style={{ width: '400px' }}
+        >
+            <MenuItem value={'online'}>Online</MenuItem>
+            <MenuItem value={'hybrid'}>Hybrid</MenuItem>
+            <MenuItem value={'in-person'}>In-Person</MenuItem>
+        </TextField>
         </>
     );
 
