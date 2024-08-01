@@ -143,8 +143,8 @@ export default function Institute(props) {
                             console.log(contact)
                             if (contact.name !== '') {
                                 return <>
-                                    <p key={index}>{contact.name}</p>
-                                    <p>{contact.email}</p>
+                                    <h4>{contact.name}</h4>
+                                    {contact.email && <p>Email: <a href={`mailto ${contact.email}`}>{contact.email}</a></p>}
                                 </>
                             }
                         }
