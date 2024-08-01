@@ -96,24 +96,34 @@ export default function Institute(props) {
         <>
             <div>
                 {parsedYAML && parsedYAML.organizers &&
+                parsedYAML.organizers.some(organizer => organizer.name !== '') &&
                     <>
                         <h3>Organizers</h3>
                         <ul>
                             {parsedYAML.organizers.map((organizer, index) => {
-                                if (organizer.name !== ''){
-                                return <li key={index}>{organizer.name}</li>
+                                if (organizer.name !== '') {
+                                    if (organizer.email) {
+                                        return <li key={index}>{organizer.name} - <a href={`mailto:${organizer.email}`}>{organizer.email}</a></li>
+                                    }
+                                    else {
+                                    return <li key={index}>{organizer.name}</li>
+                                    }
                                 }
                             })}
                         </ul>
                     </>
                 }
                 {parsedYAML && parsedYAML.sponsors &&
+                parsedYAML.sponsors.some(sponsor => sponsor.name !== '') &&
                     <>
                         <h3>Sponsors</h3>
                         <ul>
                             {parsedYAML.sponsors.map((sponsor, index) => {
-                                if (sponsor.name !== ''){
-                                return <li key={index}><a href={sponsor.link}>{sponsor.name}</a></li>
+                                if (sponsor.name !== '') {
+                                    return <>
+                                        <li key={index}><a href={sponsor.link}>{sponsor.name}</a></li>
+                                        {sponsor.notes && <p>{sponsor.notes}</p>}
+                                    </>
                                 }
                             })}
                         </ul>
@@ -125,11 +135,13 @@ export default function Institute(props) {
                         <p>{parsedYAML.location}</p>
                     </>
                 }
-                {parsedYAML && parsedYAML.contact &&
+                {parsedYAML && parsedYAML.contact && 
+                parsedYAML.contact.some(contact => contact.name !== '') &&
                     <>
-                        <h3>Contact</h3>
+                        <h3>Contacts</h3>
                         {parsedYAML.contact.map((contact, index) => {
-                            if (contact.name !== undefined) {
+                            console.log(contact)
+                            if (contact.name !== '') {
                                 return <>
                                     <p key={index}>{contact.name}</p>
                                     <p>{contact.email}</p>
@@ -140,7 +152,19 @@ export default function Institute(props) {
                     </>
                 }
                 <p>{date}</p>
-                <p>{parsedYAML && parsedYAML.venue}</p>
+                {parsedYAML && parsedYAML.venue &&
+                <>
+                    <h3>Venue</h3>
+                    <p>{parsedYAML.venue}</p>
+                </>
+                }
+
+                {parsedYAML && parsedYAML.longDescription &&
+                    <>
+                        <h3>Description</h3>
+                        <p>{parsedYAML.longDescription}</p>
+                    </>
+                }
             </div>
         </>
     )
@@ -190,12 +214,11 @@ export default function Institute(props) {
         <>
             <div className='inst-description'>
                 {parsedYAML && <p>{parsedYAML.description}</p>}
-                {
-                    parsedYAML && parsedYAML.registerlink &&
+                {parsedYAML && (parsedYAML.registerlink || parsedYAML.registerLink) &&
                     <p><Button
                         className='button button-bark'
-                        href={parsedYAML.registerlink}
-                    >{parsedYAML && parsedYAML.registertext ? parsedYAML.registertext : 'Register'}
+                        href={parsedYAML.registerlink || parsedYAML.registerLink}
+                    >{parsedYAML && (parsedYAML.registertext || parsedYAML.registerText) ? (parsedYAML.registertext || parsedYAML.registerText) : 'Register'}
                     </Button></p>
                 }
             </div>
