@@ -151,7 +151,13 @@ export default function Institute(props) {
                         )}
                     </>
                 }
-                <p>{date}</p>
+                {/* <p>{date}</p> */}
+                {parsedYAML && parsedYAML.datestart && parsedYAML.enddate &&
+                    <>
+                        <h3>Dates</h3>
+                        <p>{date}</p>
+                    </>
+                }
                 {parsedYAML && parsedYAML.venue &&
                 <>
                     <h3>Venue</h3>
