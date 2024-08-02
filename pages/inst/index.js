@@ -230,6 +230,8 @@ export default function Institute(props) {
             </div>
             {parsedYAML && parsedYAML.DHRIFTfrontpage === false || parsedYAML && !parsedYAML.DHRIFTfrontpage ? aboutAccordion : null}
             {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
+                // some sessions to show
+                sessions.some(session => session.title !== '') &&
                 <div className='schedule'>
                     <Schedule schedule={sessions}
                         {...props}

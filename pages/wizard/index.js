@@ -687,6 +687,8 @@ export default function Form(props) {
                         direction={'row'}>
                         <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
+                            error={formError && !session.title}
+                            required
                         />
                         <TextField
                             helperText="Date"
