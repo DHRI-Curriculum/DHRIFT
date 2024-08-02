@@ -185,7 +185,7 @@ export default function Form(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub })
+            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub: formDataForGithub })
         });
         if (response.ok) {
             console.log('Workshops repo cloned');
@@ -245,7 +245,7 @@ export default function Form(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub })
+            body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub: formDataForGithub })
         });
         if (response.ok) {
             const data = await response.json();
