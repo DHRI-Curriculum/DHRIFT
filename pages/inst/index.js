@@ -151,7 +151,6 @@ export default function Institute(props) {
                         )}
                     </>
                 }
-                {/* <p>{date}</p> */}
                 {parsedYAML && parsedYAML.datestart && parsedYAML.enddate &&
                     <>
                         <h3>Dates</h3>
@@ -180,6 +179,7 @@ export default function Institute(props) {
             style={{
                 marginBottom: '40px',
             }}
+            
         >
             <Accordion
                 sx={{
