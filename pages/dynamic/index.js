@@ -347,10 +347,10 @@ function ErrorFallback({error}) {
         <Container
           disableGutters={true}
           maxWidth={
-            props.workshopMode ? 'md' : '100vw'
+            props.workshopMode ? 'md' : '100%'
           }
           sx={{
-            marginLeft: {
+            paddingLeft: {
               md: '80px',
             },
             ...(props.workshopMode && {
@@ -366,7 +366,7 @@ function ErrorFallback({error}) {
           </Head>
           <Main open={editorOpen}
             id='main'
-            sx={{
+            style={{
               paddingLeft: '0px'
             }}
           >

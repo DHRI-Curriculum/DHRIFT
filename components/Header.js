@@ -128,12 +128,12 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                 <div
                                     id='nav-container'
                                 >
-                                    <Typography variant="h6" component="div"
+                                    {/* <Typography variant="h6" component="div"
                                         sx={{
                                             flexGrow: 1,
-                                            flexShrink: 0,
+                                            flexShrink: 1,
                                         }}>
-                                    </Typography>
+                                    </Typography> */}
                                     <ul className='links'>
                                         {instUser && instRepo && <li>
                                             <Link href={`/workshops/?instUser=${instUser}&instRepo=${instRepo}&user=${gitUser}&repo=${gitRepo}`} passHref>Workshops</Link>

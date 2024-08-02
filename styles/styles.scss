@@ -106,8 +106,10 @@ $breakpoints: (
 // global styles
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
   min-height: 100%;
+  position: relative;
+  // width: 100vw;
+  max-width: 100%;
 }
 
 
@@ -117,7 +119,7 @@ html {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  width: 100vw;
+  max-width: 100%;
   background-color: $background-page;
   color: $foreground;
   font-family: $body-font, sans-serif;
@@ -130,7 +132,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  // flex-grow: 1;
+  
 }
 
 h1,
@@ -265,7 +267,7 @@ header {
   flex-direction: row;
   align-content: center;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   width: 100%;
   background-color: $primary-color-cream;
 
@@ -382,7 +384,8 @@ header {
   // padding-top: 40px;
   // padding-top: 40px;
   margin-bottom: 40px;
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   background-color: rgb(239 231 225);
 
   h1,
@@ -444,6 +447,9 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
+  // max-width: 100%;
+  
 
   >div {
     padding-left: 100px;
@@ -535,7 +541,8 @@ header {
 
   &-workshops {
     padding-top: 20px;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
     background-color: $primary-color-cream;
     z-index: 100;
   }
@@ -604,6 +611,7 @@ header {
   &-hero {
     // workshop page hero block
     width: 100%;
+    max-width: 100%;
     height: 100%;
     position: relative;
     background-color: $primary-color-bark;
@@ -627,8 +635,9 @@ header {
       position: absolute;
       height: 100%;
       // width entire screen 
-      width: 130vw;
+      width: 100vw;
       left: -150px;
+      overflow-x: hidden;
     }
 
     &-breadcrumbs {
@@ -740,9 +749,14 @@ header {
 
 // page content styles
 .page-content {
-
+  
   margin-top: 150px;
   margin-bottom: 100px;
+
+  padding-left: 20px;
+  @include respond-above(md) {
+    padding-left: 0px;
+  }
 
   h1 {
     font-size: 2rem;
@@ -1068,8 +1082,6 @@ nav.sidenav {
   }
 
 }
-
-
 
 // code block styles
 pre {

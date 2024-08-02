@@ -327,7 +327,7 @@ export default function WorkshopPage({
         <Container
           disableGutters={true}
           maxWidth={
-            props.workshopMode ? 'md' : '100vw'
+            props.workshopMode ? 'md' : '100%'
           }
           sx={{
             marginLeft: {
