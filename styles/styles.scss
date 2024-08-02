@@ -110,6 +110,8 @@ html {
   min-height: 100%;
 }
 
+
+
 #__next {
   box-sizing: border-box;
   margin: 0;
@@ -120,7 +122,6 @@ html {
   color: $foreground;
   font-family: $body-font, sans-serif;
   font-size: 20px;
-  // overflow: hidden;
 }
 
 .container {
@@ -428,15 +429,15 @@ header {
     margin-bottom: 80px;
   }
 
-  &:before {
-    content: '';
-    background-color: rgb(239 231 225);
-    position: absolute;
-    height: 100%;
-    // width entire screen 
-    width: 130vw;
-    left: -150px;
-  }
+  // &:before {
+  //   content: '';
+  //   background-color: rgb(239 231 225);
+  //   position: absolute;
+  //   height: 100%;
+  //   // width entire screen 
+  //   width: 130vw;
+  //   left: -150px;
+  // }
 }
 
 .inst {
