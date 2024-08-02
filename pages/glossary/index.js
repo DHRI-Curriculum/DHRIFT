@@ -165,34 +165,6 @@ export default function Glossary({ glossary, ...props }) {
 
 export async function getStaticProps() {
     // Get files from the workshops dir
-    const getFilesandProcess = (dir) => {
-        const dirents = fs.readdirSync(path.join(dir), { withFileTypes: true })
-        const dirFiles = dirents
-            .filter((file) => file.isFile())
-            .map((file) => file.name);
-        // Get slug and frontmatter from workshop
-        const markdownFiles = dirFiles.map((filename) => {
-            // Create slug
-            const slug = filename.replace('.md', '')
-
-            // Get frontmatter
-            const markdownWithMeta = fs.readFileSync(
-                path.join(dir, filename),
-                'utf-8',
-            )
-
-            const matterResult = matter(markdownWithMeta)
-            const content = matterResult.content
-            return {
-                slug,
-                content: content,
-                ...matterResult.data,
-            }
-
-        })
-        return markdownFiles
-    }
-    const workshopFiles = getFilesandProcess('workshops')
 
 
     //  load every file in the terms dir
