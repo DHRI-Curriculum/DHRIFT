@@ -620,9 +620,11 @@ header {
 
 //frontmatter styles
 .frontmatter {
-  width: 90%;
-  padding-left: 20px;
-  padding-right: 20px;
+  @include respond-above(md) {
+    width: 90%;
+    padding-left: 20px;
+    padding-right: 20px;
+    }
 
   @include respond-above(xl) {
     display: grid;
@@ -638,6 +640,14 @@ header {
     background-color: $primary-color-bark;
     margin-bottom: 20px;
     grid-column: 1;
+    overflow-x: hidden;
+    padding-left: 20px;
+    padding-right: 20px;
+    @include respond-above(md) {
+      overflow-x: visible;
+      padding-left: 0px;
+      padding-right: 0px;
+      }
 
     h1 {
       // front page title
@@ -655,8 +665,11 @@ header {
       background-color: $primary-color-brown;
       position: absolute;
       height: 100%;
+      width: 201vw;
+      @include respond-above(md) {
+        width: 100vw;
+        }
       // width entire screen 
-      width: 100vw;
       left: -150px;
       overflow-x: hidden;
     }
@@ -707,6 +720,10 @@ header {
 
   &-item {
     grid-column: 1;
+    padding-left: 20px;
+    @include respond-above(md) {
+      padding-left: 0px;
+      }
 
     h2,
     h3 {

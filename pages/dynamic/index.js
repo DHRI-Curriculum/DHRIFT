@@ -17,6 +17,7 @@ import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
 import {ErrorBoundary} from "react-error-boundary";
+import { PaddingRounded } from '@mui/icons-material'
 
 const drawerWidth = '-30%';
 
@@ -367,7 +368,11 @@ function ErrorFallback({error}) {
           <Main open={editorOpen}
             id='main'
             style={{
-              paddingLeft: '0px'
+              paddingLeft: '0px',
+              paddingRight: {
+                sm: '0px',
+                xs: '0px',
+              }
             }}
           >
             <div className="card-page">
