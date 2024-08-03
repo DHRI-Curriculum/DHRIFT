@@ -258,13 +258,15 @@ export default function Institute(props) {
         <Fade in={parsedYAML && parsedYAML.event || parsedYAML ? true : false}>
             <Container
                 disableGutters={true}
-                // maxWidth={'100%'}
+                
+
                 sx={{
                     display: 'flex',
                     minWidth: '100%',
                     maxWidth: '100%',
                     marginLeft: {
                         md: '0px',
+                        // sm: '0px',
                     },
                 }}
             >
