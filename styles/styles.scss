@@ -547,7 +547,10 @@ header {
     justify-content: flex-start;
 
     p {
-      padding-right: 8cap;
+      padding-right: 20px;
+      @include respond-above(md) {
+        padding-right: 8cap;
+      }
       max-width: 100%;
     }
   }
@@ -587,6 +590,10 @@ header {
     width: 400px;
     border-radius: 0px;
     box-shadow: none;
+    padding-left: 20px;
+    @include respond-above(md) {
+      padding-left: 0px;
+      }
 
     h3 {
       font-weight: 900;
@@ -1137,7 +1144,12 @@ footer {
   }
 
   .footer-logo {
-    margin-left: 55px;
+    max-width: 50%;
+    display: none;
+    @include respond-above(md) {
+      margin-left: 55px;
+      display: block;
+    }
   }
 
   .footer-lower {
@@ -1146,9 +1158,9 @@ footer {
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
-    margin-left: 100px;
     // margin-top: -30px;
     @include respond-above(md) {
+      margin-left: 100px;
     flex-direction: row;
     }
 

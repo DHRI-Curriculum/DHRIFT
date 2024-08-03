@@ -9,9 +9,11 @@ export default function Footer({ workshopMode }) {
     const footerClass = workshopMode ? 'footer-workshop' : 'footer'
     return (
         <footer className={footerClass}>
-            <div className="footer-logo">
+            <div className="footer-logo"
+            >
                 <Link href="http://www.dhrift.org">
                     <Image
+                style={{maxWidth: '100vw', textAlign: 'center'}}
                         src={DHRIFTLogo}
                         width={'400'}
                         // height={'50'}

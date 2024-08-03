@@ -86,11 +86,20 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
     return (
         <>
             {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description && (parsedWorkshop.data.published === 'true' || !parsedWorkshop.data.published) &&
-                <div>
-                    <Card className='workshop-card'>
+                <div
+                style={{
+                    maxWidth: '100vw',
+                }}
+                >
+                    <Card 
+                                    style={{
+                                        maxWidth: '100vw',
+                                    }}
+                    className='workshop-card'>
                         <CardActionArea 
                         style={{
                             height: '450px',
+                            maxWidth: '100vw',
                         }}
                         href={workshopLink}>
                             <div
