@@ -462,7 +462,6 @@ export default function Form(props) {
 
     const formatSection = (
         <>
-        <InputLabel id="format">Format</InputLabel>
         <TextField
             select
             label="Format"
