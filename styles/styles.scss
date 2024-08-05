@@ -491,9 +491,11 @@ header {
       display: flex;
       flex-direction: column;
       padding-left: 20px;
+      padding-top: 20px;
       @include respond-above(md) {
         flex-direction: row;
         padding-left: 0px;
+        padding-top: 0px;
       }
       align-items: baseline;
       justify-content: space-between;
