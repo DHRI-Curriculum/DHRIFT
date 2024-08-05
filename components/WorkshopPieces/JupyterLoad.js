@@ -27,7 +27,7 @@ export default function JupyterLoad({ ...props }) {
                     }}
                     onClick={() => {
                         const fromURLString = `&fromURL=${desiredFile}`
-                        const finalURL = `melodic-moonbeam-e29b67.netlify.app/lab/index.html?${fromURLString}`;
+                        const finalURL = `https://melodic-moonbeam-e29b67.netlify.app/lab/index.html?${fromURLString}`;
                         setJupyterSrc(finalURL)
                     }}
                 >
