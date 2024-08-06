@@ -622,15 +622,14 @@ header {
 
 //frontmatter styles
 .frontmatter {
-  @include respond-above(md) {
+  display: block;
+  
+  @include respond-above(xl) {
     width: 90%;
     padding-left: 20px;
     padding-right: 20px;
-    }
-
-  @include respond-above(xl) {
     display: grid;
-    grid-template-columns: 45vw 1fr;
+    grid-template-columns: 40vw 1fr;
   }
 
   &-hero {
@@ -671,7 +670,6 @@ header {
       @include respond-above(md) {
         width: 100vw;
         }
-      // width entire screen 
       left: -150px;
       overflow-x: hidden;
     }
@@ -710,6 +708,8 @@ header {
       margin-bottom: 0px;
       position: relative;
       grid-column: 1;
+      @include respond-above(md) {
+        }
     }
 
     .button {
@@ -752,15 +752,18 @@ header {
     grid-column: 2;
     z-index: 10;
     max-width: 500px;
-    display: none;
-
+    position: relative;
+    margin-top: 0px;
+    padding-left: 20px;
     @include respond-above(xl) {
+      position: absolute;
+      display: block;
       margin-top: 80px;
       grid-row-start: 1;
       justify-self: right;
-      position: absolute;
-      display: block;
-    }
+      padding-left: 0px;
+      }
+
 
     &-authors {
       margin-top: 20px;

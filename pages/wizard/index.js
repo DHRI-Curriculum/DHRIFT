@@ -422,7 +422,7 @@ export default function Form(props) {
         <>
             <div>
                 <Checkbox
-                    checked={formData.cloneWorkshops}
+                    checked={formData.cloneWorkshops === true}
                     onChange={handleInputChange}
                     name="cloneWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
