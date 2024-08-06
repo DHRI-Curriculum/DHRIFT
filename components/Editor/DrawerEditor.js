@@ -136,7 +136,7 @@ export default function DrawerEditor(props) {
                     {...props} />
             )
         }
-        else if (language === 'computer') {
+        else if (language === 'computer' || language === 'command_line') {
             return (
                 <Webvm
                     handleOpenClose={handleOpenClose}
@@ -144,7 +144,7 @@ export default function DrawerEditor(props) {
                 />
             )
         }
-        else if (language === 'html') {
+        else if (language === 'html' || language === 'html_css') {
             return (
                 <HTMLEditorComponent />
             )
