@@ -226,10 +226,11 @@ export default function Form(props) {
     const localAPIURL = 'http://localhost:8080/';
     const APIURL = realAPIURL;
 
-    const data = useAllWorkshops({ gitUser: 'dhri-curriculum', gitRepo: 'workshops', instUser: 'dhri-curriculum', instRepo: 'workshops' });
+    const { workshops } = useAllWorkshops({ gitUser: 'dhri-curriculum', gitRepo: 'workshops', instUser: 'dhri-curriculum', instRepo: 'workshops' });
 
-    let displayWorkshops = data.workshops.filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'));
-    displayWorkshops = displayWorkshops.map(workshop => ({ name: workshop.name.replace('.md', '') }));
+    const displayWorkshops = workshops
+        .filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
+        .map(workshop => ({ name: workshop.name.replace('.md', '') }));
 
 
     const uploadFiles = async (files) => {
