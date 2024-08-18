@@ -90,6 +90,7 @@ export default function Form(props) {
             Yup.object({
                 date: Yup.date().required('Date is required'),
                 time: Yup.string().required('Time is required'),
+                endTime: Yup.string(),
                 title: Yup.string().required('Title is required'),
                 description: Yup.string(),
                 workshop: Yup.string(),
@@ -834,6 +835,9 @@ export default function Form(props) {
                             error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
                             helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
                         />
+                        <TextField
+                            type="time"
+                            value={formik.values.sessions[index].time}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
                             onBlur={formik.handleBlur}
                             error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
