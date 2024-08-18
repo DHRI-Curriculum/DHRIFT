@@ -537,11 +537,33 @@ export default function Form(props) {
             <p>
                 Write an up to 150 word description of your institute for attendees. This space may describe what the desired outcome of the event will be, what kind of skills or projects your event will focus on, or the purpose of the institute.
             </p>
-            <TextField label="Long Description" type="text" name="longDescription" value={formData.longdescription} multiline rows={4}
-                onChange={handleInputChange} />
+            <TextField
+                label="Long Description"
+                type="text"
+                name="longDescription"
+                value={formik.values.longdescription}
+                multiline
+                rows={4}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
             <h3>Social Media</h3>
-            <TextField label="Social Media" type="text" name="socialMedia" value={formData.socialMedia} onChange={handleInputChange} />
-            <TextField label="link" type="text" name="socialmedialink" value={formData.socialmedialink} onChange={handleInputChange} />
+            <TextField
+                label="Social Media"
+                type="text"
+                name="socialMedia"
+                value={formik.values.socialMedia}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
+            <TextField
+                label="link"
+                type="text"
+                name="socialmedialink"
+                value={formik.values.socialmedialink}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+            />
         </Stack>
     );
 
