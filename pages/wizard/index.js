@@ -428,22 +428,28 @@ export default function Form(props) {
     const handleAdd = (field, sessionIndex) => {
         const newItem = field === 'sessions' ? { date: '', time: '', title: '', description: '', workshop: '', location: '', instructors: [{ name: '', email: '' }], helpers: [{ name: '', email: '' }] } : { name: '', email: '' };
 
-        // if it's an instructor or helper, make the field the session.instructors or session.helpers and update the session
-        if (field === 'instructors' || field === 'helpers') {
-            const session = formData.sessions[sessionIndex];
-            const updatedSession = {
-                ...session,
-                [field]: [...session[field], newItem]
-            };
-            const updatedSessions = formData.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
+        if (field === 'sessions') {
+            const updatedSessions = [...formik.values.sessions, newItem];
             setFormData({
                 ...formData,
                 sessions: updatedSessions
             });
-            return;
+            formik.setFieldValue('sessions', updatedSessions);
+        } else if (field === 'instructors' || field === 'helpers') {
+            const session = formik.values.sessions[sessionIndex];
+            const updatedSession = {
+                ...session,
+                [field]: [...session[field], newItem]
+            };
+            const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
+            setFormData({
+                ...formData,
+                sessions: updatedSessions
+            });
+            formik.setFieldValue('sessions', updatedSessions);
+        } else {
+            formik.setFieldValue(field, [...formik.values[field], newItem]);
         }
-
-        formik.setFieldValue(field, [...formik.values[field], newItem]);
     };
 
     const handleRemove = (field, index, sessionIndex) => {
