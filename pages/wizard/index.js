@@ -171,7 +171,7 @@ export default function Form(props) {
 
     const formik = useFormik({
         validationSchema: validationSchema,
-        // initialValues: initialValues,
+        initialValues: formData,
         onSubmit: (values) => {
             setFormError(false);
             setShowProgress(true);
