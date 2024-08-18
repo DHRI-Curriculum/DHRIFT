@@ -503,14 +503,14 @@ export default function Form(props) {
                 <Stack
                     spacing={2}>
                     <h3>Location</h3>
-                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
+                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formik.values.onlinePlatformLink}
                         style={{
                             width: '400px',
                             marginRight: '10px',
                             marginBottom: '10px'
                         }}
                         onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes} onChange={handleInputChange} />
                 </Stack>
             );
         }
@@ -533,13 +533,13 @@ export default function Form(props) {
                 <Stack spacing={2}>
                     <h3>Location</h3>
 
-                    <TextField label="Venue" type="text" name="venue" value={formData.venue}
+                    <TextField label="Venue" type="text" name="venue" value={formik.values.venue}
                         style={{
                             width: '400px',
                             marginRight: '10px'
                         }}
                         onChange={handleInputChange} />
-                    <TextField label="Location" type="text" name="location" value={formData.location}
+                    <TextField label="Location" type="text" name="location" value={formik.values.location}
                         style={{
                             width: '400px',
                             marginBottom: '10px'
@@ -592,17 +592,17 @@ export default function Form(props) {
             spacing={2}>
             <h2>General Information</h2>
             <p>The information from this page will appear at the top of the page overlaid on the hero-image. See Creating a DHRIFT Landing Page (?) for an example. Fields with an * are required.</p>
-            <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formData.event}
+            <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formik.values.event}
                 required
                 error={formError && !formData.event}
                 helperText={formError && !formData.event ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
             <Stack spacing={2} direction={'row'}>
-                <TextField type="date" name="dateStart" value={formData.dateStart}
+                <TextField type="date" name="dateStart" value={formik.values.dateStart}
                     helperText="Start Date" onChange={handleInputChange} />
                 <TextField
-                    helperText="End Date" type="date" name="endDate" value={formData.endDate}
+                    helperText="End Date" type="date" name="endDate" value={formik.values.endDate}
                     onChange={handleInputChange} />
                 <TextField type="text" name='herodescription' label="Tagline"
                     value={formik.values.herodescription}
@@ -611,13 +611,13 @@ export default function Form(props) {
                     onChange={handleInputChange} />
                 {formatSection}
             </Stack>
-            <TextField label='Host Organization' type='text' name='institution' value={formData.institution}
+            <TextField label='Host Organization' type='text' name='institution' value={formik.values.institution}
                 required
                 error={formError && !formData.institution}
                 helperText={formError && !formData.institution ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
-            <TextField label="Short Description" type="text" name="description" value={formData.description} multiline rows={3}
+            <TextField label="Short Description" type="text" name="description" value={formik.values.description} multiline rows={3}
                 required
                 error={formError && !formData.description}
                 helperText={formError && !formData.description ? 'This field is required' : ''}
