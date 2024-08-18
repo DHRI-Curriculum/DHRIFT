@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import { useRef } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useRouter } from 'next/router';
 
 
 export default function Form(props) {
@@ -119,9 +120,10 @@ export default function Form(props) {
         socialmedialink: Yup.string().url('Invalid URL')
     });
 
-    const formik = useFormik({
-        validationSchema: validationSchema,
-        initialValues: {
+    const router = useRouter();
+    const useDummyData = router.query.useDummyData === 'true';
+
+    const dummyData = {
             organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
             institution: 'Example Institute',
             event: 'Example Event',
@@ -157,7 +159,48 @@ export default function Form(props) {
             socialMedia: 'Example Social Media',
             socialmedialink: 'https://example.com/social'
         },
-        onSubmit: async (values) => {
+    };
+
+    const initialValues = useDummyData ? dummyData : {
+        organizers: [{ name: '', email: '' }],
+        institution: '',
+        event: '',
+        description: '',
+        herodescription: '',
+        venue: '',
+        location: '',
+        dateStart: '',
+        endDate: '',
+        workshopsuser: 'dhri-curriculum',
+        workshopsrepo: 'workshops',
+        format: '',
+        sponsors: [{ name: '', link: '' }],
+        contact: [{ name: '', email: '' }],
+        sessions: [
+            {
+                date: '',
+                time: '',
+                title: '',
+                description: '',
+                workshop: '',
+                location: '',
+                instructors: [{ name: '', email: '' }],
+                helpers: [{ name: '', email: '' }]
+            },
+        ],
+        registerLink: '',
+        registerText: '',
+        haveRegistration: false,
+        cloneWorkshops: false,
+        showWorkshops: false,
+        longdescription: '',
+        socialMedia: '',
+        socialmedialink: ''
+    };
+
+    const formik = useFormik({
+        validationSchema: validationSchema,
+        initialValues: initialValues,
             setFormError(false);
             setShowProgress(true);
             if (!localStorage.getItem('githubToken')) {
