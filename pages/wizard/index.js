@@ -690,11 +690,11 @@ export default function Form(props) {
             <TextField
                 label="Long Description"
                 type="text"
-                name="longDescription"
+                name="longdescription"
                 value={formik.values.longdescription}
                 multiline
                 rows={4}
-                onChange={formik.handleChange}
+                onChange={handleInputChange}
                 onBlur={formik.handleBlur}
             />
             <h3>Social Media</h3>
