@@ -210,7 +210,10 @@ export default function Form(props) {
 
     const formik = useFormik({
         validationSchema: validationSchema,
-        initialValues: formData,
+        initialValues: {
+            ...formData,
+            sessions: formData.sessions || []
+        },
         onSubmit: (values) => {
             setFormError(false);
             setShowProgress(true);
@@ -870,48 +873,52 @@ export default function Form(props) {
             className='sessions'
             spacing={2}>
             <h2>Sessions</h2>
-            {formData.sessions.map((session, index) => (
+            {formik.values.sessions && formik.values.sessions.map((session, index) => (
                 <div
                     style={{ border: '1px solid black', padding: '10px', margin: '10px' }}
                     key={index}>
                     <h4>Session {index + 1}</h4>
                     <Stack spacing={2}
                         direction={'row'}>
-                        <TextField
-                            label="Title"
-                            type="text"
-                            value={formik.values.sessions[index].title}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
-                            style={{ width: '400px' }}
-                            error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
-                            helperText={formik.touched.sessions?.[index]?.title && formik.errors.sessions?.[index]?.title}
-                            required
-                        />
-                        <TextField
-                            // helperText="Date"
-                            type="date"
-                            value={formik.values.sessions[index].date}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
-                            helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
-                        />
-                        <TextField
-                            type="time"
-                            value={formik.values.sessions[index].time}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
-                            helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
-                        />
-                        <TextField
-                            type="time"
-                            value={formik.values.sessions[index].endTime}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.sessions?.[index]?.endTime && Boolean(formik.errors.sessions?.[index]?.endTime)}
-                            helperText={formik.touched.sessions?.[index]?.endTime && formik.errors.sessions?.[index]?.endTime}
-                        />
+                        {formik.values.sessions[index] && (
+                            <>
+                                <TextField
+                                    label="Title"
+                                    type="text"
+                                    value={formik.values.sessions[index].title}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
+                                    style={{ width: '400px' }}
+                                    error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
+                                    helperText={formik.touched.sessions?.[index]?.title && formik.errors.sessions?.[index]?.title}
+                                    required
+                                />
+                                <TextField
+                                    // helperText="Date"
+                                    type="date"
+                                    value={formik.values.sessions[index].date}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
+                                    helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
+                                />
+                                <TextField
+                                    type="time"
+                                    value={formik.values.sessions[index].time}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
+                                    helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
+                                />
+                                <TextField
+                                    type="time"
+                                    value={formik.values.sessions[index].endTime}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.sessions?.[index]?.endTime && Boolean(formik.errors.sessions?.[index]?.endTime)}
+                                    helperText={formik.touched.sessions?.[index]?.endTime && formik.errors.sessions?.[index]?.endTime}
+                                />
+                            </>
+                        )}
                     </Stack>
                     <br />
                     <Stack
