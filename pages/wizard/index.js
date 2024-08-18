@@ -11,6 +11,8 @@ import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import { useRef } from 'react';
+import formik from 'formik';
+// import yup from 'yup';
 
 
 export default function Form(props) {
@@ -743,7 +745,7 @@ export default function Form(props) {
                             required
                         />
                         <TextField
-                            helperText="Date"
+                            // helperText="Date"
                             type="date"
                             value={session.date}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
@@ -752,7 +754,7 @@ export default function Form(props) {
                             helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
                         />
                         <TextField
-                            helperText="Start Time"
+                            // helperText="Start Time"
                             type="time"
                             value={session.time}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
