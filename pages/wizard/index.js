@@ -623,9 +623,24 @@ export default function Form(props) {
                     <TextField label={`Sponsor ${index + 1} Link`} type="text" value={sponsor.link}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)} />
-                    <TextField label={`Sponsor ${index + 1} Notes`} type="text" value={sponsor.notes}
+                    <TextField
+                        label={`Sponsor ${index + 1} Link`}
+                        type="text"
+                        value={sponsor.link}
                         style={{ width: '400px' }}
-                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'notes', e.target.value)} />
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.sponsors?.[index]?.link && Boolean(formik.errors.sponsors?.[index]?.link)}
+                        helperText={formik.touched.sponsors?.[index]?.link && formik.errors.sponsors?.[index]?.link}
+                    />
+                    <TextField
+                        label={`Sponsor ${index + 1} Notes`}
+                        type="text"
+                        value={sponsor.notes}
+                        style={{ width: '400px' }}
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'notes', e.target.value)}
+                        onBlur={formik.handleBlur}
+                    />
                     {formData.sponsors.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('sponsors', index)}>Remove Sponsor</Button>
                     )}
@@ -643,15 +658,26 @@ export default function Form(props) {
             <h4>Contact</h4>
             {formData.contact.map((contact, index) => (
                 <div key={index}>
-                    <TextField label={`Contact ${index + 1}`} type="text" value={contact.name}
-                        style={{
-                            width: '400px',
-                            marginRight: '10px'
-                        }}
-                        onChange={(e) => handleArrayFieldChange('contact', index, 'name', e.target.value)} />
-                    <TextField label={`Contact ${index + 1} Email`} type="email" value={contact.email}
+                    <TextField
+                        label={`Contact ${index + 1}`}
+                        type="text"
+                        value={contact.name}
+                        style={{ width: '400px', marginRight: '10px' }}
+                        onChange={(e) => handleArrayFieldChange('contact', index, 'name', e.target.value)}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.contact?.[index]?.name && Boolean(formik.errors.contact?.[index]?.name)}
+                        helperText={formik.touched.contact?.[index]?.name && formik.errors.contact?.[index]?.name}
+                    />
+                    <TextField
+                        label={`Contact ${index + 1} Email`}
+                        type="email"
+                        value={contact.email}
                         style={{ width: '400px' }}
-                        onChange={(e) => handleArrayFieldChange('contact', index, 'email', e.target.value)} />
+                        onChange={(e) => handleArrayFieldChange('contact', index, 'email', e.target.value)}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.contact?.[index]?.email && Boolean(formik.errors.contact?.[index]?.email)}
+                        helperText={formik.touched.contact?.[index]?.email && formik.errors.contact?.[index]?.email}
+                    />
                     {formData.contact.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('contact', index)}>Remove Contact</Button>
                     )}
@@ -684,18 +710,41 @@ export default function Form(props) {
                     <h4>Session {index + 1}</h4>
                     <Stack spacing={2}
                         direction={'row'}>
-                        <TextField label="Title" type="text" value={session.title} onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
+                        <TextField
+                            label="Title"
+                            type="text"
+                            value={session.title}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
-                            error={formError && !session.title}
+                            error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
+                            helperText={formik.touched.sessions?.[index]?.title && formik.errors.sessions?.[index]?.title}
                             required
                         />
                         <TextField
                             helperText="Date"
-                            type="date" value={session.date} onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)} />
+                            type="date"
+                            value={session.date}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
+                            helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
+                        />
                         <TextField
                             helperText="Start Time"
-                            type="time" value={session.time} onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)} />
-                        <TextField helperText="End Time" type="time" value={session.endTime} onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)} />
+                            type="time"
+                            value={session.time}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
+                            helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
+                        />
+                        <TextField
+                            helperText="End Time"
+                            type="time"
+                            value={session.endTime}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
+                            onBlur={formik.handleBlur}
+                        />
                     </Stack>
                     <br />
                     <Stack
@@ -708,18 +757,22 @@ export default function Form(props) {
                             <TextField
                                 select
                                 label="DHRIFT Workshop"
-                                value={session.workshop}
-                                style={{ width: '400px' }}
-                                onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
-                            >
-                                {displayWorkshops && displayWorkshops.map((workshop, i) => (
-                                    <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
-                                ))}
-                                <MenuItem value={''}>None</MenuItem>
-                            </TextField>
-                            <TextField label="Location" type="text" value={session.location} onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
-                                style={{ width: '400px' }}
-                            />
+                            value={session.workshop}
+                            style={{ width: '400px' }}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
+                        >
+                            {displayWorkshops && displayWorkshops.map((workshop, i) => (
+                                <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
+                            ))}
+                            <MenuItem value={''}>None</MenuItem>
+                        </TextField>
+                        <TextField
+                            label="Location"
+                            type="text"
+                            value={session.location}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
+                            style={{ width: '400px' }}
+                        />
                         </Stack>
                         <br />
                     </Stack>
@@ -729,16 +782,25 @@ export default function Form(props) {
                             spacing={1}
                             direction={'row'}
                             key={'instructor' + i}>
-                            <TextField label={`Instructor ${i + 1}`} type="text" value={instructor.name}
-                                style={{
-                                    width: '400px',
-                                    marginRight: '10px'
-                                }}
+                            <TextField
+                                label={`Instructor ${i + 1}`}
+                                type="text"
+                                value={instructor.name}
+                                style={{ width: '400px', marginRight: '10px' }}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'name', i)}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.sessions?.[index]?.instructors?.[i]?.name && Boolean(formik.errors.sessions?.[index]?.instructors?.[i]?.name)}
+                                helperText={formik.touched.sessions?.[index]?.instructors?.[i]?.name && formik.errors.sessions?.[index]?.instructors?.[i]?.name}
                             />
-                            <TextField label={`Instructor ${i + 1} Email`} type="email" value={instructor.email}
+                            <TextField
+                                label={`Instructor ${i + 1} Email`}
+                                type="email"
+                                value={instructor.email}
                                 style={{ width: '400px' }}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', i)}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.sessions?.[index]?.instructors?.[i]?.email && Boolean(formik.errors.sessions?.[index]?.instructors?.[i]?.email)}
+                                helperText={formik.touched.sessions?.[index]?.instructors?.[i]?.email && formik.errors.sessions?.[index]?.instructors?.[i]?.email}
                             />
                             {session.instructors.length > 1 && (
                                 <Button type="button" onClick={() => handleRemove('instructors', i, index)}><Remove /></Button>
@@ -754,15 +816,26 @@ export default function Form(props) {
                                 spacing={1}
                                 direction={'row'}
                                 key={'helper' + i}>
-                                <TextField label={`Assistant ${i + 1}`} type="text" value={helper.name}
-                                    style={{
-                                        width: '400px',
-                                        marginRight: '10px'
-                                    }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)} />
-                                <TextField label={`Assistant ${i + 1} Email`} type="email" value={helper.email}
+                                <TextField
+                                    label={`Assistant ${i + 1}`}
+                                    type="text"
+                                    value={helper.name}
+                                    style={{ width: '400px', marginRight: '10px' }}
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.sessions?.[index]?.helpers?.[i]?.name && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.name)}
+                                    helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.name && formik.errors.sessions?.[index]?.helpers?.[i]?.name}
+                                />
+                                <TextField
+                                    label={`Assistant ${i + 1} Email`}
+                                    type="email"
+                                    value={helper.email}
                                     style={{ width: '400px' }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)} />
+                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)}
+                                    onBlur={formik.handleBlur}
+                                    error={formik.touched.sessions?.[index]?.helpers?.[i]?.email && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.email)}
+                                    helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.email && formik.errors.sessions?.[index]?.helpers?.[i]?.email}
+                                />
                                 <Button type="button" onClick={() => handleRemove('helpers', i, index)}><Remove /></Button>
                             </Stack>
                         </>
@@ -820,7 +893,7 @@ export default function Form(props) {
             </div>
             <Box sx={{ display: 'flex' }}>
                 <Button
-                    onClick={handleSubmit}
+                    onClick={formik.handleSubmit}
                     disabled={showProgress}
                 >Create Institute</Button>
                 {progress}
@@ -838,10 +911,7 @@ export default function Form(props) {
                         gitUser={'dhri-curriculum'} gitRepo={'workshops'}
                     />
                     <Container>
-                        <form
-                            className='form'
-                            ref={formRef}
-                        >
+                        <form className='form' onSubmit={formik.handleSubmit}>
                             <FormControl>
                                 {firstStage && firstStageSection}
                             </FormControl>
