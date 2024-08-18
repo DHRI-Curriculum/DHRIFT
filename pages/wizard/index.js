@@ -100,8 +100,47 @@ export default function Form(props) {
                 socialMedia: 'Example Social Media',
                 socialmedialink: 'https://example.com/social'
             });
+            formik.setValues({
+                ...formik.values,
+                ...{
+                    organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
+                    institution: 'Example Institute',
+                    event: 'Example Event',
+                    description: 'This is a description of the example event.',
+                    herodescription: 'An example event for testing.',
+                    venue: 'Example Venue',
+                    location: 'Example Location',
+                    dateStart: '2024-09-01',
+                    endDate: '2024-09-05',
+                    workshopsuser: 'dhri-curriculum',
+                    workshopsrepo: 'workshops',
+                    format: 'online',
+                    sponsors: [{ name: 'Example Sponsor', link: 'https://example.com' }],
+                    contact: [{ name: 'Jane Doe', email: 'jane.doe@example.com' }],
+                    sessions: [
+                        {
+                            date: '2024-09-01',
+                            time: '10:00',
+                            title: 'Example Session',
+                            description: 'This is a description of the example session.',
+                            workshop: 'Example Workshop',
+                            location: 'Example Location',
+                            instructors: [{ name: 'Instructor One', email: 'instructor.one@example.com' }],
+                            helpers: [{ name: 'Helper One', email: 'helper.one@example.com' }]
+                        },
+                    ],
+                    registerLink: 'https://example.com/register',
+                    registerText: 'Register Now',
+                    haveRegistration: true,
+                    cloneWorkshops: true,
+                    showWorkshops: true,
+                    longdescription: 'This is a long description for the example event.',
+                    socialMedia: 'Example Social Media',
+                    socialmedialink: 'https://example.com/social'
+                }
+            });
         }
-    }, [router.query]);
+    }, [router.query, formData]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
