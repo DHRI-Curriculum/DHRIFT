@@ -10,7 +10,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
-import { useRef } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
@@ -172,7 +171,7 @@ export default function Form(props) {
 
     const formik = useFormik({
         validationSchema: validationSchema,
-        initialValues: initialValues,
+        // initialValues: initialValues,
         onSubmit: (values) => {
             setFormError(false);
             setShowProgress(true);
