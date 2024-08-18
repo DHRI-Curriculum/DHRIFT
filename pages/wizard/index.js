@@ -415,7 +415,7 @@ export default function Form(props) {
                     width: '400px',
                 }}
             />
-            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formik.values.registerText} onChange={handleInputChange
+            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formik.values.registerText} onChange={handleInputChange}
                 style={{
                     width: '400px',
                 }}
