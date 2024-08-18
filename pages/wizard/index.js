@@ -122,6 +122,9 @@ export default function Form(props) {
 
     const router = useRouter();
     const useDummyData = router.query.useDummyData === 'true';
+    if (useDummyData) {
+        console.log('Using dummy data');
+    }
 
     const dummyData = {
             organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
@@ -158,8 +161,9 @@ export default function Form(props) {
             longdescription: 'This is a long description for the example event.',
             socialMedia: 'Example Social Media',
             socialmedialink: 'https://example.com/social'
-        },
-    };
+        };
+
+    // };
 
     const initialValues = useDummyData ? dummyData : {
         organizers: [{ name: '', email: '' }],
@@ -198,9 +202,11 @@ export default function Form(props) {
         socialmedialink: ''
     };
 
+
     const formik = useFormik({
         validationSchema: validationSchema,
         initialValues: initialValues,
+        onSubmit: (values) => {
             setFormError(false);
             setShowProgress(true);
             if (!localStorage.getItem('githubToken')) {
