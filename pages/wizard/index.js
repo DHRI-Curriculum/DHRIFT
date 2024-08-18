@@ -513,7 +513,7 @@ export default function Form(props) {
                 inputProps={{ 'aria-label': 'controlled' }}
             />
             <label>Include Registration Information</label>
-            {formData.haveRegistration && registrationFormSection}
+            {formik.values.haveRegistration && registrationFormSection}
         </div>
     );
 
