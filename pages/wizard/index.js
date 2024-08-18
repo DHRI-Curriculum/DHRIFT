@@ -12,7 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import { useRef } from 'react';
 import { useFormik } from 'formik';
-// import yup from 'yup';
+import * as Yup from 'yup';
 
 
 export default function Form(props) {
@@ -56,7 +56,70 @@ export default function Form(props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
+    const validationSchema = Yup.object({
+        organizers: Yup.array().of(
+            Yup.object({
+                name: Yup.string().required('Name is required'),
+                email: Yup.string().email('Invalid email').required('Email is required')
+            })
+        ),
+        institution: Yup.string().required('Institution is required'),
+        event: Yup.string().required('Event is required'),
+        description: Yup.string().required('Description is required'),
+        herodescription: Yup.string(),
+        venue: Yup.string(),
+        location: Yup.string(),
+        dateStart: Yup.date().required('Start date is required'),
+        endDate: Yup.date().required('End date is required'),
+        workshopsuser: Yup.string(),
+        workshopsrepo: Yup.string(),
+        format: Yup.string().required('Format is required'),
+        sponsors: Yup.array().of(
+            Yup.object({
+                name: Yup.string().required('Name is required'),
+                link: Yup.string().url('Invalid URL')
+            })
+        ),
+        contact: Yup.array().of(
+            Yup.object({
+                name: Yup.string().required('Name is required'),
+                email: Yup.string().email('Invalid email').required('Email is required')
+            })
+        ),
+        sessions: Yup.array().of(
+            Yup.object({
+                date: Yup.date().required('Date is required'),
+                time: Yup.string().required('Time is required'),
+                title: Yup.string().required('Title is required'),
+                description: Yup.string(),
+                workshop: Yup.string(),
+                location: Yup.string(),
+                instructors: Yup.array().of(
+                    Yup.object({
+                        name: Yup.string().required('Name is required'),
+                        email: Yup.string().email('Invalid email').required('Email is required')
+                    })
+                ),
+                helpers: Yup.array().of(
+                    Yup.object({
+                        name: Yup.string().required('Name is required'),
+                        email: Yup.string().email('Invalid email').required('Email is required')
+                    })
+                )
+            })
+        ),
+        registerLink: Yup.string().url('Invalid URL'),
+        registerText: Yup.string(),
+        haveRegistration: Yup.boolean(),
+        cloneWorkshops: Yup.boolean(),
+        showWorkshops: Yup.boolean(),
+        longdescription: Yup.string(),
+        socialMedia: Yup.string(),
+        socialmedialink: Yup.string().url('Invalid URL')
+    });
+
     const formik = useFormik({
+        validationSchema: validationSchema,
         initialValues: {
             organizers: [{ name: '', email: '' }],
             institution: '',
