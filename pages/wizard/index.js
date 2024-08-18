@@ -720,11 +720,11 @@ export default function Form(props) {
                         error={formik.touched.contact?.[index]?.email && Boolean(formik.errors.contact?.[index]?.email)}
                         helperText={formik.touched.contact?.[index]?.email && formik.errors.contact?.[index]?.email}
                     />
-                    {formData.contact.length > 1 && (
+                    {formik.values.contact.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('contact', index)}>Remove Contact</Button>
                     )}
 
-                    {index === formData.contact.length - 1 && (
+                    {index === formik.values.contact.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('contact')}><Add /></Button>
                     )}
                 </div>
