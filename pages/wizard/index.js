@@ -576,8 +576,8 @@ export default function Form(props) {
         </>
     );
 
-    const locationSection = function () {
-        if (formData.format === 'online') {
+    const locationSection = () => {
+        if (formik.values.format === 'online') {
             return (
                 <Stack
                     spacing={2}>
@@ -593,7 +593,7 @@ export default function Form(props) {
                 </Stack>
             );
         }
-        if (formData.format === 'hybrid') {
+        if (formik.values.format === 'hybrid') {
             return (
                 <Stack spacing={2}>
                     <h3>Location</h3>
@@ -607,7 +607,7 @@ export default function Form(props) {
                 </Stack>
             );
         }
-        if (formData.format === 'in-person') {
+        if (formik.values.format === 'in-person') {
             return (
                 <Stack spacing={2}>
                     <h3>Location</h3>
