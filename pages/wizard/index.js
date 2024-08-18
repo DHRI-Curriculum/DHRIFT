@@ -11,7 +11,7 @@ import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import { useRef } from 'react';
-import formik from 'formik';
+import { useFormik } from 'formik';
 // import yup from 'yup';
 
 
@@ -56,7 +56,53 @@ export default function Form(props) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
-    const formRef = useRef();
+    const formik = useFormik({
+        initialValues: {
+            organizers: [{ name: '', email: '' }],
+            institution: '',
+            event: '',
+            description: '',
+            herodescription: '',
+            venue: '',
+            location: '',
+            dateStart: '',
+            endDate: '',
+            workshopsuser: 'dhri-curriculum',
+            workshopsrepo: 'workshops',
+            format: '',
+            sponsors: [{ name: '', link: '' }],
+            contact: [{ name: '', email: '' }],
+            sessions: [
+                {
+                    date: '',
+                    time: '',
+                    title: '',
+                    description: '',
+                    workshop: '',
+                    location: '',
+                    instructors: [{ name: '', email: '' }],
+                    helpers: [{ name: '', email: '' }]
+                },
+            ],
+            registerLink: '',
+            registerText: '',
+            haveRegistration: false,
+            cloneWorkshops: false,
+            showWorkshops: false,
+            longdescription: '',
+            socialMedia: '',
+            socialmedialink: ''
+        },
+        onSubmit: async (values) => {
+            setFormError(false);
+            setShowProgress(true);
+            if (!localStorage.getItem('githubToken')) {
+                permRequest();
+            } else {
+                checkAuth();
+            }
+        }
+    });
 
     const realAPIURL = 'https://run-dhrift-d5tkoh5ciq-uc.a.run.app/';
     const localAPIURL = 'http://localhost:8080/';
@@ -162,22 +208,6 @@ export default function Form(props) {
         window.authWindow.focus();
     }
 
-    const handleSubmit = async (e) => {
-        setFormError(false);
-        e.preventDefault();
-        if (formRef.current.reportValidity()) {
-            setShowProgress(true);
-            if (!localStorage.getItem('githubToken')) {
-                permRequest();
-            }
-            else {
-                checkAuth();
-            }
-        }
-        else {
-            setFormError(true);
-        }
-    }
 
     const cloneWorkshopsRepo = async (formDataForGithub) => {
         const cloneAPIURL = APIURL + 'make_workshop_repo';
@@ -273,10 +303,7 @@ export default function Form(props) {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === 'checkbox' ? checked : value
-        });
+        formik.setFieldValue(name, type === 'checkbox' ? checked : value);
     };
 
     const handleAdd = (field, sessionIndex) => {
@@ -297,10 +324,7 @@ export default function Form(props) {
             return;
         }
 
-        setFormData({
-            ...formData,
-            [field]: [...formData[field], newItem]
-        });
+        formik.setFieldValue(field, [...formik.values[field], newItem]);
     };
 
     const handleRemove = (field, index, sessionIndex) => {
@@ -321,10 +345,7 @@ export default function Form(props) {
 
         const list = [...formData[field]];
         list.splice(index, 1);
-        setFormData({
-            ...formData,
-            [field]: list
-        });
+        formik.setFieldValue(field, list);
     };
 
     const handleArrayFieldChange = (field, index, subfield, value, subsubfield, subIndex) => {
@@ -345,10 +366,7 @@ export default function Form(props) {
         }
         const list = [...formData[field]];
         list[index][subfield] = value;
-        setFormData({
-            ...formData,
-            [field]: list
-        });
+        formik.setFieldValue(field, list);
     };
 
     const formExplanation = (
@@ -392,12 +410,12 @@ export default function Form(props) {
             direction={'row'}
             spacing={2}
         >
-            <TextField label="Registration or Application Link" type="text" name="registerLink" value={formData.registerLink} onChange={handleInputChange}
+            <TextField label="Registration or Application Link" type="text" name="registerLink" value={formik.values.registerLink} onChange={handleInputChange}
                 style={{
                     width: '400px',
                 }}
             />
-            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formData.registerText} onChange={handleInputChange}
+            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formik.values.registerText} onChange={handleInputChange
                 style={{
                     width: '400px',
                 }}
@@ -410,7 +428,7 @@ export default function Form(props) {
             <h3>Registration Information</h3>
             {/* <input type="checkbox" name="haveRegistration" checked={formData.haveRegistration} onChange={handleInputChange} /> */}
             <Switch
-                checked={formData.haveRegistration}
+                checked={formik.values.haveRegistration}
                 onChange={handleInputChange}
                 name="haveRegistration"
                 inputProps={{ 'aria-label': 'controlled' }}
@@ -424,7 +442,7 @@ export default function Form(props) {
         <>
             <div>
                 <Checkbox
-                    checked={formData.cloneWorkshops === true}
+                    checked={formik.values.cloneWorkshops === true}
                     onChange={handleInputChange}
                     name="cloneWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
@@ -467,7 +485,7 @@ export default function Form(props) {
         <TextField
             select
             label="Format"
-            value={formData.format}
+            value={formik.values.format}
             onChange={handleInputChange}
             name="format"
             style={{ width: '400px' }}
@@ -587,7 +605,7 @@ export default function Form(props) {
                     helperText="End Date" type="date" name="endDate" value={formData.endDate}
                     onChange={handleInputChange} />
                 <TextField type="text" name='herodescription' label="Tagline"
-                    value={formData.herodescription}
+                    value={formik.values.herodescription}
                     helperText="Max 10 words"
                     style={{ width: '400px' }}
                     onChange={handleInputChange} />
@@ -612,13 +630,13 @@ export default function Form(props) {
             <h4>Organizers</h4>
             {formData.organizers.map((organizer, index) => (
                 <div key={index}>
-                    <TextField label={`Organizer ${index + 1}`} type="text" value={organizer.name}
+                    <TextField label={`Organizer ${index + 1}`} type="text" value={formik.values.organizers[index].name}
                         style={{
                             width: '400px',
                             marginRight: '10px'
                         }}
                         onChange={(e) => handleArrayFieldChange('organizers', index, 'name', e.target.value)} />
-                    <TextField label={`Organizer ${index + 1} Email`} type="email" value={organizer.email}
+                    <TextField label={`Organizer ${index + 1} Email`} type="email" value={formik.values.organizers[index].email}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('organizers', index, 'email', e.target.value)} />
                     {formData.organizers.length > 1 && (
@@ -638,13 +656,13 @@ export default function Form(props) {
             <h4>Sponsors</h4>
             {formData.sponsors.map((sponsor, index) => (
                 <div key={index}>
-                    <TextField label={`Sponsor ${index + 1}`} type="text" value={sponsor.name}
+                    <TextField label={`Sponsor ${index + 1}`} type="text" value={formik.values.sponsors[index].name}
                         style={{
                             width: '400px',
                             marginRight: '10px'
                         }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'name', e.target.value)} />
-                    <TextField label={`Sponsor ${index + 1} Link`} type="text" value={sponsor.link}
+                    <TextField label={`Sponsor ${index + 1} Link`} type="text" value={formik.values.sponsors[index].link}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)} />
                     <TextField
@@ -737,7 +755,7 @@ export default function Form(props) {
                         <TextField
                             label="Title"
                             type="text"
-                            value={session.title}
+                            value={formik.values.sessions[index].title}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
                             style={{ width: '400px' }}
                             error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
@@ -747,7 +765,7 @@ export default function Form(props) {
                         <TextField
                             // helperText="Date"
                             type="date"
-                            value={session.date}
+                            value={formik.values.sessions[index].date}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
                             onBlur={formik.handleBlur}
                             error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
@@ -756,7 +774,7 @@ export default function Form(props) {
                         <TextField
                             // helperText="Start Time"
                             type="time"
-                            value={session.time}
+                            value={formik.values.sessions[index].time}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
                             onBlur={formik.handleBlur}
                             error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
@@ -765,7 +783,7 @@ export default function Form(props) {
                         <TextField
                             helperText="End Time"
                             type="time"
-                            value={session.endTime}
+                            value={formik.values.sessions[index].endTime}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
                             onBlur={formik.handleBlur}
                         />
@@ -773,7 +791,7 @@ export default function Form(props) {
                     <br />
                     <Stack
                         spacing={2}>
-                        <TextField label="Description" type="text" value={session.description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} multiline rows={4}
+                        <TextField label="Description" type="text" value={formik.values.sessions[index].description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} multiline rows={4}
                         />
                         <Stack
                             spacing={2}
@@ -781,7 +799,7 @@ export default function Form(props) {
                             <TextField
                                 select
                                 label="DHRIFT Workshop"
-                            value={session.workshop}
+                            value={formik.values.sessions[index].workshop}
                             style={{ width: '400px' }}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
                         >
@@ -793,7 +811,7 @@ export default function Form(props) {
                         <TextField
                             label="Location"
                             type="text"
-                            value={session.location}
+                            value={formik.values.sessions[index].location}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
                             style={{ width: '400px' }}
                         />
@@ -809,7 +827,7 @@ export default function Form(props) {
                             <TextField
                                 label={`Instructor ${i + 1}`}
                                 type="text"
-                                value={instructor.name}
+                                value={formik.values.sessions[index].instructors[i].name}
                                 style={{ width: '400px', marginRight: '10px' }}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'name', i)}
                                 onBlur={formik.handleBlur}
@@ -819,7 +837,7 @@ export default function Form(props) {
                             <TextField
                                 label={`Instructor ${i + 1} Email`}
                                 type="email"
-                                value={instructor.email}
+                                value={formik.values.sessions[index].instructors[i].email}
                                 style={{ width: '400px' }}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', i)}
                                 onBlur={formik.handleBlur}
@@ -843,7 +861,7 @@ export default function Form(props) {
                                 <TextField
                                     label={`Assistant ${i + 1}`}
                                     type="text"
-                                    value={helper.name}
+                                    value={formik.values.sessions[index].helpers[i].name}
                                     style={{ width: '400px', marginRight: '10px' }}
                                     onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)}
                                     onBlur={formik.handleBlur}
@@ -853,7 +871,7 @@ export default function Form(props) {
                                 <TextField
                                     label={`Assistant ${i + 1} Email`}
                                     type="email"
-                                    value={helper.email}
+                                    value={formik.values.sessions[index].helpers[i].email}
                                     style={{ width: '400px' }}
                                     onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)}
                                     onBlur={formik.handleBlur}
@@ -908,7 +926,7 @@ export default function Form(props) {
             {cloneWorkshopsSection}
             <div>
                 <Checkbox
-                    checked={formData.showWorkshops}
+                    checked={formik.values.showWorkshops}
                     onChange={handleInputChange}
                     name="showWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
