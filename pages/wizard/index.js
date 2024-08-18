@@ -834,27 +834,32 @@ export default function Form(props) {
                             error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
                             helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
                         />
-                        <TextField
-                            // helperText="Start Time"
-                            type="time"
-                            value={formik.values.sessions[index].time}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
                             onBlur={formik.handleBlur}
                             error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
                             helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
                         />
                         <TextField
-                            helperText="End Time"
                             type="time"
                             value={formik.values.sessions[index].endTime}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
                             onBlur={formik.handleBlur}
+                            error={formik.touched.sessions?.[index]?.endTime && Boolean(formik.errors.sessions?.[index]?.endTime)}
+                            helperText={formik.touched.sessions?.[index]?.endTime && formik.errors.sessions?.[index]?.endTime}
                         />
                     </Stack>
                     <br />
                     <Stack
                         spacing={2}>
-                        <TextField label="Description" type="text" value={formik.values.sessions[index].description} onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)} multiline rows={4}
+                        <TextField
+                            label="Description"
+                            type="text"
+                            value={formik.values.sessions[index].description}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)}
+                            multiline
+                            rows={4}
+                            error={formik.touched.sessions?.[index]?.description && Boolean(formik.errors.sessions?.[index]?.description)}
+                            helperText={formik.touched.sessions?.[index]?.description && formik.errors.sessions?.[index]?.description}
                         />
                         <Stack
                             spacing={2}
@@ -862,22 +867,28 @@ export default function Form(props) {
                             <TextField
                                 select
                                 label="DHRIFT Workshop"
-                            value={formik.values.sessions[index].workshop}
-                            style={{ width: '400px' }}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
-                        >
-                            {displayWorkshops && displayWorkshops.map((workshop, i) => (
-                                <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
-                            ))}
-                            <MenuItem value={''}>None</MenuItem>
-                        </TextField>
-                        <TextField
-                            label="Location"
-                            type="text"
-                            value={formik.values.sessions[index].location}
-                            onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
-                            style={{ width: '400px' }}
-                        />
+                                value={formik.values.sessions[index].workshop}
+                                style={{ width: '400px' }}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.sessions?.[index]?.workshop && Boolean(formik.errors.sessions?.[index]?.workshop)}
+                                helperText={formik.touched.sessions?.[index]?.workshop && formik.errors.sessions?.[index]?.workshop}
+                            >
+                                {displayWorkshops && displayWorkshops.map((workshop, i) => (
+                                    <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
+                                ))}
+                                <MenuItem value={''}>None</MenuItem>
+                            </TextField>
+                            <TextField
+                                label="Location"
+                                type="text"
+                                value={formik.values.sessions[index].location}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
+                                style={{ width: '400px' }}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.sessions?.[index]?.location && Boolean(formik.errors.sessions?.[index]?.location)}
+                                helperText={formik.touched.sessions?.[index]?.location && formik.errors.sessions?.[index]?.location}
+                            />
                         </Stack>
                         <br />
                     </Stack>
