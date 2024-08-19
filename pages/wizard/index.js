@@ -11,6 +11,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
+import Grid  from '@mui/material/Grid';
+import Card from '@mui/material/Card';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
@@ -907,7 +909,9 @@ const generalInfoSection = (
     );
 
 const sessionsSection = (
-    <Stack spacing={3}>
+    <Stack spacing={3}
+    className='sessions'
+    >
         <h2>Sessions</h2>
         <p>Provide details about each session in your institute.</p>
         {formik.values.sessions.map((session, index) => (
