@@ -102,14 +102,9 @@ export default function Form(props) {
                 socialmedialink: 'https://example.com/social'
             };
             setFormData(dummyData);
-            if (JSON.stringify(formik.values) === JSON.stringify(formData)) {
-                formik.setValues({
-                    ...formik.values,
-                    ...dummyData
-                });
-            }
+            formik.setValues(dummyData);
         }
-    }, [router.query]);
+    }, [router.query, formik]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
@@ -200,9 +195,12 @@ export default function Form(props) {
 
     const { workshops } = useAllWorkshops({ gitUser: 'dhri-curriculum', gitRepo: 'workshops', instUser: 'dhri-curriculum', instRepo: 'workshops' });
 
-    const displayWorkshops = workshops
-        .filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
-        .map(workshop => ({ name: workshop.name.replace('.md', '') }));
+    const displayWorkshops = useMemo(() => 
+        workshops
+            .filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
+            .map(workshop => ({ name: workshop.name.replace('.md', '') })),
+        [workshops]
+    );
 
 
     const uploadFiles = async (files) => {
@@ -397,7 +395,7 @@ export default function Form(props) {
             const { name, value, type, checked } = e.target;
             formik.setFieldValue(name, type === 'checkbox' ? checked : value);
         }, 300),
-        []
+        [formik]
     );
 
     const handleAdd = (field, sessionIndex) => {
