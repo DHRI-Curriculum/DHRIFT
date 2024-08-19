@@ -70,6 +70,12 @@ function MyApp({ Component, pageProps }) {
     title, setTitle, workshopMode, setWorkshopMode,
   })
   const base = process.env.NEXT_PUBLIC_GITHUB_ACTIONS === "true" ? `/${process.env.NEXT_PUBLIC_REPO_NAME}` : '';
+  useEffect(() => {
+    if (base) {
+      router.basePath = base;
+      router.assetPrefix = base;
+    }
+  }, [base]);
 
   // useCacheProvider hook
   function useCacheProvider() {
