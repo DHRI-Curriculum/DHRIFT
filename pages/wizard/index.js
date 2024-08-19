@@ -185,7 +185,7 @@ export default function Form(props) {
             setFormData(dummyData);
             formik.setValues(dummyData);
         }
-    }, [router.query, formik]);
+    }, [router.query]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
@@ -201,7 +201,7 @@ export default function Form(props) {
         workshops
             .filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
             .map(workshop => ({ name: workshop.name.replace('.md', '') })),
-        [workshops]
+        []
     );
 
 
@@ -397,7 +397,7 @@ export default function Form(props) {
             const { name, value, type, checked } = e.target;
             formik.setFieldValue(name, type === 'checkbox' ? checked : value);
         }, 300),
-        [formik]
+        []
     );
 
     const handleAdd = (field, sessionIndex) => {
