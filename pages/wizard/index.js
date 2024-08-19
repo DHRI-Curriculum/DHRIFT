@@ -392,8 +392,8 @@ export default function Form(props) {
         debounce((e) => {
             const { name, value, type, checked } = e.target;
             formik.setFieldValue(name, type === 'checkbox' ? checked : value);
-        }, 300),
-        []
+        }, 200),
+        [formik]
     );
 
     const handleAdd = (field, sessionIndex) => {
