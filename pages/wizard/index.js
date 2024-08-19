@@ -598,9 +598,9 @@ const heroImageUpload = (
     const locationSection = () => {
         return (
             <Stack spacing={2}>
-                <h3>Location</h3>
                 {formik.values.format === 'online' && (
                     <>
+                    <h3>Location</h3>
                         <TextField
                             label="Virtual Meeting Link"
                             type="text"
@@ -621,6 +621,7 @@ const heroImageUpload = (
                 )}
                 {formik.values.format === 'hybrid' && (
                     <>
+                    <h3>Location</h3>
                         <TextField
                             label="Virtual Meeting Link"
                             type="text"
@@ -657,6 +658,7 @@ const heroImageUpload = (
                 )}
                 {formik.values.format === 'in-person' && (
                     <>
+                    <h3>Location</h3>
                         <TextField
                             label="Venue"
                             type="text"
