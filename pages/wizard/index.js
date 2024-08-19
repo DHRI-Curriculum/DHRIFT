@@ -377,7 +377,6 @@ export default function Form(props) {
             };
             const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
             formik.setFieldValue('sessions', updatedSessions);
-            formik.setFieldValue('sessions', updatedSessions);
         } else {
             formik.setFieldValue(field, [...formik.values[field], newItem]);
         }
