@@ -906,180 +906,172 @@ const generalInfoSection = (
         </Stack>
     );
 
-    const sessionsSection = (
-        <Stack
-            className='sessions'
-            spacing={2}>
-            <h2>Sessions</h2>
-            {formik.values.sessions && formik.values.sessions.map((session, index) => (
-                <div
-                    style={{ border: '1px solid black', padding: '10px', margin: '10px' }}
-                    key={index}>
-                    <h4>Session {index + 1}</h4>
-                    <Stack spacing={2}
-                        direction={'row'}>
-                        {formik.values.sessions[index] && (
-                            <>
-                                <TextField
-                                    label="Title"
-                                    type="text"
-                                    value={formik.values.sessions[index].title}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
-                                    style={{ width: '400px' }}
-                                    error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
-                                    helperText={formik.touched.sessions?.[index]?.title && formik.errors.sessions?.[index]?.title}
-                                    required
-                                />
-                                <TextField
-                                    // helperText="Date"
-                                    type="date"
-                                    value={formik.values.sessions[index].date}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
-                                    helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
-                                />
-                                <TextField
-                                    type="time"
-                                    value={formik.values.sessions[index].time}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
-                                    helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
-                                />
-                                <TextField
-                                    type="time"
-                                    value={formik.values.sessions[index].endTime}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.sessions?.[index]?.endTime && Boolean(formik.errors.sessions?.[index]?.endTime)}
-                                    helperText={formik.touched.sessions?.[index]?.endTime && formik.errors.sessions?.[index]?.endTime}
-                                />
-                            </>
-                        )}
-                    </Stack>
-                    <br />
-                    <Stack
-                        spacing={2}>
+const sessionsSection = (
+    <Stack spacing={3}>
+        <h2>Sessions</h2>
+        <p>Provide details about each session in your institute.</p>
+        {formik.values.sessions.map((session, index) => (
+            <Card key={index} variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+                <h4>Session {index + 1}</h4>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Title"
+                            type="text"
+                            value={session.title}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'title', e.target.value)}
+                            fullWidth
+                            required
+                            error={formik.touched.sessions?.[index]?.title && Boolean(formik.errors.sessions?.[index]?.title)}
+                            helperText={formik.touched.sessions?.[index]?.title && formik.errors.sessions?.[index]?.title}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            type="date"
+                            value={session.date}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'date', e.target.value)}
+                            fullWidth
+                            required
+                            error={formik.touched.sessions?.[index]?.date && Boolean(formik.errors.sessions?.[index]?.date)}
+                            helperText={formik.touched.sessions?.[index]?.date && formik.errors.sessions?.[index]?.date}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            type="time"
+                            value={session.time}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'time', e.target.value)}
+                            fullWidth
+                            required
+                            error={formik.touched.sessions?.[index]?.time && Boolean(formik.errors.sessions?.[index]?.time)}
+                            helperText={formik.touched.sessions?.[index]?.time && formik.errors.sessions?.[index]?.time}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            type="time"
+                            value={session.endTime}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'endTime', e.target.value)}
+                            fullWidth
+                            error={formik.touched.sessions?.[index]?.endTime && Boolean(formik.errors.sessions?.[index]?.endTime)}
+                            helperText={formik.touched.sessions?.[index]?.endTime && formik.errors.sessions?.[index]?.endTime}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
                         <TextField
                             label="Description"
                             type="text"
-                            value={formik.values.sessions[index].description}
+                            value={session.description}
                             onChange={(e) => handleArrayFieldChange('sessions', index, 'description', e.target.value)}
                             multiline
                             rows={4}
+                            fullWidth
                             error={formik.touched.sessions?.[index]?.description && Boolean(formik.errors.sessions?.[index]?.description)}
                             helperText={formik.touched.sessions?.[index]?.description && formik.errors.sessions?.[index]?.description}
                         />
-                        <Stack
-                            spacing={2}
-                            direction={'row'}>
-                            <TextField
-                                select
-                                label="DHRIFT Workshop"
-                                value={formik.values.sessions[index].workshop}
-                                style={{ width: '400px' }}
-                                onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.sessions?.[index]?.workshop && Boolean(formik.errors.sessions?.[index]?.workshop)}
-                                helperText={formik.touched.sessions?.[index]?.workshop && formik.errors.sessions?.[index]?.workshop}
-                            >
-                                {displayWorkshops && displayWorkshops.map((workshop, i) => (
-                                    <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
-                                ))}
-                                <MenuItem value={''}>None</MenuItem>
-                            </TextField>
-                            <TextField
-                                label="Location"
-                                type="text"
-                                value={formik.values.sessions[index].location}
-                                onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
-                                style={{ width: '400px' }}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.sessions?.[index]?.location && Boolean(formik.errors.sessions?.[index]?.location)}
-                                helperText={formik.touched.sessions?.[index]?.location && formik.errors.sessions?.[index]?.location}
-                            />
-                        </Stack>
-                        <br />
-                    </Stack>
-
-                    {session.instructors && session.instructors.map((instructor, i) => (
-                        <Stack
-                            spacing={1}
-                            direction={'row'}
-                            key={'instructor' + i}>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            select
+                            label="DHRIFT Workshop"
+                            value={session.workshop}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'workshop', e.target.value)}
+                            fullWidth
+                            error={formik.touched.sessions?.[index]?.workshop && Boolean(formik.errors.sessions?.[index]?.workshop)}
+                            helperText={formik.touched.sessions?.[index]?.workshop && formik.errors.sessions?.[index]?.workshop}
+                        >
+                            {displayWorkshops.map((workshop, i) => (
+                                <MenuItem key={i} value={workshop.name}>{workshop.name}</MenuItem>
+                            ))}
+                            <MenuItem value={''}>None</MenuItem>
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Location"
+                            type="text"
+                            value={session.location}
+                            onChange={(e) => handleArrayFieldChange('sessions', index, 'location', e.target.value)}
+                            fullWidth
+                            error={formik.touched.sessions?.[index]?.location && Boolean(formik.errors.sessions?.[index]?.location)}
+                            helperText={formik.touched.sessions?.[index]?.location && formik.errors.sessions?.[index]?.location}
+                        />
+                    </Grid>
+                </Grid>
+                <h5>Instructors</h5>
+                {session.instructors.map((instructor, i) => (
+                    <Grid container spacing={2} key={i}>
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label={`Instructor ${i + 1}`}
                                 type="text"
-                                value={formik.values.sessions[index].instructors[i].name}
-                                style={{ width: '400px', marginRight: '10px' }}
+                                value={instructor.name}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'name', i)}
-                                onBlur={formik.handleBlur}
+                                fullWidth
                                 error={formik.touched.sessions?.[index]?.instructors?.[i]?.name && Boolean(formik.errors.sessions?.[index]?.instructors?.[i]?.name)}
                                 helperText={formik.touched.sessions?.[index]?.instructors?.[i]?.name && formik.errors.sessions?.[index]?.instructors?.[i]?.name}
                             />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label={`Instructor ${i + 1} Email`}
                                 type="email"
-                                value={formik.values.sessions[index].instructors[i].email}
-                                style={{ width: '400px' }}
+                                value={instructor.email}
                                 onChange={(e) => handleArrayFieldChange('sessions', index, 'instructors', e.target.value, 'email', i)}
-                                onBlur={formik.handleBlur}
+                                fullWidth
                                 error={formik.touched.sessions?.[index]?.instructors?.[i]?.email && Boolean(formik.errors.sessions?.[index]?.instructors?.[i]?.email)}
                                 helperText={formik.touched.sessions?.[index]?.instructors?.[i]?.email && formik.errors.sessions?.[index]?.instructors?.[i]?.email}
                             />
-                            {session.instructors.length > 1 && (
+                        </Grid>
+                        {session.instructors.length > 1 && (
+                            <Grid item xs={12}>
                                 <Button type="button" onClick={() => handleRemove('instructors', i, index)}><Remove /></Button>
-                            )}
-                        </Stack>
-                    ))}
-                    <Button type="button" onClick={() => handleAdd('instructors', index)}>
-                        <Add />
-                    </Button>
-                    {session.helpers && session.helpers.map((helper, i) => (
-                        <>
-                            <Stack
-                                spacing={1}
-                                direction={'row'}
-                                key={'helper' + i}>
-                                <TextField
-                                    label={`Assistant ${i + 1}`}
-                                    type="text"
-                                    value={formik.values.sessions[index].helpers[i].name}
-                                    style={{ width: '400px', marginRight: '10px' }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.sessions?.[index]?.helpers?.[i]?.name && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.name)}
-                                    helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.name && formik.errors.sessions?.[index]?.helpers?.[i]?.name}
-                                />
-                                <TextField
-                                    label={`Assistant ${i + 1} Email`}
-                                    type="email"
-                                    value={formik.values.sessions[index].helpers[i].email}
-                                    style={{ width: '400px' }}
-                                    onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)}
-                                    onBlur={formik.handleBlur}
-                                    error={formik.touched.sessions?.[index]?.helpers?.[i]?.email && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.email)}
-                                    helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.email && formik.errors.sessions?.[index]?.helpers?.[i]?.email}
-                                />
+                            </Grid>
+                        )}
+                    </Grid>
+                ))}
+                <Button type="button" onClick={() => handleAdd('instructors', index)}><Add /></Button>
+                <h5>Helpers</h5>
+                {session.helpers.map((helper, i) => (
+                    <Grid container spacing={2} key={i}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label={`Helper ${i + 1}`}
+                                type="text"
+                                value={helper.name}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'name', i)}
+                                fullWidth
+                                error={formik.touched.sessions?.[index]?.helpers?.[i]?.name && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.name)}
+                                helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.name && formik.errors.sessions?.[index]?.helpers?.[i]?.name}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                label={`Helper ${i + 1} Email`}
+                                type="email"
+                                value={helper.email}
+                                onChange={(e) => handleArrayFieldChange('sessions', index, 'helpers', e.target.value, 'email', i)}
+                                fullWidth
+                                error={formik.touched.sessions?.[index]?.helpers?.[i]?.email && Boolean(formik.errors.sessions?.[index]?.helpers?.[i]?.email)}
+                                helperText={formik.touched.sessions?.[index]?.helpers?.[i]?.email && formik.errors.sessions?.[index]?.helpers?.[i]?.email}
+                            />
+                        </Grid>
+                        {session.helpers.length > 1 && (
+                            <Grid item xs={12}>
                                 <Button type="button" onClick={() => handleRemove('helpers', i, index)}><Remove /></Button>
-                            </Stack>
-                        </>
-                    ))}
-                    <Button type="button" onClick={() => handleAdd('helpers', index)}>
-                        <Add />
-                    </Button>
-                    {formik.values.sessions.length > 1 && (
-                        <div>
-                            <Button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</Button>
-                        </div>
-                    )}
-                </div>
-            ))}
-            <div>
-                <Button type="button" onClick={() => handleAdd('sessions')}>Add Session</Button>
-            </div>
-        </Stack>
+                            </Grid>
+                        )}
+                    </Grid>
+                ))}
+                <Button type="button" onClick={() => handleAdd('helpers', index)}><Add /></Button>
+                {formik.values.sessions.length > 1 && (
+                    <Button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</Button>
+                )}
+            </Card>
+        ))}
+        <Button type="button" onClick={() => handleAdd('sessions')}>Add Session</Button>
+    </Stack>
     );
 
     const handleStageChange = (e) => {
