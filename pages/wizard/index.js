@@ -388,13 +388,9 @@ export default function Form(props) {
 
     }
 
-    const handleInputChange = useCallback(
-        debounce((e) => {
-            const { name, value, type, checked } = e.target;
-            formik.setFieldValue(name, type === 'checkbox' ? checked : value);
-        }, 200),
-        [formik]
-    );
+    const handleInputChange = (e) => {
+        formik.handleChange(e);
+    };
 
     const handleAdd = (field, sessionIndex) => {
         const newItem = field === 'sessions' ? { date: '', time: '', title: '', description: '', workshop: '', location: '', instructors: [{ name: '', email: '' }], helpers: [{ name: '', email: '' }] } : { name: '', email: '' };
@@ -495,12 +491,12 @@ const heroImageUpload = (
             direction={'row'}
             spacing={2}
         >
-            <TextField label="Registration or Application Link" type="text" name="registerLink" value={formik.values.registerLink} onChange={handleInputChange}
+            <TextField label="Registration or Application Link" type="text" name="registerLink" value={formik.values.registerLink} onChange={formik.handleChange}
                 style={{
                     width: '400px',
                 }}
             />
-            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formik.values.registerText} onChange={handleInputChange}
+            <TextField label="Registration or Application Button Text" type="text" name="registerText" value={formik.values.registerText} onChange={formik.handleChange}
                 style={{
                     width: '400px',
                 }}
@@ -514,7 +510,7 @@ const heroImageUpload = (
             <Stack direction="row" alignItems="center" spacing={1}>
                 <Switch
                     checked={formik.values.haveRegistration}
-                    onChange={(e) => formik.setFieldValue('haveRegistration', e.target.checked)}
+                    onChange={formik.handleChange}
                     name="haveRegistration"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
@@ -529,7 +525,7 @@ const heroImageUpload = (
             <div>
                 <Checkbox
                     checked={formik.values.cloneWorkshops}
-                    onChange={(e) => formik.setFieldValue('cloneWorkshops', e.target.checked)}
+                    onChange={formik.handleChange}
                     name="cloneWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
@@ -584,7 +580,7 @@ const heroImageUpload = (
             select
             label="Format"
             value={formik.values.format}
-            onChange={handleInputChange}
+            onChange={formik.handleChange}
             name="format"
             style={{ width: '400px' }}
         >
@@ -739,7 +735,7 @@ const generalInfoSection = (
             error={formError && !formik.values.event}
             helperText={formError && !formik.values.event ? 'This field is required' : ''}
             fullWidth
-            onChange={handleInputChange} 
+            onChange={formik.handleChange} 
         />
         
         <Stack spacing={2} direction="row">
@@ -748,7 +744,7 @@ const generalInfoSection = (
                 name="dateStart" 
                 value={formik.values.dateStart}
                 helperText="Start Date" 
-                onChange={handleInputChange} 
+                onChange={formik.handleChange} 
                 fullWidth
             />
             <TextField
@@ -768,7 +764,7 @@ const generalInfoSection = (
             value={formik.values.herodescription}
             helperText="Max 10 words"
             fullWidth
-            onChange={handleInputChange} 
+            onChange={formik.handleChange} 
         />
         
         {formatSection}
@@ -782,7 +778,7 @@ const generalInfoSection = (
             error={formError && !formik.values.institution}
             helperText={formError && !formik.values.institution ? 'This field is required' : ''}
             fullWidth
-            onChange={handleInputChange} 
+            onChange={formik.handleChange} 
         />
         
         <TextField 
@@ -796,7 +792,7 @@ const generalInfoSection = (
             error={formError && !formik.values.description}
             helperText={formError && !formik.values.description ? 'This field is required' : ''}
             fullWidth
-            onChange={handleInputChange} 
+            onChange={formik.handleChange} 
         />
     </Stack>
 );
@@ -1116,7 +1112,7 @@ const sessionsSection = (
             <div>
                 <Checkbox
                     checked={formik.values.showWorkshops}
-                    onChange={(e) => formik.setFieldValue('showWorkshops', e.target.checked)}
+                    onChange={formik.handleChange}
                     name="showWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
