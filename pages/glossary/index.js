@@ -41,7 +41,10 @@ export default function Glossary({ glossary, ...props }) {
 
 
     const [currentTerm, setCurrentTerm] = useState(null);
+    const [isClient, setIsClient] = useState(false);
+
     useEffect(() => {
+        setIsClient(true);
         //    get currentTerm from url
         const urlParams = new URLSearchParams(window.location.search);
         const currentTerm = urlParams.get('term');
@@ -166,22 +169,22 @@ export default function Glossary({ glossary, ...props }) {
 
 
 
-    return (
+    return isClient ? (
         <>
-        <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo} gitUser={props.gitUser} gitRepo={props.gitRepo} />
-        <Container>
-            <GlossaryHeader variant="h3" component="h1">Glossary</GlossaryHeader>
-            <LetterSelector>
-                {letterSelector}
-            </LetterSelector>
-            <GlossaryContent container spacing={3}>
-                <Grid item xs={12}>
-                    {currentGlossaryPage}
-                </Grid>
-            </GlossaryContent>
-        </Container>
+            <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo} gitUser={props.gitUser} gitRepo={props.gitRepo} />
+            <Container>
+                <GlossaryHeader variant="h3" component="h1">Glossary</GlossaryHeader>
+                <LetterSelector>
+                    {letterSelector}
+                </LetterSelector>
+                <GlossaryContent container spacing={3}>
+                    <Grid item xs={12}>
+                        {currentGlossaryPage}
+                    </Grid>
+                </GlossaryContent>
+            </Container>
         </>
-    )
+    ) : null;
 }
 
 
