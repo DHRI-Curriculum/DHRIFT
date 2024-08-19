@@ -467,21 +467,21 @@ export default function Form(props) {
         </div>
     );
 
-    const logoUpload = (
-        <div>
-            <h2>Logo Upload</h2>
-            <p>Upload a logo for your institute. This will be displayed in the header of your DHRIFT landing page.</p>
-            <input type="file" name="logo" accept="image/*" />
-        </div>
-    );
+const logoUpload = (
+    <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+        <h2>Logo Upload</h2>
+        <p>Upload a logo for your institute. This will be displayed in the header of your DHRIFT landing page.</p>
+        <input type="file" name="logo" accept="image/*" />
+    </Card>
+);
 
-    const heroImageUpload = (
-        <div>
-            <h2>Hero Image Upload</h2>
-            <p>Upload a hero image for your institute. This will be displayed at the top of your DHRIFT landing page.</p>
-            <input type="file" name="heroImage" accept="image/*" />
-        </div>
-    );
+const heroImageUpload = (
+    <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+        <h2>Hero Image Upload</h2>
+        <p>Upload a hero image for your institute. This will be displayed at the top of your DHRIFT landing page.</p>
+        <input type="file" name="heroImage" accept="image/*" />
+    </Card>
+);
 
     const registrationFormSection = (
         <Stack
