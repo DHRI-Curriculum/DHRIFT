@@ -165,7 +165,7 @@ export default function Form(props) {
                         time: '10:00',
                         title: 'Example Session',
                         description: 'This is a description of the example session.',
-                        workshop: 'Example Workshop',
+                        workshop: '',
                         location: 'Example Location',
                         instructors: [{ name: 'Instructor One', email: 'instructor.one@example.com' }],
                         helpers: [{ name: 'Helper One', email: 'helper.one@example.com' }]
@@ -468,7 +468,9 @@ export default function Form(props) {
     );
 
 const logoUpload = (
-    <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+    <Card 
+     className='logoUpload'
+    variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
         <h2>Logo Upload</h2>
         <p>Upload a logo for your institute. This will be displayed in the header of your DHRIFT landing page.</p>
         <input type="file" name="logo" accept="image/*" />
@@ -476,7 +478,9 @@ const logoUpload = (
 );
 
 const heroImageUpload = (
-    <Card variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+    <Card
+        className='heroImageUpload' 
+    variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
         <h2>Hero Image Upload</h2>
         <p>Upload a hero image for your institute. This will be displayed at the top of your DHRIFT landing page.</p>
         <input type="file" name="heroImage" accept="image/*" />
