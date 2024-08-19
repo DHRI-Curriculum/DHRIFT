@@ -165,7 +165,7 @@ export default function WorkshopPage({
         console.log('data', data)
         setMarkdownError(err);
       }
-    } else if (data && !currentFile && typeof (data) === 'object') {
+    } else if (!data && !currentFile) {
       setMarkdownError(new Error('Failed to fetch data from the repository.'));
     }
   }, [data])
