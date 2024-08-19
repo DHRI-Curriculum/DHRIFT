@@ -546,8 +546,20 @@ export default function Form(props) {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <h2>Success!</h2>
-                <p>Your institute has been created. You can view it <a href={`../../inst/?instUser=${instName}&instRepo=${instUrl}`}>here</a>.</p>
+                <Box sx={{ padding: '20px', textAlign: 'center' }}>
+                    <h2>Success!</h2>
+                    <p>Your institute has been successfully created.</p>
+                    <p>
+                        <a href={`../../inst/?instUser=${instName}&instRepo=${instUrl}`} target="_blank" rel="noopener noreferrer">
+                            View your new site
+                        </a>
+                    </p>
+                    <p>
+                        <a href={`https://github.com/${instName}/${instUrl}`} target="_blank" rel="noopener noreferrer">
+                            View your GitHub repository
+                        </a>
+                    </p>
+                </Box>
 
                 <DialogActions>
                     <Button onClick={() => setDialogOpen(false)}>Close</Button>
