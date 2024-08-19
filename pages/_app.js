@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }) {
   Object.assign(pageProps, {
     title, setTitle, workshopMode, setWorkshopMode,
   })
-  const base = '/' + process.env.NEXT_PUBLIC_REPO_NAME
+  const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   // useCacheProvider hook
   function useCacheProvider() {

@@ -18,8 +18,8 @@ process.env.NEXT_PUBLIC_REPO_NAME = repoName
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX || '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || `/${repoName}`;
+const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX || `/${repoName}`;
 
 const nextConfig = {
     basePath: basePath,
