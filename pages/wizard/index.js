@@ -386,13 +386,10 @@ export default function Form(props) {
 
     }
 
-    const handleInputChange = useCallback(
-        debounce((e) => {
-            const { name, value, type, checked } = e.target;
-            formik.setFieldValue(name, type === 'checkbox' ? checked : value);
-        }, 300),
-        []
-    );
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        formik.setFieldValue(name, type === 'checkbox' ? checked : value);
+    };
 
     const handleAdd = (field, sessionIndex) => {
         const newItem = field === 'sessions' ? { date: '', time: '', title: '', description: '', workshop: '', location: '', instructors: [{ name: '', email: '' }], helpers: [{ name: '', email: '' }] } : { name: '', email: '' };
