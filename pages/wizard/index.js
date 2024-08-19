@@ -424,6 +424,13 @@ export default function Form(props) {
                 [field]: session[field].filter((item, i) => i !== index)
             };
             const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
+            const session = formik.values.sessions[sessionIndex];
+            const updatedSession = {
+                ...session,
+                [field]: session[field].filter((item, i) => i !== index)
+            };
+            const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
+            formik.setFieldValue('sessions', updatedSessions);
             return;
         }
 
