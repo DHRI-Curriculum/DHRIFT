@@ -616,13 +616,18 @@ export default function Form(props) {
             return (
                 <Stack spacing={2}>
                     <h3>Location</h3>
-                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formData.onlinePlatformLink}
+                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formik.values.onlinePlatformLink}
                         style={{ width: '400px' }}
                         onChange={handleInputChange} />
                     <p>Enter the venue and address for your event below. This will be displayed on your DHRIFT landing page.</p>
-                    <TextField label="Venue" type="text" name="venue" value={formData.venue} onChange={handleInputChange} />
-                    <TextField label="Location" type="text" name="location" value={formData.location} onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
+                    <TextField label="Venue" type="text" name="venue" 
+                    value={formik.values.venue}
+                    onChange={handleInputChange} />
+                    <TextField label="Location" type="text" name="location" 
+                    value={formik.values.location} 
+                    onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes}
+                     onChange={handleInputChange} />
                 </Stack>
             );
         }
@@ -643,7 +648,8 @@ export default function Form(props) {
                             marginBottom: '10px'
                         }}
                         onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formData.eventNotes} onChange={handleInputChange} />
+                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes}
+                        onChange={handleInputChange} />
                 </Stack>
             );
         }
