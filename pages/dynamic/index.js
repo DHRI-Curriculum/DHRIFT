@@ -140,9 +140,12 @@ export default function WorkshopPage({
     setEditing(urlParams.get('edit'));
     setCurrentPage(Number(urlParams.get('page')));
     if (gitFile === null) {
-      setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
-    }
-    else {
+      if (gitUser && gitRepo) {
+        setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
+      } else {
+        setMarkdownError(new Error('GitHub user or repository is not specified.'));
+      }
+    } else {
       setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
     }
   }, [gitUser, gitRepo, gitFile, editing, instUser, instRepo])
@@ -162,6 +165,8 @@ export default function WorkshopPage({
         console.log('data', data)
         setMarkdownError(err);
       }
+    } else if (!data && !currentFile) {
+      setMarkdownError(new Error('Failed to fetch data from the repository.'));
     }
   }, [data])
 
