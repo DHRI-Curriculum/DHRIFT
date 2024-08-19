@@ -681,43 +681,81 @@ export default function Form(props) {
         </Stack>
     );
 
-    const generalInfoSection = (
-        <Stack
-            spacing={2}>
-            <h2>General Information</h2>
-            <p>The information from this page will appear at the top of the page overlaid on the hero-image. See Creating a DHRIFT Landing Page (?) for an example. Fields with an * are required.</p>
-            <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formik.values.event}
-                required
-                error={formError && !formik.values.event}
-                helperText={formError && !formik.values.event ? 'This field is required' : ''}
-                style={{ width: '400px' }}
-                onChange={handleInputChange} />
-            <Stack spacing={2} direction={'row'}>
-                <TextField type="date" name="dateStart" value={formik.values.dateStart}
-                    helperText="Start Date" onChange={handleInputChange} />
-                <TextField
-                    helperText="End Date" type="date" name="endDate" value={formik.values.endDate}
-                    onChange={handleInputChange} />
-                <TextField type="text" name='herodescription' label="Tagline"
-                    value={formik.values.herodescription}
-                    helperText="Max 10 words"
-                    style={{ width: '400px' }}
-                    onChange={handleInputChange} />
-                {formatSection}
-            </Stack>
-            <TextField label='Host Organization' type='text' name='institution' value={formik.values.institution}
-                required
-                error={formError && !formik.values.institution}
-                helperText={formError && !formik.values.institution ? 'This field is required' : ''}
-                style={{ width: '400px' }}
-                onChange={handleInputChange} />
-            <TextField label="Short Description" type="text" name="description" value={formik.values.description} multiline rows={3}
-                required
-                error={formError && !formik.values.description}
-                helperText={formError && !formik.values.description ? 'This field is required' : ''}
-                onChange={handleInputChange} />
+const generalInfoSection = (
+    <Stack spacing={3}>
+        <h2>General Information</h2>
+        <p>The information from this page will appear at the top of the page overlaid on the hero-image. Fields with an * are required.</p>
+        
+        <TextField 
+            label="Title of Institute / Workshop / Event / Course / Class" 
+            type="text" 
+            name="event" 
+            value={formik.values.event}
+            required
+            error={formError && !formik.values.event}
+            helperText={formError && !formik.values.event ? 'This field is required' : ''}
+            fullWidth
+            onChange={handleInputChange} 
+        />
+        
+        <Stack spacing={2} direction="row">
+            <TextField 
+                type="date" 
+                name="dateStart" 
+                value={formik.values.dateStart}
+                helperText="Start Date" 
+                onChange={handleInputChange} 
+                fullWidth
+            />
+            <TextField
+                type="date" 
+                name="endDate" 
+                value={formik.values.endDate}
+                helperText="End Date" 
+                onChange={handleInputChange} 
+                fullWidth
+            />
         </Stack>
-    );
+        
+        <TextField 
+            label="Tagline" 
+            type="text" 
+            name="herodescription" 
+            value={formik.values.herodescription}
+            helperText="Max 10 words"
+            fullWidth
+            onChange={handleInputChange} 
+        />
+        
+        {formatSection}
+        
+        <TextField 
+            label="Host Organization" 
+            type="text" 
+            name="institution" 
+            value={formik.values.institution}
+            required
+            error={formError && !formik.values.institution}
+            helperText={formError && !formik.values.institution ? 'This field is required' : ''}
+            fullWidth
+            onChange={handleInputChange} 
+        />
+        
+        <TextField 
+            label="Short Description" 
+            type="text" 
+            name="description" 
+            value={formik.values.description} 
+            multiline 
+            rows={3}
+            required
+            error={formError && !formik.values.description}
+            helperText={formError && !formik.values.description ? 'This field is required' : ''}
+            fullWidth
+            onChange={handleInputChange} 
+        />
+    </Stack>
+);
 
     const organizersSection = (
         <Stack spacing={2}>
