@@ -10,41 +10,14 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Header from '../../components/Header';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-
-const GlossaryHeader = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-}));
-
-const LetterSelector = styled(Box)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-}));
-
-const GlossaryContent = styled(Grid)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-}));
-
-const Term = styled(Typography)({
-    fontWeight: 'bold',
-});
-
-const Definition = styled(Typography)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-}));
+import { Container } from '@mui/material'
 
 
 export default function Glossary({ glossary, ...props }) {
 
 
-    const [currentTerm, setCurrentTerm] = useState(null);
-    const [isClient, setIsClient] = useState(false);
-
+    const [currentTerm, setCurrentTerm] = useState(null)
     useEffect(() => {
-        setIsClient(true);
         //    get currentTerm from url
         const urlParams = new URLSearchParams(window.location.search);
         const currentTerm = urlParams.get('term');
@@ -90,29 +63,29 @@ export default function Glossary({ glossary, ...props }) {
 
     const GlossaryPage = (letter, terms) => {
         return (
-            <Paper >
-                <Typography variant="h5" component="h2">{letter}</Typography>
+            <div className="glossary-page">
+                <h2>{letter}</h2>
                 {terms.map(term => {
                     return (
                         <Accordion key={term.term}>
                             <AccordionSummary>
                                 <Box display="flex" flexDirection="row" alignItems="center">
                                     <Box flexGrow={1}>
-                                        <Term variant="body1">{term.term}</Term>
+                                        <span className="term">{term.term}</span>
                                     </Box>
                                 </Box>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Box display="flex" flexDirection="row" alignItems="center">
                                     <Box flexGrow={1}>
-                                        <Definition variant="body2" dangerouslySetInnerHTML={{ __html: term.definition }} />
+                                        <div className='definition' dangerouslySetInnerHTML={{ __html: term.definition }} />
                                     </Box>
                                 </Box>
                             </AccordionDetails>
                         </Accordion>
                     )
                 })}
-            </Paper>
+            </div>
         )
     }
 
@@ -169,24 +142,24 @@ export default function Glossary({ glossary, ...props }) {
 
 
 
-    return isClient ? (
+    return (
         <>
-            <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo} gitUser={props.gitUser} gitRepo={props.gitRepo} />
-            <Container
-            className='glossary'
-            >
-                <GlossaryHeader variant="h3" component="h1">Glossary</GlossaryHeader>
-                <LetterSelector>
+        <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo}
+            gitUser={props.gitUser} gitRepo={props.gitRepo}
+          />
+        <Container className="glossary mui-container">
+            <div className="glossary-header">
+                <h1>Glossary</h1>
+                <div className="letter-selector">
                     {letterSelector}
-                </LetterSelector>
-                <GlossaryContent container spacing={3}>
-                    <Grid item xs={12}>
-                        {currentGlossaryPage}
-                    </Grid>
-                </GlossaryContent>
-            </Container>
+                </div>
+            </div>
+            <div className="glossary-content">
+                {currentGlossaryPage}
+            </div>
+        </Container>
         </>
-    ) : null;
+    )
 }
 
 
