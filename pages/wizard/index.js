@@ -514,7 +514,7 @@ const heroImageUpload = (
             <Stack direction="row" alignItems="center" spacing={1}>
                 <Switch
                     checked={formik.values.haveRegistration}
-                    onChange={handleInputChange}
+                    onChange={(e) => formik.setFieldValue('haveRegistration', e.target.checked)}
                     name="haveRegistration"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
@@ -528,8 +528,8 @@ const heroImageUpload = (
         <>
             <div>
                 <Checkbox
-                    checked={formik.values.cloneWorkshops === true}
-                    onChange={handleInputChange}
+                    checked={formik.values.cloneWorkshops}
+                    onChange={(e) => formik.setFieldValue('cloneWorkshops', e.target.checked)}
                     name="cloneWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
@@ -1116,7 +1116,7 @@ const sessionsSection = (
             <div>
                 <Checkbox
                     checked={formik.values.showWorkshops}
-                    onChange={handleInputChange}
+                    onChange={(e) => formik.setFieldValue('showWorkshops', e.target.checked)}
                     name="showWorkshops"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
