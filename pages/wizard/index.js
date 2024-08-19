@@ -367,10 +367,7 @@ export default function Form(props) {
 
         if (field === 'sessions') {
             const updatedSessions = [...formik.values.sessions, newItem];
-            setFormData({
-                ...formData,
-                sessions: updatedSessions
-            });
+            formik.setFieldValue('sessions', updatedSessions);
             formik.setFieldValue('sessions', updatedSessions);
         } else if (field === 'instructors' || field === 'helpers') {
             const session = formik.values.sessions[sessionIndex];
@@ -379,10 +376,7 @@ export default function Form(props) {
                 [field]: [...session[field], newItem]
             };
             const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
-            setFormData({
-                ...formData,
-                sessions: updatedSessions
-            });
+            formik.setFieldValue('sessions', updatedSessions);
             formik.setFieldValue('sessions', updatedSessions);
         } else {
             formik.setFieldValue(field, [...formik.values[field], newItem]);
@@ -401,28 +395,25 @@ export default function Form(props) {
             return;
         }
 
-        const list = [...formData[field]];
+        const list = [...formik.values[field]];
         list.splice(index, 1);
         formik.setFieldValue(field, list);
     };
 
     const handleArrayFieldChange = (field, index, subfield, value, subsubfield, subIndex) => {
         if (subfield === 'instructors' || subfield === 'helpers') {
-            const session = formData.sessions[index];
+            const session = formik.values.sessions[index];
             const list = [...session[subfield]];
             list[subIndex][subsubfield] = value;
             const updatedSession = {
                 ...session,
                 [subfield]: list
             };
-            const updatedSessions = formData.sessions.map((s, i) => i === index ? updatedSession : s);
-            setFormData({
-                ...formData,
-                sessions: updatedSessions
-            });
+            const updatedSessions = formik.values.sessions.map((s, i) => i === index ? updatedSession : s);
+            formik.setFieldValue('sessions', updatedSessions);
             return;
         }
-        const list = [...formData[field]];
+        const list = [...formik.values[field]];
         list[index][subfield] = value;
         formik.setFieldValue(field, list);
     };
@@ -658,8 +649,8 @@ export default function Form(props) {
             <p>The information from this page will appear at the top of the page overlaid on the hero-image. See Creating a DHRIFT Landing Page (?) for an example. Fields with an * are required.</p>
             <TextField label="Title of institute/ workshop / event/ course / class" type="text" name="event" value={formik.values.event}
                 required
-                error={formError && !formData.event}
-                helperText={formError && !formData.event ? 'This field is required' : ''}
+                error={formError && !formik.values.event}
+                helperText={formError && !formik.values.event ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
             <Stack spacing={2} direction={'row'}>
@@ -677,14 +668,14 @@ export default function Form(props) {
             </Stack>
             <TextField label='Host Organization' type='text' name='institution' value={formik.values.institution}
                 required
-                error={formError && !formData.institution}
-                helperText={formError && !formData.institution ? 'This field is required' : ''}
+                error={formError && !formik.values.institution}
+                helperText={formError && !formik.values.institution ? 'This field is required' : ''}
                 style={{ width: '400px' }}
                 onChange={handleInputChange} />
             <TextField label="Short Description" type="text" name="description" value={formik.values.description} multiline rows={3}
                 required
-                error={formError && !formData.description}
-                helperText={formError && !formData.description ? 'This field is required' : ''}
+                error={formError && !formik.values.description}
+                helperText={formError && !formik.values.description ? 'This field is required' : ''}
                 onChange={handleInputChange} />
         </Stack>
     );
@@ -692,7 +683,7 @@ export default function Form(props) {
     const organizersSection = (
         <Stack spacing={2}>
             <h4>Organizers</h4>
-            {formData.organizers.map((organizer, index) => (
+            {formik.values.organizers.map((organizer, index) => (
                 <div key={index}>
                     <TextField label={`Organizer ${index + 1}`} type="text" value={formik.values.organizers[index].name}
                         style={{
@@ -703,11 +694,11 @@ export default function Form(props) {
                     <TextField label={`Organizer ${index + 1} Email`} type="email" value={formik.values.organizers[index].email}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('organizers', index, 'email', e.target.value)} />
-                    {formData.organizers.length > 1 && (
+                    {formik.values.organizers.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('organizers', index)}>Remove Organizer</Button>
                     )}
 
-                    {index === formData.organizers.length - 1 && (
+                    {index === formik.values.organizers.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('organizers')}><Add /></Button>
                     )}
                 </div>
@@ -718,7 +709,7 @@ export default function Form(props) {
     const sponsorsSection = (
         <Stack spacing={2}>
             <h4>Sponsors</h4>
-            {formData.sponsors.map((sponsor, index) => (
+            {formik.values.sponsors.map((sponsor, index) => (
                 <div key={index}>
                     <TextField label={`Sponsor ${index + 1}`} type="text" value={formik.values.sponsors[index].name}
                         style={{
@@ -747,11 +738,11 @@ export default function Form(props) {
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'notes', e.target.value)}
                         onBlur={formik.handleBlur}
                     />
-                    {formData.sponsors.length > 1 && (
+                    {formik.values.sponsors.length > 1 && (
                         <Button type="button" onClick={() => handleRemove('sponsors', index)}>Remove Sponsor</Button>
                     )}
 
-                    {index === formData.sponsors.length - 1 && (
+                    {index === formik.values.sponsors.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('sponsors')}><Add /></Button>
                     )}
                 </div>
@@ -762,7 +753,7 @@ export default function Form(props) {
     const contactSection = (
         <Stack spacing={2}>
             <h4>Contact</h4>
-            {formData.contact.map((contact, index) => (
+            {formik.values.contact.map((contact, index) => (
                 <div key={index}>
                     <TextField
                         label={`Contact ${index + 1}`}
@@ -967,7 +958,7 @@ export default function Form(props) {
                     <Button type="button" onClick={() => handleAdd('helpers', index)}>
                         <Add />
                     </Button>
-                    {formData.sessions.length > 1 && (
+                    {formik.values.sessions.length > 1 && (
                         <div>
                             <Button type="button" onClick={() => handleRemove('sessions', index)}>Remove Session</Button>
                         </div>
