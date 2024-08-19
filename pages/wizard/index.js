@@ -14,7 +14,6 @@ import Box from '@mui/material/Box';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
 
 
 export default function Form(props) {
@@ -197,12 +196,11 @@ export default function Form(props) {
 
     const { workshops } = useAllWorkshops({ gitUser: 'dhri-curriculum', gitRepo: 'workshops', instUser: 'dhri-curriculum', instRepo: 'workshops' });
 
-    const displayWorkshops = useMemo(() => 
-        workshops
-            .filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
-            .map(workshop => ({ name: workshop.name.replace('.md', '') })),
-        []
-    );
+    const displayWorkshops = 
+        workshops.filter(workshop => workshop.type === 'file' && !workshop.name.startsWith('DHRIFT_') && !workshop.name.startsWith('README.md'))
+            .map(workshop => ({ name: workshop.name.replace('.md', '') }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
 
 
     const uploadFiles = async (files) => {
