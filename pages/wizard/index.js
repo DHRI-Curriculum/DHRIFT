@@ -91,8 +91,40 @@ export default function Form(props) {
     const formik = useFormik({
         validationSchema: validationSchema,
         initialValues: {
-            ...formik.values,
-            sessions: formik.values.sessions || []
+            organizers: [{ name: '', email: '' }],
+            institution: '',
+            event: '',
+            description: '',
+            herodescription: '',
+            venue: '',
+            location: '',
+            dateStart: '',
+            endDate: '',
+            workshopsuser: 'dhri-curriculum',
+            workshopsrepo: 'workshops',
+            format: '',
+            sponsors: [{ name: '', link: '' }],
+            contact: [{ name: '', email: '' }],
+            sessions: [
+                {
+                    date: '',
+                    time: '',
+                    title: '',
+                    description: '',
+                    workshop: '',
+                    location: '',
+                    instructors: [{ name: '', email: '' }],
+                    helpers: [{ name: '', email: '' }]
+                }
+            ],
+            registerLink: '',
+            registerText: '',
+            haveRegistration: false,
+            cloneWorkshops: false,
+            showWorkshops: false,
+            longdescription: '',
+            socialMedia: '',
+            socialmedialink: ''
         },
         onSubmit: (values) => {
             setFormError(false);
@@ -315,7 +347,7 @@ export default function Form(props) {
                 extension: imageExtension
             };
         });
-        if (formData.cloneWorkshops) {
+        if (formik.values.cloneWorkshops) {
             formDataForGithub.cloneWorkshops = true;
         }
         else {
@@ -337,7 +369,7 @@ export default function Form(props) {
             setInstUrl(data.repoName);
             setInstName(data.instUser);
             uploadFiles(imagesToSend);
-            if (formData.cloneWorkshops) {
+            if (formik.values.cloneWorkshops) {
                 console.log('Cloning workshops repo');
                 cloneWorkshopsRepo(formDataForGithub);
             }
