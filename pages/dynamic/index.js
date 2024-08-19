@@ -16,7 +16,7 @@ import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
-import {ErrorBoundary} from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 import { PaddingRounded } from '@mui/icons-material'
 
 const drawerWidth = '-30%';
@@ -88,7 +88,7 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown({content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc});
+    const htmlifiedContent = ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
     // split react element array into pages
     const allPages = [];
     const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
@@ -165,7 +165,7 @@ export default function WorkshopPage({
         console.log('data', data)
         setMarkdownError(err);
       }
-    } else if (!data && !currentFile) {
+    } else if (data && !currentFile && typeof (data) === 'object') {
       setMarkdownError(new Error('Failed to fetch data from the repository.'));
     }
   }, [data])
@@ -301,7 +301,7 @@ export default function WorkshopPage({
         top: 0,
         behavior: 'smooth'
       });
-    }  
+    }
   })
 
   if (markdownError) return (
@@ -320,124 +320,124 @@ export default function WorkshopPage({
       </div>
     </>)
 
-function ErrorFallback({error}) {
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre style={{color: 'red'}}>{error.message}</pre>
-    </div>
-  )
-}
+  function ErrorFallback({ error }) {
+    return (
+      <div role="alert">
+        <p>Something went wrong:</p>
+        <pre style={{ color: 'red' }}>{error.message}</pre>
+      </div>
+    )
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <Fade in={currentContentLoaded} timeout={500}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh',
-        }}
-      >
-        {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
-          setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
-          pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
-          handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
-        />
-          ||
-          <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
-            gitUser={gitUser} gitRepo={gitRepo}
-          />
-        }
-
-        <Container
-          disableGutters={true}
-          maxWidth={
-            props.workshopMode ? 'md' : '100%'
-          }
-          sx={{
-            paddingLeft: {
-              md: '80px',
-            },
-            ...(props.workshopMode && {
-              marginLeft: {
-                md: '100px',
-              },
-            }),
-            flexGrow: 1,
+      <Fade in={currentContentLoaded} timeout={500}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
           }}
         >
-          <Head>
-            <title>{title}</title>
-          </Head>
-          <Main open={editorOpen}
-            id='main'
-            style={{
-              paddingLeft: '0px',
-              paddingRight: {
-                sm: '0px',
-                xs: '0px',
-              }
+          {props.workshopMode && workshopTitle != undefined && <WorkshopHeader currentPage={currentPage}
+            setCurrentPage={setCurrentPage} setCurrentContent={setCurrentContent}
+            pages={pages} pageTitles={pageTitles} workshopTitle={workshopTitle}
+            handlePageChange={handlePageChange} instUser={instUser} instRepo={instRepo}
+          />
+            ||
+            <Header title={workshopTitle} instUser={instUser} instRepo={instRepo}
+              gitUser={gitUser} gitRepo={gitRepo}
+            />
+          }
+
+          <Container
+            disableGutters={true}
+            maxWidth={
+              props.workshopMode ? 'md' : '100%'
+            }
+            sx={{
+              paddingLeft: {
+                md: '80px',
+              },
+              ...(props.workshopMode && {
+                marginLeft: {
+                  md: '100px',
+                },
+              }),
+              flexGrow: 1,
             }}
           >
-            <div className="card-page">
-              <div className="workshop-container">
-                {currentContentLoaded ? (
-                  currentContent
-                ) : (
+            <Head>
+              <title>{title}</title>
+            </Head>
+            <Main open={editorOpen}
+              id='main'
+              style={{
+                paddingLeft: '0px',
+                paddingRight: {
+                  sm: '0px',
+                  xs: '0px',
+                }
+              }}
+            >
+              <div className="card-page">
+                <div className="workshop-container">
+                  {currentContentLoaded ? (
+                    currentContent
+                  ) : (
 
-                  <div className='skeleton-container'
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                  >
-                    <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                    {
-                      Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
-                  </div>
-                )}
+                    <div className='skeleton-container'
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
+                      <Skeleton variant="rect" width={'100%'} height={'50px'} />
+                      {
+                        Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </Main>
-          {language && props.workshopMode &&
-            <DrawerEditorMovable
-              drawerWidth={drawerWidth}
-              open={editorOpen}
-              setEditorOpen={setEditorOpen}
-              text={code}
-              setText={setCode}
-              askToRun={askToRun}
-              setAskToRun={setAskToRun}
-              language={language}
-              allUploads={uploads}
-              gitUser={gitUser}
-              gitRepo={gitRepo}
-              jupyterSrc={jupyterSrc}
-              setJupyterSrc={setJupyterSrc}
-            />}
-          {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
-        </Container>
-        {props.workshopMode &&
-          <>
-            <div className='workshop-footer'>
-              <Pagination 
-              currentPage={currentPage} 
-              pageTitles={pageTitles} 
-              handlePageChange={handlePageChange} 
-              pages={pages}
-              editorOpen={editorOpen}
-              // sx={{
-              //   backgroundColor: 'white',
-              //   width: {  md:!editorOpen ? '100%' : '10%' },
-              // }}
-               />
-              <Footer workshopMode={props.workshopMode} />
-            </div>
-          </>
-        }
-      </div>
-    </Fade>
+            </Main>
+            {language && props.workshopMode &&
+              <DrawerEditorMovable
+                drawerWidth={drawerWidth}
+                open={editorOpen}
+                setEditorOpen={setEditorOpen}
+                text={code}
+                setText={setCode}
+                askToRun={askToRun}
+                setAskToRun={setAskToRun}
+                language={language}
+                allUploads={uploads}
+                gitUser={gitUser}
+                gitRepo={gitRepo}
+                jupyterSrc={jupyterSrc}
+                setJupyterSrc={setJupyterSrc}
+              />}
+            {/* {props.workshopMode && <Pagination currentPage={currentPage} pageTitles={pageTitles} handlePageChange={handlePageChange} pages={pages} />} */}
+          </Container>
+          {props.workshopMode &&
+            <>
+              <div className='workshop-footer'>
+                <Pagination
+                  currentPage={currentPage}
+                  pageTitles={pageTitles}
+                  handlePageChange={handlePageChange}
+                  pages={pages}
+                  editorOpen={editorOpen}
+                // sx={{
+                //   backgroundColor: 'white',
+                //   width: {  md:!editorOpen ? '100%' : '10%' },
+                // }}
+                />
+                <Footer workshopMode={props.workshopMode} />
+              </div>
+            </>
+          }
+        </div>
+      </Fade>
     </ErrorBoundary>
   )
 }
