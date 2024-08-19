@@ -1,5 +1,6 @@
 import Header from '../../components/Header';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { debounce } from 'lodash';
 import { FormControl, InputLabel } from '@mui/material';
 import { Stack, TextField, Button, Container, MenuItem } from '@mui/material';
 import useAllWorkshops from '../../components/Hooks/UseAllWorkshops';
@@ -64,7 +65,7 @@ export default function Form(props) {
         const useDummyData = router.query.useDummyData === 'true';
         if (useDummyData) {
             console.log('Using dummy data');
-            setFormData({
+            const dummyData = {
                 organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
                 institution: 'Example Institute',
                 event: 'Example Event',
@@ -99,50 +100,16 @@ export default function Form(props) {
                 longdescription: 'This is a long description for the example event.',
                 socialMedia: 'Example Social Media',
                 socialmedialink: 'https://example.com/social'
-            });
+            };
+            setFormData(dummyData);
             if (JSON.stringify(formik.values) === JSON.stringify(formData)) {
                 formik.setValues({
                     ...formik.values,
-                    ...{
-                        organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
-                        institution: 'Example Institute',
-                        event: 'Example Event',
-                        description: 'This is a description of the example event.',
-                        herodescription: 'An example event for testing.',
-                        venue: 'Example Venue',
-                        location: 'Example Location',
-                        dateStart: '2024-09-01',
-                        endDate: '2024-09-05',
-                        workshopsuser: 'dhri-curriculum',
-                        workshopsrepo: 'workshops',
-                        format: 'online',
-                        sponsors: [{ name: 'Example Sponsor', link: 'https://example.com' }],
-                        contact: [{ name: 'Jane Doe', email: 'jane.doe@example.com' }],
-                        sessions: [
-                            {
-                                date: '2024-09-01',
-                                time: '10:00',
-                                title: 'Example Session',
-                                description: 'This is a description of the example session.',
-                                workshop: 'Example Workshop',
-                                location: 'Example Location',
-                                instructors: [{ name: 'Instructor One', email: 'instructor.one@example.com' }],
-                                helpers: [{ name: 'Helper One', email: 'helper.one@example.com' }]
-                            },
-                        ],
-                        registerLink: 'https://example.com/register',
-                        registerText: 'Register Now',
-                        haveRegistration: true,
-                        cloneWorkshops: true,
-                        showWorkshops: true,
-                        longdescription: 'This is a long description for the example event.',
-                        socialMedia: 'Example Social Media',
-                        socialmedialink: 'https://example.com/social'
-                    }
+                    ...dummyData
                 });
             }
         }
-    }, [router.query, formData]);
+    }, [router.query]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [showProgress, setShowProgress] = useState(false);
 
@@ -425,10 +392,13 @@ export default function Form(props) {
 
     }
 
-    const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        formik.setFieldValue(name, type === 'checkbox' ? checked : value);
-    };
+    const handleInputChange = useCallback(
+        debounce((e) => {
+            const { name, value, type, checked } = e.target;
+            formik.setFieldValue(name, type === 'checkbox' ? checked : value);
+        }, 300),
+        []
+    );
 
     const handleAdd = (field, sessionIndex) => {
         const newItem = field === 'sessions' ? { date: '', time: '', title: '', description: '', workshop: '', location: '', instructors: [{ name: '', email: '' }], helpers: [{ name: '', email: '' }] } : { name: '', email: '' };
