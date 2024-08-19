@@ -14,31 +14,32 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
-    glossaryHeader: {
-        marginBottom: theme.spacing(4),
-    },
-    letterSelector: {
-        marginBottom: theme.spacing(2),
-    },
-    glossaryContent: {
-        marginTop: theme.spacing(2),
-    },
-    term: {
-        fontWeight: 'bold',
-    },
-    definition: {
-        marginTop: theme.spacing(1),
-    },
+const GlossaryHeader = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
+
+const LetterSelector = styled(Box)(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+}));
+
+const GlossaryContent = styled(Grid)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+}));
+
+const Term = styled(Typography)({
+    fontWeight: 'bold',
+});
+
+const Definition = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
 }));
 
 
 export default function Glossary({ glossary, ...props }) {
 
 
-    const classes = useStyles();
     const [currentTerm, setCurrentTerm] = useState(null);
     useEffect(() => {
         //    get currentTerm from url
@@ -86,7 +87,7 @@ export default function Glossary({ glossary, ...props }) {
 
     const GlossaryPage = (letter, terms) => {
         return (
-            <Paper className={classes.glossaryPage} elevation={3}>
+            <Paper elevation={3}>
                 <Typography variant="h5" component="h2">{letter}</Typography>
                 {terms.map(term => {
                     return (
@@ -94,14 +95,14 @@ export default function Glossary({ glossary, ...props }) {
                             <AccordionSummary>
                                 <Box display="flex" flexDirection="row" alignItems="center">
                                     <Box flexGrow={1}>
-                                        <Typography variant="body1" className={classes.term}>{term.term}</Typography>
+                                        <Term variant="body1">{term.term}</Term>
                                     </Box>
                                 </Box>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Box display="flex" flexDirection="row" alignItems="center">
                                     <Box flexGrow={1}>
-                                        <Typography variant="body2" className={classes.definition} dangerouslySetInnerHTML={{ __html: term.definition }} />
+                                        <Definition variant="body2" dangerouslySetInnerHTML={{ __html: term.definition }} />
                                     </Box>
                                 </Box>
                             </AccordionDetails>
@@ -169,15 +170,15 @@ export default function Glossary({ glossary, ...props }) {
         <>
         <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo} gitUser={props.gitUser} gitRepo={props.gitRepo} />
         <Container>
-            <Typography variant="h3" component="h1" className={classes.glossaryHeader}>Glossary</Typography>
-            <div className={classes.letterSelector}>
+            <GlossaryHeader variant="h3" component="h1">Glossary</GlossaryHeader>
+            <LetterSelector>
                 {letterSelector}
-            </div>
-            <Grid container spacing={3} className={classes.glossaryContent}>
+            </LetterSelector>
+            <GlossaryContent container spacing={3}>
                 <Grid item xs={12}>
                     {currentGlossaryPage}
                 </Grid>
-            </Grid>
+            </GlossaryContent>
         </Container>
         </>
     )
