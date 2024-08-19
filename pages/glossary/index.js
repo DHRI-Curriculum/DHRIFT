@@ -90,7 +90,7 @@ export default function Glossary({ glossary, ...props }) {
 
     const GlossaryPage = (letter, terms) => {
         return (
-            <Paper elevation={3}>
+            <Paper >
                 <Typography variant="h5" component="h2">{letter}</Typography>
                 {terms.map(term => {
                     return (
@@ -172,7 +172,9 @@ export default function Glossary({ glossary, ...props }) {
     return isClient ? (
         <>
             <Header title={'Glossary'} instUser={props.instGitUser} instRepo={props.instGitRepo} gitUser={props.gitUser} gitRepo={props.gitRepo} />
-            <Container>
+            <Container
+            className='glossary'
+            >
                 <GlossaryHeader variant="h3" component="h1">Glossary</GlossaryHeader>
                 <LetterSelector>
                     {letterSelector}
