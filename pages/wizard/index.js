@@ -587,70 +587,102 @@ export default function Form(props) {
     );
 
     const locationSection = () => {
-        if (formik.values.format === 'online') {
-            return (
-                <Stack
-                    spacing={2}>
-                    <h3>Location</h3>
-                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formik.values.onlinePlatformLink}
-                        style={{
-                            width: '400px',
-                            marginRight: '10px',
-                            marginBottom: '10px'
-                        }}
-                        onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes} onChange={handleInputChange} />
-                </Stack>
-            );
-        }
-        if (formik.values.format === 'hybrid') {
-            return (
-                <Stack spacing={2}>
-                    <h3>Location</h3>
-                    <TextField label="Virtual Meeting Link" type="text" name="onlinePlatformLink" value={formik.values.onlinePlatformLink}
-                        style={{ width: '400px' }}
-                        onChange={handleInputChange} />
-                    <p>Enter the venue and address for your event below. This will be displayed on your DHRIFT landing page.</p>
-                    <TextField label="Venue" type="text" name="venue" 
-                    value={formik.values.venue}
-                    onChange={handleInputChange} />
-                    <TextField label="Location" type="text" name="location" 
-                    value={formik.values.location} 
-                    onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes}
-                     onChange={handleInputChange} />
-                </Stack>
-            );
-        }
-        if (formik.values.format === 'in-person') {
-            return (
-                <Stack spacing={2}>
-                    <h3>Location</h3>
-
-                    <TextField label="Venue" type="text" name="venue" value={formik.values.venue}
-                        style={{
-                            width: '400px',
-                            marginRight: '10px'
-                        }}
-                        onChange={handleInputChange} />
-                    <TextField label="Location" type="text" name="location" value={formik.values.location}
-                        style={{
-                            width: '400px',
-                            marginBottom: '10px'
-                        }}
-                        onChange={handleInputChange} />
-                    <TextField label="Event Notes" type="text" name="eventNotes" value={formik.values.eventNotes}
-                        onChange={handleInputChange} />
-                </Stack>
-            );
-        }
+        return (
+            <Stack spacing={2}>
+                <h3>Location</h3>
+                {formik.values.format === 'online' && (
+                    <>
+                        <TextField
+                            label="Virtual Meeting Link"
+                            type="text"
+                            name="onlinePlatformLink"
+                            value={formik.values.onlinePlatformLink}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Event Notes"
+                            type="text"
+                            name="eventNotes"
+                            value={formik.values.eventNotes}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                    </>
+                )}
+                {formik.values.format === 'hybrid' && (
+                    <>
+                        <TextField
+                            label="Virtual Meeting Link"
+                            type="text"
+                            name="onlinePlatformLink"
+                            value={formik.values.onlinePlatformLink}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Venue"
+                            type="text"
+                            name="venue"
+                            value={formik.values.venue}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Location"
+                            type="text"
+                            name="location"
+                            value={formik.values.location}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Event Notes"
+                            type="text"
+                            name="eventNotes"
+                            value={formik.values.eventNotes}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                    </>
+                )}
+                {formik.values.format === 'in-person' && (
+                    <>
+                        <TextField
+                            label="Venue"
+                            type="text"
+                            name="venue"
+                            value={formik.values.venue}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Location"
+                            type="text"
+                            name="location"
+                            value={formik.values.location}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Event Notes"
+                            type="text"
+                            name="eventNotes"
+                            value={formik.values.eventNotes}
+                            onChange={handleInputChange}
+                            fullWidth
+                        />
+                    </>
+                )}
+            </Stack>
+        );
     }
 
     const longDescriptionSection = (
         <Stack spacing={2}>
             <h3>Long Description</h3>
             <p>
-                Write an up to 150 word description of your institute for attendees. This space may describe what the desired outcome of the event will be, what kind of skills or projects your event will focus on, or the purpose of the institute.
+                Provide a detailed description of your institute for attendees. This space may describe the desired outcomes, the skills or projects your event will focus on, or the overall purpose of the institute.
             </p>
             <TextField
                 label="Long Description"
@@ -659,8 +691,8 @@ export default function Form(props) {
                 value={formik.values.longdescription}
                 multiline
                 rows={4}
-                onChange={(e) => handleInputChange(e)}
-                onBlur={formik.handleBlur}
+                onChange={handleInputChange}
+                fullWidth
             />
             <h3>Social Media</h3>
             <TextField
@@ -668,16 +700,16 @@ export default function Form(props) {
                 type="text"
                 name="socialMedia"
                 value={formik.values.socialMedia}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onChange={handleInputChange}
+                fullWidth
             />
             <TextField
-                label="link"
+                label="Social Media Link"
                 type="text"
                 name="socialmedialink"
                 value={formik.values.socialmedialink}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onChange={handleInputChange}
+                fullWidth
             />
         </Stack>
     );
