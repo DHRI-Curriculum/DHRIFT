@@ -418,6 +418,11 @@ export default function Form(props) {
     const handleRemove = (field, index, sessionIndex) => {
         if (field === 'instructors' || field === 'helpers') {
             const session = formik.values.sessions[sessionIndex];
+            const updatedSession = {
+                ...session,
+                [field]: session[field].filter((item, i) => i !== index)
+            };
+            const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
             formik.setFieldValue('sessions', updatedSessions);
             return;
         }
