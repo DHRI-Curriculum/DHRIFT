@@ -514,7 +514,7 @@ const heroImageUpload = (
             <Stack direction="row" alignItems="center" spacing={1}>
                 <Switch
                     checked={formik.values.haveRegistration}
-                    onChange={(e) => handleInputChange({ target: { name: e.target.name, value: e.target.checked, type: 'checkbox' } })}
+                    onChange={handleInputChange}
                     name="haveRegistration"
                     inputProps={{ 'aria-label': 'controlled' }}
                 />
