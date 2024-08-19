@@ -822,85 +822,85 @@ const generalInfoSection = (
 
     const sponsorsSection = (
         <Stack spacing={2}>
-            <h4>Sponsors</h4>
+            <h3>Sponsors</h3>
             {formik.values.sponsors.map((sponsor, index) => (
-                <div key={index}>
-                    <TextField label={`Sponsor ${index + 1}`} type="text" value={formik.values.sponsors[index].name}
-                        style={{
-                            width: '400px',
-                            marginRight: '10px'
-                        }}
-                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'name', e.target.value)} />
+                <Stack key={index} spacing={2} direction="row" alignItems="center">
+                    <TextField
+                        label={`Sponsor ${index + 1}`}
+                        type="text"
+                        value={formik.values.sponsors[index].name}
+                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'name', e.target.value)}
+                        fullWidth
+                    />
                     <TextField
                         label={`Sponsor ${index + 1} Link`}
                         type="text"
                         value={formik.values.sponsors[index].link}
-                        style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)}
                         onBlur={formik.handleBlur}
                         error={formik.touched.sponsors?.[index]?.link && Boolean(formik.errors.sponsors?.[index]?.link)}
                         helperText={formik.touched.sponsors?.[index]?.link && formik.errors.sponsors?.[index]?.link}
+                        fullWidth
                     />
                     <TextField
                         label={`Sponsor ${index + 1} Notes`}
                         type="text"
                         value={sponsor.notes}
-                        style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'notes', e.target.value)}
                         onBlur={formik.handleBlur}
+                        fullWidth
                     />
                     {formik.values.sponsors.length > 1 && (
-                        <Button type="button" onClick={() => handleRemove('sponsors', index)}>Remove Sponsor</Button>
+                        <Button type="button" onClick={() => handleRemove('sponsors', index)}><Remove /></Button>
                     )}
-
                     {index === formik.values.sponsors.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('sponsors')}><Add /></Button>
                     )}
-                </div>
+                </Stack>
             ))}
         </Stack>
     );
 
     const contactSection = (
         <Stack spacing={2}>
-            <h4>Contact</h4>
+            <h3>Contact</h3>
             {formik.values.contact.map((contact, index) => (
-                <div key={index}>
+                <Stack key={index} spacing={2} direction="row" alignItems="center">
                     <TextField
                         label={`Contact ${index + 1}`}
                         type="text"
                         value={contact.name}
-                        style={{ width: '400px', marginRight: '10px' }}
                         onChange={(e) => handleArrayFieldChange('contact', index, 'name', e.target.value)}
                         onBlur={formik.handleBlur}
                         error={formik.touched.contact?.[index]?.name && Boolean(formik.errors.contact?.[index]?.name)}
                         helperText={formik.touched.contact?.[index]?.name && formik.errors.contact?.[index]?.name}
+                        fullWidth
                     />
                     <TextField
                         label={`Contact ${index + 1} Email`}
                         type="email"
                         value={contact.email}
-                        style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('contact', index, 'email', e.target.value)}
                         onBlur={formik.handleBlur}
                         error={formik.touched.contact?.[index]?.email && Boolean(formik.errors.contact?.[index]?.email)}
                         helperText={formik.touched.contact?.[index]?.email && formik.errors.contact?.[index]?.email}
+                        fullWidth
                     />
                     {formik.values.contact.length > 1 && (
-                        <Button type="button" onClick={() => handleRemove('contact', index)}>Remove Contact</Button>
+                        <Button type="button" onClick={() => handleRemove('contact', index)}><Remove /></Button>
                     )}
-
                     {index === formik.values.contact.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('contact')}><Add /></Button>
                     )}
-                </div>
+                </Stack>
             ))}
         </Stack>
     );
 
     const instituteDetailsSection = (
-        <Stack spacing={2}>
+        <Stack spacing={3}>
             <h2>Institute Details</h2>
+            <p>Provide details about the sponsors and contact persons for your institute.</p>
             {sponsorsSection}
             {contactSection}
         </Stack>
