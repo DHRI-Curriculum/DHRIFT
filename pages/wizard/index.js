@@ -24,42 +24,6 @@ export default function Form(props) {
     const [firstStage, setFirstStage] = useState(true);
     const [formError, setFormError] = useState(false);
     const router = useRouter();
-    const [formData, setFormData] = useState({
-        organizers: [{ name: '', email: '' }],
-        institution: '',
-        event: '',
-        description: '',
-        herodescription: '',
-        venue: '',
-        location: '',
-        dateStart: '',
-        endDate: '',
-        workshopsuser: 'dhri-curriculum',
-        workshopsrepo: 'workshops',
-        format: '',
-        sponsors: [{ name: '', link: '' }],
-        contact: [{ name: '', email: '' }],
-        sessions: [
-            {
-                date: '',
-                time: '',
-                title: '',
-                description: '',
-                workshop: '',
-                location: '',
-                instructors: [{ name: '', email: '' }],
-                helpers: [{ name: '', email: '' }]
-            },
-        ],
-        registerLink: '',
-        registerText: '',
-        haveRegistration: false,
-        cloneWorkshops: false,
-        showWorkshops: false,
-        longdescription: '',
-        socialMedia: '',
-        socialmedialink: ''
-    });
 
     const validationSchema = Yup.object({
         organizers: Yup.array().of(
@@ -127,8 +91,8 @@ export default function Form(props) {
     const formik = useFormik({
         validationSchema: validationSchema,
         initialValues: {
-            ...formData,
-            sessions: formData.sessions || []
+            ...formik.values,
+            sessions: formik.values.sessions || []
         },
         onSubmit: (values) => {
             setFormError(false);
@@ -181,7 +145,7 @@ export default function Form(props) {
                 socialMedia: 'Example Social Media',
                 socialmedialink: 'https://example.com/social'
             };
-            setFormData(dummyData);
+            formik.setValues(dummyData);
             formik.setValues(dummyData);
         }
     }, [router.query]);
@@ -320,8 +284,8 @@ export default function Form(props) {
     const createInstitute = async () => {
         props.clearCache();
         const formDataForGithub = {
-            ...formData,
-            sessions: formData.sessions.map(session => ({
+            ...formik.values,
+            sessions: formik.values.sessions.map(session => ({
                 ...session,
                 instructors: session.instructors.map(instructor => ({ name: instructor })),
                 helpers: session.helpers.map(helper => ({ name: helper.name })),
@@ -428,16 +392,12 @@ export default function Form(props) {
     const handleRemove = (field, index, sessionIndex) => {
         if (field === 'instructors' || field === 'helpers') {
 
-            const session = formData.sessions[sessionIndex];
+            const session = formik.values.sessions[sessionIndex];
             const updatedSession = {
                 ...session,
                 [field]: session[field].filter((item, i) => i !== index)
             };
-            const updatedSessions = formData.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
-            setFormData({
-                ...formData,
-                sessions: updatedSessions
-            });
+            const updatedSessions = formik.values.sessions.map((s, i) => i === sessionIndex ? updatedSession : s);
             return;
         }
 
