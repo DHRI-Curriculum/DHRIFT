@@ -662,7 +662,7 @@ export default function Form(props) {
                 value={formik.values.longdescription}
                 multiline
                 rows={4}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
                 onBlur={formik.handleBlur}
             />
             <h3>Social Media</h3>
