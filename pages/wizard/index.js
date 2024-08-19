@@ -500,18 +500,19 @@ export default function Form(props) {
     );
 
     const checkboxtoHaveRegistration = (
-        <div>
+        <Stack spacing={2}>
             <h3>Registration Information</h3>
-            {/* <input type="checkbox" name="haveRegistration" checked={formData.haveRegistration} onChange={handleInputChange} /> */}
-            <Switch
-                checked={formik.values.haveRegistration}
-                onChange={handleInputChange}
-                name="haveRegistration"
-                inputProps={{ 'aria-label': 'controlled' }}
-            />
-            <label>Include Registration Information</label>
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Switch
+                    checked={formik.values.haveRegistration}
+                    onChange={handleInputChange}
+                    name="haveRegistration"
+                    inputProps={{ 'aria-label': 'controlled' }}
+                />
+                <label>Include Registration Information</label>
+            </Stack>
             {formik.values.haveRegistration && registrationFormSection}
-        </div>
+        </Stack>
     );
 
     const cloneWorkshopsSection = (
@@ -761,24 +762,28 @@ const generalInfoSection = (
         <Stack spacing={2}>
             <h4>Organizers</h4>
             {formik.values.organizers.map((organizer, index) => (
-                <div key={index}>
-                    <TextField label={`Organizer ${index + 1}`} type="text" value={formik.values.organizers[index].name}
-                        style={{
-                            width: '400px',
-                            marginRight: '10px'
-                        }}
-                        onChange={(e) => handleArrayFieldChange('organizers', index, 'name', e.target.value)} />
-                    <TextField label={`Organizer ${index + 1} Email`} type="email" value={formik.values.organizers[index].email}
-                        style={{ width: '400px' }}
-                        onChange={(e) => handleArrayFieldChange('organizers', index, 'email', e.target.value)} />
+                <Box key={index} display="flex" alignItems="center" flexWrap="wrap" gap={2}>
+                    <TextField
+                        label={`Organizer ${index + 1}`}
+                        type="text"
+                        value={formik.values.organizers[index].name}
+                        onChange={(e) => handleArrayFieldChange('organizers', index, 'name', e.target.value)}
+                        style={{ flex: 1, minWidth: '200px' }}
+                    />
+                    <TextField
+                        label={`Organizer ${index + 1} Email`}
+                        type="email"
+                        value={formik.values.organizers[index].email}
+                        onChange={(e) => handleArrayFieldChange('organizers', index, 'email', e.target.value)}
+                        style={{ flex: 1, minWidth: '200px' }}
+                    />
                     {formik.values.organizers.length > 1 && (
-                        <Button type="button" onClick={() => handleRemove('organizers', index)}>Remove Organizer</Button>
+                        <Button type="button" onClick={() => handleRemove('organizers', index)}><Remove /></Button>
                     )}
-
                     {index === formik.values.organizers.length - 1 && (
                         <Button type="button" onClick={() => handleAdd('organizers')}><Add /></Button>
                     )}
-                </div>
+                </Box>
             ))}
         </Stack>
     );
