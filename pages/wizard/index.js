@@ -22,6 +22,7 @@ export default function Form(props) {
     const [instUrl, setInstUrl] = useState('');
     const [instName, setInstName] = useState('');
     const [firstStage, setFirstStage] = useState(true);
+    const [secondStage, setSecondStage] = useState(false);
     const [formError, setFormError] = useState(false);
     const router = useRouter();
 
@@ -177,7 +178,6 @@ export default function Form(props) {
                 socialMedia: 'Example Social Media',
                 socialmedialink: 'https://example.com/social'
             };
-            formik.setValues(dummyData);
             formik.setValues(dummyData);
         }
     }, [router.query]);
@@ -396,7 +396,6 @@ export default function Form(props) {
 
         if (field === 'sessions') {
             const updatedSessions = [...formik.values.sessions, newItem];
-            formik.setFieldValue('sessions', updatedSessions);
             formik.setFieldValue('sessions', updatedSessions);
         } else if (field === 'instructors' || field === 'helpers') {
             const session = formik.values.sessions[sessionIndex];
@@ -745,13 +744,10 @@ export default function Form(props) {
                             marginRight: '10px'
                         }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'name', e.target.value)} />
-                    <TextField label={`Sponsor ${index + 1} Link`} type="text" value={formik.values.sponsors[index].link}
-                        style={{ width: '400px' }}
-                        onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)} />
                     <TextField
                         label={`Sponsor ${index + 1} Link`}
                         type="text"
-                        value={sponsor.link}
+                        value={formik.values.sponsors[index].link}
                         style={{ width: '400px' }}
                         onChange={(e) => handleArrayFieldChange('sponsors', index, 'link', e.target.value)}
                         onBlur={formik.handleBlur}
