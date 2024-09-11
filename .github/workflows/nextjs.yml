@@ -75,6 +75,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
           GITHUBSECRET: ${{ secrets.GITHUBKEY }}
+          PAGES_PATH: ${{ steps.setup-pages.outputs.base_path }}
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
         env:
