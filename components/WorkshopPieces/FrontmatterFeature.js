@@ -9,9 +9,7 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
       setSrc(imageBuiltURL)
     }
     else {
-      // setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
-      setSrc( process.env.NEXT_PUBLIC_ASSET_PREFIX 
-          + "/images/img" + randomNumberBetween1and7 + ".jpg")
+      setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
     }
   }, [coverImage])
 

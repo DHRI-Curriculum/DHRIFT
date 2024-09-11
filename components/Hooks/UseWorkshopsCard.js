@@ -73,13 +73,11 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
             setSrc(imageBuiltURL)
         }
         else {
-            // setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
-            setSrc( process.env.NEXT_PUBLIC_ASSET_PREFIX 
-                + "/images/img" + randomNumberBetween1and7 + ".jpg")
+            setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
         }
     }, [coverimage])
 
-    const workshopLink = '../dynamic/?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
+    const workshopLink = '../dynamic?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
 
     if(parsedWorkshop?.data?.published === false){
         console.log('not published', parsedWorkshop.data.title)
