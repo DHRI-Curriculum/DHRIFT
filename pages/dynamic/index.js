@@ -175,7 +175,7 @@ export default function WorkshopPage({
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('page', 2);
-    setSecondPageLink(`${window.location.pathname}?${urlParams}`);
+    setSecondPageLink(`${'./dynamic'}?${urlParams}`);
     if (currentFile != null && content != '' && metadata != null && allUploads != undefined) {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);

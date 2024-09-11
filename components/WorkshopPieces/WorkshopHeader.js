@@ -27,7 +27,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
         if (queryString) {
             const urlParams = new URLSearchParams(queryString);
             urlParams.set('page', currentPageParentPage);
-            setParentLink(`${window.location.pathname}?${urlParams}`);
+            setParentLink(`${'./dynamic'}?${urlParams}`);
         }
     }, [currentPageParentPage])
 
@@ -35,7 +35,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
         if (queryString) {
             const urlParams = new URLSearchParams(queryString);
             urlParams.set('page', 1);
-            setFirstPageLink(`${window.location.pathname}?${urlParams}`);
+            setFirstPageLink(`${'./dynamic'}?${urlParams}`);
         }
     }, [queryString])
 
