@@ -1,28 +1,19 @@
-const withYAML = require('next-yaml')
-const withPlugins = require('next-compose-plugins')
+
+const { default: next } = require('next');
 const withMDX = require('@next/mdx')({
     extension: /\.(md|mdx)$/,
 })
 
 const isGitHub = process.env.GITHUB_ACTIONS === "true";
 console.log(`Running in ${isGitHub ? "GitHub Actions" : "local"} mode`);
-var repoName;
-if (isGitHub) {
-    repoName = process.env.GITHUB_REPOSITORY.split('/')[1];
-}else{
-    repoName = 'dhrift';
-}
-const build = process.env.NODE_ENV === "production";
-console.log(`Running in ${process.env.NODE_ENV} mode`);
-process.env.NEXT_PUBLIC_REPO_NAME = repoName
+
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
 
 const nextConfig = {
     output: "export",
-    trailingSlash: true,
-    // basePath: isGitHub ? '/' + repoName : '',
-    // assetPrefix: isGitHub ? '/' + repoName : '',
+    // trailingSlash: true,
+    // basePath: process.env.PAGES_PATH || '',
     images: {
         unoptimized: true,
     },
@@ -33,7 +24,5 @@ const nextConfig = {
 
 console.log(nextConfig);
 
-module.exports = withPlugins([
-    [withYAML],
-    // [withMDX],
-], nextConfig);
+
+module.exports = nextConfig;
