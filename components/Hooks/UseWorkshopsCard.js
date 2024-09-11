@@ -77,7 +77,7 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
         }
     }, [coverimage])
 
-    const workshopLink = '../dynamic?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
+    const workshopLink = './dynamic?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
 
     if(parsedWorkshop?.data?.published === false){
         console.log('not published', parsedWorkshop.data.title)
