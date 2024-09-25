@@ -7,6 +7,7 @@ import REditorComponent from '../components/Editor/REditorComponent';
 import JSEditorComponent from '../components/Editor/JSEditorComponent';
 import MDX from '../components/WorkshopPieces/MDX';
 import useWorkshop from '../components/Hooks/UseWorkshop';
+import Webllm from '../components/Wasm/Webllm';
 
 
 export default function Test() {
@@ -33,6 +34,7 @@ export default function Test() {
             <div>
               {/* {processedContent?.result && processedContent.result} */}
             {/* <HTMLEditorComponent /> */}
+            {<Webllm />}
             </div>
         </div>
     )

@@ -1066,6 +1066,82 @@ nav.sidenav {
   font-weight: bold;
 }
 
+// chatbot
+.chatbot-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.chatbox {
+  background-color: #121212;
+  color: #c5c5c5;
+  padding: 15px;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #333;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.message {
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.message.user {
+  color: #8cdaff;
+}
+
+.message.bot {
+  color: #8fff8f;
+}
+
+.loading-message {
+  color: #ffdd57;
+  font-style: italic;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  flex: 1;
+  padding: 10px;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.send-button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #444;
+}
+
+.send-button:disabled,
+.input-field:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+
+
 @media(max-width: 2100px) {
   .drawer-left.permanent {
     display: none !important;
