@@ -1101,16 +1101,14 @@ nav.sidenav {
   color: #8fff8f;
 }
 
-.message code {
-  padding: 3px 6px;
-  border-radius: 3px;
-  font-family: 'Courier New', Courier, monospace;
-}
+// .message code {
+//   padding: 3px 6px;
+//   border-radius: 3px;
+//   font-family: 'Courier New', Courier, monospace;
+// }
 
 .message pre {
-  padding: 10px;
-  border-radius: 5px;
-  overflow-x: auto;
+background-color: inherit;
 }
 
 .loading-message {
