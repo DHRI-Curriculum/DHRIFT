@@ -1,60 +1,67 @@
 import * as webllm from "@mlc-ai/web-llm";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Markdown from 'markdown-to-jsx';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css'; // Import syntax highlighting theme
+import { LinearProgress, Box, Typography } from '@mui/material'; // Import MUI components
 
 // Define a custom Markdown component with code highlighting
 const MarkdownWithHighlight = ({ children }) => {
-    return (
-      <Markdown
-        options={{
-          overrides: {
-            code: {
-              component: ({ className, children }) => {
-                // Ensure the className follows the 'language-' pattern
-                const language = className ? className.replace('lang-', 'language-').replace('language-', '') : '';
-  
-                // Join children to handle multiline or single-line code blocks properly
-                const codeString = Array.isArray(children) ? children.join('') : children;
-  
-                // Highlight the code properly based on the detected language
-                const highlightedCode = language
-                  ? hljs.highlight(codeString, { language }).value
-                  : hljs.highlightAuto(codeString).value;
-                
-                return (
-                  <div dangerouslySetInnerHTML={highlightedCode ? { __html: highlightedCode } : { __html: codeString }} />
-                );
-              },
+  return (
+    <Markdown
+      options={{
+        overrides: {
+          code: {
+            component: ({ className, children }) => {
+              const language = className ? className.replace('lang-', 'language-').replace('language-', '') : '';
+              const codeString = Array.isArray(children) ? children.join('') : children;
+              const highlightedCode = language
+                ? hljs.highlight(codeString, { language }).value
+                : hljs.highlightAuto(codeString).value;
+              return (
+                <pre>
+                  <code
+                    className={`hljs ${language}`}
+                    dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                  />
+                </pre>
+              );
             },
           },
-        }}
-      >
-        {children}
-      </Markdown>
-    );
-  };
+        },
+      }}
+    >
+      {children}
+    </Markdown>
+  );
+};
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]); // Holds the entire conversation
   const [input, setInput] = useState(""); // User input
   const [model, setModel] = useState(null); // LLM model instance
   const [isModelLoading, setIsModelLoading] = useState(true); // Loading the model
+  const [progressInfo, setProgressInfo] = useState({ progress: 0, text: '', timeElapsed: 0 }); // Progress state
   const [isResponding, setIsResponding] = useState(false); // Bot is generating response
+  const chatboxRef = useRef(null); // Reference to the chatbox
 
   useEffect(() => {
     // Initialize the LLM model
     const initializeModel = async () => {
       try {
-        const initProgressCallback = (initProgress) => {
-          console.log(initProgress);
+        const initProgressCallback = (progressObject) => {
+          // Update progress info with details from the loading object
+          setProgressInfo({
+            progress: Math.round(progressObject.progress * 100), // Convert to percentage
+            text: progressObject.text,
+            timeElapsed: progressObject.timeElapsed,
+          });
         };
 
-        const selectedModel = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC";
+        const selectedModel = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC"; // Remembered model name
         const engine = await webllm.CreateMLCEngine(
           selectedModel,
-          { initProgressCallback: initProgressCallback } // engineConfig
+          { initProgressCallback } // engineConfig with progress callback
         );
         setModel(engine);
         setIsModelLoading(false); // Model loaded
@@ -66,6 +73,13 @@ const ChatBot = () => {
 
     initializeModel();
   }, []);
+
+  // Scroll to the bottom of the chatbox whenever a new message is added
+  useEffect(() => {
+    if (chatboxRef.current) {
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -138,17 +152,24 @@ const ChatBot = () => {
 
   return (
     <div className="chatbot-container">
-      {isModelLoading && <div className="loading-message">Loading model, please wait...</div>} {/* Loading model */}
-
-      <div className="chatbox">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            {/* Use the custom MarkdownWithHighlight component */}
-            <MarkdownWithHighlight>{message.sender === "user" ? `>> ${message.text}` : `Bot: ${message.text}`}</MarkdownWithHighlight>
-          </div>
-        ))}
-        {isResponding && <div className="loading-message">Bot is typing...</div>} {/* Bot response loading */}
-      </div>
+      {isModelLoading ? (
+        <Box sx={{ width: '100%' }}>
+          <Typography variant="h6" color="white">
+            {progressInfo.text} ({progressInfo.progress}% completed, {progressInfo.timeElapsed} secs elapsed)
+          </Typography>
+          <LinearProgress variant="determinate" value={progressInfo.progress} />
+        </Box>
+      ) : (
+        <div className="chatbox" ref={chatboxRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {/* Use the custom MarkdownWithHighlight component */}
+              <MarkdownWithHighlight>{message.sender === "user" ? `>> ${message.text}` : `Bot: ${message.text}`}</MarkdownWithHighlight>
+            </div>
+          ))}
+          {isResponding && <div className="loading-message">Bot is typing...</div>} {/* Bot response loading */}
+        </div>
+      )}
 
       <div className="input-container">
         <input
