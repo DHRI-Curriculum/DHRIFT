@@ -1101,6 +1101,18 @@ nav.sidenav {
   color: #8fff8f;
 }
 
+.message code {
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.message pre {
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
 .loading-message {
   color: #ffdd57;
   font-style: italic;
@@ -1139,6 +1151,7 @@ nav.sidenav {
   background-color: #444;
   cursor: not-allowed;
 }
+
 
 
 

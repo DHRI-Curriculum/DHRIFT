@@ -13,9 +13,6 @@ import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import JupyterLoad from './JupyterLoad';
 import SecretComponent from './SecretComponent';
-import { Children } from 'react'
-import { NewLineKind } from 'typescript';
-import { autocompleteClasses } from '@mui/material';
 // import HTMLEditorComponent from './Editor/HTMLEditorComponent';
 
 

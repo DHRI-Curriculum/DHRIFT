@@ -1,5 +1,40 @@
 import * as webllm from "@mlc-ai/web-llm";
 import { useEffect, useState } from "react";
+import Markdown from 'markdown-to-jsx';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css'; // Import syntax highlighting theme
+
+// Define a custom Markdown component with code highlighting
+const MarkdownWithHighlight = ({ children }) => {
+    return (
+      <Markdown
+        options={{
+          overrides: {
+            code: {
+              component: ({ className, children }) => {
+                // Ensure the className follows the 'language-' pattern
+                const language = className ? className.replace('lang-', 'language-').replace('language-', '') : '';
+  
+                // Join children to handle multiline or single-line code blocks properly
+                const codeString = Array.isArray(children) ? children.join('') : children;
+  
+                // Highlight the code properly based on the detected language
+                const highlightedCode = language
+                  ? hljs.highlight(codeString, { language }).value
+                  : hljs.highlightAuto(codeString).value;
+                
+                return (
+                  <div dangerouslySetInnerHTML={highlightedCode ? { __html: highlightedCode } : { __html: codeString }} />
+                );
+              },
+            },
+          },
+        }}
+      >
+        {children}
+      </Markdown>
+    );
+  };
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]); // Holds the entire conversation
@@ -16,7 +51,7 @@ const ChatBot = () => {
           console.log(initProgress);
         };
 
-        const selectedModel = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+        const selectedModel = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC";
         const engine = await webllm.CreateMLCEngine(
           selectedModel,
           { initProgressCallback: initProgressCallback } // engineConfig
@@ -93,6 +128,14 @@ const ChatBot = () => {
     }
   };
 
+  // Function to handle "Enter" key for message sending
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <div className="chatbot-container">
       {isModelLoading && <div className="loading-message">Loading model, please wait...</div>} {/* Loading model */}
@@ -100,7 +143,8 @@ const ChatBot = () => {
       <div className="chatbox">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
-            {message.sender === "user" ? ">> " : "Bot: "} {message.text}
+            {/* Use the custom MarkdownWithHighlight component */}
+            <MarkdownWithHighlight>{message.sender === "user" ? `>> ${message.text}` : `Bot: ${message.text}`}</MarkdownWithHighlight>
           </div>
         ))}
         {isResponding && <div className="loading-message">Bot is typing...</div>} {/* Bot response loading */}
@@ -113,6 +157,7 @@ const ChatBot = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type a message..."
           className="input-field"
+          onKeyDown={handleKeyDown} // Capture Enter key to send message
           disabled={isModelLoading || isResponding} // Disable input while model is loading or bot is responding
         />
         <button
