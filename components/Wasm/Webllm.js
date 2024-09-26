@@ -7,34 +7,38 @@ import { LinearProgress, Box, Typography } from '@mui/material'; // Import MUI c
 
 // Define a custom Markdown component with code highlighting
 const MarkdownWithHighlight = ({ children }) => {
-  return (
-    <Markdown
-      options={{
-        overrides: {
-          code: {
-            component: ({ className, children }) => {
-              const language = className ? className.replace('lang-', 'language-').replace('language-', '') : '';
-              const codeString = Array.isArray(children) ? children.join('') : children;
-              const highlightedCode = language
-                ? hljs.highlight(codeString, { language }).value
-                : hljs.highlightAuto(codeString).value;
-              return (
-                <pre>
-                  <code
-                    className={`hljs ${language}`}
-                    dangerouslySetInnerHTML={{ __html: highlightedCode }}
-                  />
-                </pre>
-              );
+    return (
+      <Markdown
+        options={{
+          overrides: {
+            code: {
+              component: ({ className, children }) => {
+                // Ensure className follows the pattern 'language-<language>'
+                const language = className?.replace('lang-', '').replace('language-', '') || 'plaintext';
+                
+                // Join children to handle multiline code blocks correctly
+                const codeString = Array.isArray(children) ? children.join('') : children;
+                
+                // Highlight the code using hljs
+                const highlightedCode = hljs.highlight(codeString, { language }).value;
+  
+                return (
+                  <pre>
+                    <code
+                      className={`hljs language-${language}`}
+                      dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                    />
+                  </pre>
+                );
+              },
             },
           },
-        },
-      }}
-    >
-      {children}
-    </Markdown>
-  );
-};
+        }}
+      >
+        {children}
+      </Markdown>
+    );
+  };
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]); // Holds the entire conversation
@@ -58,7 +62,7 @@ const ChatBot = () => {
           });
         };
 
-        const selectedModel = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC"; // Remembered model name
+        const selectedModel = "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC";
         const engine = await webllm.CreateMLCEngine(
           selectedModel,
           { initProgressCallback } // engineConfig with progress callback
