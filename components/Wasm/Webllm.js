@@ -164,7 +164,7 @@ const ChatBot = () => {
           <LinearProgress variant="determinate" value={progressInfo.progress} />
         </Box>
       ) : (
-        <div className="chatbox" ref={chatboxRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        <div className="chatbox" ref={chatboxRef}>
           {messages.map((message, index) => (
             <div key={index} className={`message ${message.sender}`}>
               {/* Use the custom MarkdownWithHighlight component */}

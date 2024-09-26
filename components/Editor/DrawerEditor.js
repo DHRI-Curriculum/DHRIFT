@@ -7,6 +7,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Webvm from '../Wasm/Webvm';
+import Webllm from '../Wasm/Webllm';
 import HTMLEditorComponent from './HTMLEditorComponent';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
@@ -149,6 +150,15 @@ export default function DrawerEditor(props) {
                 <HTMLEditorComponent />
             )
         }
+        else if (language === 'llm') {
+            return (
+                <Webllm
+                    handleOpenClose={handleOpenClose}
+                    runButtonNeeded={false}
+                />
+            )
+        }
+
         else {
             return (
                 <div>
