@@ -62,8 +62,7 @@ const ChatBot = () => {
           });
         };
 
-        // const selectedModel = "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC";
-        const selectedModel = "Llama-3.2-3B-Instruct-q4f32_1-MLC";
+        const selectedModel = "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC";
         const engine = await webllm.CreateMLCEngine(
           selectedModel,
           { initProgressCallback } // engineConfig with progress callback
