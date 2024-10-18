@@ -10,6 +10,7 @@ export default function Webvm(props) {
                 <script src={process.env.NEXT_PUBLIC_ASSET_PREFIX +'/coi-serviceworker.js'} async></script>
             </Head>
             <iframe src='./webvm/index.html' width='100%' height='95%' id="iframe"></iframe>
+            {/* <iframe src={'https://zweibel.net/webvm/'} width='100%' height='95%' id="iframe"></iframe> */}
            </div>
     )
 }
