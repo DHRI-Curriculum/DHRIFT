@@ -5,11 +5,23 @@ DHRIFT (Digital Humanities Research Infrastructure for Teaching) is a static sit
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Features](#features)
+- [WASM Capabilities](#wasm-capabilities)
+  - [Key Features Enabled by WASM](#key-features-enabled-by-wasm)
+  - [Example: Interactive Python Editor](#example-interactive-python-editor)
 - [Getting Started](#getting-started)
+    - [Quick Deployment Steps](#quick-deployment-steps)
 - [Usage](#usage)
+    - [How DHRIFT Works](#how-dhrift-works)
+    - [Workshop Repository Structure](#workshop-repository-structure)
+    - [Adding New Workshops](#adding-new-workshops)
 - [Development](#development)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running the Development Server](#running-the-development-server)
+    - [Building for Production](#building-for-production)
 - [Contributing](#contributing)
 - [Custom Workshops](#custom-workshops)
+    - [How to Create Custom Workshop Repositories](#how-to-create-custom-workshop-repositories)
 - [License](#license)
 
 ## Project Overview
@@ -23,6 +35,43 @@ DHRIFT provides an infrastructure for teaching and learning in the digital human
 - **Scalable design** to allow contributions and expansions of teaching resources.
 - **Interactive in-browser code execution** using WebAssembly (WASM).
 - **GitHub Actions integration** for automatic deployment.
+
+## WASM Capabilities
+
+DHRIFT offers advanced interactive features through WebAssembly (WASM), allowing users to engage with code directly in the browser. This makes DHRIFT workshops not just static learning resources, but dynamic, interactive experiences where learners can execute and modify code in real-time.
+
+### Key Features Enabled by WASM:
+
+1. **Integrated Code Editors**:
+   DHRIFT provides in-browser code editors that allow users to write and execute code without needing any local setup. These editors support multiple programming languages and are embedded directly into the workshop content. Participants can edit code examples within the workshop itself and see live output, creating an immersive learning experience.
+
+   - **Supported Languages**: Python, JavaScript, HTML/CSS, and more.
+   - **Real-time Execution**: Learners can immediately see the results of the code they write, without leaving the browser.
+
+2. **Simulated Command Line Interface**:
+   For workshops that teach command-line skills, DHRIFT integrates a browser-based simulated command line. This allows users to practice common terminal commands like navigating directories, managing files, or using version control (e.g., `git`) directly in the browser.
+
+   - **Features**: Basic shell commands like `ls`, `cd`, `echo`, etc.
+   - **Hands-On Practice**: Participants can try out commands as they progress through the lesson, reinforcing their learning through active engagement.
+
+3. **Interactive Code Execution with WASM**:
+   Using WebAssembly, DHRIFT enables secure and fast in-browser execution of code blocks. This is particularly useful for running code snippets in languages like Python or JavaScript without requiring server-side execution. WASM ensures that the execution happens efficiently within the user's browser environment, providing an experience similar to using a local IDE.
+
+### Example: Interactive Python Editor
+
+Within a Python workshop, users might encounter code blocks like this:
+
+```python
+# Example Python Code
+print("Welcome to the Python workshop!")
+```
+
+The results are displayed instantly, without needing to leave the browser, reinforcing learning by allowing immediate feedback.
+
+Benefits of WASM Integration:
+- **No Setup Required**: Learners don’t need to install any local tools or environments. Everything runs directly in the browser.
+- **Performance**: WebAssembly allows fast execution of complex tasks, including running code or simulating environments, without the performance limitations of JavaScript alone.
+- **Interactive Learning**: By offering interactive editors and terminals, DHRIFT transforms passive reading into active learning, where participants can experiment and engage directly with the material.
 
 ## Getting Started
 
