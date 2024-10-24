@@ -115,7 +115,7 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
                             </div>
                             <CardContent
                                 style={{
-                                    padding: '0px',
+                                    padding: '10px',
                                     paddingTop: '10px',
                                 }}
                             ><p className='centered'>{parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}</p>
