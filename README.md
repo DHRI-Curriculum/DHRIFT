@@ -66,7 +66,7 @@ Within a Python workshop, users might encounter code blocks like this:
 print("Welcome to the Python workshop!")
 ```
 
-The results are displayed instantly, without needing to leave the browser, reinforcing learning by allowing immediate feedback.
+Users are able to open the code editor and run this code themselves within the browser.
 
 Benefits of WASM Integration:
 - **No Setup Required**: Learners don’t need to install any local tools or environments. Everything runs directly in the browser.
