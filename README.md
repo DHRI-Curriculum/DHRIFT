@@ -1,52 +1,104 @@
 # DHRIFT - Digital Humanities Research Infrastructure for Teaching
 
-DHRIFT (Digital Humanities Research Infrastructure for Teaching) is a static site generator built using Next.js. It supports the creation and dissemination of digital humanities workshops, institutes, and other educational materials. This repository provides the development framework for building static websites and generating resources for the DHRIFT initiative.
+DHRIFT (Digital Humanities Research Infrastructure for Teaching) is a static site generator built using Next.js. It facilitates the creation and dissemination of digital humanities workshops, institutes, and educational materials. This repository contains the development framework for building static websites and resources for the DHRIFT initiative.
 
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Features](#features)
 - [Getting Started](#getting-started)
-- [Development](#development)
 - [Usage](#usage)
-- [Custom Workshops](#custom-workshops)
+- [Development](#development)
 - [Contributing](#contributing)
+- [Custom Workshops](#custom-workshops)
 - [License](#license)
-
 
 ## Project Overview
 
-DHRIFT aims to create a sustainable infrastructure for teaching and learning in the digital humanities. It powers [app.dhrift.org](https://app.dhrift.org), providing open-source workshops and resources for educators and students in the digital humanities field.
-
-DHRIFT uses Next.js to ensure high performance, scalability, and easy deployment across multiple platforms.
+DHRIFT provides an infrastructure for teaching and learning in the digital humanities. It powers [app.dhrift.org](https://app.dhrift.org), a platform that dynamically pulls and displays workshops based on the repository specified in the URL query. The platform reads metadata from the `config.yml` file of the specified repository, allowing for dynamic loading of workshops and resources.
 
 ## Features
 
 - **Next.js framework** for building and deploying static sites.
-- **Customizable workshops** with exercises and examples for digital humanities.
+- **Customizable workshops** following a structured format.
 - **Scalable design** to allow contributions and expansions of teaching resources.
-- **Interactive in-browser code editing** using WebAssembly (WASM).
-- **GitHub Actions integration** for automatic deployment to GitHub Pages.
+- **Interactive in-browser code execution** using WebAssembly (WASM).
+- **GitHub Actions integration** for automatic deployment.
 
 ## Getting Started
 
-Deploying DHRIFT using GitHub Actions is simple. By forking the repository and enabling Actions, your workshop site can be automatically deployed. However, after enabling Actions, you will need to trigger the workflow by either running it manually or making a small change to the repository.
+Deploying DHRIFT using GitHub Actions is simple. By forking the repository and enabling Actions, your workshop site can be automatically deployed. After enabling Actions, you will need to trigger the workflow by either running it manually or making a small change to the repository.
 
 ### Quick Deployment Steps
 
 1. **Fork the Repository**:
-   - Fork the [DHRIFT repository](https://github.com/DHRI-Curriculum/DHRIFT) to your own GitHub account.
+   - Fork the [DHRIFT repository](https://github.com/DHRI-Curriculum/DHRIFT) to your GitHub account.
 
 2. **Enable GitHub Actions**:
-   - In your forked repository, go to the **Actions** tab.
+   - In your forked repository, navigate to the **Actions** tab.
    - Click **Enable Actions** if GitHub Actions are not already active.
 
 3. **Trigger the Deployment**:
-   - **Option 1**: Make a small change (e.g., edit the README) and push it to trigger the GitHub Actions workflow.
-   - **Option 2**: Manually trigger the workflow by navigating to the **Actions** tab, selecting the workflow, and clicking **Run workflow**.
+   - **Option 1**: Make a small change (e.g., edit the README) and push the change to trigger the GitHub Actions workflow.
+   - **Option 2**: Manually trigger the workflow from the **Actions** tab by selecting the workflow and clicking **Run workflow**.
 
 4. **Automatic Deployment**:
    - Once triggered, GitHub will run the deployment workflow, building and deploying your site to GitHub Pages or your specified hosting platform.
    - Future updates to the `main` branch will automatically trigger a rebuild and redeploy.
+
+## Usage
+
+### How DHRIFT Works
+
+When you deploy DHRIFT, it dynamically pulls content from a GitHub repository specified in the URL query. DHRIFT reads the `config.yml` file from the specified repository to gather metadata (e.g., site title, description) and locate the workshops repository.
+
+For example, if your repository URL is:
+```
+https://app.dhrift.org/inst?instUser=dhri-curriculum&instRepo=dhrift-site-template
+```
+
+DHRIFT will pull the `config.yml` from `https://github.com/DHRI-Curriculum/dhrift-site-template`:
+```yaml
+# Example config.yml
+title: "DHRI Curriculum"
+description: "A site for DHRI workshops"
+workshopsuser: dhri-curriculum
+workshopsrepo: workshops 
+```
+
+The `workshopsuser` and `workshopsrepo` keys point to the repository containing the Markdown workshop files.
+
+### Workshop Repository Structure
+
+The workshops repository must adhere to a specific structure for DHRIFT to correctly load and display the content. Here is an example of the structure based on the [DHRI-Curriculum/workshops repository](https://github.com/DHRI-Curriculum/workshops):
+
+```
+├── command-line.md       # Markdown files for each workshop
+├── data-literacies.md
+├── git.md
+│
+└── images/               # Any images used in workshops
+    ├── example.png
+```
+
+Each Markdown file represents a workshop. The files should follow a clear and consistent format, such as:
+
+```markdown
+# Workshop Title
+Introduction and objectives.
+
+## Lesson 1: Getting Started
+Explanation and tasks...
+
+```bash
+# Example command
+echo "Hello, DHRIFT!"
+```
+
+DHRIFT will use the structure defined in the `config.yml` and the content in the `workshops` repository to populate the site dynamically.
+
+### Adding New Workshops
+
+To add new workshops, update the `workshops_repo` in your `config.yml` file to point to a GitHub repository structured according to the example above. Ensure that each workshop is written in Markdown format and follows the proper structure for integration into the platform.
 
 ## Development
 
@@ -59,79 +111,61 @@ To set up a local development environment for DHRIFT, ensure you have the follow
 ### Installation
 
 1. Clone your forked repository:
-   
+
 ```bash
 git clone https://github.com/<your-username>/DHRIFT.git
 cd DHRIFT
 ```
-Install dependencies:
+
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-## Running the Development Server
-To start the development server, run:
+### Running the Development Server
 
+To start the development server, run:
 ```bash
 npm run dev
 ```
-Visit http://localhost:3000 to preview your changes.
+Visit `http://localhost:3000` to preview your changes.
 
-# Contributing
+### Building for Production
+
+To build and export the static site:
+```bash
+npm run build
+```
+This will generate static files in the `out` folder.
+
+## Contributing
+
 We welcome contributions to DHRIFT! To contribute:
 
-## Fork the repository.
-Create a new branch for your feature or bugfix.
-Submit a pull request with detailed information about your changes.
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Submit a pull request with detailed information about your changes.
+
 Be sure to follow the project's code style and conventions.
 
-# Custom Workshops
-DHRIFT allows creators to host their own repositories of workshops and configure DHRIFT to pull and display content dynamically from those repositories using query parameters.
+## Custom Workshops
 
-## Example: Custom Workshops Repository
-To point DHRIFT to a custom workshop repository, use the following URL format:
+DHRIFT allows creators to host their own repositories of workshops and configure DHRIFT to dynamically pull and display content from those repositories.
 
-```
-https://app.dhrift.org/inst?instUser=<github-username>&instRepo=<repository-name>
-```
+### How to Create Custom Workshop Repositories
 
-For instance, to use the dhrift-site-template repository under the dhri-curriculum organization, the URL would be:
+1. **Create a GitHub Repository**:
+   - Set up a new GitHub repository for your workshops. Each workshop can be a separate Markdown file with content like lesson plans, code examples, and exercises.
 
-```
-https://app.dhrift.org/inst?instUser=dhri-curriculum&instRepo=dhrift-site-template
-```
+2. **Organize Your Repository**:
+   - Create a clear structure following the requirements above.
 
-DHRIFT will fetch and process workshops from this repository and convert them into interactive web pages.
+3. **Write Workshop Files**:
+   - Use Markdown to write each workshop. Ensure they follow the structured format as shown in the example above.
 
-## How to Create Custom Workshop Repositories
-Create a GitHub Repository:
+4. **Update the `config.yml`**:
+   - Point to your custom workshops repository by setting the `workshopsuser` and `workshopsrepo` keys in the `config.yml` file of your institute repository.
 
-Set up a new repository for your workshops. Each workshop can be a Markdown file with content like lesson plans, code examples, and exercises.
-Organize Your Content:
-Create a clear structure, such as a workshops/ folder for lesson files and an assets/ folder for images.
-## Write Workshop Files:
+## License
 
-Use Markdown to create each workshop. For example:
-```markdown
-# Workshop Title
-Introduction and objectives.
-
-## Lesson 1: Getting Started
-Explanation and tasks...
-```
-
-```bash
-echo "Hello, DHRIFT!"
-```
-
-## Deploy the Repository:
-
-Once the repository is ready, use the appropriate query string to point DHRIFT at your custom repository.
-
-## Benefits of Using Custom Repositories
-Customizability: Tailor the workshop content to specific needs or curricula.
-Interactivity: DHRIFT supports WebAssembly (WASM) for in-browser code execution, providing interactive learning experiences.
-Flexibility: Any updates to the repository automatically reflect on the live site.
-
-# License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
