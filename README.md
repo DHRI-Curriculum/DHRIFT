@@ -18,7 +18,6 @@ DHRIFT (Digital Humanities Research Infrastructure for Teaching) is a static sit
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Development Server](#running-the-development-server)
-    - [Building for Production](#building-for-production)
 - [Contributing](#contributing)
 - [Custom Workshops](#custom-workshops)
     - [How to Create Custom Workshop Repositories](#how-to-create-custom-workshop-repositories)
@@ -178,14 +177,6 @@ To start the development server, run:
 npm run dev
 ```
 Visit `http://localhost:3000` to preview your changes.
-
-### Building for Production
-
-To build and export the static site:
-```bash
-npm run build
-```
-This will generate static files in the `out` folder.
 
 ## Contributing
 
