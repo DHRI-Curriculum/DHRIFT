@@ -137,9 +137,6 @@ Introduction and objectives.
 ## Lesson 1: Getting Started
 Explanation and tasks...
 
-```bash
-# Example command
-echo "Hello, DHRIFT!"
 ```
 
 DHRIFT will use the structure defined in the `config.yml` and the content in the `workshops` repository to populate the site dynamically.
