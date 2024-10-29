@@ -99,6 +99,18 @@ Deploying DHRIFT using GitHub Actions is simple. By forking the repository and e
 
 When you deploy DHRIFT, it dynamically pulls content from a GitHub repository specified in the URL query. DHRIFT reads the `config.yml` file from the specified repository to gather metadata (e.g., site title, description) and locate the workshops repository.
 
+DHRIFT generates a URL that pulls specific event and workshop content from a GitHub repository. Here’s how the URL is set up:
+
+```php
+https://app.dhrift.org/inst?instUser={github_username}&instRepo={repository_name}
+```
+
+1. **Base URL**: `https://app.dhrift.org/inst` – Directs to DHRIFT’s content loader.
+
+2. **Parameters**:
+   - **`instUser`**: The GitHub username or organization (e.g., `dhri-curriculum`).
+   - **`instRepo`**: Repository name containing a `config.yml` file with event info, such as date, location, and sessions (e.g., `dhrift-site-template`).
+
 For example, if your repository URL is:
 ```
 https://app.dhrift.org/inst?instUser=dhri-curriculum&instRepo=dhrift-site-template
