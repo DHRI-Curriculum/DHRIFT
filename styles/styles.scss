@@ -113,12 +113,11 @@ html {
 }
 
 
-
 #__next {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  // min-height: 100vh;
   max-width: 100%;
   background-color: $background-page;
   color: $foreground;
@@ -128,10 +127,10 @@ html {
 
 .container {
   position: relative;
-  min-height: 100vh;
+  min-height: 95vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   
 }
 
@@ -619,6 +618,51 @@ header {
   }
 }
 
+// track cards
+.track-card {
+    background-color: $primary-color-cream;
+    width: 100%; // ensure full width within grid item
+    border-radius: 0px;
+    box-shadow: none;
+    padding-left: 20px;
+    @include respond-above(md) {
+        padding-left: 0px;
+    }
+
+    h3 {
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-top: -5px;
+    }
+
+    .description {
+        font-size: 1rem;
+        margin-top: -5px;
+    }
+
+    &:hover {
+        transform: translateY(-10px);
+        overflow: visible;
+        z-index: 0;
+        box-shadow: $primary-color-sky 16px 16px 0px;
+        transition: all 0.5s ease;
+    }
+
+    .MuiCardContent-root {
+        padding: 10px;
+    }
+
+    .MuiTypography-h5 {
+        font-weight: 900;
+        font-size: 1.5rem;
+        margin-top: -5px;
+    }
+
+    .MuiTypography-body2 {
+        font-size: 1rem;
+        margin-top: -5px;
+    }
+}
 
 //frontmatter styles
 .frontmatter {

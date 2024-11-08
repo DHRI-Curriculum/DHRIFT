@@ -24,18 +24,20 @@ export default function OneTrackView({ gitUser, gitRepo, instUser, instRepo, tra
     const tracks = yaml.load(data);
     const trackData = tracks.tracks.find(t => t.short_name === track);
 
-    console.log('trackData workshops', trackData.workshops);
-    console.log('all workshops', workshops);
-    // workshop names have '.md' at the end, so we need to remove it
-    // Filter workshops by track
-
     const trackWorkshops = workshops.filter(workshop => trackData.workshops.includes(workshop.name.replace('.md', '')));
     const reverseTrackWorkshops = trackWorkshops.reverse();
 
+console.log('gitUser', gitUser)
+console.log('gitRepo', gitRepo)
+console.log('instUser', instUser)
+console.log('instRepo', instRepo)
+
     return (
         <div>
-            <h1>{trackData.name}</h1>
-        <div className='workshop-grid'>
+            <h1>{trackData.name} Track</h1>
+            <p>{trackData.description}</p>
+        <div
+        className='workshop-grid'>
             {reverseTrackWorkshops.map((workshop, index) => (
                 <UseWorkshopsCard
                     workshop={workshop}
