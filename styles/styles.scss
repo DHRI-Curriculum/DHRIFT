@@ -131,7 +131,7 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  
+
 }
 
 h1,
@@ -279,6 +279,7 @@ header {
     width: 50%;
     background-color: $primary-color-cream;
     padding-top: 20px;
+    padding-right: 71px;
 
     li {
       list-style: none;
@@ -448,7 +449,7 @@ header {
   justify-content: center;
   width: 100%;
   // max-width: 100%;
-  
+
 
   >div {
     @include respond-above(sm) {
@@ -470,6 +471,7 @@ header {
         padding-left: 100px;
         padding-right: 100px;
       }
+
       // padding: 0px 20px 0px 20px;
       position: absolute;
       height: 500px;
@@ -491,11 +493,13 @@ header {
       flex-direction: column;
       padding-left: 20px;
       padding-top: 20px;
+
       @include respond-above(md) {
         flex-direction: row;
         padding-left: 0px;
         padding-top: 0px;
       }
+
       align-items: baseline;
       justify-content: space-between;
     }
@@ -539,19 +543,23 @@ header {
     position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding-left: 20px;
+
     @include respond-above(md) {
       flex-direction: row;
       padding-left: 0px;
-      }
+    }
 
     justify-content: flex-start;
 
     p {
       padding-right: 20px;
+
       @include respond-above(md) {
         padding-right: 8cap;
       }
+
       max-width: 100%;
     }
   }
@@ -568,6 +576,8 @@ header {
   .button {
     margin-top: -10px;
     margin-top: -10px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
 
 }
@@ -577,24 +587,23 @@ header {
 .workshop {
   &-grid {
     display: grid;
-    // 3 columns
-    // grid-template-columns: repeat(3, 1fr);
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    justify-content: center;
     // bit of space 
-    grid-gap: 30px;
-    grid-gap: 30px;
+    grid-gap: 80px;
     margin-bottom: 30px;
   }
 
   &-card {
     background-color: $primary-color-cream;
-    width: 400px;
+    // width: 400px;
     border-radius: 0px;
     box-shadow: none;
     padding-left: 20px;
+
     @include respond-above(md) {
       padding-left: 0px;
-      }
+    }
 
     h3 {
       font-weight: 900;
@@ -620,54 +629,55 @@ header {
 
 // track cards
 .track-card {
-    background-color: $primary-color-cream;
-    width: 100%; // ensure full width within grid item
-    border-radius: 0px;
-    box-shadow: none;
-    padding-left: 20px;
-    @include respond-above(md) {
-        padding-left: 0px;
-    }
+  background-color: $primary-color-cream;
+  width: 100%; // ensure full width within grid item
+  border-radius: 0px;
+  box-shadow: none;
+  padding-left: 20px;
 
-    h3 {
-        font-weight: 900;
-        font-size: 1.5rem;
-        margin-top: -5px;
-    }
+  @include respond-above(md) {
+    padding-left: 0px;
+  }
 
-    .description {
-        font-size: 1rem;
-        margin-top: -5px;
-    }
+  h3 {
+    font-weight: 900;
+    font-size: 1.5rem;
+    margin-top: -5px;
+  }
 
-    &:hover {
-        transform: translateY(-10px);
-        overflow: visible;
-        z-index: 0;
-        box-shadow: $primary-color-sky 16px 16px 0px;
-        transition: all 0.5s ease;
-    }
+  .description {
+    font-size: 1rem;
+    margin-top: -5px;
+  }
 
-    .MuiCardContent-root {
-        padding: 10px;
-    }
+  &:hover {
+    transform: translateY(-10px);
+    overflow: visible;
+    z-index: 0;
+    box-shadow: $primary-color-sky 16px 16px 0px;
+    transition: all 0.5s ease;
+  }
 
-    .MuiTypography-h5 {
-        font-weight: 900;
-        font-size: 1.5rem;
-        margin-top: -5px;
-    }
+  .MuiCardContent-root {
+    padding: 10px;
+  }
 
-    .MuiTypography-body2 {
-        font-size: 1rem;
-        margin-top: -5px;
-    }
+  .MuiTypography-h5 {
+    font-weight: 900;
+    font-size: 1.5rem;
+    margin-top: -5px;
+  }
+
+  .MuiTypography-body2 {
+    font-size: 1rem;
+    margin-top: -5px;
+  }
 }
 
 //frontmatter styles
 .frontmatter {
   display: block;
-  
+
   @include respond-above(xl) {
     width: 90%;
     padding-left: 20px;
@@ -688,11 +698,12 @@ header {
     overflow-x: hidden;
     padding-left: 20px;
     padding-right: 20px;
+
     @include respond-above(md) {
       overflow-x: visible;
       padding-left: 0px;
       padding-right: 0px;
-      }
+    }
 
     h1 {
       // front page title
@@ -711,9 +722,11 @@ header {
       position: absolute;
       height: 100%;
       width: 201vw;
+
       @include respond-above(md) {
         width: 100vw;
-        }
+      }
+
       left: -150px;
       overflow-x: hidden;
     }
@@ -752,8 +765,8 @@ header {
       margin-bottom: 0px;
       position: relative;
       grid-column: 1;
-      @include respond-above(md) {
-        }
+
+      @include respond-above(md) {}
     }
 
     .button {
@@ -767,9 +780,10 @@ header {
   &-item {
     grid-column: 1;
     padding-left: 20px;
+
     @include respond-above(md) {
       padding-left: 0px;
-      }
+    }
 
     h2,
     h3 {
@@ -799,6 +813,7 @@ header {
     position: relative;
     margin-top: 0px;
     padding-left: 20px;
+
     @include respond-above(xl) {
       position: absolute;
       display: block;
@@ -806,7 +821,7 @@ header {
       grid-row-start: 1;
       justify-self: right;
       padding-left: 0px;
-      }
+    }
 
 
     &-authors {
@@ -836,11 +851,12 @@ header {
 
 // page content styles
 .page-content {
-  
+
   margin-top: 150px;
   margin-bottom: 100px;
 
   padding-left: 20px;
+
   @include respond-above(md) {
     padding-left: 0px;
   }
@@ -1150,7 +1166,7 @@ nav.sidenav {
 // }
 
 .message pre {
-background-color: inherit;
+  background-color: inherit;
 }
 
 .loading-message {
@@ -1218,15 +1234,17 @@ background-color: inherit;
 
 // Forms 
 .form {
-  h2{
+  h2 {
     font-weight: 700;
     margin-bottom: 10px;
   }
+
   h3 {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 10px;
   }
+
   h4 {
     margin-top: 0px;
     margin-bottom: 0px;
@@ -1243,28 +1261,31 @@ background-color: inherit;
       background-color: $primary-color-sky;
     }
   }
+
   .sessions {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    
+
     div {
-    background-color: $primary-color-cream;
+      background-color: $primary-color-cream;
     }
 
 
-    h4{
+    h4 {
       margin-bottom: 20px;
     }
   }
 
-  .logoUpload, .heroImageUpload{
+  .logoUpload,
+  .heroImageUpload {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
     background-color: $primary-color-cream;
+
     // input {
     //   display: none;
     // }
@@ -1322,6 +1343,7 @@ footer {
   .footer-logo {
     max-width: 50%;
     display: none;
+
     @include respond-above(md) {
       margin-left: 55px;
       display: block;
@@ -1334,10 +1356,11 @@ footer {
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
+
     // margin-top: -30px;
     @include respond-above(md) {
       margin-left: 100px;
-    flex-direction: row;
+      flex-direction: row;
     }
 
 

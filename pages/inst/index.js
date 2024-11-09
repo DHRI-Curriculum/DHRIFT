@@ -221,11 +221,11 @@ export default function Institute(props) {
             <div className='inst-description'>
                 {parsedYAML && <p>{parsedYAML.description}</p>}
                 {parsedYAML && (parsedYAML.registerlink || parsedYAML.registerLink) &&
-                    <p><Button
+                    <Button
                         className='button button-bark'
                         href={parsedYAML.registerlink || parsedYAML.registerLink}
                     >{parsedYAML && (parsedYAML.registertext || parsedYAML.registerText) ? (parsedYAML.registertext || parsedYAML.registerText) : 'Register'}
-                    </Button></p>
+                    </Button>
                 }
             </div>
             {parsedYAML && parsedYAML.DHRIFTfrontpage === false || parsedYAML && !parsedYAML.DHRIFTfrontpage ? aboutAccordion : null}
@@ -258,8 +258,6 @@ export default function Institute(props) {
         <Fade in={parsedYAML && parsedYAML.event || parsedYAML ? true : false}>
             <Container
                 disableGutters={true}
-                
-
                 sx={{
                     display: 'flex',
                     minWidth: '100%',

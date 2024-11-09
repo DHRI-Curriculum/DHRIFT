@@ -74,44 +74,40 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
         }
         else {
             // setSrc("/images/img" + randomNumberBetween1and7 + ".jpg")
-            setSrc( process.env.NEXT_PUBLIC_ASSET_PREFIX 
+            setSrc(process.env.NEXT_PUBLIC_ASSET_PREFIX
                 + "/images/img" + randomNumberBetween1and7 + ".jpg")
         }
     }, [coverimage])
 
     const workshopLink = './dynamic?user=' + gitUser + '&repo=' + gitRepo + '&file=' + workshop.name.split('.')[0] + '&instUser=' + instUser + '&instRepo=' + instRepo;
 
-    if(parsedWorkshop?.data?.published === false){
+    if (parsedWorkshop?.data?.published === false) {
         console.log('not published', parsedWorkshop.data.title)
         return null;
     }
     return (
         <>
             {parsedWorkshop && parsedWorkshop.data.title && parsedWorkshop.data.description && (parsedWorkshop.data.published === 'true' || !parsedWorkshop.data.published) &&
-                <div
-                style={{
-                    maxWidth: '100vw',
-                }}
-                >
-                    <Card 
-                                    style={{
-                                        maxWidth: '100vw',
-                                    }}
-                    className='workshop-card'>
-                        <CardActionArea 
+                <>
+                    <Card
                         style={{
-                            height: '450px',
                             maxWidth: '100vw',
                         }}
-                        href={workshopLink}>
+                        className='workshop-card'>
+                        <CardActionArea
+                            style={{
+                                height: '450px',
+                                maxWidth: '100vw',
+                            }}
+                            href={workshopLink}>
                             <div
-                            className='stylized-image-container'>
-                            <CardMedia
-                                component="img"
-                                height="240"
-                                image={src}
-                                alt={parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}
-                            />
+                                className='stylized-image-container'>
+                                <CardMedia
+                                    component="img"
+                                    height="240"
+                                    image={src}
+                                    alt={parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}
+                                />
                             </div>
                             <CardContent
                                 style={{
@@ -121,12 +117,12 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
                             ><p className='centered'>{parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}</p>
                                 <h3>{parsedWorkshop.data.title}</h3>
                                 <p
-                                className='description'
+                                    className='description'
                                 >{parsedWorkshop?.data?.description?.length > 200 ? parsedWorkshop.data.description.substring(0, 200) + '...' : parsedWorkshop.data.description}</p>
                             </CardContent>
                         </CardActionArea>
                     </Card>
-                </div>
+                </>
             }
         </>
     )
