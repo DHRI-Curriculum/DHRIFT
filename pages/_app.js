@@ -23,6 +23,7 @@ function MyApp({ Component, pageProps }) {
   const [gitRepo, setGitRepo] = useState(null);
   const [instGitUser, setInstGitUser] = useState(null);
   const [instGitRepo, setInstGitRepo] = useState(null);
+  const [query, setQuery] = useState(null);
   const [cacheCleared, setCacheCleared] = useState(false);
   const { cache, mutate } = useSWRConfig()
   const router = useRouter();
@@ -32,6 +33,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
+    setQuery(urlParams);
     setInstGitUser(urlParams.get('instUser'));
     setInstGitRepo(urlParams.get('instRepo'));
     if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
@@ -54,6 +56,7 @@ function MyApp({ Component, pageProps }) {
     }
   }, [router])
 
+  pageProps.query = query
   pageProps.title = title
   pageProps.setTitle = setTitle
   pageProps.workshopMode = workshopMode

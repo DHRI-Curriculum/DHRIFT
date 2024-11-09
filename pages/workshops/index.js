@@ -40,10 +40,10 @@ export default function Workshops(props) {
         }
     }, [props.instGitUser, props.instGitRepo])
 
-    useEffect(() => {
-        //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
-        // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
-    }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
+    // useEffect(() => {
+    //     //     console.log(props.gitUser) && props.gitRepo && props.instGitUser && props.instGitRepo)
+    //     // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
+    // }, [props.gitUser, props.gitRepo, props.instGitUser, props.instGitRepo])
 
 
 
