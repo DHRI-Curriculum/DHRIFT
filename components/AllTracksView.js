@@ -6,7 +6,7 @@ import { Card, CardActionArea, CardContent, Typography, Grid, CardMedia } from '
 
 const fetcher = (...args) => fetch(...args).then(res => res.text());
 
-export default function AllTracksView({ gitUser, gitRepo }) {
+export default function AllTracksView({ gitUser, gitRepo, instUser, instRepo }) {
     const [shouldFetch, setShouldFetch] = useState(false);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export default function AllTracksView({ gitUser, gitRepo }) {
                 return (
                     <Grid item xs={12} sm={6} md={6} lg={4} key={track.short_name}>
                         <Card className='track-card' variant="outlined">
-                            <CardActionArea href={`/tracks?t=${track.short_name}&user=${gitUser}&repo=${gitRepo}&instUser=${gitUser}&instRepo=${gitRepo}`}>
+                            <CardActionArea href={`/tracks?t=${track.short_name}&user=${gitUser}&repo=${gitRepo}&instUser=${instUser}&instRepo=${instRepo}`}>
                                 <div className='stylized-image-container'>
                                     <CardMedia
                                         component="img"
