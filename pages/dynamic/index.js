@@ -17,7 +17,6 @@ import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
 import { ErrorBoundary } from "react-error-boundary";
-import { PaddingRounded } from '@mui/icons-material'
 
 const drawerWidth = '-30%';
 

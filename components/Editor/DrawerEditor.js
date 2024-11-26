@@ -62,7 +62,7 @@ export default function DrawerEditor(props) {
             let offsetRight =
                 document.body.offsetWidth - (e.clientX - document.body.offsetLeft);
             let minWidth = 50;
-            let maxWidth = 1200;
+            let maxWidth = 1800;
             if (offsetRight > minWidth && offsetRight < maxWidth) {
                 setNewWidth(offsetRight);
             }
