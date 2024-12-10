@@ -6,6 +6,7 @@ import { CardMedia } from '@mui/material';
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
+import TrianglifyBasic from '../Backgrounds';
 
 export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, instRepo, totalWorkshops }) {
 
@@ -101,13 +102,18 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
                             }}
                             href={workshopLink}>
                             <div
-                                className='stylized-image-container'>
+                                className=''>
                                 <CardMedia
-                                    component="img"
-                                    height="240"
-                                    image={src}
+                                // use TrianglifyBasic
+
+                                    component={TrianglifyBasic}
+                                    // component="img"
+                                    // height="240"
+                                    // image={src}
+
                                     alt={parsedWorkshop.data['cover title'] || parsedWorkshop.data.title}
                                 />
+
                             </div>
                             <CardContent
                                 style={{

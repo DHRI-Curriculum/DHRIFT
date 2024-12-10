@@ -27,11 +27,6 @@ export default function OneTrackView({ gitUser, gitRepo, instUser, instRepo, tra
     const trackWorkshops = workshops.filter(workshop => trackData.workshops.includes(workshop.name.replace('.md', '')));
     const reverseTrackWorkshops = trackWorkshops.reverse();
 
-console.log('gitUser', gitUser)
-console.log('gitRepo', gitRepo)
-console.log('instUser', instUser)
-console.log('instRepo', instRepo)
-
     return (
         <div>
             <h1>{trackData.name} Track</h1>
