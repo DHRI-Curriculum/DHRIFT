@@ -42,9 +42,10 @@ function MyApp({ Component, pageProps }) {
     if (urlParams.get('user') && urlParams.get('repo')) {
       setGitUser(urlParams.get('user'));
       setGitRepo(urlParams.get('repo'));
-    } else {
-      console.error('GitHub user or repository is not specified in the URL.');
-    }
+    } 
+    // else {
+    //   console.error('GitHub user or repository is not specified in the URL.');
+    // }
     if (urlParams.get('edit') === 'true') {
       if (cacheCleared == false) {
         localStorage.removeItem('app-cache');
