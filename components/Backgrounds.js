@@ -36,7 +36,7 @@ const TrianglifyBasic = () => {
     if (!containerRef.current) return;
 
     const pattern = trianglify({
-      width: 450,
+      width: 400,
       height: 250,
       cellSize: cellSize,
       xColors: palettes[Math.floor(Math.random() * palettes.length)],
