@@ -3,13 +3,15 @@ import { getGitHubParamsFromURL, validateParams } from '../utils/github';
 import { useRouter } from 'next/router';
 import { GitHubStatus } from './GitHubStatus';
 
+const PAGES_NEEDING_GITHUB = ['/inst', '/workshops', '/dynamic'];
+
 export const GitHubContext = createContext();
 
 export function GitHubProvider({ children }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start false to prevent flash
   const [validationStatus, setValidationStatus] = useState({
-    isValid: false,
+    isValid: true, // Start true to prevent flash
     messages: [],
     checks: []
   });
@@ -18,50 +20,28 @@ export function GitHubProvider({ children }) {
     const checkParams = async () => {
       if (!router.isReady) return;
       
-      setLoading(true);
-      try {
-        const params = getGitHubParamsFromURL();
-        const status = await validateParams(params);
-        setValidationStatus(status);
-      } catch (error) {
-        setValidationStatus({
-          isValid: false,
-          messages: [`Validation error: ${error.message}`],
-          checks: []
-        });
-      } finally {
-        setLoading(false);
+      // Skip validation for pages that don't need it
+      if (!PAGES_NEEDING_GITHUB.includes(router.pathname)) {
+        return;
       }
+
+      setLoading(true);
+      const params = getGitHubParamsFromURL();
+      const status = await validateParams(params);
+      setValidationStatus(status);
+      setLoading(false);
     };
 
     checkParams();
-    
-    // Cleanup
-    return () => {
-      setValidationStatus({
-        isValid: false,
-        messages: [],
-        checks: []
-      });
-    };
-  }, [router.isReady, router.query]);
+  }, [router.isReady, router.pathname]);
 
-  const value = {
-    loading,
-    validationStatus,
-    setValidationStatus
-  };
+  // Only show validation UI on relevant pages
+  const showValidation = PAGES_NEEDING_GITHUB.includes(router.pathname);
 
   return (
-    <GitHubContext.Provider value={value}>
-      {loading ? (
-        <div>Validating GitHub parameters...</div>
-      ) : (
-        <>
-          <GitHubStatus validationStatus={validationStatus} />
-          {children}
-        </>
-      )}
+    <GitHubContext.Provider value={{ loading, validationStatus }}>
+      {children}
+      {showValidation && <GitHubStatus validationStatus={validationStatus} />}
     </GitHubContext.Provider>
   );
 }

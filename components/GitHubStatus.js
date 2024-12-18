@@ -6,10 +6,11 @@ export function GitHubStatus({ validationStatus }) {
   return (
     <div style={{ 
       position: 'fixed',
-      top: '1rem',
+      bottom: '1rem', // Move to bottom
       right: '1rem',
       zIndex: 9999,
-      maxWidth: '400px'
+      maxWidth: '400px',
+      opacity: 0.9 // Make slightly transparent
     }}>
       {validationStatus.messages.map((message, i) => (
         <Alert 
