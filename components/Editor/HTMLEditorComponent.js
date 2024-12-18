@@ -41,6 +41,14 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     const css = useRef(memoryCss);
     const consoleRef = useRef(null);
 
+    const parserOptions = {
+        replace: (domNode) => {
+            if (domNode.type === 'tag' && domNode.name === 'img') {
+                const props = { ...domNode.attribs, crossorigin: 'anonymous' };
+                return <img {...props} />;
+            }
+        }
+    };
 
     const consoleHook = () => {
         setTimeout(() => {
@@ -86,18 +94,72 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     }
     // end of hook
 
-    const transform = (node, index) => {
-        if (node.type === 'tag' && node.name === 'img') {
-            node.attribs = {
-                ...node.attribs,
-                crossorigin: 'anonymous'
-            };
-        }
-        return node;
-    };
-
     const options = {
-        transform,
+        replace: (domNode) => {
+            if (!domNode || !domNode.name) return;
+
+            try {
+                const baseAttribs = domNode.attribs || {};
+                
+                switch (domNode.name) {
+                    case 'img':
+                        return <img 
+                            {...baseAttribs} 
+                            crossorigin="anonymous"
+                            loading="lazy"
+                            referrerPolicy="no-referrer" 
+                        />;
+                    
+                    case 'script':
+                        return <script 
+                            {...baseAttribs}
+                            nonce={crypto.randomUUID()}
+                            defer
+                            referrerPolicy="no-referrer"
+                        />;
+                    
+                    case 'link':
+                        return <link 
+                            {...baseAttribs}
+                            crossorigin="anonymous"
+                            referrerPolicy="no-referrer"
+                        />;
+                    
+                    case 'iframe':
+                        return <iframe 
+                            {...baseAttribs}
+                            sandbox="allow-scripts allow-same-origin allow-forms"
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                        />;
+                    
+                    case 'form':
+                        return <form 
+                            {...baseAttribs}
+                            target="_self"
+                            rel="noopener noreferrer"
+                        />;
+                    
+                    case 'a':
+                        return <a 
+                            {...baseAttribs}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        />;
+                    
+                    case 'object':
+                    case 'embed':
+                    case 'applet':
+                        return <div className="blocked-content">External content blocked for security</div>;
+                    
+                    default:
+                        return undefined;
+                }
+            } catch (error) {
+                console.error('Parser error:', error);
+                return <div className="parse-error">Error parsing content</div>;
+            }
+        }
     };
 
     const doParsing = (code) => {
@@ -129,9 +191,9 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     const frameEval = (allCode) => {
         if (frameWindow) {
             try {
-                const codeToEval = frameScripts.current.join('\n') + '\n' + allCode;
+                const parsedContent = parse(allCode, parserOptions);
+                const codeToEval = frameScripts.current.join('\n') + '\n' + parsedContent;
                 frameWindow.eval(codeToEval);
-
             } catch (e) {
                 frameWindow.console.error(e);
             }
