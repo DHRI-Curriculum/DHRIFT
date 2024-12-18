@@ -87,26 +87,13 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     // end of hook
 
     const transform = (node, index) => {
-        if (node.type == 'script') {
-            var data, scriptContent;
-            if (node.children[0] && node.children[0].data) {
-                data = node.children[0].data;
-            }
-            // use AJAX to get script src and then add to frameScripts
-            if (node.attribs && node.attribs.src) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', node.attribs.src, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-                        if (xhr.status == 200) {
-                            scriptContent = xhr.responseText;
-                            frameScripts.current.push(scriptContent);
-                        }
-                    }
-                }
-                xhr.send();
-            }
+        if (node.type === 'tag' && node.name === 'img') {
+            node.attribs = {
+                ...node.attribs,
+                crossorigin: 'anonymous'
+            };
         }
+        return node;
     };
 
     const options = {
@@ -114,7 +101,6 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
     };
 
     const doParsing = (code) => {
-        // const result = ReactHtmlParser(code, options);
         const result = parse(code, options);
         setOutput(result);
     };
