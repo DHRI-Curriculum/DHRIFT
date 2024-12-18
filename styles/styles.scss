@@ -2,12 +2,15 @@
 // import Poppins
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo:wght@400;500;600;700&display=swap');
+@import '../node_modules/highlight.js/styles/obsidian.css';
+@import '../node_modules/allotment/dist/style.css';
+@import 'react-medium-image-zoom/dist/styles.css';
 
 // primary colors (still need primary colors for dark mode)
-$primary-color-bark: #614F42;
+$primary-color-bark: #2E2E2E;
 $primary-color-brown: #3C342F;
 $primary-color-sun: #F9976A;
-$primary-color-cream: #FFF9F4;
+$primary-color-cream: #F9F3EF;
 $primary-color-white: #FFFFFF;
 $primary-color-black: #1B1621;
 $primary-color-sky: #8dd0cd;
