@@ -1,7 +1,20 @@
 const checkGitHubResource = async (user, repo) => {
   try {
     const apiURL = `https://api.github.com/repos/${user}/${repo}`;
-    const response = await fetch(apiURL);
+    
+    // Add headers based on environment
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      ...(process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false' && {
+        'Authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
+      })
+    });
+
+    const response = await fetch(apiURL, { 
+      method: 'GET',
+      headers 
+    });
+
     const data = await response.json();
 
     return { 
@@ -11,14 +24,19 @@ const checkGitHubResource = async (user, repo) => {
         ? `Repository '${repo}' not found under user '${user}'`
         : response.status === 200 
           ? 'Repository found' 
-          : 'GitHub API error',
-      type: response.status === 404 ? 'not_found' : response.status === 200 ? 'success' : 'api_error',
+          : response.status === 403
+            ? 'Rate limit exceeded - please wait or use authenticated requests'
+            : 'GitHub API error',
+      type: response.status === 404 ? 'not_found' 
+          : response.status === 200 ? 'success' 
+          : response.status === 403 ? 'rate_limit'
+          : 'api_error',
       details: data
     };
   } catch (error) {
     console.error('GitHub check error:', error);
     return {
-      exists: false,
+      exists: false, 
       status: 500,
       message: `Error checking repository: ${error.message}`,
       type: 'error',
