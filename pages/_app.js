@@ -4,6 +4,11 @@ import Head from 'next/head';
 import CssBaseline from '@mui/material/CssBaseline';
 import { StyledEngineProvider } from '@mui/material/styles';
 
+// External styles
+import 'highlight.js/styles/obsidian.css';
+import 'allotment/dist/style.css';
+import 'react-medium-image-zoom/dist/styles.css';
+
 // Framework imports
 import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
@@ -11,9 +16,7 @@ import { SWRConfig, useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { GitHubProvider } from '../components/GitHubContext';
 
-// Custom styles after MUI
-import 'allotment/dist/style.css';
-import '../node_modules/highlight.js/styles/obsidian.css';
+// Custom styles last
 import '../styles/styles.scss';
 
 const Footer = dynamic(() => import('../components/Footer'));
