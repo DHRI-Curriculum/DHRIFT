@@ -1,4 +1,3 @@
-
 const { default: next } = require('next');
 const withMDX = require('@next/mdx')({
     extension: /\.(md|mdx)$/,
@@ -13,17 +12,23 @@ process.env.NEXT_PUBLIC_ASSET_PREFIX = process.env.PAGES_PATH || '';
 
 const nextConfig = {
     output: "export",
-    // trailingSlash: true,
-    // basePath: process.env.PAGES_PATH || '',
     images: {
         unoptimized: true,
     },
+    // Add CSS optimization
     experimental: {
-        optimizeCss: true,
+        optimizeCss: true, // Enable CSS optimization
     },
+    webpack(config) {
+        // CSS handling
+        config.module.rules.push({
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+        });
+        return config;
+    }
 }
 
 console.log(nextConfig);
-
 
 module.exports = nextConfig;
