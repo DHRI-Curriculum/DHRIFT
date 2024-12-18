@@ -117,7 +117,7 @@ export default function HTMLEditorComponent({
     const parserOptions = {
         replace: (domNode) => {
             if (domNode.type === 'tag' && domNode.name === 'img') {
-                const props = { ...domNode.attribs, crossorigin: 'anonymous' };
+                const props = { ...domNode.attribs, crossOrigin: 'anonymous' };
                 return <img {...props} />;
             }
         }
@@ -178,7 +178,7 @@ export default function HTMLEditorComponent({
                     case 'img':
                         return <img 
                             {...baseAttribs} 
-                            crossorigin="anonymous"
+                            crossOrigin="anonymous"
                             loading="lazy"
                             referrerPolicy="no-referrer" 
                         />;
@@ -194,7 +194,7 @@ export default function HTMLEditorComponent({
                     case 'link':
                         return <link 
                             {...baseAttribs}
-                            crossorigin="anonymous"
+                            crossOrigin="anonymous"
                             referrerPolicy="no-referrer"
                         />;
                     

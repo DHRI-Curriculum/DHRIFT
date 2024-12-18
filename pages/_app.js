@@ -1,22 +1,24 @@
-import Header from '../components/Header';
-import { StyledEngineProvider } from '@mui/material/styles';
-import '../styles/styles.scss';
-import '../node_modules/highlight.js/styles/obsidian.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
+// MUI styles first
 import CssBaseline from '@mui/material/CssBaseline';
+import { StyledEngineProvider } from '@mui/material/styles';
+
+// Framework imports
 import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
-const Footer = dynamic(() => import('../components/Footer'))
-import PyodideProvider from '../components/Wasm/PyodideProvider';
-import { SWRConfig } from 'swr';
-import { useRef } from 'react';
-import NextNProgress from 'nextjs-progressbar';
-import { useSWRConfig } from "swr";
+import { SWRConfig, useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
+import { GitHubProvider } from '../components/GitHubContext';
+
+// Custom styles after MUI
+import 'allotment/dist/style.css';
+import '../node_modules/highlight.js/styles/obsidian.css';
+import '../styles/styles.scss';
+
+const Footer = dynamic(() => import('../components/Footer'));
 
 function MyApp({ Component, pageProps }) {
-
   const [title, setTitle] = useState('');
   const [workshopMode, setWorkshopMode] = useState(false);
   const [gitUser, setGitUser] = useState(null);
@@ -25,11 +27,13 @@ function MyApp({ Component, pageProps }) {
   const [instGitRepo, setInstGitRepo] = useState(null);
   const [query, setQuery] = useState(null);
   const [cacheCleared, setCacheCleared] = useState(false);
-  const { cache, mutate } = useSWRConfig()
+  const { cache, mutate } = useSWRConfig();
   const router = useRouter();
+
+  const swrCacheProvider = useRef(new Map()).current;
   const clearCache = () => {
-    cache.clear()
-  }
+    cache.clear();
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -57,85 +61,44 @@ function MyApp({ Component, pageProps }) {
     }
   }, [router])
 
-  pageProps.query = query
-  pageProps.title = title
-  pageProps.setTitle = setTitle
-  pageProps.workshopMode = workshopMode
-  pageProps.setWorkshopMode = setWorkshopMode
-  pageProps.gitUser = gitUser
-  pageProps.setGitUser = setGitUser
-  pageProps.gitRepo = gitRepo
-  pageProps.setGitRepo = setGitRepo
-  pageProps.instGitUser = instGitUser
-  pageProps.setInstGitUser = setInstGitUser
-  pageProps.instGitRepo = instGitRepo
-  pageProps.setInstGitRepo = setInstGitRepo
-  pageProps.clearCache = clearCache
-
-  Object.assign(pageProps, {
-    title, setTitle, workshopMode, setWorkshopMode,
-  })
-
-  // useCacheProvider hook
-  function useCacheProvider() {
-    const cache = useRef(new Map());
-    useEffect(() => {
-      const currentDate = new Date();
-      const appCache = localStorage.getItem('app-cache');
-      if (appCache) {
-        // if at least a day has passed since the cache was set, clear it
-        if (localStorage.getItem('app-cache-time') && (currentDate - new Date(localStorage.getItem('app-cache-time'))) > 86400000) {
-          localStorage.removeItem('app-cache');
-          localStorage.removeItem('app-cache-time');
-          // cache.clear();
-          console.log('cache cleared')
-          return;
-        }
-        const map = new Map(JSON.parse(appCache));
-        map.forEach((value, key) => cache.current.set(key, value));
-      }
-
-      const saveCache = () => {
-        const appCache = JSON.stringify(Array.from(cache.current.entries()));
-        localStorage.setItem('app-cache', appCache);
-        const whenSet = new Date()
-        localStorage.setItem('app-cache-time', whenSet);
-      };
-
-      window.addEventListener('beforeunload', saveCache);
-      return () => window.removeEventListener('beforeunload', saveCache);
-    }, []);
-
-    return () => cache.current;
-  }
-
-
-  // use hook in SWRConfig
-  const provider = useCacheProvider();
+  pageProps = {
+    ...pageProps,
+    query,
+    title,
+    setTitle,
+    workshopMode,
+    setWorkshopMode,
+    gitUser,
+    setGitUser,
+    gitRepo,
+    setGitRepo, 
+    instGitUser,
+    setInstGitUser,
+    instGitRepo,
+    setInstGitRepo,
+    clearCache
+  };
 
   return (
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <CssBaseline />
-      <ThemeProvider>
-        <StyledEngineProvider>
+      <StyledEngineProvider injectFirst>
+        <CssBaseline />
+        <ThemeProvider>
           <main className='container'>
-            <SWRConfig value={{ provider }}>
-              <PyodideProvider>
-                <NextNProgress
-                  options={{ easing: 'ease', speed: 200 }} />
+            <SWRConfig value={{ provider: () => swrCacheProvider }}>
+              <GitHubProvider>
                 <Component {...pageProps} />
-              </PyodideProvider>
+              </GitHubProvider>
             </SWRConfig>
           </main>
-        </StyledEngineProvider>
-      </ThemeProvider>
-      {!workshopMode &&
-        <Footer />}
+        </ThemeProvider>
+        {!workshopMode && <Footer />}
+      </StyledEngineProvider>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
