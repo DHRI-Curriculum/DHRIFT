@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useContext } from "react";
+import React, { useRef, useEffect, useState, useContext, useCallback } from "react";
 // import ReactHtmlParser, { Options } from "react-html-parser";
 // import convertHtmlToReact from '@hedgedoc/html-to-react';
 import parse from 'html-react-parser';
@@ -16,30 +16,103 @@ import "allotment/dist/style.css";
 import { Console, Hook, Unhook } from 'console-feed';
 import JSZip from 'jszip';
 import { saveAs } from "file-saver";
+import debounce from 'lodash.debounce';
 
-export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTML here -->", defaultCSS = "/* Write CSS Here */",
-    defaultJS = '// Write Javascript Here' }, includeFrames = '[html, css, javascript]') {
-
-    // check if user has text in local storage
-    const memoryCode = window.localStorage.getItem('code') || defaultCode;
-    const memoryCss = window.localStorage.getItem('css') || defaultCSS;
-    const memoryJavascript = window.localStorage.getItem('javascript') || defaultJS;
-
+export default function HTMLEditorComponent({ 
+    defaultCode = "<!-- Write your HTML here -->", 
+    defaultCSS = "/* Write CSS Here */",
+    defaultJS = '// Write Javascript Here',
+    includeFrames = '[html, css, javascript]' 
+}) {
+    // State initialization
     const [output, setOutput] = useState([]);
     const [frameKey, setFrameKey] = useState(Math.random());
     const [outputKey, setOutputKey] = useState(Math.random());
     const [frameReady, setFrameReady] = useState(false);
-    const [frameDoc, setFrameDoc] = useState(null);
     const [frameWindow, setFrameWindow] = useState(null);
+    const [frameDoc, setFrameDoc] = useState(null);
     const [logs, setLogs] = useState([]);
-    const [contentRef, setContentRef] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [toShow, setToShow] = useState(false);
-    const [initialContent, setInitialContent] = useState('<!DOCTYPE html><html><head></head><body><div id="mountHere"></div></body></html>');
-    const frameScripts = useRef([]);
-    const javascript = useRef(memoryJavascript);
-    const code = useRef(memoryCode);
-    const css = useRef(memoryCss);
+
+    // Refs initialization
+    const code = useRef(window?.localStorage?.getItem('code') || defaultCode);
+    const css = useRef(window?.localStorage?.getItem('css') || defaultCSS);
+    const javascript = useRef(window?.localStorage?.getItem('javascript') || defaultJS);
     const consoleRef = useRef(null);
+    const frameScripts = useRef([]);
+    const contentRef = useRef(null);
+
+    // Frame initialization
+    const frameStyle = `
+        html, body { 
+            margin: 0; 
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #mountHere {
+            height: 100%;
+            width: 100%;
+        }
+    `;
+
+    const initialContent = `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <style>${frameStyle}</style>
+            </head>
+            <body>
+                <div id="mountHere"></div>
+            </body>
+        </html>
+    `;
+
+    // Memoized handlers
+    const isExecuting = useRef(false);
+    const executionQueue = useRef([]);
+
+    const executeJavaScript = useCallback(async (code) => {
+        if (isExecuting.current) {
+            executionQueue.current.push(code);
+            return;
+        }
+        
+        isExecuting.current = true;
+        try {
+            await frameEval(code);
+        } catch (error) {
+            console.error('Execution error:', error);
+        } finally {
+            isExecuting.current = false;
+            if (executionQueue.current.length > 0) {
+                const nextCode = executionQueue.current.shift();
+                executeJavaScript(nextCode);
+            }
+        }
+    }, [frameWindow]);
+
+    const updateFrame = useCallback(debounce(() => {
+        if (!frameWindow || !frameReady) return;
+        executeJavaScript(javascript.current);
+    }, 500), [frameWindow, frameReady]);
+
+    useEffect(() => {
+        return () => {
+            executionQueue.current = [];
+            isExecuting.current = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (frameReady) {
+            updateFrame();
+        }
+    }, [javascript.current, frameReady]);
+
+    const scriptQueue = useRef([]);
+    const scriptRunning = useRef(false);
 
     const parserOptions = {
         replace: (domNode) => {
@@ -212,6 +285,30 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
         runAll();
     };
 
+    const clearPreviousScripts = () => {
+        if (frameDoc) {
+            const scripts = frameDoc.getElementsByTagName('script');
+            Array.from(scripts).forEach(script => script.remove());
+        }
+    };
+
+    const runScriptQueue = async () => {
+        if (scriptRunning.current || scriptQueue.current.length === 0) return;
+        
+        scriptRunning.current = true;
+        try {
+            const script = scriptQueue.current.shift();
+            await frameEval(script);
+        } catch (error) {
+            console.error('Script execution error:', error);
+        } finally {
+            scriptRunning.current = false;
+            if (scriptQueue.current.length > 0) {
+                runScriptQueue();
+            }
+        }
+    };
+
     const runAll = () => {
         if (frameWindow && frameDoc) {
             setOutputKey(Math.random());
@@ -307,15 +404,49 @@ export default function HTMLEditorComponent({ defaultCode = "<!-- Write your HTM
         saveAs(htmlBlob, 'webpage.html');
     }
 
-    const downloadButton = () => {
+    const downloadFiles = () => {
+        // Create HTML with external references
+        const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+   
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+${code.current}
+<script src="./script.js"></script>
+</body>
+</html>`;
+
+        // Create individual file blobs
+        const htmlFile = new Blob([htmlContent], { type: 'text/html' });
+        const cssFile = new Blob([css.current], { type: 'text/css' });
+        const jsFile = new Blob([javascript.current], { type: 'text/javascript' });
+
+        // Download functions
+        const downloadHTML = () => saveAs(htmlFile, 'index.html');
+        const downloadCSS = () => saveAs(cssFile, 'styles.css');
+        const downloadJS = () => saveAs(jsFile, 'script.js');
+
+        // Download all files
+        downloadHTML();
+        downloadCSS();
+        downloadJS();
+    };
+
+    const DownloadButtons = () => {
         return (
-            <button onClick={downloadAll} style={{ position: 'relative', marginTop:'10px', marginLeft:'10px' }}>Download</button>
-        )
-    }
+            <div style={{ margin: '10px' }}>
+                <button onClick={downloadFiles}>
+                    Download All Files (index.html, styles.css, script.js)
+                </button>
+            </div>
+        );
+    };
 
     return (
         <div style={{ height: '100vh', width: '100%' }}>
-            {downloadButton()}
+            <DownloadButtons />
             <Allotment minSize={90} >
                 <Allotment.Pane minSize={100}>
                     <Allotment vertical>
