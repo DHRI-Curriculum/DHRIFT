@@ -9,27 +9,14 @@ const TrianglifyBasic = () => {
   const [intensity, setIntensity] = useState(0.5 + Math.random() * 0.5); // 0.5-1
 
   const palettes = [
-    // Original palettes
-    ['#f7f7f7', '#d1d1d1', '#a8a8a8'],
-    ['#ff6b6b', '#f06595', '#cc5de8'],
-    ['#4dabf7', '#3bc9db', '#38d9a9'],
-    ['#ffd43b', '#ffa94d', '#ff8787'],
-    // Nature inspired
-    ['#2D5A27', '#5AA45C', '#95E06C'],
-    ['#1B3B6F', '#065A82', '#1C7293'],
-    ['#FC7307', '#FCA001', '#FDD85D'],
-    // Modern & minimal
-    ['#2B2D42', '#8D99AE', '#EDF2F4'],
-    ['#233D4D', '#FE7F2D', '#FCCA46'],
-    // Vibrant
-    ['#7400B8', '#6930C3', '#5E60CE'],
-    ['#FF0A54', '#FF477E', '#FF5C8A'],
-    ['#55A630', '#80B918', '#AACC00'],
-    // Pastel
-    ['#FFE5D9', '#FFD7BA', '#FEC89A'],
-    ['#BDE0FE', '#A2D2FF', '#CDB4DB'],
-    // Dark mode
-    ['#2B2D42', '#1A1A1D', '#4E4E50']
+    // Primary theme colors
+    ['#2E2E2E', '#3C342F', '#F9976A'], // bark, brown, sun
+    ['#F9F3EF', '#FFFFFF', '#8dd0cd'], // cream, white, sky
+    ['#F9976A', '#F9F3EF', '#8dd0cd'], // sun, cream, sky
+    // Variations
+    ['#2E2E2E', '#3C342F', '#1B1621'], // dark theme
+    ['#F9F3EF', '#8dd0cd', '#FFFFFF'], // light theme
+    ['#F9976A', '#8dd0cd', '#F9F3EF'], // accent theme
   ];
 
   const generatePattern = () => {
