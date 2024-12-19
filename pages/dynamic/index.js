@@ -17,6 +17,8 @@ import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
 import { ErrorBoundary } from "react-error-boundary";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const drawerWidth = '-30%';
 
@@ -87,48 +89,73 @@ export default function WorkshopPage({
 
   // convert markdown to html and split into pages
   const convertContenttoHTML = function (content) {
-    const htmlifiedContent = ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
-    // split react element array into pages
-    const allPages = [];
-    const pages = htmlifiedContent?.props.children.reduce((acc, curr) => {
-      // allPages = [[h1, p, p][h1, p, div]]
-      if (typeof curr === 'string') {
-        return acc;
-      } else if (curr.type === 'h1') {
-        allPages.push([curr]);
-      }
-      else if ((curr.type === 'h2' && currentFile.data.long_pages === 'false')
-        || (curr.type === 'h2' && currentFile.data.long_pages === undefined)) {
-        allPages.push([curr]);
-      }
-      // this changes from long pages to short ones 
-      else if (curr.type === 'h2' && currentFile.data.long_pages === 'true') {
-        // pass
-      }
-      // else if (curr.type === 'h2' && currentFile.data.long_pages === 'false')
-      else {
-        allPages[allPages.length - 1].push(curr);
-      }
-      return acc;
-    }, []);
+    // Safeguard against null/undefined content
+    if (!content) {
+      return [];
+    }
 
-    return (
-      allPages.map((page, index) => {  // page = [h1, p, p]
-        return (
-          <div key={index} className='page-content'>
-            {page.map((element, index) => {
-              return (
-                <Fragment key={index}>
-                  {element}
-                </Fragment>
-              )
-            }
-            )}
-          </div>
-        )
+    try {
+      const htmlifiedContent = ConvertMarkdown({ 
+        content, 
+        allUploads, 
+        workshopTitle, 
+        language, 
+        setCode, 
+        setEditorOpen, 
+        setAskToRun, 
+        gitUser, 
+        gitRepo, 
+        gitFile, 
+        instUser, 
+        instRepo, 
+        setJupyterSrc 
+      });
+
+      // Safeguard against missing props or children
+      if (!htmlifiedContent?.props?.children) {
+        return [];
       }
-      )
-    )
+
+      const allPages = [];
+      const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
+        // Skip non-element nodes
+        if (!curr || typeof curr !== 'object') {
+          return acc; 
+        }
+
+        // Handle various heading levels
+        if (curr.type === 'h1') {
+          allPages.push([curr]);
+        } else if (curr.type === 'h2' && currentFile?.data?.long_pages === 'false') {
+          allPages.push([curr]);
+        } else if (curr.type === 'h2' && !currentFile?.data?.long_pages) {
+          allPages.push([curr]); 
+        } else if (allPages.length > 0) {
+          // Add content to current section if it exists
+          allPages[allPages.length - 1].push(curr);
+        } else {
+          // Create new section if none exists
+          allPages.push([curr]);
+        }
+
+        return acc;
+      }, []);
+
+      return allPages.map((page, index) => (
+        <div key={`page-${index}`} className="page-content">
+          {page.map((element, elementIndex) => (
+            <div key={`element-${elementIndex}`}>
+              {element} 
+            </div>
+          ))}
+        </div>
+      ));
+
+    } catch (error) {
+      console.error('Error converting markdown:', error);
+      setMarkdownError(error);
+      return [];
+    }
   }
 
   const data = useWorkshop(gitUser, gitFile, builtURL, editing);
@@ -395,6 +422,14 @@ export default function WorkshopPage({
                       <Skeleton variant="rect" width={'100%'} height={'50px'} />
                       {
                         Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                    </div>
+                  )}
+                  {markdownError && (
+                    <div className="markdown-error">
+                      <Alert severity="error">
+                        <AlertTitle>Error Converting Markdown</AlertTitle>
+                        {markdownError.message}
+                      </Alert>
                     </div>
                   )}
                 </div>
