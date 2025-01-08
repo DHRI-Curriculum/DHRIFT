@@ -147,7 +147,7 @@ export default function DrawerEditor(props) {
         }
         else if (language === 'html' || language === 'html_css') {
             return (
-                <HTMLEditorComponent />
+                <HTMLEditorComponent isActive={show} />
             )
         }
         else if (language === 'llm') {
@@ -255,4 +255,3 @@ export default function DrawerEditor(props) {
         </Fragment>
     )
 }
-
