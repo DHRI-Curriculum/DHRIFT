@@ -64,56 +64,17 @@ export default function HTMLEditorComponent({
                     ${frameStyle}
                 </style>
                 <style id="user-css"></style>
+                <script>
+                    window.onerror = function(msg, url, line) {
+                        console.error('JavaScript error:', msg, 'at line:', line);
+                        return false;
+                    };
+                </script>
             </head>
             <body>
             </body>
         </html>
     `;
-
-    // Memoized handlers
-    const isExecuting = useRef(false);
-    const executionQueue = useRef([]);
-
-    const executeJavaScript = useCallback(async (code) => {
-        if (isExecuting.current) {
-            executionQueue.current.push(code);
-            return;
-        }
-        
-        isExecuting.current = true;
-        try {
-            await frameEval(code);
-        } catch (error) {
-            console.error('Execution error:', error);
-        } finally {
-            isExecuting.current = false;
-            if (executionQueue.current.length > 0) {
-                const nextCode = executionQueue.current.shift();
-                executeJavaScript(nextCode);
-            }
-        }
-    }, [frameWindow]);
-
-    const updateFrame = useCallback(debounce(() => {
-        if (!frameWindow || !frameReady) return;
-        executeJavaScript(javascript.current);
-    }, 500), [frameWindow, frameReady]);
-
-    useEffect(() => {
-        return () => {
-            executionQueue.current = [];
-            isExecuting.current = false;
-        };
-    }, []);
-
-    useEffect(() => {
-        if (frameReady && isActive) {
-            updateFrame();
-        }
-    }, [javascript.current, frameReady, isActive]);
-
-    const scriptQueue = useRef([]);
-    const scriptRunning = useRef(false);
 
     const consoleHook = () => {
         setTimeout(() => {
@@ -133,6 +94,7 @@ export default function HTMLEditorComponent({
             runAll();
         }
     }, [frameReady, isActive]);
+
 
     // all this below can be wrapped into useAllotment hook or smth like that
     const isMountedRef = useRef(false);
@@ -164,55 +126,45 @@ export default function HTMLEditorComponent({
     };
 
     const frameEval = (allCode) => {
-        if (frameWindow) {
-            try {
-                const codeToEval = frameScripts.current.join('\n') + '\n' + allCode;
-                frameWindow.eval(codeToEval);
-            } catch (e) {
-                frameWindow.console.error(e);
-            }
+        if (!frameWindow) {
+            console.error('Frame window not available');
+            return;
+        }
+        try {
+            const codeToEval = frameScripts.current.join('\n') + '\n' + allCode;
+            frameWindow.eval(codeToEval);
+        } catch (e) {
+            console.error('JavaScript execution error:', e);
+            frameWindow.console.error('JavaScript execution error:', e);
         }
     }
 
     const onChangeCss = (newValue) => {
         css.current = newValue;
-        setTimeout(() => {
-            runAll();
-        }, 100);
+        runAll();
     };
 
     const onChangeJavascript = (newValue) => {
         javascript.current = newValue;
-        runAll();
-    };
-
-    const clearPreviousScripts = () => {
-        if (frameDoc) {
-            const scripts = frameDoc.getElementsByTagName('script');
-            Array.from(scripts).forEach(script => script.remove());
+        if (frameReady && isActive) {
+            runAll();
+        } else {
+            console.log('Frame not ready or editor not active, queuing JavaScript update');
         }
     };
 
-    const runScriptQueue = async () => {
-        if (scriptRunning.current || scriptQueue.current.length === 0) return;
-        
-        scriptRunning.current = true;
-        try {
-            const script = scriptQueue.current.shift();
-            await frameEval(script);
-        } catch (error) {
-            console.error('Script execution error:', error);
-        } finally {
-            scriptRunning.current = false;
-            if (scriptQueue.current.length > 0) {
-                runScriptQueue();
-            }
-        }
-    };
 
     const runAll = () => {
-        if (!isActive) return;
-        if (frameWindow && frameDoc) {
+        if (!isActive) {
+            console.log('Editor not active');
+            return;
+        }
+        if (!frameWindow || !frameDoc) {
+            console.error('Frame not ready');
+            return;
+        }
+
+        try {
             // Update CSS
             const styleEl = frameDoc.getElementById('user-css');
             if (styleEl) {
@@ -239,14 +191,15 @@ export default function HTMLEditorComponent({
                 iframe.referrerPolicy = 'no-referrer';
             });
 
-            // Scripts
+            // Handle inline scripts in HTML
             const scripts = frameDoc.getElementsByTagName('script');
-            Array.from(scripts).forEach(script => {
-                script.defer = true;
-                script.referrerPolicy = 'no-referrer';
-                if (!script.nonce) {
-                    script.nonce = crypto.randomUUID();
-                }
+            Array.from(scripts).forEach(oldScript => {
+                const newScript = frameDoc.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => {
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+                newScript.textContent = oldScript.textContent;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
             });
 
             // Forms
@@ -265,14 +218,16 @@ export default function HTMLEditorComponent({
                 }
             });
 
-            // Update JavaScript
-            setTimeout(() => {
-                frameEval(javascript.current);
-                // set the user local storage
-                window.localStorage.setItem('code', code.current);
-                window.localStorage.setItem('css', css.current);
-                window.localStorage.setItem('javascript', javascript.current);
-            }, 100);
+            // Update JavaScript immediately without setTimeout
+            frameEval(javascript.current);
+            
+            // Save to localStorage after successful execution
+            window.localStorage.setItem('code', code.current);
+            window.localStorage.setItem('css', css.current);
+            window.localStorage.setItem('javascript', javascript.current);
+        } catch (error) {
+            console.error('Error in runAll:', error);
+            frameWindow.console.error('Error running code:', error);
         }
     }
 
@@ -288,7 +243,7 @@ export default function HTMLEditorComponent({
                     key={frameKey}
                     initialContent={initialContent}
                     mountTarget='body'
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
                     style={{
                         width: "100%",
                         height: "100%",
