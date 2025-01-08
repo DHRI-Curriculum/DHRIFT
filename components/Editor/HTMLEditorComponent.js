@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState, useContext, useCallback } from "react";
 // import ReactHtmlParser, { Options } from "react-html-parser";
 // import convertHtmlToReact from '@hedgedoc/html-to-react';
-import parse from 'html-react-parser';
 import dynamic from "next/dynamic";
 const EditorComponent = dynamic(
     () => import("./EditorComponent"),
@@ -22,12 +21,11 @@ export default function HTMLEditorComponent({
     defaultCode = "<!-- Write your HTML here -->", 
     defaultCSS = "/* Write CSS Here */",
     defaultJS = '// Write Javascript Here',
-    includeFrames = '[html, css, javascript]' 
+    includeFrames = '[html, css, javascript]',
+    isActive = true
 }) {
     // State initialization
-    const [output, setOutput] = useState([]);
     const [frameKey, setFrameKey] = useState(Math.random());
-    const [outputKey, setOutputKey] = useState(Math.random());
     const [frameReady, setFrameReady] = useState(false);
     const [frameWindow, setFrameWindow] = useState(null);
     const [frameDoc, setFrameDoc] = useState(null);
@@ -48,12 +46,12 @@ export default function HTMLEditorComponent({
         html, body { 
             margin: 0; 
             padding: 0;
-            height: 100%;
+            min-height: 100%;
             width: 100%;
+            background: white;
         }
-        #mountHere {
-            height: 100%;
-            width: 100%;
+        body {
+            position: relative;
         }
     `;
 
@@ -61,10 +59,13 @@ export default function HTMLEditorComponent({
         <!DOCTYPE html>
         <html>
             <head>
-                <style>${frameStyle}</style>
+                <base target="_parent">
+                <style>
+                    ${frameStyle}
+                </style>
+                <style id="user-css"></style>
             </head>
             <body>
-                <div id="mountHere"></div>
             </body>
         </html>
     `;
@@ -106,22 +107,13 @@ export default function HTMLEditorComponent({
     }, []);
 
     useEffect(() => {
-        if (frameReady) {
+        if (frameReady && isActive) {
             updateFrame();
         }
-    }, [javascript.current, frameReady]);
+    }, [javascript.current, frameReady, isActive]);
 
     const scriptQueue = useRef([]);
     const scriptRunning = useRef(false);
-
-    const parserOptions = {
-        replace: (domNode) => {
-            if (domNode.type === 'tag' && domNode.name === 'img') {
-                const props = { ...domNode.attribs, crossOrigin: 'anonymous' };
-                return <img {...props} />;
-            }
-        }
-    };
 
     const consoleHook = () => {
         setTimeout(() => {
@@ -136,12 +128,11 @@ export default function HTMLEditorComponent({
     }
 
     useEffect(() => {
-        if (frameReady) {
+        if (frameReady && isActive) {
             consoleHook();
             runAll();
         }
-    }, [frameReady]);
-
+    }, [frameReady, isActive]);
 
     // all this below can be wrapped into useAllotment hook or smth like that
     const isMountedRef = useRef(false);
@@ -167,105 +158,15 @@ export default function HTMLEditorComponent({
     }
     // end of hook
 
-    const options = {
-        replace: (domNode) => {
-            if (!domNode || !domNode.name) return;
-
-            try {
-                const baseAttribs = domNode.attribs || {};
-                
-                switch (domNode.name) {
-                    case 'img':
-                        return <img 
-                            {...baseAttribs} 
-                            crossOrigin="anonymous"
-                            loading="lazy"
-                            referrerPolicy="no-referrer" 
-                        />;
-                    
-                    case 'script':
-                        return <script 
-                            {...baseAttribs}
-                            nonce={crypto.randomUUID()}
-                            defer
-                            referrerPolicy="no-referrer"
-                        />;
-                    
-                    case 'link':
-                        return <link 
-                            {...baseAttribs}
-                            crossOrigin="anonymous"
-                            referrerPolicy="no-referrer"
-                        />;
-                    
-                    case 'iframe':
-                        return <iframe 
-                            {...baseAttribs}
-                            sandbox="allow-scripts allow-same-origin allow-forms"
-                            loading="lazy"
-                            referrerPolicy="no-referrer"
-                        />;
-                    
-                    case 'form':
-                        return <form 
-                            {...baseAttribs}
-                            target="_self"
-                            rel="noopener noreferrer"
-                        />;
-                    
-                    case 'a':
-                        return <a 
-                            {...baseAttribs}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        />;
-                    
-                    case 'object':
-                    case 'embed':
-                    case 'applet':
-                        return <div className="blocked-content">External content blocked for security</div>;
-                    
-                    default:
-                        return undefined;
-                }
-            } catch (error) {
-                console.error('Parser error:', error);
-                return <div className="parse-error">Error parsing content</div>;
-            }
-        }
-    };
-
-    const doParsing = (code) => {
-        const result = parse(code, options);
-        setOutput(result);
-    };
-
     const onChangeHTML = (newValue) => {
         code.current = newValue;
         runAll();
     };
 
-    const outputComponent = (output) => {
-        return (
-            <div key={outputKey}>
-                {output}
-                {/* {output.map((item, index) => {
-                    if (typeof item === 'string') {
-                        return
-                    }
-                    return (
-                        item
-                    )
-                })} */}
-            </div>
-        )
-    }
-
     const frameEval = (allCode) => {
         if (frameWindow) {
             try {
-                const parsedContent = parse(allCode, parserOptions);
-                const codeToEval = frameScripts.current.join('\n') + '\n' + parsedContent;
+                const codeToEval = frameScripts.current.join('\n') + '\n' + allCode;
                 frameWindow.eval(codeToEval);
             } catch (e) {
                 frameWindow.console.error(e);
@@ -277,7 +178,7 @@ export default function HTMLEditorComponent({
         css.current = newValue;
         setTimeout(() => {
             runAll();
-        }, 1000);
+        }, 100);
     };
 
     const onChangeJavascript = (newValue) => {
@@ -310,24 +211,70 @@ export default function HTMLEditorComponent({
     };
 
     const runAll = () => {
+        if (!isActive) return;
         if (frameWindow && frameDoc) {
-            setOutputKey(Math.random());
-            doParsing(code.current);
+            // Update CSS
+            const styleEl = frameDoc.getElementById('user-css');
+            if (styleEl) {
+                styleEl.textContent = css.current;
+            }
+
+            // Update HTML
+            frameDoc.body.innerHTML = code.current;
+            
+            // Fix elements
+            // Images
+            const images = frameDoc.getElementsByTagName('img');
+            Array.from(images).forEach(img => {
+                img.crossOrigin = 'anonymous';
+                img.loading = 'lazy';
+                img.referrerPolicy = 'no-referrer';
+            });
+
+            // Iframes
+            const iframes = frameDoc.getElementsByTagName('iframe');
+            Array.from(iframes).forEach(iframe => {
+                iframe.sandbox = 'allow-scripts allow-same-origin allow-forms';
+                iframe.loading = 'lazy';
+                iframe.referrerPolicy = 'no-referrer';
+            });
+
+            // Scripts
+            const scripts = frameDoc.getElementsByTagName('script');
+            Array.from(scripts).forEach(script => {
+                script.defer = true;
+                script.referrerPolicy = 'no-referrer';
+                if (!script.nonce) {
+                    script.nonce = crypto.randomUUID();
+                }
+            });
+
+            // Forms
+            const forms = frameDoc.getElementsByTagName('form');
+            Array.from(forms).forEach(form => {
+                form.target = '_self';
+                form.rel = 'noopener noreferrer';
+            });
+
+            // External Links
+            const links = frameDoc.getElementsByTagName('a');
+            Array.from(links).forEach(link => {
+                if (link.href && link.href.startsWith('http')) {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                }
+            });
+
+            // Update JavaScript
             setTimeout(() => {
                 frameEval(javascript.current);
                 // set the user local storage
                 window.localStorage.setItem('code', code.current);
                 window.localStorage.setItem('css', css.current);
                 window.localStorage.setItem('javascript', javascript.current);
-            }, 2000);
+            }, 100);
         }
     }
-
-    const iFrameStyle = <style>
-        {css.current}
-    </style>;
-
-    const frameHead = [iFrameStyle];
 
     const FramePane = () => {
         return (
@@ -339,9 +286,9 @@ export default function HTMLEditorComponent({
                 <Frame
                     ref={contentRef}
                     key={frameKey}
-                    head={frameHead}
                     initialContent={initialContent}
-                    mountTarget='#mountHere'
+                    mountTarget='body'
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                     style={{
                         width: "100%",
                         height: "100%",
@@ -356,11 +303,7 @@ export default function HTMLEditorComponent({
                                 setFrameDoc(document);
                                 setFrameReady(true);
                                 consoleRef.current = window.console;
-                                return (
-                                    <>
-                                        {outputComponent(output)}
-                                    </>
-                                )
+                                return null;
                             }
                         }
                     </FrameContextConsumer>
@@ -394,22 +337,11 @@ export default function HTMLEditorComponent({
         return (<EditorComponent code={javascript.current} onChange={onChangeJavascript} language={'javascript'} debounce={1000} height={'100%'} />)
     }
 
-    // download html, css, and javascript in a zip file
-    const downloadAll = () => {
-        const htmlAdded = '<!DOCTYPE html><html><head><style>' + css.current + '</style></head><body>' + code.current + '<script>' + javascript.current + '</script></body></html>';
-        // const htmlBlob = new Blob([code.current], { type: 'text/html' });
-        // const cssBlob = new Blob([css.current], { type: 'text/css' });
-        // const javascriptBlob = new Blob([javascript.current], { type: 'text/javascript' });
-        const htmlBlob = new Blob([htmlAdded], { type: 'text/html' });
-        saveAs(htmlBlob, 'webpage.html');
-    }
-
     const downloadFiles = () => {
         // Create HTML with external references
         const htmlContent = `<!DOCTYPE html>
 <html>
 <head>
-   
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -467,12 +399,11 @@ ${code.current}
                 <Allotment.Pane>
                     <Allotment>
                         <Allotment vertical>
-                            <Allotment.Pane minSize={140}
-                            >
+                            <Allotment.Pane minSize={140}>
                                 {FramePane()}
                             </Allotment.Pane>
                             <Allotment.Pane className={'JS-console'}>
-                            <div style={{ color: 'white', paddingLeft: '10px' }}>Console</div>
+                                <div style={{ color: 'white', paddingLeft: '10px' }}>Console</div>
                                 {ConsolePane()}
                             </Allotment.Pane>
                         </Allotment>
@@ -481,4 +412,4 @@ ${code.current}
             </Allotment>
         </div>
     );
-};
+}
