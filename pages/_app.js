@@ -19,6 +19,7 @@ import { ThemeProvider } from 'next-themes';
 import { SWRConfig, useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { GitHubProvider } from '../components/GitHubContext';
+import PyodideProvider from '../components/Wasm/PyodideProvider';
 
 const Footer = dynamic(() => import('../components/Footer'));
 
@@ -94,7 +95,9 @@ function MyApp({ Component, pageProps }) {
           <main className='container'>
             <SWRConfig value={{ provider: () => swrCacheProvider }}>
               <GitHubProvider>
-                <Component {...pageProps} />
+                <PyodideProvider>
+                  <Component {...pageProps} />
+                </PyodideProvider>
               </GitHubProvider>
             </SWRConfig>
           </main>

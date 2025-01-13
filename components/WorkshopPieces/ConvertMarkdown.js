@@ -291,7 +291,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         const workshop = props.workshop;
         const pageNumber = props.page;
         return (
-            <a href={`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${workshop}&page=${pageNumber}&instUser=${instUser}&instRepo=${instRepo}`}>
+            <a href={`/dynamic?user=${gitUser}&repo=${gitRepo}&file=${workshop}&page=${pageNumber}&instUser=${instUser}&instRepo=${instRepo}`}>
                 {children}
             </a>
         )
