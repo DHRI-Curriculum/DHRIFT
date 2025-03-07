@@ -100,7 +100,6 @@ export default function Frontmatter(currentFile, setCurrentPage, setCurrentConte
               if (typeof item === 'object' && item !== null) {
                 if (item?.link || item['workshop prerequisites']) {
                   const itemHtml = ConvertMarkdown({content: item.description})
-                  con
                   return (
                     <li key={key}>
                       <a href={item.link}>{key}</a>

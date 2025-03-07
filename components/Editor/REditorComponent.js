@@ -4,7 +4,8 @@ import dynamic from 'next/dynamic';
 const EditorComponent = dynamic(() => import('./EditorComponent'), { ssr: false });
 import CloseIcon from '@mui/icons-material/Close';
 import EditorTopbar from './EditorTopbar';
-import { WebR } from '@r-wasm/webr';
+// import { WebR } from '@r-wasm/webr';
+import { WebR } from 'webr';
 
 
 
