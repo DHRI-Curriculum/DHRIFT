@@ -20,8 +20,19 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef('');
     const [result, setResult] = useState(['Loading webR...']);
-    // const [Rcode, setRCode] = useState(defaultCode);
+    // Use both state and ref for code
+    const [editorCode, setEditorCode] = useState(defaultCode);
     const Rcode = useRef(defaultCode);
+    
+    // Update both state and ref when defaultCode changes
+    useEffect(() => {
+        console.log("REditorComponent: defaultCode changed:", defaultCode);
+        if (defaultCode) {
+            Rcode.current = defaultCode;
+            setEditorCode(defaultCode);
+            console.log("REditorComponent: Updated code state and ref");
+        }
+    }, [defaultCode]);
 
 
     const onChange = (newValue) => {
@@ -103,8 +114,11 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                     language='R'
                     {...props}
                 />
-                <EditorComponent code={Rcode.current}
-                    onChange={onChange}
+                <EditorComponent code={editorCode}
+                    onChange={(newValue) => {
+                        Rcode.current = newValue;
+                        setEditorCode(newValue);
+                    }}
                     language='r'
                     height={height}
                     {...props}
@@ -129,5 +143,3 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
         </Fragment >
     )
 }
-
-

@@ -155,46 +155,52 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
 
 
     const CodeEditor = ({ children, ...props }) => {
+        // Helper function to extract text from React elements or strings
+        const extractText = (element) => {
+            // If it's a string, return it directly
+            if (typeof element === 'string') {
+                return element;
+            }
+            
+            // If it's an object (React element)
+            if (element && typeof element === 'object') {
+                // If it has props.children
+                if (element.props && element.props.children) {
+                    // If children is an array, recursively extract text from each child
+                    if (Array.isArray(element.props.children)) {
+                        return element.props.children.map(extractText).join('');
+                    } 
+                    // If children is a single element, recursively extract text
+                    return extractText(element.props.children);
+                }
+            }
+            
+            // Default case: return empty string
+            return '';
+        };
+        
         var codeText = '';
+        
         if (children) {
-            if (Array.isArray(children) && children.length > 0) {
-                children.forEach((child) => {
-                    if (typeof child === 'object') {
-                        if (child.props && Array.isArray(child.props.children)) {
-                            child.props.children.forEach((line) => {
-                                if (typeof line === 'object') {
-                                    if (Array.isArray(line.props.children)) {
-                                        codeText += line.props.children.join('');
-                                    } else if (line.props.children) {
-                                        codeText += line.props.children.toString();
-                                    }
-                                }
-                                codeText += line;
-                            });
-                        } else if (child.props && child.props.children) {
-                            // Handle single child case
-                            codeText += child.props.children.toString();
-                        }
-                    }
-                    else {
-                        codeText += child;
-                    }
-                });
-                return (
-                    <div>
-                        <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
-                    </div>
-                );
+            // If children is an array, process each child
+            if (Array.isArray(children)) {
+                // Extract text from each child and join
+                codeText = children.map(extractText).join('');
+            } 
+            // If children is a single element, extract text from it
+            else {
+                codeText = extractText(children);
             }
-            else if (Array.isArray(children)) {
-                codeText = children.join('');
-            } else {
-                // Handle single child case
-                codeText = children.toString();
-            }
+            
+            console.log("Extracted code with recursive method:", codeText);
+            
             return (
                 <div>
-                    <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
+                    <CodeRunBox 
+                        language={props.language} 
+                        defaultCode={codeText} 
+                        {...props} 
+                    />
                 </div>
             );
         } else {
@@ -384,6 +390,12 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     }
 
     if (!content) return null;
+    
+    // Debug the props being passed to CodeEditor
+    console.log("ConvertMarkdown props check:");
+    console.log("setCode function:", setCode);
+    console.log("setEditorOpen function:", setEditorOpen);
+    console.log("setAskToRun function:", setAskToRun);
     
     try {
         return compiler(content, {

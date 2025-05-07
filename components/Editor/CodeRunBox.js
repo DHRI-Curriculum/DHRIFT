@@ -29,9 +29,24 @@ export default function CodeRunBox(props) {
                 <Button
                     className='button button-bark'
                     onClick={() => {
-                        setCode(props.defaultCode);
-                        setEditorOpen(true);
-                        props.setAskToRun(true);
+                        console.log("Run Code button clicked!");
+                        console.log("defaultCode:", props.defaultCode);
+                        console.log("setCode function:", setCode);
+                        console.log("setEditorOpen function:", setEditorOpen);
+                        console.log("setAskToRun function:", props.setAskToRun);
+                        
+                        try {
+                            setCode(props.defaultCode);
+                            console.log("setCode called successfully");
+                            
+                            setEditorOpen(true);
+                            console.log("setEditorOpen called successfully");
+                            
+                            props.setAskToRun(true);
+                            console.log("setAskToRun called successfully");
+                        } catch (error) {
+                            console.error("Error in Run Code button handler:", error);
+                        }
                     }}
                 >
                     Run Code

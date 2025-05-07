@@ -18,6 +18,15 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     const [isoutput, setIsoutput] = useState(false);
     const [isError, setIsError] = useState(false);
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+    
+    // Update JScode when defaultCode changes
+    useEffect(() => {
+        console.log("JSEditorComponent: defaultCode changed:", defaultCode);
+        if (defaultCode) {
+            setJSCode(defaultCode);
+            console.log("JSEditorComponent: Updated JScode state");
+        }
+    }, [defaultCode]);
 
 
     const allSnippets = props.allUploads;
