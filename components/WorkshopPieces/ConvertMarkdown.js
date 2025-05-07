@@ -21,8 +21,16 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
         const [src, setSrc] = useState(newProps.src);
+        const [loadFailed, setLoadFailed] = useState(false);
+        const [isGithubUrl, setIsGithubUrl] = useState(false);
 
-        const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`
+        // Ensure we have a valid src
+        if (!newProps.src) {
+            return <div className="image-error">Missing image source</div>;
+        }
+
+        const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`;
+        
         return (
             <div className="image-container"
                 style={{
@@ -38,16 +46,37 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     }}
                     aria-label={newProps.alt}
                 >
-                    <Image
-                        className='markdown-image'
-                        // fill={true}
-                        width={0}
-                        height={0}
-                        src={src}
-                        alt={newProps.alt}
-                        onError={() => setSrc(builtURL)}
-                        title={newProps.alt}
-                        style={{
+                    {loadFailed ? (
+                        <div className="image-load-error" style={{
+                            padding: '1rem',
+                            border: '1px dashed #ccc',
+                            borderRadius: '4px',
+                            color: '#666',
+                            textAlign: 'center'
+                        }}>
+                            Image could not be loaded
+                            {newProps.alt && <div>Alt text: {newProps.alt}</div>}
+                        </div>
+                    ) : (
+                        <Image
+                            className='markdown-image'
+                            // fill={true}
+                            width={0}
+                            height={0}
+                            src={src}
+                            alt={newProps.alt || "Image"}
+                            onError={() => {
+                                if (!isGithubUrl) {
+                                    // Try GitHub URL as fallback
+                                    setSrc(builtURL);
+                                    setIsGithubUrl(true);
+                                } else {
+                                    // Both URLs failed
+                                    setLoadFailed(true);
+                                }
+                            }}
+                            title={newProps.alt}
+                            style={{
                                 width: 'auto',
                                 maxWidth: '100%',
                                 height: 'auto',
@@ -55,29 +84,49 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                                 marginLeft: 'auto',
                                 marginRight: 'auto',
                             }}
-                    />
+                        />
+                    )}
                 </div>
                 {/* </Zoom> */}
             </div>
-        )
+        );
     }
 
     const Code = ({ className, children }) => {
         const [isShown, setIsShown] = useState(false);
-        // using hljs to highlight code
-        const html = children.props.children;
+        
+        // Guard against missing children or props
+        if (!children || !children.props) {
+            return <pre className={className}><code>Empty code block</code></pre>;
+        }
+        
+        // Guard against missing children.props.children
+        const html = children.props.children || '';
         const childClassName = children.props.className;
+        
         if (childClassName !== undefined) {
             const language = childClassName.replace('lang-', '');
             let highlighted;
             try {
                 highlighted = hljs.highlight(html, { language: language, ignoreIllegals: true });
             } catch (err) {
-                console.log('err', err)
-                console.log('language not found', language)
-                highlighted = hljs.highlightAuto(html);
+                console.log('err', err);
+                console.log('language not found', language);
+                try {
+                    // Try auto-highlighting as fallback
+                    highlighted = hljs.highlightAuto(html);
+                } catch (autoErr) {
+                    console.error('Auto-highlight failed:', autoErr);
+                    // Return plain text if all highlighting fails
+                    return (
+                        <pre className={className}>
+                            <code>{html}</code>
+                        </pre>
+                    );
+                }
                 highlighted.value = html;
             }
+            
             return (
                 <div className="code-block"
                     onMouseEnter={() => setIsShown(true)}
@@ -108,40 +157,52 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     const CodeEditor = ({ children, ...props }) => {
         var codeText = '';
         if (children) {
-            if (children.length > 0) {
+            if (Array.isArray(children) && children.length > 0) {
                 children.forEach((child) => {
                     if (typeof child === 'object') {
-                        child.props.children.forEach((line) => {
-                            if (typeof line === 'object') {
-                                codeText += line.props.children.join('');
-                            }
-                            codeText += line;
-                        })
+                        if (child.props && Array.isArray(child.props.children)) {
+                            child.props.children.forEach((line) => {
+                                if (typeof line === 'object') {
+                                    if (Array.isArray(line.props.children)) {
+                                        codeText += line.props.children.join('');
+                                    } else if (line.props.children) {
+                                        codeText += line.props.children.toString();
+                                    }
+                                }
+                                codeText += line;
+                            });
+                        } else if (child.props && child.props.children) {
+                            // Handle single child case
+                            codeText += child.props.children.toString();
+                        }
                     }
                     else {
                         codeText += child;
                     }
-                })
+                });
                 return (
                     <div>
                         <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
                     </div>
-                )
+                );
             }
-            else {
+            else if (Array.isArray(children)) {
                 codeText = children.join('');
+            } else {
+                // Handle single child case
+                codeText = children.toString();
             }
             return (
                 <div>
                     <CodeRunBox language={props.language} defaultCode={codeText} {...props} />
                 </div>
-            )
+            );
         } else {
             return (
                 <div>
                     <CodeRunBox language={props.language} {...props} />
                 </div>
-            )
+            );
         }
     }
 
@@ -177,15 +238,40 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         let termsAndDefinitions = [];
         // if its a list item it is the term, anything else is the definition
         let mostRecentTerm = {}
-        children?.forEach((child) => {
-            let items = child.props.children;
+        
+        // Guard against null or undefined children
+        if (!children) return null;
+        
+        // Ensure children is treated as an array
+        const childrenArray = Array.isArray(children) ? children : [children];
+        
+        childrenArray.forEach((child) => {
+            if (!child || !child.props || !child.props.children) return;
+            
+            // Ensure items is treated as an array
+            const items = Array.isArray(child.props.children) ? 
+                child.props.children : [child.props.children];
+            
             items.forEach((item) => {
+                if (!item) return;
+                
                 if (item.type == 'li') {
                     let termHolder;
-                    if (item.props.children[0].props) {
+                    if (item.props && item.props.children && item.props.children[0] && 
+                        item.props.children[0].props) {
                         termHolder = item.props.children[0].props.children[0]
                     }
-                    else { termHolder = item.props.children[0] }
+                    else if (item.props && item.props.children) { 
+                        termHolder = item.props.children[0] 
+                    } else {
+                        return; // Skip if we can't extract the term
+                    }
+                    
+                    // Check if termHolder is a string before using string methods
+                    if (typeof termHolder !== 'string' || termHolder.indexOf('\n') === -1) {
+                        return; // Skip if termHolder is not a string or doesn't contain a newline
+                    }
+                    
                     let term = termHolder.slice(0, termHolder.indexOf('\n'))
                     mostRecentTerm.term = term
                     // now cut off the term from the termHolder
@@ -195,7 +281,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     mostRecentTerm.definition = definition
                     termsAndDefinitions.push({ term, definition })
                 }
-                else {
+                else if (mostRecentTerm.definition) {
                     mostRecentTerm.definition.push(item)
                 }
             })
@@ -298,76 +384,93 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     }
 
     if (!content) return null;
-    return (
-        compiler(content,
-            {
-                overrides: {
-                    pre: {
-                        component: Code,
-                        props: {
-                            className: 'hljs'
-                        }
+    
+    try {
+        return compiler(content, {
+            overrides: {
+                pre: {
+                    component: Code,
+                    props: {
+                        className: 'hljs'
+                    }
+                },
+                img: {
+                    component: Imager,
+                    props: {
+                        className: 'image',
+                        gitUser: gitUser,
+                        gitRepo: gitRepo,
+                        gitFile: gitFile,
+                    }
+                },
+                CodeEditor: {
+                    component: CodeEditor,
+                    props: {
+                        allUploads: allUploads,
+                        language: language,
+                        setCode: setCode,
+                        setEditorOpen: setEditorOpen,
+                        setAskToRun: setAskToRun,
+                        workshopTitle: workshopTitle,
                     },
-                    img: {
-                        component: Imager,
-                        props: {
-                            className: 'image',
-                            gitUser: gitUser,
-                            gitRepo: gitRepo,
-                            gitFile: gitFile,
-                        }
+                    options: {
+                        forceInline: true,
+                    }
+                },
+                Download: {
+                    component: Download,
+                    props: {
+                        workshopTitle: workshopTitle,
+                        allUploads: allUploads,
+                    }
+                },
+                Info: {
+                    component: InfoAlert,
+                    props: {
+                        className: 'info-alert',
+                    }
+                },
+                Secret: {
+                    component: Secret,
+                    props: {
+                        className: 'secret',
                     },
-                    CodeEditor: {
-                        component: CodeEditor,
-                        props: {
-                            allUploads: allUploads,
-                            language: language,
-                            setCode: setCode,
-                            setEditorOpen: setEditorOpen,
-                            setAskToRun: setAskToRun,
-                            workshopTitle: workshopTitle,
-                        },
-                        options: {
-                            forceInline: true,
-                        }
-                    },
-                    Download: {
-                        component: Download,
-                        props: {
-                            workshopTitle: workshopTitle,
-                            allUploads: allUploads,
-                        }
-                    },
-                    Info: {
-                        component: InfoAlert,
-                        props: {
-                            className: 'info-alert',
-                        }
-                    },
-                    Secret: {
-                        component: Secret,
-                        props: {
-                            className: 'secret',
-                        },
-                        options: {
-                            wrapper: 'p',
-                            forceWrapper: true,
-                            forceInline: true,
-                        }
-                    },
+                    options: {
+                        wrapper: 'p',
+                        forceWrapper: true,
+                        forceInline: true,
+                    }
+                },
 
-                    Jupyter,
-                    Quiz,
-                    PythonREPL,
-                    Terminal,
-                    JSTerminal,
-                    Keywords,
-                    // Secret,
-                    Link
-                    // HTMLEditor,
-
-                }
-
-            })
-    );
+                Jupyter,
+                Quiz,
+                PythonREPL,
+                Terminal,
+                JSTerminal,
+                Keywords,
+                // Secret,
+                Link
+                // HTMLEditor,
+            }
+        });
+    } catch (error) {
+        console.error("Error compiling markdown:", error);
+        return (
+            <div className="markdown-error" style={{
+                padding: '1rem',
+                margin: '1rem 0',
+                border: '1px solid #f56565',
+                borderRadius: '0.25rem',
+                backgroundColor: '#fff5f5',
+                color: '#c53030'
+            }}>
+                <h3>Error rendering content</h3>
+                <p>There was a problem rendering this content. Please check the markdown format.</p>
+                <details>
+                    <summary>Error details</summary>
+                    <pre>{error.message}</pre>
+                </details>
+            </div>
+        );
+    }
 }
