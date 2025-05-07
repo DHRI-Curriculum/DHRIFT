@@ -21,10 +21,8 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     
     // Update JScode when defaultCode changes
     useEffect(() => {
-        console.log("JSEditorComponent: defaultCode changed:", defaultCode);
         if (defaultCode) {
             setJSCode(defaultCode);
-            console.log("JSEditorComponent: Updated JScode state");
         }
     }, [defaultCode]);
 

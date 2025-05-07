@@ -391,12 +391,6 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
 
     if (!content) return null;
     
-    // Debug the props being passed to CodeEditor
-    console.log("ConvertMarkdown props check:");
-    console.log("setCode function:", setCode);
-    console.log("setEditorOpen function:", setEditorOpen);
-    console.log("setAskToRun function:", setAskToRun);
-    
     try {
         return compiler(content, {
             overrides: {

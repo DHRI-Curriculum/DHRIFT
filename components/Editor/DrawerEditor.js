@@ -12,11 +12,9 @@ import HTMLEditorComponent from './HTMLEditorComponent';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
 export default function DrawerEditor(props) {
-    console.log("DrawerEditor props:", props);
     
     const language = props.language.toLowerCase();  // this is the language of the editor
     const text = props.text;  // this is the text in the editor
-    console.log("DrawerEditor text prop:", text);
     
     const open = props.open;  // this is the state of the drawer
     const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
@@ -93,9 +91,7 @@ export default function DrawerEditor(props) {
     }
 
     useEffect(() => {
-        console.log("DrawerEditor open state changed:", open);
         if (open) {
-            console.log("Setting show to true");
             setShow(true);
         }
     }, [open])
@@ -106,11 +102,8 @@ export default function DrawerEditor(props) {
     }
 
     const whichEditor = () => {
-        console.log("whichEditor called, language:", language);
-        console.log("whichEditor text value:", text);
         
         if (language === 'python') {
-            console.log("Rendering PythonEditorComponent with defaultCode:", text);
             return (
                 <PythonEditorComponent language={language}
                     defaultCode={text}
@@ -129,7 +122,6 @@ export default function DrawerEditor(props) {
             )
         }
         else if (language === 'javascript') {
-            console.log("Rendering JSEditorComponent with defaultCode:", text);
             return (
                 <JSEditorComponent language={language}
                     defaultCode={text}
@@ -139,7 +131,6 @@ export default function DrawerEditor(props) {
             )
         }
         else if (language === 'r') {
-            console.log("Rendering REditorComponent with defaultCode:", text);
             return (
                 <REditorComponent language={language}
                     defaultCode={text}
