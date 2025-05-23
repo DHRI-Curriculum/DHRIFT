@@ -418,10 +418,8 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                         setEditorOpen: setEditorOpen,
                         setAskToRun: setAskToRun,
                         workshopTitle: workshopTitle,
-                    },
-                    options: {
-                        forceInline: true,
                     }
+                    // Removed options: { forceInline: true }
                 },
                 Download: {
                     component: Download,

@@ -43,7 +43,7 @@
     "js-beautify": "^1.14.6",
     "js-yaml": "^4.1.0",
     "jszip": "^3.9.1",
-    "markdown-to-jsx": "^7.3.2",
+    "markdown-to-jsx": "^7.7.6",
     "marked": "^4.1.1",
     "mdx": "^0.3.1",
     "next": "13.5",

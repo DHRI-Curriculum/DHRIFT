@@ -53,19 +53,43 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     }
 
 
-    var JSoutput = function (a) {
-        var str = "["
-        if (typeof (a) == "object" && a.length) {
-            for (var i = 0; i < a.length; i++)
-                if (typeof (a[i]) == "object" && a[i].length) {
-                    str += (i == 0 ? "" : " ") + "["
-                    for (var j = 0; j < a[i].length; j++)
-                        str += a[i][j] + (j == a[i].length - 1 ?
-                            "]" + (i == a.length - 1 ? "]" : ",") + "\n" : ", ");
-                } else str += a[i] + (i == a.length - 1 ? "]" : ", ");
-        } else str = a;
-        return str;
-    }
+    var JSoutput = function (value) {
+        if (value === null) {
+            return "null";
+        }
+        if (value === undefined) {
+            return "undefined";
+        }
+        const type = typeof value;
+        if (type === "string") {
+            return value;
+        }
+        if (type === "number" || type === "boolean" || type === "symbol" || type === "bigint") {
+            return String(value);
+        }
+        if (type === "function") {
+            return `[Function: ${value.name || 'anonymous'}]`;
+        }
+        if (type === "object") { // This includes arrays
+            if (value instanceof Error) {
+                return value.stack ? value.stack : value.toString();
+            }
+            try {
+                // Attempt to stringify. This handles arrays and plain objects well.
+                return JSON.stringify(value, null, 2);
+            } catch (e) {
+                // Fallback for complex objects that JSON.stringify can't handle (e.g., circular refs, DOM elements)
+                if (Array.isArray(value)) {
+                    // For arrays with problematic content, provide a basic representation
+                    return `[Array of ${value.length} items]`;
+                }
+                // For other non-stringifiable objects
+                return "[Object]"; 
+            }
+        }
+        // Fallback for any other unexpected types
+        return String(value);
+    };
 
     var writeln = function (str) {
         outputRef.current += JSoutput(str) + "\n";
@@ -114,7 +138,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     const height = props.height ? props.height : '100%';
 
     return (
-        <>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}> {/* New Flex Wrapper */}
             <div className="editorContainer" style={{ width: '100%' }}>
                 <EditorTopbar spinnerNeeded={runningCode}
                     snippets={filteredSnippets}
@@ -134,6 +158,6 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                 consoleRef={consoleRef}
                 error={error}
             />
-        </>
+        </div> // Closing New Flex Wrapper
     );
 };

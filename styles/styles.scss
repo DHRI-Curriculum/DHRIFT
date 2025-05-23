@@ -1098,6 +1098,12 @@ nav.sidenav {
 .side-terminal {
   --size: 1.5;
   --color: white;
+  // New rule to ensure the actual terminal widget inside .side-terminal is flexible
+  .terminal { // This targets the element that jQuery Terminal plugin creates
+    min-height: 0 !important;    // Override general .terminal style
+    max-height: none !important; // Override general .terminal style
+    height: 100% !important;     // Make it fill the .side-terminal container
+  }
   --background: rgb(39, 40, 34);
   --animation: terminal-bar;
 }
