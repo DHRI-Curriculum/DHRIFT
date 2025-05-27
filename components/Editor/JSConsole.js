@@ -33,18 +33,41 @@ export default function JSConsole({ defaultCode = "<!-- Write your HTML here -->
 
     const consoleRef = useRef(null);
     
+    // useEffect(() => {
+    //     if (frameReady) {
+    //         setTimeout(() => {
+    //             setToShow(true);}, 20);
+    //         Hook(
+    //             consoleRef.current,
+    //             (log) => setLogs((currLogs) => [...currLogs, log]),
+    //             false
+    //         )
+    //         return () => Unhook(consoleRef.current);
+    //     }
+    // }, [frameReady])
+
     useEffect(() => {
-        if (frameReady) {
-            setTimeout(() => {
-                setToShow(true);}, 20);
+        if (frameWindow) { // Check if frameWindow is available
+            const timerId = setTimeout(() => {
+                setToShow(true);
+            }, 20);
+
+            const currentConsole = frameWindow.console;
             Hook(
-                consoleRef.current,
+                currentConsole,
                 (log) => setLogs((currLogs) => [...currLogs, log]),
-                false
-            )
-            return () => Unhook(consoleRef.current);
+                false 
+            );
+
+            return () => {
+                Unhook(currentConsole);
+                clearTimeout(timerId);
+            };
+        } else {
+            setLogs([]);
+            setToShow(false);
         }
-    }, [frameReady])
+    }, [frameWindow]);
 
 
     // all this below can be wrapped into useAllotment hook or smth like that
