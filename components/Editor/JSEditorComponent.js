@@ -104,19 +104,23 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         outputRef.current = "";
         consoleRef.current = "";
         try {
-            var logged = [];
-            // store logged values in logged array
-            var log = function (value) {
-                logged.push(value);
+            var loggedLines = []; // Store arrays of arguments for each log call
+            // store logged values in loggedLines array
+            var log = function (...args) { // Capture all arguments for a single console.log call
+                loggedLines.push(args);
             };
             // capture console.log output 
             console.oldLog = console.log;
             console.log = log;
 
             var result = eval(JScode);
+            console.log = console.oldLog; // Restore console.log immediately after eval
 
-            for (var i = 0; i < logged.length; i++) {
-                consoleRef.current += JSoutput(logged[i]) + "\n";
+            // Process loggedLines
+            for (var i = 0; i < loggedLines.length; i++) {
+                // Join arguments of a single log call with spaces, processed by JSoutput
+                const lineOutput = loggedLines[i].map(arg => JSoutput(arg)).join(' ');
+                consoleRef.current += lineOutput + "\n";
             }
 
             writeln(result);
@@ -127,8 +131,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             setIsError(true);
         }
         if (str != undefined) { outputRef.current += str; }
-        // restore console.log
-        console.log = console.oldLog;
+        // console.log has already been restored
         setRunningCode(false);
     }
 
