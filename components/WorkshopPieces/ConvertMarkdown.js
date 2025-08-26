@@ -155,23 +155,41 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
 
 
     const CodeEditor = ({ children, ...props }) => {
-        // Helper function to extract text from React elements or strings
-        const extractText = (element) => {
+        // Improved helper function to extract text from React elements or strings
+        const extractText = (element, preserveNewlines = true) => {
             // If it's a string, return it directly
             if (typeof element === 'string') {
                 return element;
             }
             
+            // Handle null, undefined, or non-object elements
+            if (!element || typeof element !== 'object') {
+                return '';
+            }
+            
             // If it's an object (React element)
-            if (element && typeof element === 'object') {
-                // If it has props.children
+            if (element.props && element.props.children !== undefined) {
+                const children = element.props.children;
+                
+                // If children is an array, recursively extract text from each child
+                if (Array.isArray(children)) {
+                    return children.map(child => extractText(child, preserveNewlines)).join('');
+                } 
+                // If children is a single element, recursively extract text
+                else {
+                    return extractText(children, preserveNewlines);
+                }
+            }
+            
+            // Handle React elements that might have textContent
+            if (element.type && typeof element.type === 'string') {
+                // For line break elements, preserve them as newlines
+                if (element.type === 'br') {
+                    return '\n';
+                }
+                // For other elements, extract their children
                 if (element.props && element.props.children) {
-                    // If children is an array, recursively extract text from each child
-                    if (Array.isArray(element.props.children)) {
-                        return element.props.children.map(extractText).join('');
-                    } 
-                    // If children is a single element, recursively extract text
-                    return extractText(element.props.children);
+                    return extractText(element.props.children, preserveNewlines);
                 }
             }
             
@@ -179,20 +197,76 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             return '';
         };
         
+        // Alternative extraction method for better handling of markdown-to-jsx structure
+        const extractTextFromMarkdown = (element) => {
+            if (typeof element === 'string') {
+                return element;
+            }
+            
+            if (!element) {
+                return '';
+            }
+            
+            // Handle arrays of elements
+            if (Array.isArray(element)) {
+                return element.map(extractTextFromMarkdown).join('');
+            }
+            
+            // Handle React elements
+            if (element.props) {
+                // Special handling for code elements which often wrap the content
+                if (element.type === 'code' && element.props.children) {
+                    return extractTextFromMarkdown(element.props.children);
+                }
+                
+                // Handle pre elements
+                if (element.type === 'pre' && element.props.children) {
+                    return extractTextFromMarkdown(element.props.children);
+                }
+                
+                // General case for elements with children
+                if (element.props.children) {
+                    return extractTextFromMarkdown(element.props.children);
+                }
+            }
+            
+            return '';
+        };
+        
         var codeText = '';
         
         if (children) {
-            // If children is an array, process each child
-            if (Array.isArray(children)) {
-                // Extract text from each child and join
-                codeText = children.map(extractText).join('');
-            } 
-            // If children is a single element, extract text from it
-            else {
-                codeText = extractText(children);
+            // Try the improved extraction method first
+            try {
+                codeText = extractTextFromMarkdown(children);
+                
+                // If that didn't work or returned empty, try the original method
+                if (!codeText.trim()) {
+                    if (Array.isArray(children)) {
+                        codeText = children.map(child => extractText(child)).join('');
+                    } else {
+                        codeText = extractText(children);
+                    }
+                }
+            } catch (error) {
+                console.warn("Error in text extraction, falling back to original method:", error);
+                // Fallback to original method
+                if (Array.isArray(children)) {
+                    codeText = children.map(child => extractText(child)).join('');
+                } else {
+                    codeText = extractText(children);
+                }
             }
             
-            console.log("Extracted code with recursive method:", codeText);
+            // Clean up the extracted text
+            codeText = codeText
+                .replace(/^\s*\n/, '') // Remove leading newline
+                .replace(/\n\s*$/, '') // Remove trailing newline and spaces
+                .replace(/\r\n/g, '\n') // Normalize line endings
+                .replace(/\r/g, '\n'); // Handle old Mac line endings
+            
+            console.log("Extracted code text:", JSON.stringify(codeText));
+            console.log("Code preview:", codeText.substring(0, 100) + (codeText.length > 100 ? '...' : ''));
             
             return (
                 <div>
