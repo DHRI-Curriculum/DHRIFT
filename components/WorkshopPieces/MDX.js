@@ -113,6 +113,84 @@ export default async function MDX({ content, allUploads, workshopTitle, language
   //   }
   // }
 
+  // Preprocess content for MDX quirks and custom tags
+  let safeContent = (await content) || ''
+  // Normalize void tags (br) to self-closing to satisfy MDX
+  safeContent = safeContent
+    .replace(/<br\s*>/gi, '<br />')
+    .replace(/<br\s*\/\s*>/gi, '<br />')
+
+  // Auto-close bare <Download ...> if not followed by </Download>
+  safeContent = safeContent.replace(/<Download(\b[^>]*?)>(?!\s*<\s*\/\s*Download\s*>)/gi, '<Download$1></Download>')
+
+  // Strip stray </Quiz> that appear before any <Quiz> opener in the document
+  const stripStrayQuizClosers = (str) => {
+    const lines = str.split(/\r?\n/)
+    let depth = 0
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i]
+      const opens = (line.match(/<\s*Quiz\b[^>]*>/gi) || []).length
+      line = line.replace(/<\s*\/\s*Quiz\s*>/gi, (m) => {
+        if (depth > 0) { depth--; return m }
+        return ''
+      })
+      depth += opens
+      lines[i] = line
+    }
+    return lines.join('\n')
+  }
+  safeContent = stripStrayQuizClosers(safeContent)
+
+  // Auto-close <Quiz> when a block ends (blank line) or a new block starts (heading or tag)
+  const normalizeQuizBlocks = (str) => {
+    const lines = str.split(/\r?\n/)
+    let inFence = false
+    let openSince = -1
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true }
+      else if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false }
+      if (inFence) continue
+      if (openSince !== -1) {
+        const isHeading = /^\s*#{1,6}\s+/.test(line)
+        const isTagOpen = /^\s*<\s*[A-Za-z]/.test(line)
+        const isNewQuiz = /<Quiz\b[^>]*>/.test(line)
+        if ((isHeading || isTagOpen) && !isNewQuiz) {
+          let j = i - 1
+          while (j >= openSince && lines[j].trim() === '') j--
+          const at = j >= openSince ? j : openSince
+          lines[at] = (lines[at] || '') + '</Quiz>'
+          openSince = -1
+        }
+      }
+      if (/^\s*<\/\s*Quiz\s*>\s*$/.test(line) && openSince === -1) {
+        lines[i] = ''
+        continue
+      }
+      if (/<Quiz\b[^>]*>/.test(line)) {
+        if (/<\/\s*Quiz\s*>/.test(line)) continue
+        openSince = i
+        continue
+      }
+      if (!line.trim() && openSince !== -1) {
+        let j = i - 1
+        while (j >= openSince && lines[j].trim() === '') j--
+        const at = j >= openSince ? j : openSince
+        lines[at] = (lines[at] || '') + '</Quiz>'
+        openSince = -1
+        continue
+      }
+      if (/<\/\s*Quiz\s*>/.test(line)) {
+        openSince = -1
+      }
+    }
+    if (openSince !== -1) {
+      lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Quiz>'
+    }
+    return lines.join('\n')
+  }
+  safeContent = normalizeQuizBlocks(safeContent)
+
   let file
   try {
     file = unified()
@@ -148,7 +226,7 @@ export default async function MDX({ content, allUploads, workshopTitle, language
           }
           )
           .use(moveFootnotes)
-      .process(await content).then((file) => {
+      .process(safeContent).then((file) => {
         return file
       })
   } catch (e) {
@@ -157,4 +235,3 @@ export default async function MDX({ content, allUploads, workshopTitle, language
 
   return file
 }
-

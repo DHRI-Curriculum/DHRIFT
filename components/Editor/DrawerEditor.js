@@ -101,6 +101,8 @@ export default function DrawerEditor(props) {
         // window.localStorage.setItem('code', newText);
     }
 
+    const scrollContainerRef = useRef(null);
+
     const whichEditor = () => {
         
         if (language === 'python') {
@@ -110,6 +112,7 @@ export default function DrawerEditor(props) {
                     text={text}
                     handleOpenClose={handleOpenClose}
                     runButtonNeeded={true}
+                    scrollContainerRef={scrollContainerRef}
                     {...props} />
             )
         }
@@ -127,6 +130,7 @@ export default function DrawerEditor(props) {
                 <JSEditorComponent language={language}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
+                    scrollContainerRef={scrollContainerRef}
                     runButtonNeeded={true}
                     {...props} />
             )
@@ -255,13 +259,14 @@ export default function DrawerEditor(props) {
                         }}
                     > Load Notebook/Data</Button>
                 } */}
-                <div className='drawer-editor'
+                <div id='drawer-editor' className='drawer-editor'
                     style={{
                         flex: 1,
                         minHeight: 0,
                         overflowY: 'auto',
                         paddingRight: '8px',
                     }}
+                    ref={scrollContainerRef}
                 >
                     {whichEditor()}
                 </div>

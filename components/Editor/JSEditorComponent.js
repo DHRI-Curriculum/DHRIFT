@@ -6,11 +6,13 @@ const EditorComponent = dynamic(
 );
 import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 
-export default function JSEditorComponent({ defaultCode = '// Write JavaScript Here', ...props }) {
+export default function JSEditorComponent({ defaultCode = '// Write JavaScript Here', scrollContainerRef, ...props }) {
     const [JScode, setJSCode] = useState(defaultCode);
     const [runningCode, setRunningCode] = useState(false);
+    const [outputVersion, setOutputVersion] = useState(0);
     const outputRef = useRef(null);
     const consoleRef = useRef(null);
     const [error, setError] = useState(null);
@@ -124,6 +126,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             writeln(result);
             forceUpdate();
             setIsoutput(true);
+            setOutputVersion((v) => v + 1);
         } catch (e) {
             setError(e);
             setIsError(true);
@@ -172,6 +175,24 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     }, [isResizing]);
 
     const showOutput = isoutput || isError || !!consoleRef.current;
+    const outDivRef = useRef(null);
+    useEffect(() => {
+        if (!showOutput || !outDivRef.current) return;
+        const outEl = outDivRef.current;
+        const container = (scrollContainerRef && scrollContainerRef.current) || document.getElementById('drawer-editor') || outEl.closest('.drawer-editor');
+        const scrollToChild = () => {
+            if (!container) return;
+            try {
+                const cRect = container.getBoundingClientRect();
+                const oRect = outEl.getBoundingClientRect();
+                const y = container.scrollTop + (oRect.top - cRect.top);
+                container.scrollTo({ top: Math.max(0, y - 56), behavior: 'smooth' });
+            } catch (_) {
+                outEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+        requestAnimationFrame(() => setTimeout(scrollToChild, 0));
+    }, [showOutput, outputVersion, runningCode]);
     const editorFlexStyle = showOutput
         ? { flex: `0 0 ${Math.round(editorRatio * 100)}%`, minHeight: 0 }
         : { flex: '1 1 auto', minHeight: 0 };
@@ -180,9 +201,11 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     return (
         <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div className="editorContainer" style={{ ...editorFlexStyle, display: 'flex', flexDirection: 'column' }}>
-                <EditorTopbar spinnerNeeded={runningCode}
+                <EditorTopbar
+                    spinnerNeeded={runningCode}
                     snippets={filteredSnippets}
-                    run={JSrun} language='JavaScript'
+                    run={JSrun}
+                    language='JavaScript'
                     defaultCode={defaultCode}
                     setCode={setJSCode}
                     {...props}
@@ -205,12 +228,13 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                     onMouseDown={() => setIsResizing(true)}
                     onDoubleClick={() => setEditorRatio(0.7)}
                     style={{
-                        height: '6px',
+                        height: '2px',
+                        flex: '0 0 2px',
                         cursor: 'row-resize',
                         background: '#e3e7ea',
                         borderTop: '1px solid #ddd',
                         borderBottom: '1px solid #ddd',
-                        margin: '8px 0'
+                        margin: 0
                     }}
                 />
                 <div
@@ -222,11 +246,24 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                         font: '1.1rem Inconsolata, monospace',
                         whiteSpace: 'pre-wrap',
                         borderRadius: '5px',
-                        marginTop: '10px',
+                        marginTop: 0,
                         overflowY: 'auto',
                         ...outputFlexStyle,
                     }}
+                    ref={outDivRef}
                 >
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                        <DeleteOutlineIcon
+                            onClick={() => { outputRef.current=''; consoleRef.current=''; setIsError(false); setIsoutput(true); forceUpdate(); }}
+                            titleAccess="Clear output"
+                            style={{ fontSize: '18px', color: '#777', cursor: 'pointer' }}
+                        />
+                        <CloseIcon
+                            onClick={() => { setIsoutput(false); setIsError(false); outputRef.current=''; consoleRef.current=''; }}
+                            titleAccess="Close output"
+                            style={{ fontSize: '18px', color: '#555', cursor: 'pointer' }}
+                        />
+                    </div>
                     {consoleRef.current}
                     {outputRef.current}
                     {isError && (

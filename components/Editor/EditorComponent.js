@@ -7,7 +7,7 @@ import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools"
 
-export default function CodeEditorComponent({ code, onChange, maxLines = Infinity, minLines = 15, debounce = null, width = '100%', ...props }) {
+export default function CodeEditorComponent({ code, onChange, maxLines = null, minLines = 1, debounce = null, width = '100%', ...props }) {
 
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   const height = props.height || '100%';
@@ -25,6 +25,8 @@ export default function CodeEditorComponent({ code, onChange, maxLines = Infinit
       fontSize={22}
       width={width}
       minLines={minLines}
+      // Do not auto-expand with content; let container height control scroll
+      // Avoid passing Infinity here; null keeps Ace from growing beyond height
       maxLines={maxLines}
       showPrintMargin={false}
       showGutter={true}

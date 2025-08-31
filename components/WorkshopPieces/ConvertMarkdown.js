@@ -360,6 +360,88 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         };
         safeContent = autoCloseInfoBlocks(safeContent);
 
+        // First, strip stray </Quiz> that appear before any opener in the document (global)
+        const stripStrayQuizClosers = (str) => {
+            const lines = str.split(/\r?\n/);
+            let depth = 0;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                // count openers on this line
+                const opens = (line.match(/<\s*Quiz\b[^>]*>/gi) || []).length;
+                // strip unmatched closers while honoring depth
+                line = line.replace(/<\s*\/\s*Quiz\s*>/gi, (m) => {
+                    if (depth > 0) { depth--; return m; }
+                    // depth == 0: drop this stray closer
+                    return '';
+                });
+                depth += opens;
+                lines[i] = line;
+            }
+            return lines.join('\n');
+        }
+        safeContent = stripStrayQuizClosers(safeContent);
+
+        // Normalize Quiz blocks: auto-close <Quiz> before blank line or new block if no closer; drop stray </Quiz>
+        const normalizeQuizBlocks = (str) => {
+            const lines = str.split(/\r?\n/);
+            let inFence = false;
+            let openSince = -1;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; }
+                else if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; }
+                if (inFence) continue;
+                // If a quiz is open and we encounter a clear block boundary, auto-close before this line
+                if (openSince !== -1) {
+                    const isHeading = /^\s*#{1,6}\s+/.test(line);
+                    const isTagOpen = /^\s*<\s*[A-Za-z]/.test(line); // starts another tag
+                    const isNewQuiz = /<Quiz\b[^>]*>/.test(line);
+                    if ((isHeading || isTagOpen) && !isNewQuiz) {
+                        // close Quiz on the previous non-empty line
+                        let j = i - 1;
+                        while (j >= openSince && lines[j].trim() === '') j--;
+                        const at = j >= openSince ? j : openSince;
+                        lines[at] = (lines[at] || '') + '</Quiz>';
+                        openSince = -1;
+                        // continue processing this line as normal (do not skip it)
+                    }
+                }
+                if (/^\s*<\/\s*Quiz\s*>\s*$/.test(line) && openSince === -1) {
+                    // stray closing quiz without prior open in this block: drop it
+                    lines[i] = '';
+                    continue;
+                }
+                if (/<Quiz\b[^>]*>/.test(line)) {
+                    if (/<\/\s*Quiz\s*>/.test(line)) {
+                        // same-line closed
+                        continue;
+                    }
+                    // mark open within this paragraph block
+                    openSince = i;
+                    continue;
+                }
+                // blank line ends paragraph; if open pending, append closer to previous non-empty line
+                if (!line.trim() && openSince !== -1) {
+                    let j = i - 1;
+                    while (j >= openSince && lines[j].trim() === '') j--;
+                    const at = j >= openSince ? j : openSince;
+                    lines[at] = (lines[at] || '') + '</Quiz>';
+                    openSince = -1;
+                    continue;
+                }
+                // found explicit closer resets state
+                if (/<\/\s*Quiz\s*>/.test(line)) {
+                    openSince = -1;
+                }
+            }
+            // If file ended while quiz open, close it at last line
+            if (openSince !== -1) {
+                lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Quiz>';
+            }
+            return lines.join('\n');
+        };
+        safeContent = normalizeQuizBlocks(safeContent);
+
         // Fix self-closing custom tags to proper open/close so HTML parser doesn't swallow following content
         // Specific known tags + generic PascalCase components
         safeContent = safeContent
@@ -369,6 +451,9 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .replace(/<Download([^>]*)\/>/g, '<Download$1></Download>')
             // Generic: any self-closing PascalCase component becomes open/close
             .replace(/<([A-Z][A-Za-z0-9]*)([^>]*)\/>/g, '<$1$2></$1>');
+
+        // Auto-close bare <Download ...> if not followed by </Download>
+        safeContent = safeContent.replace(/<Download(\b[^>]*?)>(?!\s*<\s*\/\s*Download\s*>)/gi, '<Download$1></Download>');
 
         // Capture CodeEditor inner content exactly and replace with placeholder to preserve formatting
         const codeEditorSegments = [];

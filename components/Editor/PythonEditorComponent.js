@@ -8,10 +8,11 @@ const EditorComponent = dynamic(
 );
 import { Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { PyodideContext } from '../Wasm/PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
 
-export default function PythonEditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
+export default function PythonEditorComponent({ defaultCode, minLines, codeOnChange, scrollContainerRef, ...props }) {
 
   const startingCode = props.text;
   const [code, setCodeState] = useState(startingCode);
@@ -22,6 +23,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
   const [runningCode, setRunningCode] = useState(false);
+  const [outputVersion, setOutputVersion] = useState(0);
   const [isPlot, setIsPlot] = useState(false);
   const [matplotlibDiv, setMatplotlibDiv] = useState(null);
 
@@ -125,9 +127,11 @@ sys.tracebacklimit = 0
         const combined = resultStr ? (outStr ? outStr + '\n' + resultStr : resultStr) : outStr;
         outputRef.current = combined;
         setIsoutput(true);
+        setOutputVersion((v) => v + 1);
       } catch (e) {
         // Fallback if buffer missing
         setIsoutput(true);
+        setOutputVersion((v) => v + 1);
       }
     } catch (err) {
       setIsError(true);
@@ -211,6 +215,25 @@ sys.tracebacklimit = 0
   }, [isResizing]);
 
   const showOutput = !!isoutput;
+  const outDivRef = useRef(null);
+  useEffect(() => {
+    if (!showOutput || !outDivRef.current) return;
+    const outEl = outDivRef.current;
+    const container = (scrollContainerRef && scrollContainerRef.current) || document.getElementById('drawer-editor') || outEl.closest('.drawer-editor');
+    const scrollToChild = () => {
+      if (!container) return;
+      try {
+        const cRect = container.getBoundingClientRect();
+        const oRect = outEl.getBoundingClientRect();
+        const y = container.scrollTop + (oRect.top - cRect.top);
+        container.scrollTo({ top: Math.max(0, y - 56), behavior: 'smooth' });
+      } catch (_) {
+        outEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    // Wait for layout to settle
+    requestAnimationFrame(() => setTimeout(scrollToChild, 0));
+  }, [showOutput, outputVersion, runningCode]);
   const editorFlexStyle = showOutput
     ? { flex: `0 0 ${Math.round(editorRatio * 100)}%`, minHeight: 0 }
     : { flex: '1 1 auto', minHeight: 0 };
@@ -266,9 +289,12 @@ sys.tracebacklimit = 0
           />
           {String(error)}
         </Alert>}
-        <EditorTopbar spinnerNeeded={((isPyodideLoading || !isPyodideReady) || runningCode)}
-          snippets={filteredSnippets} run={showValue}
-          defaultCode={startingCode} setCode={setCodeState}
+        <EditorTopbar
+          spinnerNeeded={((isPyodideLoading || !isPyodideReady) || runningCode)}
+          snippets={filteredSnippets}
+          run={showValue}
+          defaultCode={startingCode}
+          setCode={setCodeState}
           language={props.language}
           {...props}
         />
@@ -290,12 +316,13 @@ sys.tracebacklimit = 0
             onMouseDown={() => setIsResizing(true)}
             onDoubleClick={() => setEditorRatio(0.7)}
             style={{
-              height: '6px',
+              height: '2px',
+              flex: '0 0 2px',
               cursor: 'row-resize',
               background: '#e3e7ea',
               borderTop: '1px solid #ddd',
               borderBottom: '1px solid #ddd',
-              margin: '8px 0'
+              margin: 0
             }}
           />
           <div
@@ -307,11 +334,24 @@ sys.tracebacklimit = 0
               font: '1.1rem Inconsolata, monospace',
               whiteSpace: 'pre-wrap',
               borderRadius: '5px',
-              marginTop: '10px',
+              marginTop: 0,
               overflowY: 'auto',
               ...outputFlexStyle,
             }}
+            ref={outDivRef}
           >
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <DeleteOutlineIcon
+                onClick={() => { outputRef.current=''; setIsoutput(true); setOutputVersion((v)=>v+1); }}
+                titleAccess="Clear output"
+                style={{ fontSize: '18px', color: '#777', cursor: 'pointer' }}
+              />
+              <CloseIcon
+                onClick={() => { setIsoutput(false); outputRef.current=''; }}
+                titleAccess="Close output"
+                style={{ fontSize: '18px', color: '#555', cursor: 'pointer' }}
+              />
+            </div>
             {outputRef.current}
           </div>
         </>
