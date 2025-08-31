@@ -69,6 +69,7 @@ export default function WorkshopPage({
   const [askToRun, setAskToRun] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const gitUser = props.gitUser
   const setGitUser = props.setGitUser
@@ -366,6 +367,7 @@ export default function WorkshopPage({
   useEffect(() => {
     if (currentPage && pages.length > 0) {
       setCurrentContent(pages[currentPage - 1]);
+      if (initialLoading) setInitialLoading(false);
     }
   }, [currentPage, pages])
 
@@ -378,6 +380,7 @@ export default function WorkshopPage({
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
       setCurrentContentLoaded(true);
+      if (initialLoading) setInitialLoading(false);
     }
   }, [currentFile, content, metadata, currentPage, secondPageLink, allUploads])
 
@@ -560,7 +563,7 @@ export default function WorkshopPage({
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Fade in={currentContentLoaded} timeout={500}>
+      <>
         <div
           style={{
             display: 'flex',
@@ -611,21 +614,30 @@ export default function WorkshopPage({
             >
               <div className="card-page">
                 <div className="workshop-container">
-                  {currentContentLoaded ? (
-                    currentContent
+                  {currentContent ? (
+                    <Fade in={true} timeout={500}>
+                      <div className="page-content">{currentContent}</div>
+                    </Fade>
                   ) : (
 
                     <div className='skeleton-container'
                       style={{
                         width: '100%',
-                        height: '100%',
+                        minHeight: '80vh',
+                        paddingTop: '12px'
                       }}
                     >
-                      <Skeleton variant="rect" width={'100%'} height={'50px'} />
-                      {
-                        Array(content?.split('\n').length).fill(<Skeleton variant="text" height='100%' width='100%' />)}
+                      <Skeleton variant="rect" width={'80%'} height={32} sx={{ mb: 2 }} />
+                      {Array(12).fill(0).map((_, i) => (
+                        <Skeleton key={`t-${i}`} variant="text" height={28} width={`${95 - i * 2}%`} />
+                      ))}
+                      <Skeleton variant="rect" width={'100%'} height={220} sx={{ my: 2 }} />
+                      {Array(10).fill(0).map((_, i) => (
+                        <Skeleton key={`m-${i}`} variant="text" height={26} width={`${92 - i * 3}%`} />
+                      ))}
+                      <Skeleton variant="rect" width={'100%'} height={280} sx={{ my: 2 }} />
                     </div>
-                  )}
+                   )}
                   {markdownError && (
                     <div className="markdown-error">
                       <Alert severity="error">
@@ -674,7 +686,8 @@ export default function WorkshopPage({
             </>
           }
         </div>
-      </Fade>
+      
+      </>
     </ErrorBoundary>
   )
 }
