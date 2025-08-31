@@ -7,10 +7,10 @@ import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools"
 
-export default function CodeEditorComponent({ code, onChange, maxLines = null, minLines = 4, debounce = null, width = '100%', ...props }) {
+export default function CodeEditorComponent({ code, onChange, maxLines = Infinity, minLines = 15, debounce = null, width = '100%', ...props }) {
 
   const uniqueid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  const height = props.height || 'auto';
+  const height = props.height || '100%';
 
 
   return (
@@ -23,9 +23,9 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
       editorProps={{ $blockScrolling: true }}
       value={code}
       fontSize={22}
-      width="auto"
-      minLines={15}
-      maxLines={'infinity'}
+      width={width}
+      minLines={minLines}
+      maxLines={maxLines}
       showPrintMargin={false}
       showGutter={true}
       highlightActiveLine={true}

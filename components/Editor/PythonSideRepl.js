@@ -135,9 +135,16 @@ export default function PythonSideREPLComponent(props) {
       keymap: {
         "CTRL+C": async function (event, original) {
           clear_console();
-          term.echo_command();
+          try {
+            if (typeof term.get_command === 'function') {
+              const current = term.get_command();
+              if (current) term.echo(current);
+            }
+          } catch (e) {
+            // ignore if API not available
+          }
           term.echo("KeyboardInterrupt");
-          term.set_command("");
+          if (typeof term.set_command === 'function') term.set_command("");
           term.set_prompt(ps1);
         },
       },

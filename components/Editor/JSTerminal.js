@@ -1,4 +1,4 @@
-import { useRef, useState, useReducer, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Script from "next/script";
 import $ from 'jquery';
 import 'jquery.terminal/js/jquery.terminal.min.js';
@@ -9,10 +9,20 @@ export default function JSTerminal() {
     // ref: https://stackoverflow.com/q/67322922/387194
     // var __EVAL = (s) => eval(`void (__EVAL = ${__EVAL.toString()}); ${s}`);
 
-    var randomID = Math.random().toString(36).substring(7);
+    const idRef = useRef(null);
+    if (!idRef.current) {
+        idRef.current = 'term-' + Math.random().toString(36).slice(2);
+    }
+    const termElRef = useRef(null);
 
     useEffect(() => {
-        var term = $('#' + randomID).terminal(function (command) {
+        const id = idRef.current;
+        const $el = $('#' + id);
+        if ($el.length === 0) return;
+        // Avoid double init in React refresh/hydration
+        const existing = $el.data('terminal');
+        if (!existing) {
+            const term = $el.terminal(function (command) {
             if (command !== '') {
                 try {
                     var result = __EVAL(command);
@@ -31,9 +41,19 @@ export default function JSTerminal() {
             prompt: '> ',
             enabled: false,
             focus: false
-        });
-        // term.focus();
-        return () => term.destroy();
+            });
+            termElRef.current = term;
+        }
+        return () => {
+            try {
+                const inst = $el.data('terminal');
+                if (inst && typeof inst.destroy === 'function') {
+                    inst.destroy();
+                }
+            } catch (e) {
+                // ignore teardown errors
+            }
+        };
     }, []);
 
     return (
@@ -44,7 +64,7 @@ export default function JSTerminal() {
                 justifyContent: 'center',
             }}
         >
-            <div className="term" id={randomID}
+            <div className="term" id={idRef.current}
                 style={{
                     width: '50%',
                     height: '100%',

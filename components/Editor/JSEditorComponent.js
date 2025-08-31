@@ -5,7 +5,6 @@ const EditorComponent = dynamic(
     { ssr: false }
 );
 import EditorTopbar from "./EditorTopbar";
-import JSSideTerminal from "./JSSideTerminal";
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -114,7 +113,6 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             console.log = log;
 
             var result = eval(JScode);
-            console.log = console.oldLog; // Restore console.log immediately after eval
 
             // Process loggedLines
             for (var i = 0; i < loggedLines.length; i++) {
@@ -129,6 +127,8 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         } catch (e) {
             setError(e);
             setIsError(true);
+        } finally {
+            try { if (console.oldLog) console.log = console.oldLog; } catch (_) {}
         }
         if (str != undefined) { outputRef.current += str; }
         // console.log has already been restored
@@ -138,11 +138,48 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     const onChange = (newValue) => {
         setJSCode(newValue);
     };
+    // Auto-run parity with Python when askToRun is true
+    useEffect(() => {
+        if (props.askToRun === true) {
+            JSrun();
+            if (props.setAskToRun) props.setAskToRun(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.askToRun]);
     const height = props.height ? props.height : '100%';
 
+    const [isResizing, setIsResizing] = useState(false);
+    const [editorRatio, setEditorRatio] = useState(0.7);
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const onMove = (e) => {
+            if (!isResizing || !containerRef.current) return;
+            const rect = containerRef.current.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const ratio = Math.max(0.2, Math.min(0.9, y / rect.height));
+            setEditorRatio(ratio);
+            e.preventDefault();
+        };
+        const onUp = () => setIsResizing(false);
+        if (isResizing) {
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onUp, { once: true });
+        }
+        return () => {
+            window.removeEventListener('mousemove', onMove);
+        };
+    }, [isResizing]);
+
+    const showOutput = isoutput || isError || !!consoleRef.current;
+    const editorFlexStyle = showOutput
+        ? { flex: `0 0 ${Math.round(editorRatio * 100)}%`, minHeight: 0 }
+        : { flex: '1 1 auto', minHeight: 0 };
+    const outputFlexStyle = showOutput ? { flex: `0 0 ${Math.round((1 - editorRatio) * 100)}%`, minHeight: 0 } : {};
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}> {/* New Flex Wrapper */}
-            <div className="editorContainer" style={{ width: '100%' }}>
+        <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div className="editorContainer" style={{ ...editorFlexStyle, display: 'flex', flexDirection: 'column' }}>
                 <EditorTopbar spinnerNeeded={runningCode}
                     snippets={filteredSnippets}
                     run={JSrun} language='JavaScript'
@@ -150,17 +187,56 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                     setCode={setJSCode}
                     {...props}
                 />
-                <EditorComponent code={JScode}
-                    onChange={onChange} language={'javascript'}
-                    height={height}
-                    {...props}
-                />
+                <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex' }}>
+                    <EditorComponent
+                        code={JScode}
+                        onChange={onChange}
+                        language={'javascript'}
+                        height={'100%'}
+                        {...props}
+                    />
+                </div>
             </div>
-            <JSSideTerminal
-                outputRef={outputRef}
-                consoleRef={consoleRef}
-                error={error}
-            />
+            {showOutput && (
+                <>
+                <div
+                    role="separator"
+                    aria-orientation="horizontal"
+                    onMouseDown={() => setIsResizing(true)}
+                    onDoubleClick={() => setEditorRatio(0.7)}
+                    style={{
+                        height: '6px',
+                        cursor: 'row-resize',
+                        background: '#e3e7ea',
+                        borderTop: '1px solid #ddd',
+                        borderBottom: '1px solid #ddd',
+                        margin: '8px 0'
+                    }}
+                />
+                <div
+                    className="outputContainer"
+                    style={{
+                        padding: '10px',
+                        backgroundColor: '#f5f5f5',
+                        color: '#222',
+                        font: '1.1rem Inconsolata, monospace',
+                        whiteSpace: 'pre-wrap',
+                        borderRadius: '5px',
+                        marginTop: '10px',
+                        overflowY: 'auto',
+                        ...outputFlexStyle,
+                    }}
+                >
+                    {consoleRef.current}
+                    {outputRef.current}
+                    {isError && (
+                        <div style={{ color: '#b00020', marginTop: '8px' }}>
+                            {error && (error.stack ? error.stack : String(error))}
+                        </div>
+                    )}
+                </div>
+                </>
+            )}
         </div> // Closing New Flex Wrapper
     );
 };

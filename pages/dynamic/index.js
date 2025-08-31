@@ -16,6 +16,11 @@ import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
 import Pagination from '../../components/WorkshopPieces/Pagination';
 import { Fade } from '@mui/material'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMdx from 'remark-mdx'
 import { ErrorBoundary } from "react-error-boundary";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -87,7 +92,7 @@ export default function WorkshopPage({
 
   const router = useRouter();
 
-  // convert markdown to html and split into pages
+  // convert markdown to html and split into pages (mdast-based splitting)
   const convertContenttoHTML = function (content) {
     // Safeguard against null/undefined content
     if (!content) {
@@ -95,59 +100,220 @@ export default function WorkshopPage({
     }
 
     try {
-      const htmlifiedContent = ConvertMarkdown({ 
-        content, 
-        allUploads, 
-        workshopTitle, 
-        language, 
-        setCode, 
-        setEditorOpen, 
-        setAskToRun, 
-        gitUser, 
-        gitRepo, 
-        gitFile, 
-        instUser, 
-        instRepo, 
-        setJupyterSrc 
-      });
+      // Split using mdast heading positions. Ignore headings whose start offsets fall inside
+      // any <Secret>...</Secret> or <CodeEditor>...</CodeEditor> range in the original source.
+      // Also: protect CodeEditor and Secret inner content from MDX escaping by masking/restoring.
+      const codeEditorSegments = [];
+      const secretSegments = [];
+      const infoSegments = [];
+      const maskBlocks = (src) => {
+        // Mask CodeEditor inner content, keep attributes and add data-index
+        let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
+          const idx = codeEditorSegments.length;
+          codeEditorSegments.push(inner);
+          // Preserve attrs, add data-index if not present
+          const hasData = /data-index\s*=/.test(attrs);
+          const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+          return `<CodeEditor${newAttrs}></CodeEditor>`;
+        });
+        // Mask Secret inner content similarly
+        masked = masked.replace(/<Secret\b([^>]*)>([\s\S]*?)<\/Secret>/gi, (m, attrs, inner) => {
+          const idx = secretSegments.length;
+          secretSegments.push(inner);
+          const hasData = /data-index\s*=/.test(attrs);
+          const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+          return `<Secret${newAttrs}></Secret>`;
+        });
+        // Mask Info blocks (balanced)
+        masked = masked.replace(/<Info\b[^>]*>([\s\S]*?)<\/Info>/gi, (m, inner) => {
+          const idx = infoSegments.length;
+          infoSegments.push(inner);
+          return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+        });
+        // Mask single-line Info without closer (rest of the line)
+        masked = masked.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
+          const idx = infoSegments.length;
+          infoSegments.push(inner);
+          return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+        });
+        return masked;
+      };
+      const restoreBlocks = (src) => {
+        let restored = src.replace(/<CodeEditor\b([^>]*)><\/CodeEditor>/gi, (m, attrs) => {
+          const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
+          const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
+          const inner = (idx >= 0 && codeEditorSegments[idx] != null) ? codeEditorSegments[idx] : '';
+          return `<CodeEditor${attrs}>${inner}</CodeEditor>`;
+        });
+        restored = restored.replace(/<Secret\b([^>]*)><\/Secret>/gi, (m, attrs) => {
+          const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
+          const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
+          const inner = (idx >= 0 && secretSegments[idx] != null) ? secretSegments[idx] : '';
+          return `<Secret${attrs}>${inner}</Secret>`;
+        });
+        restored = restored.replace(/<dhrift-info\b([^>]*)><\/dhrift-info>/gi, (m, attrs) => {
+          const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
+          const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
+          const inner = (idx >= 0 && infoSegments[idx] != null) ? infoSegments[idx] : '';
+          return `<Info${attrs}>${inner}</Info>`;
+        });
+        return restored;
+      };
+      const escapeCurlyForMDX = (str) => {
+        let out = '';
+        let i = 0;
+        let inFence = false;
+        let inInline = false;
+        const knownHtml = new Set(['codeeditor','dhrift-codeeditor','secret','pythonrepl','terminal','jupyter','download','dhrift-secret','quiz','info','link','img','a','strong','em','p','div','span','ul','ol','li','pre','code','h1','h2','h3','h4','h5','h6','table','thead','tbody','tr','td','th','blockquote','hr','br','sup','sub','kbd','input','meta']);
+        const voidTags = new Set(['br','hr','img','meta','link','input','source','track','area','base','col','embed','param','wbr']);
+        const isAllowedTag = (name) => {
+          if (!name) return false;
+          const lower = name.toLowerCase();
+          if (knownHtml.has(lower)) return true;
+          if (lower.startsWith('dhrift-')) return true;
+          return /^[A-Z]/.test(name);
+        };
+        while (i < str.length) {
+          if (!inInline && (str.startsWith('```', i) || str.startsWith('~~~', i))) {
+            inFence = !inFence;
+            out += str.substr(i, 3);
+            i += 3;
+            continue;
+          }
+          if (!inFence && str[i] === '`') {
+            inInline = !inInline;
+            out += str[i++];
+            continue;
+          }
+          const ch = str[i];
+          if (!inFence && !inInline && (ch === '{' || ch === '}')) {
+            out += (ch === '{') ? '&#123;' : '&#125;';
+            i++;
+            continue;
+          }
+          if (!inFence && !inInline && ch === '<') {
+            let j = i + 1;
+            let isClosing = false;
+            if (str[j] === '/') { isClosing = true; j++; }
+            let name = '';
+            while (j < str.length) {
+              const c = str[j];
+              if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '-') { name += c; j++; }
+              else break;
+            }
+            if (isAllowedTag(name)) {
+              // Normalize void tags to self-closing for MDX
+              if (!isClosing && voidTags.has(name.toLowerCase())) {
+                let k = j;
+                while (k < str.length && str[k] !== '>') k++;
+                if (k < str.length) {
+                  const tagInner = str.slice(i + 1, k);
+                  const alreadySelfClosed = /\/\s*$/.test(tagInner.trim());
+                  if (!alreadySelfClosed) {
+                    out += '<' + tagInner.replace(/\s*$/, '') + ' />';
+                    i = k + 1;
+                    continue;
+                  }
+                }
+              }
+              out += ch; i++; continue; }
+            else { out += '&lt;'; i++; continue; }
+          }
+          out += ch;
+          i++;
+        }
+        return out;
+      };
+      // Auto-close Info blocks that are opened but not closed before a blank line (outside fences)
+      const autoCloseInfoBlocks = (str) => {
+        const lines = str.split(/\r?\n/);
+        let inFence = false;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; }
+          else if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; }
+          if (inFence) continue;
+          if (/<!--\s*<Info\b/i.test(line)) continue;
+          if (/<Info\b[^>]*>/.test(line)) {
+            if (/<\/\s*Info\s*>/.test(line)) continue;
+            let j = i + 1;
+            let foundClose = false;
+            while (j < lines.length) {
+              const l2 = lines[j];
+              if (!l2.trim()) break;
+              if (!inFence && (l2.startsWith('```') || l2.startsWith('~~~'))) break;
+              if (/<\/\s*Info\s*>/.test(l2)) { foundClose = true; break; }
+              j++;
+            }
+            if (!foundClose) {
+              const insertAt = j - 1 >= i ? j - 1 : i;
+              lines[insertAt] = (lines[insertAt] || '') + '</Info>';
+            }
+          }
+        }
+        return lines.join('\n');
+      };
 
-      // Safeguard against missing props or children
-      if (!htmlifiedContent?.props?.children) {
-        return [];
+      const maskedContent = maskBlocks(autoCloseInfoBlocks(content));
+      let maskedEscaped = escapeCurlyForMDX(maskedContent);
+      // Final safety: normalize stray <br> to <br /> to satisfy MDX even if inside lists
+      maskedEscaped = maskedEscaped
+        .replace(/<br\s*>/gi, '<br />')
+        .replace(/<br\s*\/\s*>/gi, '<br />');
+      // Use plain Markdown parser for splitting to avoid MDX parse errors
+      const processor = unified().use(remarkParse).use(remarkGfm).use(remarkFrontmatter);
+      const tree = processor.parse(maskedEscaped);
+      const splitOnH2 = (currentFile?.data?.long_pages === false) || (currentFile?.data?.long_pages === 'false') || (currentFile?.data?.long_pages === undefined);
+      const starts = [];
+
+      // Build suppressed ranges using mdxJsxFlowElement node positions
+      const suppressedRanges = [];
+      // Build suppressed ranges using regex for Info blocks (CodeEditor/Secret were masked already)
+      const buildRanges = (openRe, closeRe) => {
+        openRe.lastIndex = 0; closeRe.lastIndex = 0;
+        let mOpen;
+        while ((mOpen = openRe.exec(maskedEscaped)) !== null) {
+          const start = mOpen.index;
+          closeRe.lastIndex = openRe.lastIndex;
+          const mClose = closeRe.exec(maskedEscaped);
+          if (!mClose) break;
+          const end = mClose.index + mClose[0].length;
+          suppressedRanges.push([start, end]);
+          openRe.lastIndex = end;
+        }
+      };
+      buildRanges(/<\s*Info\b[^>]*>/ig, /<\s*\/\s*Info\s*>/ig);
+
+      const isInSuppressed = (offset) => {
+        for (const [s, e] of suppressedRanges) {
+          if (offset >= s && offset < e) return true;
+        }
+        return false;
       }
 
-      const allPages = [];
-      const pages = htmlifiedContent.props.children.reduce((acc, curr) => {
-        // Skip non-element nodes
-        if (!curr || typeof curr !== 'object') {
-          return acc; 
+      if (Array.isArray(tree.children)) {
+        for (const node of tree.children) {
+          if (node.type === 'heading') {
+            if (node.depth === 1 || (node.depth === 2 && splitOnH2)) {
+              const off = node.position?.start?.offset;
+              if (typeof off === 'number' && !isInSuppressed(off)) starts.push(off);
+            }
+          }
         }
-
-        // Handle various heading levels
-        if (curr.type === 'h1') {
-          allPages.push([curr]);
-        } else if (curr.type === 'h2' && currentFile?.data?.long_pages === 'false') {
-          allPages.push([curr]);
-        } else if (curr.type === 'h2' && !currentFile?.data?.long_pages) {
-          allPages.push([curr]); 
-        } else if (allPages.length > 0) {
-          // Add content to current section if it exists
-          allPages[allPages.length - 1].push(curr);
-        } else {
-          // Create new section if none exists
-          allPages.push([curr]);
-        }
-
-        return acc;
-      }, []);
-
-      return allPages.map((page, index) => (
+      }
+      if (starts.length === 0) {
+        const el = ConvertMarkdown({ content: restoreBlocks(maskedEscaped), allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
+        return [<div key={`page-0`} className="page-content">{el}</div>];
+      }
+      const slices = [];
+      for (let i = 0; i < starts.length; i++) {
+        const start = starts[i];
+        const end = (i + 1 < starts.length) ? starts[i + 1] : maskedEscaped.length;
+        slices.push(maskedEscaped.slice(start, end));
+      }
+      return slices.map((md, index) => (
         <div key={`page-${index}`} className="page-content">
-          {page.map((element, elementIndex) => (
-            <div key={`element-${elementIndex}`}>
-              {element} 
-            </div>
-          ))}
+          {ConvertMarkdown({ content: restoreBlocks(md), allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
         </div>
       ));
 
@@ -208,7 +374,7 @@ export default function WorkshopPage({
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('page', 2);
     setSecondPageLink(`${'./dynamic'}?${urlParams}`);
-    if (currentFile != null && content != '' && metadata != null && allUploads != undefined) {
+    if (currentFile != null && content !== '' && metadata != null) {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
       setPages([frontMatterContent, ...convertContenttoHTML(content)]);
       setCurrentContentLoaded(true);
@@ -220,33 +386,69 @@ export default function WorkshopPage({
     setTitle(workshopTitle);
     let mostRecentH1 = null;
     let mostRecentH1Index = null;
-    const pageTitlesGet = pages.map((page, index) => {
-      let header = undefined;
-      // if it's the frontpage vs not
-      index === 0 ? header = "Frontmatter" : header = page.props.children[0].props.children.props.children[0]
-      if (typeof header === 'object') {
-        header = header.props.children;
+
+    const getText = (node) => {
+      if (node == null) return '';
+      if (typeof node === 'string') return node;
+      if (Array.isArray(node)) return node.map(getText).join('');
+      if (node.props && node.props.children !== undefined) return getText(node.props.children);
+      return '';
+    }
+
+    const findFirstHeading = (node) => {
+      if (!node) return null;
+      if (Array.isArray(node)) {
+        for (const n of node) {
+          const found = findFirstHeading(n);
+          if (found) return found;
+        }
+        return null;
       }
-      let tag = page.props.children[0].props.children.type;
+      if (typeof node === 'object' && node.type) {
+        if (typeof node.type === 'string') {
+          if (node.type === 'h1' || node.type === 'h2') return node;
+          if (node.type === 'code' || node.type === 'pre') return null;
+        }
+        if (node.props && node.props.children !== undefined) {
+          return findFirstHeading(node.props.children);
+        }
+      }
+      return null;
+    }
+
+    const pageTitlesGet = pages.map((page, index) => {
+      if (index === 0) {
+        return {
+          title: 'Frontmatter',
+          index: index + 1,
+          active: index + 1 === currentPage,
+          parent: undefined,
+          parentIndex: undefined,
+        };
+      }
+      const child = page?.props?.children;
+      const heading = findFirstHeading(child);
+      const tag = heading?.type;
+      let titleText = heading ? getText(heading.props?.children) : `Page ${index + 1}`;
       let parent = undefined;
       let parentIndex = undefined;
       if (tag === 'h1') {
-        mostRecentH1 = header;
+        mostRecentH1 = titleText;
         mostRecentH1Index = index;
       }
       if (tag === 'h2') {
         parent = mostRecentH1;
         parentIndex = mostRecentH1Index;
       }
-      header = {
-        title: header,
+      return {
+        title: titleText,
         index: index + 1,
-        active: index + 1 === currentPage ? true : false,
-        parent: parent,
-        parentIndex: parentIndex,
-      }
-      return (header)
-    })
+        active: index + 1 === currentPage,
+        parent,
+        parentIndex,
+      };
+    });
+
     setPageTitles(pageTitlesGet)
   }, [currentPage, pages]);
 

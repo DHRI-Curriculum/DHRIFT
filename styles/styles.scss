@@ -981,8 +981,9 @@ nav.sidenav {
 }
 
 .drawer-editor {
-  height: 100vh;
-  overflow: hidden;
+  /* Let the drawer layout control height; enable internal scroll when needed */
+  height: 100%;
+  overflow: visible;
 }
 
 .drawer-list {
@@ -1018,11 +1019,9 @@ nav.sidenav {
 .editorContainer {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: flex-start;
   width: 100%;
-  height: 64vh;
-  background-color: black;
-  /* margin-top: 30px; */
+  /* Height is controlled by parent flex; do not force a fixed viewport height here */
 }
 
 .webvm {

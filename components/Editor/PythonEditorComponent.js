@@ -10,7 +10,6 @@ import { Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { PyodideContext } from '../Wasm/PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
-import PythonSideREPLComponent from './PythonSideRepl';
 
 export default function PythonEditorComponent({ defaultCode, minLines, codeOnChange, ...props }) {
 
@@ -22,7 +21,6 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
-  const [print, setPrint] = useState(null);
   const [runningCode, setRunningCode] = useState(false);
   const [isPlot, setIsPlot] = useState(false);
   const [matplotlibDiv, setMatplotlibDiv] = useState(null);
@@ -35,19 +33,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
     setIsPyodideReady,
   } = useContext(PyodideContext)
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations()
-        .then(function (registrations) {
-          for (let registration of registrations) {
-            console.log(registration);
-            // if (registration.active.scriptURL == 'coi-serviceworker.js') {
-            registration.unregister();
-            window.location.reload()
-          }
-        });
-    }
-  }, [])
+  // Removed aggressive service worker unregister/reload to prevent flicker and reload loops
 
   useEffect(() => {
     if (isPyodideReady) {
@@ -89,7 +75,6 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
     return matLine;
   }
 
-  let printList = [];
   const runPyodide = async (code) => {
     setRunningCode(true);
     setIsoutput(false);
@@ -111,13 +96,7 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
         namespace.set(`file${index + 1}`, snippet.content);
       });
     }
-    namespace.set("print", (s) => {
-      printList.push(s.toString());
-    });
-
-    namespace.set("log", (s) => {
-      console.log(s);
-    });
+    // Do not override Python's print; capture sys.stdout instead
 
     await pyodide.runPythonAsync(checkImports(code),
       { globals: namespace });
@@ -126,24 +105,38 @@ matplotlib.use("module://matplotlib_pyodide.html5_canvas_backend")\n`
 import sys
 from js import prompt
 import builtins
+import io
+_pyodide_out = io.StringIO()
+_sys_stdout_orig = sys.stdout
+sys.stdout = _pyodide_out
 def input(p=""):
   return prompt(p)
 builtins.input = input
 # dangerous?
 sys.tracebacklimit = 0
 `, { globals: namespace });
-    return await pyodide.runPythonAsync(code,
-      { globals: namespace }
-    ).then(result => {
-      setIsoutput(true);
-      outputRef.current = outputRef.current + '\n' + result;
-      setPrint(printList.join('\n'));
-    }).catch((err) => {
+    try {
+      const result = await pyodide.runPythonAsync(code, { globals: namespace });
+      // Collect stdout
+      try {
+        const outProxy = namespace.get('_pyodide_out');
+        const outStr = outProxy && outProxy.getvalue ? outProxy.getvalue().toString() : '';
+        const resultStr = (result !== undefined && result !== null) ? result.toString() : '';
+        const combined = resultStr ? (outStr ? outStr + '\n' + resultStr : resultStr) : outStr;
+        outputRef.current = combined;
+        setIsoutput(true);
+      } catch (e) {
+        // Fallback if buffer missing
+        setIsoutput(true);
+      }
+    } catch (err) {
       setIsError(true);
       setError(err);
-    }).finally(() => {
+    } finally {
+      // Restore stdout
+      try { await pyodide.runPythonAsync('sys.stdout = _sys_stdout_orig', { globals: namespace }); } catch (_) {}
       setRunningCode(false);
-    });
+    }
   };
 
   function showValue() {
@@ -194,8 +187,37 @@ sys.tracebacklimit = 0
 
   const height = props.height ? props.height : '100%';
 
+  const [isResizing, setIsResizing] = useState(false);
+  const [editorRatio, setEditorRatio] = useState(0.7); // portion of space for editor when output visible
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!isResizing || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const y = e.clientY - rect.top;
+      const ratio = Math.max(0.2, Math.min(0.9, y / rect.height));
+      setEditorRatio(ratio);
+      e.preventDefault();
+    };
+    const onUp = () => setIsResizing(false);
+    if (isResizing) {
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp, { once: true });
+    }
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+    };
+  }, [isResizing]);
+
+  const showOutput = !!isoutput;
+  const editorFlexStyle = showOutput
+    ? { flex: `0 0 ${Math.round(editorRatio * 100)}%`, minHeight: 0 }
+    : { flex: '1 1 auto', minHeight: 0 };
+  const outputFlexStyle = showOutput ? { flex: `0 0 ${Math.round((1 - editorRatio) * 100)}%`, minHeight: 0 } : {};
+
   return (
-    <div>
+    <div ref={containerRef} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {<><Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.js" />
         <Script src="https://cdn.jsdelivr.net/pyodide/v0.22.0/full/pyodide.asm.js"
           onLoad={() => {
@@ -223,11 +245,7 @@ sys.tracebacklimit = 0
 
           }}
         /></>}
-      <div className="editorContainer"
-        style={{
-          overflowY: 'auto',
-        }}
-      >
+      <div className="editorContainer" style={{ ...editorFlexStyle, display: 'flex', flexDirection: 'column' }}>
         {isError && <Alert id="error"
           severity="error"
           style={{
@@ -254,12 +272,50 @@ sys.tracebacklimit = 0
           language={props.language}
           {...props}
         />
-        <EditorComponent code={code}
-          onChange={onChange}
-          maxLines='Infinity'
-          minLines={minLines}
-          language={props.language}
-          height={height} />
+        <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex' }}>
+          <EditorComponent
+            code={code}
+            onChange={onChange}
+            minLines={minLines}
+            language={props.language}
+            height={'100%'}
+          />
+        </div>
+      </div>
+      {showOutput && (
+        <>
+          <div
+            role="separator"
+            aria-orientation="horizontal"
+            onMouseDown={() => setIsResizing(true)}
+            onDoubleClick={() => setEditorRatio(0.7)}
+            style={{
+              height: '6px',
+              cursor: 'row-resize',
+              background: '#e3e7ea',
+              borderTop: '1px solid #ddd',
+              borderBottom: '1px solid #ddd',
+              margin: '8px 0'
+            }}
+          />
+          <div
+            className="outputContainer"
+            style={{
+              padding: '10px',
+              backgroundColor: '#f5f5f5',
+              color: '#222',
+              font: '1.1rem Inconsolata, monospace',
+              whiteSpace: 'pre-wrap',
+              borderRadius: '5px',
+              marginTop: '10px',
+              overflowY: 'auto',
+              ...outputFlexStyle,
+            }}
+          >
+            {outputRef.current}
+          </div>
+        </>
+      )}
         <div
           id='figHolder'
           style={{
@@ -281,16 +337,8 @@ sys.tracebacklimit = 0
               </div>
             </>}
         </div>
-      </div>
 
-      <div className="shellContainer">
-        {!isPlot && <PythonSideREPLComponent
-          print={print}
-          setPrint={setPrint}
-          {...props}
-        />}
-
-      </div>
+      <div className="shellContainer"></div>
     </div>
   )
 }

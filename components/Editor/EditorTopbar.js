@@ -10,7 +10,18 @@ export default function EditorTopbar(props) {
     const runButtonNeeded = props.runButtonNeeded || false;
     return (
         <>
-            <div className="editorTopBarButtonsContainer">
+            <div
+                className="editorTopBarButtonsContainer"
+                style={{
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 10,
+                    width: '100%',
+                    background: '#000',
+                    borderBottom: '1px solid #333',
+                    padding: '12px 12px',
+                }}
+            >
                 {/* <Button
                     color="primary"
                     aria-label="open drawer"
@@ -28,7 +39,7 @@ export default function EditorTopbar(props) {
                     }}
                     variant="outlined"
                     style={{
-                        margin: "10px",
+                        margin: "6px 8px",
                         width: "100px",
                         height: "25px",
                         backgroundColor: "#32c259",

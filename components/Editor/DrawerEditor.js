@@ -107,6 +107,7 @@ export default function DrawerEditor(props) {
             return (
                 <PythonEditorComponent language={language}
                     defaultCode={text}
+                    text={text}
                     handleOpenClose={handleOpenClose}
                     runButtonNeeded={true}
                     {...props} />
@@ -200,10 +201,14 @@ export default function DrawerEditor(props) {
                     width: { xs: '100%', sm: '100%', md: '45%' },
                     flexShrink: { xs: 1, sm: 0 },
                     '& .MuiDrawer-paper': {
-                        width: { xs: '100%', sm: '100%', md: newWidth }, boxSizing: 'border-box'
+                        width: { xs: '100%', sm: '100%', md: newWidth },
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100vh',
+                        overflowY: 'hidden',
                     },
                     display: !show ? 'none' : 'block',
-                    overflow: 'hidden',
                 }}
 
             ><div
@@ -250,7 +255,14 @@ export default function DrawerEditor(props) {
                         }}
                     > Load Notebook/Data</Button>
                 } */}
-                <div className='drawer-editor'>
+                <div className='drawer-editor'
+                    style={{
+                        flex: 1,
+                        minHeight: 0,
+                        overflowY: 'auto',
+                        paddingRight: '8px',
+                    }}
+                >
                     {whichEditor()}
                 </div>
             </Drawer>

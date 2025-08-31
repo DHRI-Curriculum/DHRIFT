@@ -1,11 +1,9 @@
-import ReactDOMServer from 'react-dom/server';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import parse from 'html-react-parser';
 
 // evaluate quiz questions
 export default function QuizComponent({ className, children }) {
@@ -14,30 +12,35 @@ export default function QuizComponent({ className, children }) {
     const [disabled, setDisabled] = useState(false);
     const [correct, setCorrect] = useState(0);
 
-    // list of lis in children 
-    // console.log('children', children);
-    const lis = children[0].props?.children.map((child, index) => {
-        const flattened = ReactDOMServer.renderToString(child);
-        // remove <li data-reactroot="">
-        // strip last 5 characters '</li>'
-        const li = flattened.replace('<li data-reactroot="">', '').slice(0, -5);
-        // correct if ends with *</li>
-        const correct = li.endsWith('*');
-        // strip *
-        if (correct) {
-            const liStripped = li.slice(0, -1);
-            return {
-                index,
-                correct,
-                li: parse(liStripped)
-            };
-        }
-        return {
-            index,
-            correct,
-            li: parse(li)
-        }
-    })
+    // list of <li> nodes inside a single <ul>; build labels directly from React children
+    const listRoot = Array.isArray(children) ? children[0] : children;
+    const listItemsRaw = listRoot?.props?.children;
+    const listItems = Array.isArray(listItemsRaw) ? listItemsRaw : (listItemsRaw != null ? [listItemsRaw] : []);
+    const lis = listItems
+        .map((child, index) => {
+            if (!child || child.type !== 'li') return null;
+            let labelChildren = child.props?.children;
+            const parts = Array.isArray(labelChildren) ? [...labelChildren] : [labelChildren];
+            // Determine correctness by trailing '*' on the last stringy segment, then remove it from label
+            let correct = false;
+            for (let i = parts.length - 1; i >= 0; i--) {
+                const seg = parts[i];
+                if (typeof seg === 'string') {
+                    const trimmed = seg.trimEnd();
+                    if (trimmed.endsWith('*')) {
+                        correct = true;
+                        // remove only the final '*' while preserving preceding text/spacing
+                        const lastStar = seg.lastIndexOf('*');
+                        parts[i] = seg.slice(0, lastStar);
+                    }
+                    break;
+                }
+                if (seg != null) break; // non-string node at end; stop scanning
+            }
+            const label = <>{parts}</>;
+            return { index, correct, li: label };
+        })
+        .filter(Boolean);
 
     const componentUniqueId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
