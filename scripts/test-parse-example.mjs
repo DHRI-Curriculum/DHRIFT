@@ -3,40 +3,46 @@ import path from 'path';
 import matter from 'gray-matter';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
+import remarkMdx from 'remark-mdx';
 import remarkGfm from 'remark-gfm';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkDeflist from 'remark-deflist';
-import remarkRehype from 'remark-rehype';
-import rehypeRaw from 'rehype-raw';
 
-function preprocess(content) {
-  let safe = (content || '')
+// General sanitizer consistent with app path
+function sanitizeSource(str) {
+  let s = (str || '')
     .replace(/<\s*Link(\s|>)/g, '<dhrift-link$1')
     .replace(/<\/\s*Link\s*>/g, '</dhrift-link>');
-
-  // Fix self-closing custom tags
-  safe = safe
-    .replace(/<PythonREPL\s*\/>/g, '<PythonREPL></PythonREPL>')
-    .replace(/<Terminal\s*\/>/g, '<Terminal></Terminal>')
-    .replace(/<Jupyter([^>]*)\/>/g, '<Jupyter$1></Jupyter>')
-    .replace(/<Download([^>]*)\/>/g, '<Download$1></Download>');
-
-  // Escape CodeEditor inner content to avoid headings inside
-  const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  safe = safe.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
-    const escaped = escapeHtml(inner);
-    return `<CodeEditor${attrs}>${escaped}</CodeEditor>`;
-  });
-
-  // Placeholder Secrets
-  const secretSegments = [];
-  safe = safe.replace(/<Secret\b[^>]*>([\s\S]*?)<\/Secret>/gi, (m, inner) => {
-    const idx = secretSegments.length;
-    secretSegments.push(inner);
-    return `<dhrift-secret data-index="${idx}"></dhrift-secret>`;
-  });
-
-  return { safe, secretSegments };
+  // Normalize voids
+  s = s.replace(/<br\s*>/gi, '<br />').replace(/<br\s*\/\s*>/gi, '<br />');
+  // Auto-close Download
+  s = s.replace(/<Download(\b[^>]*?)>(?!\s*<\s*\/\s*Download\s*>)/gi, '<Download$1></Download>');
+  // Quiz: strip stray closers
+  const stripStrayQuizClosers = (t) => { const lines=t.split(/\r?\n/); let depth=0; for(let i=0;i<lines.length;i++){ let line=lines[i]; const opens=(line.match(/<\s*Quiz\b[^>]*>/gi)||[]).length; line=line.replace(/<\s*\/\s*Quiz\s*>/gi,(m)=>depth>0?(depth--,m):''); depth+=opens; lines[i]=line } return lines.join('\n') };
+  s = stripStrayQuizClosers(s);
+  // Quiz: auto-close at block boundaries
+  const normalizeQuizBlocks = (t)=>{ const lines=t.split(/\r?\n/); let inFence=false,openSince=-1; for(let i=0;i<lines.length;i++){ const line=lines[i]; if(!inFence&&(line.startsWith('```')||line.startsWith('~~~'))){ inFence=true; continue } if(inFence&&(line.startsWith('```')||line.startsWith('~~~'))){ inFence=false; continue } if(inFence) continue; if(openSince!==-1){ const isHeading=/^\s*#{1,6}\s+/.test(line); const isTag=/^\s*<\s*[A-Za-z]/.test(line); const isNewQuiz=/<Quiz\b[^>]*>/.test(line); if((isHeading||isTag)&&!isNewQuiz){ let j=i-1; while(j>=openSince&&lines[j].trim()==='') j--; const at=j>=openSince?j:openSince; lines[at]=(lines[at]||'')+'</Quiz>'; openSince=-1; } } if(/^\s*<\/\s*Quiz\s*>\s*$/.test(line)&&openSince===-1){ lines[i]=''; continue } if(/<Quiz\b[^>]*>/.test(line)){ if(/<\/\s*Quiz\s*>/.test(line)) continue; openSince=i; continue } if(!line.trim()&&openSince!==-1){ let j=i-1; while(j>=openSince&&lines[j].trim()==='') j--; const at=j>=openSince?j:openSince; lines[at]=(lines[at]||'')+'</Quiz>'; openSince=-1; continue } if(/<\/\s*Quiz\s*>/.test(line)) openSince=-1; } if(openSince!==-1){ lines[lines.length-1]=(lines[lines.length-1]||'')+'</Quiz>'; } return lines.join('\n') };
+  // Note: minor typo fixed below
+  s = s.replace(/<Quiz\b/,'<Quiz'); // no-op placeholder
+  // Inline kbd
+  const normKbd=(t)=>{ const lines=t.split(/\r?\n/); let inFence=false; for(let i=0;i<lines.length;i++){ let line=lines[i]; if(!inFence&&(line.startsWith('```')||line.startsWith('~~~'))){ inFence=true; lines[i]=line; continue } if(inFence&&(line.startsWith('```')||line.startsWith('~~~'))){ inFence=false; lines[i]=line; continue } if(inFence){ lines[i]=line; continue } line=line.replace(/<kbd>([^<\n]+?)(?=$|<|\s|[\.,:;!\?\)\]])/gi,'<kbd>$1</kbd>'); const openCount=(line.match(/<\s*kbd\b[^>]*>/gi)||[]).length; const closeCount=(line.match(/<\s*\/\s*kbd\s*>/gi)||[]).length; if(openCount>closeCount){ const missing=openCount-closeCount; line=line+Array(missing).fill('</kbd>').join('') } let depth=0; line=line.replace(/<\s*kbd\b[^>]*>/gi,(m)=>{depth++; return m}).replace(/<\s*\/\s*kbd\s*>/gi,(m)=>depth>0?(depth--,m):''); lines[i]=line } return lines.join('\n') };
+  s = normKbd(s);
+  // Strip stray closers for known tags
+  const stripStrayClosers = (t, tagNames) => {
+    const reOpen = (nm) => new RegExp(`<\\s*${nm}\\b[^>]*>`, 'gi');
+    const reClose = (nm) => new RegExp(`<\\s*/\\s*${nm}\\s*>`, 'gi');
+    const depths = Object.fromEntries(tagNames.map(n => [n.toLowerCase(), 0]));
+    const lines = t.split(/\r?\n/);
+    for (let i=0;i<lines.length;i++){
+      let line = lines[i];
+      tagNames.forEach((nm)=>{ line = line.replace(reClose(nm), (m) => { const key=nm.toLowerCase(); if (depths[key] > 0) { depths[key]--; return m; } return ''; }) })
+      tagNames.forEach((nm)=>{ const key=nm.toLowerCase(); const opens=(line.match(reOpen(nm))||[]).length; depths[key]+=opens; })
+      lines[i]=line;
+    }
+    return lines.join('\n');
+  }
+  s = stripStrayClosers(s, ['Info','Secret','Keywords','Download','CodeEditor','Jupyter','PythonREPL','Terminal','Link','dhrift-info','dhrift-secret','dhrift-keywords','p','li','ul','ol','div','span','code','pre','em','strong','h1','h2','h3','h4','h5','h6']);
+  return s;
 }
 
 function printTree(node, depth = 0) {
@@ -73,115 +79,166 @@ function getHeadingTag(node) {
   return null;
 }
 
+// Mask blocks similarly to the app's dynamic route before heading parse
+function maskBlocks(src) {
+  const codeEditorSegments = [];
+  const secretSegments = [];
+  const infoSegments = [];
+  let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
+    const idx = codeEditorSegments.length;
+    codeEditorSegments.push(inner);
+    const hasData = /data-index\s*=/.test(attrs);
+    const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+    return `<CodeEditor${newAttrs}></CodeEditor>`;
+  });
+  masked = masked.replace(/<Secret\b([^>]*)>([\s\S]*?)<\/Secret>/gi, (m, attrs, inner) => {
+    const idx = secretSegments.length;
+    secretSegments.push(inner);
+    const hasData = /data-index\s*=/.test(attrs);
+    const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+    return `<Secret${newAttrs}></Secret>`;
+  });
+  masked = masked.replace(/<Info\b[^>]*>([\s\S]*?)<\/Info>/gi, (m, inner) => {
+    const idx = infoSegments.length;
+    infoSegments.push(inner);
+    return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+  });
+  masked = masked.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
+    const idx = infoSegments.length;
+    infoSegments.push(inner);
+    return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+  });
+  return masked;
+}
+
+function buildProcessor({ mdx = true } = {}) {
+  const p = unified()
+    .use(remarkParse, { fragment: true })
+    .use(remarkGfm)
+    .use(remarkFrontmatter)
+    .use(remarkDeflist);
+  if (mdx) p.use(remarkMdx);
+  return p;
+}
+
+function extractPages(children, { splitOnH2 }) {
+  const pageStartIdx = [];
+  for (let i = 0; i < children.length; i++) {
+    const n = children[i];
+    if (n.type === 'heading' && (n.depth === 1 || (n.depth === 2 && splitOnH2))) pageStartIdx.push(i);
+  }
+  const pages = [];
+  for (let i = 0; i < pageStartIdx.length; i++) {
+    const start = pageStartIdx[i];
+    const end = (i + 1 < pageStartIdx.length) ? pageStartIdx[i + 1] : children.length;
+    pages.push(children.slice(start, end));
+  }
+  return pages;
+}
+
+function headingTextFromNodes(nodes) {
+  if (!nodes || !nodes.length) return '(no heading)';
+  const h = nodes.find(n => n.type === 'heading');
+  if (h) return getText(h).trim() || '(no heading)';
+  const el = nodes.find(x => x.type === 'element' && (x.tagName === 'h1' || x.tagName === 'h2')) || nodes.find(getHeadingTag);
+  if (el) return getText(el).trim() || '(no heading)';
+  return '(no heading)';
+}
+
 async function main() {
-  const argPath = process.argv[2];
+  // Simple arg parse: [--summary] [--json] [--max-lines=N] [--list] [--verbose|-v] [file]
+  const args = process.argv.slice(2);
+  const flags = { verbose: false, list: false, summary: false, json: false, maxLines: 50 };
+  const paths = [];
+  for (const a of args) {
+    if (a === '--verbose' || a === '-v') flags.verbose = true;
+    else if (a === '--list') flags.list = true;
+    else if (a === '--summary') flags.summary = true;
+    else if (a === '--json') flags.json = true;
+    else if (a.startsWith('--max-lines')) {
+      const [, val] = a.split('=');
+      const n = Number(val);
+      if (Number.isFinite(n) && n > 0) flags.maxLines = Math.min(n, 200);
+    }
+    else if (a.startsWith('-')) {
+      // ignore unknown flags silently to keep script resilient
+    } else {
+      paths.push(a);
+    }
+  }
+
+  const argPath = paths[0];
   const filePath = argPath
-    ? path.isAbsolute(argPath) ? argPath : path.join(process.cwd(), argPath)
+    ? (path.isAbsolute(argPath) ? argPath : path.join(process.cwd(), argPath))
     : path.join(process.cwd(), 'EXAMPLE-WORKSHOP-FOR-TESTING.md');
-  console.log('Using file:', filePath);
+  if (flags.verbose) console.log('Using file:', filePath);
   const raw = fs.readFileSync(filePath, 'utf8');
   const fm = matter(raw);
   const longPages = fm.data?.long_pages === true || fm.data?.long_pages === 'true';
   const splitOnH2 = !longPages; // matches app logic
-  const { safe } = preprocess(fm.content);
+  // Preprocess ref was removed; use local sanitizer
+  const safe = sanitizeSource(maskBlocks(fm.content));
 
-  const processor = unified()
-    .use(remarkParse, { fragment: true })
-    .use(remarkGfm)
-    .use(remarkFrontmatter)
-    .use(remarkDeflist)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw);
-
-  const mdast = processor.parse(safe);
-  // Count mdast H1 headings
-  let mdH1 = 0;
-  function walk(node) {
-    if (!node) return;
-    if (node.type === 'heading' && node.depth === 1) mdH1++;
-    const kids = node.children || [];
-    kids.forEach(walk);
-  }
-  walk(mdast);
-  console.log('mdast H1 count:', mdH1);
-  const hast = await processor.run(mdast);
-
-  // Also try without Secret placeholder to compare
-  const processor2 = unified()
-    .use(remarkParse, { fragment: true })
-    .use(remarkGfm)
-    .use(remarkFrontmatter)
-    .use(remarkDeflist)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw);
-  const noSecretSafe = (fm.content || '')
-    .replace(/<\s*Link(\s|>)/g, '<dhrift-link$1')
-    .replace(/<\/\s*Link\s*>/g, '</dhrift-link>')
-    .replace(/<PythonREPL\s*\/>/g, '<PythonREPL></PythonREPL>')
-    .replace(/<Terminal\s*\/>/g, '<Terminal></Terminal>')
-    .replace(/<Jupyter([^>]*)\/>/g, '<Jupyter$1></Jupyter>')
-    .replace(/<Download([^>]*)\/>/g, '<Download$1></Download>')
-    .replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
-      const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return `<CodeEditor${attrs}>${escapeHtml(inner)}</CodeEditor>`;
-    });
-  const mdast2 = processor2.parse(noSecretSafe);
-  const hast2 = await processor2.run(mdast2);
-
-  const top = (hast.children || []).filter(Boolean);
-  const pages = [];
-  let current = [];
-
-  for (const n of top) {
-    if (n.type !== 'element') { current.push(n); continue; }
-    const tag = getHeadingTag(n);
-    if (tag === 'h1') {
-      if (current.length) pages.push(current), current = [];
-      current.push(n);
-    } else if (tag === 'h2' && splitOnH2) {
-      if (current.length) pages.push(current), current = [];
-      current.push(n);
+  // For splitting, match the app: use Markdown-only AST for headings
+  let mdast;
+  let usedFallback = true; // we intentionally skip MDX here
+  try {
+    mdast = buildProcessor({ mdx: false }).parse(safe);
+  } catch (e2) {
+    const where = e2 && e2.line != null && e2.column != null ? ` (at ${e2.line}:${e2.column})` : '';
+    const msg = e2?.reason || e2?.message || String(e2);
+    if (flags.json) {
+      console.log(JSON.stringify({ error: msg, where: where.trim(), file: path.basename(filePath) }));
+    } else if (flags.summary) {
+      console.log(`error${where?':'+where:''} ${msg}`);
     } else {
-      current.push(n);
+      console.error(`parse_error:${where} ${msg}`);
+    }
+    process.exit(1);
+  }
+  // Count mdast H1 headings (top-level)
+  const top = Array.isArray(mdast.children) ? mdast.children : [];
+  const mdH1 = top.filter(n => n.type === 'heading' && n.depth === 1).length;
+  if (flags.verbose) console.log('mdast H1 count:', mdH1);
+
+  // Build pages from mdast top-level children
+  const children = Array.isArray(mdast.children) ? mdast.children : [];
+  const pages = extractPages(children, { splitOnH2 });
+
+  if (flags.verbose) {
+    console.log('long_pages:', longPages, 'splitOnH2:', splitOnH2, 'fallback:', usedFallback);
+    console.log('Total top-level nodes:', top.length);
+    console.log('Computed pages:', pages.length);
+  }
+  // Debug: list all H1 headings we see
+  if (flags.verbose || flags.list) {
+    const allH1 = top
+      .filter(n => n.type === 'heading' && n.depth === 1)
+      .map(n => getText(n).slice(0, 120));
+    if (flags.verbose) {
+      console.log('All H1s at top level:', allH1.length);
+      allH1.forEach((t, i) => console.log(`  H1[${i+1}]: ${t}`));
+    }
+    const prefixed = [{ title: 'Frontmatter' }, ...pages.map(nodes => ({ title: headingTextFromNodes(nodes) }))];
+    const max = Math.max(0, flags.maxLines);
+    const count = Math.min(prefixed.length, max);
+    for (let i = 0; i < count; i++) {
+      const title = String(prefixed[i].title || '(no heading)').slice(0, 80);
+      console.log(`Page ${i + 1}: ${title}`);
+    }
+    if (prefixed.length > count) {
+      console.log(`… (${prefixed.length - count} more)`);
     }
   }
-  if (current.length) pages.push(current);
 
-  console.log('long_pages:', longPages, 'splitOnH2:', splitOnH2);
-  console.log('Total top-level nodes:', top.length);
-  console.log('Computed pages:', pages.length);
-  // Debug: list all H1 headings we see
-  const allH1 = top
-    .filter(n => n.type === 'element' && n.tagName === 'h1')
-    .map(n => getText(n).slice(0, 120));
-  console.log('All H1s at top level:', allH1.length);
-  allH1.forEach((t, i) => console.log(`  H1[${i+1}]: ${t}`));
-  pages.forEach((p, i) => {
-    const firstHeading = p.find(x => x.type === 'element' && (x.tagName === 'h1' || x.tagName === 'h2'))
-      || p.find(x => getHeadingTag(x));
-    const headingText = firstHeading ? getText(firstHeading) : '(no heading)';
-    console.log(`Page ${i + 1}: ${headingText.slice(0, 80)}`);
-  });
-
-  // Compare without Secret placeholder
-  const top2 = (hast2.children || []).filter(Boolean);
-  const pages2 = [];
-  let curr2 = [];
-  for (const n of top2) {
-    if (n.type !== 'element') { curr2.push(n); continue; }
-    const tag = getHeadingTag(n);
-    if (tag === 'h1') { if (curr2.length) pages2.push(curr2), curr2 = []; curr2.push(n); }
-    else if (tag === 'h2' && splitOnH2) { if (curr2.length) pages2.push(curr2), curr2 = []; curr2.push(n); }
-    else { curr2.push(n); }
+  // Always print a concise summary at the end when not verbose
+  if (flags.json) {
+    const base = path.basename(filePath);
+    console.log(JSON.stringify({ pages: pages.length + 1, h1: mdH1, long_pages: !!longPages, splitOnH2: !!splitOnH2, fallback: usedFallback, file: base }));
+  } else if (flags.summary || (!flags.verbose && !flags.list)) {
+    const base = path.basename(filePath);
+    console.log(`pages=${pages.length + 1} h1=${mdH1} long_pages=${longPages} splitOnH2=${splitOnH2} fallback=${usedFallback} file=${base}`);
   }
-  if (curr2.length) pages2.push(curr2);
-  console.log('Computed pages (no secret placeholder):', pages2.length);
-  pages2.forEach((p, i) => {
-    const firstHeading = p.find(x => x.type === 'element' && (x.tagName === 'h1' || x.tagName === 'h2'))
-      || p.find(x => getHeadingTag(x));
-    const headingText = firstHeading ? getText(firstHeading) : '(no heading)';
-    console.log(`  P2 Page ${i + 1}: ${headingText.slice(0, 80)}`);
-  });
 }
 
 main().catch(e => {

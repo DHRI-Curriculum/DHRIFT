@@ -22,6 +22,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
+import { sanitizeBeforeParse, removeDanglingSelfClose, stripStrayClosers, defaultStrayCloserTags, balanceKbdNesting } from '../../utils/sanitizer';
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc }) {
@@ -360,6 +361,42 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         };
         safeContent = autoCloseInfoBlocks(safeContent);
 
+        // Auto-close Secret blocks that are opened without a closer before a blank line, heading, new tag, or EOF
+        const autoCloseSecretBlocks = (str) => {
+            const lines = str.split(/\r?\n/);
+            let inFence = false;
+            let openSince = -1;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
+                if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
+                if (inFence) continue;
+                // Drop stray closer when not currently open
+                if (/^\s*<\/\s*Secret\s*>\s*$/.test(line) && openSince === -1) { lines[i] = ''; continue; }
+                // Opening Secret
+                if (/<Secret\b[^>]*>/.test(line)) {
+                    if (/<\/\s*Secret\s*>/.test(line)) continue; // balanced on same line
+                    if (openSince === -1) openSince = i;
+                    continue;
+                }
+                if (openSince !== -1) {
+                    const isHeading = /^\s*#{1,6}\s+/.test(line);
+                    const isTagStart = /^\s*<\s*[A-Za-z]/.test(line);
+                    if ((!line.trim() || isHeading || isTagStart) && !/<\/\s*Secret\s*>/.test(line)) {
+                        let j = i - 1; while (j >= openSince && lines[j].trim() === '') j--;
+                        const at = j >= openSince ? j : openSince;
+                        lines[at] = (lines[at] || '') + '</Secret>';
+                        openSince = -1;
+                    }
+                }
+            }
+            if (openSince !== -1) {
+                lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Secret>';
+            }
+            return lines.join('\n');
+        };
+        safeContent = autoCloseSecretBlocks(safeContent);
+
         // First, strip stray </Quiz> that appear before any opener in the document (global)
         const stripStrayQuizClosers = (str) => {
             const lines = str.split(/\r?\n/);
@@ -442,6 +479,34 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         };
         safeContent = normalizeQuizBlocks(safeContent);
 
+        // Normalize <kbd> usage: auto-close unclosed <kbd>... and strip stray </kbd>
+        const normalizeKbd = (str) => {
+            const lines = str.split(/\r?\n/);
+            let inFence = false;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; lines[i] = line; continue; }
+                if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; lines[i] = line; continue; }
+                if (inFence) { lines[i] = line; continue; }
+                // Auto-close simple inline cases
+                line = line.replace(/<kbd>([^<\n]+?)(?=$|<|\s|[\.,:;!\?\)\]])/gi, '<kbd>$1</kbd>');
+                // Balance per-line: append missing </kbd> if openers > closers
+                const openCount = (line.match(/<\s*kbd\b[^>]*>/gi) || []).length;
+                const closeCount = (line.match(/<\s*\/\s*kbd\s*>/gi) || []).length;
+                if (openCount > closeCount) {
+                    const missing = openCount - closeCount;
+                    line = line + Array(missing).fill('</kbd>').join('');
+                }
+                // Remove stray </kbd> with no opener earlier in the same line
+                let depth = 0;
+                line = line.replace(/<\s*kbd\b[^>]*>/gi, (m) => { depth++; return m; })
+                           .replace(/<\s*\/\s*kbd\s*>/gi, (m) => depth > 0 ? (depth--, m) : '');
+                lines[i] = line;
+            }
+            return lines.join('\n');
+        };
+        safeContent = normalizeKbd(safeContent);
+
         // Fix self-closing custom tags to proper open/close so HTML parser doesn't swallow following content
         // Specific known tags + generic PascalCase components
         safeContent = safeContent
@@ -465,7 +530,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
 
         // Isolate Secret content from outer Markdown parsing to prevent fence leakage
         const secretSegments = [];
-        safeContent = safeContent.replace(/<Secret\b[^>]*>([\s\S]*?)<\/Secret>/gi, (m, inner) => {
+        safeContent = safeContent.replace(/<Secret\b([^>]*)>([\s\S]*?)<\/Secret>/gi, (m, attrs, inner) => {
             const idx = secretSegments.length;
             secretSegments.push(inner);
             return `<dhrift-secret data-index="${idx}"></dhrift-secret>`;
@@ -477,13 +542,13 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         safeContent = safeContent.replace(/<Info\b[^>]*>([\s\S]*?)<\/Info>/gi, (m, inner) => {
             const idx = infoSegments.length;
             infoSegments.push(inner);
-            return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+            return `<dhrift-info data-index="${idx}" />`;
         });
         // Single-line Info without closer (capture rest of line)
         safeContent = safeContent.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
             const idx = infoSegments.length;
             infoSegments.push(inner);
-            return `<dhrift-info data-index="${idx}"></dhrift-info>`;
+            return `<dhrift-info data-index="${idx}" />`;
         });
 
         // Isolate Keywords content so we can parse terms/definitions from raw markdown reliably
@@ -491,8 +556,11 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         safeContent = safeContent.replace(/<Keywords\b[^>]*>([\s\S]*?)<\/Keywords>/gi, (m, inner) => {
             const idx = keywordsSegments.length;
             keywordsSegments.push(inner);
-            return `<dhrift-keywords data-index="${idx}"></dhrift-keywords>`;
+            return `<dhrift-keywords data-index="${idx}" />`;
         });
+
+        // Generalized sanitizer (shared)
+        safeContent = sanitizeBeforeParse(safeContent);
 
         // Escape curly braces in plain text (outside fences/inline code) to satisfy MDX parser
         const escapeCurlyForMDX = (str) => {
@@ -571,10 +639,37 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             return out;
         };
         safeContent = escapeCurlyForMDX(safeContent);
-        // Final safety: normalize stray <br> variants to self-closing even if missed
+        // Final safety: normalize stray <br> variants and drop any dangling '/>' or bare '</>' fragments
         safeContent = safeContent
             .replace(/<br\s*>/gi, '<br />')
             .replace(/<br\s*\/\s*>/gi, '<br />');
+        // Drop bare fragment closers </> anywhere
+        safeContent = safeContent.replace(/<\s*\/\s*>/g, '');
+        // Drop dangling '/>' that are not part of a tag context
+        safeContent = removeDanglingSelfClose(safeContent);
+        // One more opener-first stray closer sweep to be safe
+        safeContent = stripStrayClosers(safeContent, defaultStrayCloserTags);
+        // Ensure correct <kbd> nesting across entire slice (inject missing closers before new opens)
+        safeContent = balanceKbdNesting(safeContent);
+
+        // Robust <kbd> balancing across the whole document (handles stray closers)
+        // 1) Remove duplicate consecutive </kbd>
+        safeContent = safeContent.replace(/(<\s*\/\s*kbd\s*>\s*){2,}/gi, '</kbd>');
+        // 2) Global balance scan to remove stray closers and ensure depth doesn't go negative
+        (function(){
+            let depth = 0;
+            safeContent = safeContent.replace(/<\/?\s*kbd\s*>/gi, (m) => {
+                if (/^<\s*\//.test(m)) {
+                    if (depth > 0) { depth--; return m; }
+                    return ''; // stray closer
+                } else {
+                    depth++; return m;
+                }
+            });
+            if (depth > 0) {
+                safeContent += Array(depth).fill('</kbd>').join('');
+            }
+        })();
 
         const mdxHandlers = {
             mdxJsxFlowElement(h, node) {
@@ -608,6 +703,13 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             },
         };
 
+        // Finalize sanitized content for MDX safety
+        // 1) Escape MDX curly braces outside of code; 2) Normalize void tags to self-closing
+        // 3) Run a final sweep to drop any dangling '/>' and bare '</>' fragments that may have arisen
+        //    in prior transforms
+        // Note: sanitizeBeforeParse already does a pass, but we do a quick, final guard here
+        
+        // Build processor and convert
         const file = unified()
             .use(remarkParse, { fragment: true })
             .use(remarkMdx)

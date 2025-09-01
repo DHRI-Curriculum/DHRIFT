@@ -24,6 +24,7 @@ import remarkMdx from 'remark-mdx'
 import { ErrorBoundary } from "react-error-boundary";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { sanitizeBeforeParse, dropLeadingSliceArtifacts } from '../../utils/sanitizer'
 
 const drawerWidth = '-30%';
 
@@ -70,6 +71,8 @@ export default function WorkshopPage({
   const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [debugSanitize, setDebugSanitize] = useState(false);
+  const [debugPage, setDebugPage] = useState(null);
 
   const gitUser = props.gitUser
   const setGitUser = props.setGitUser
@@ -94,6 +97,7 @@ export default function WorkshopPage({
   const router = useRouter();
 
   // convert markdown to html and split into pages (mdast-based splitting)
+  // returns { pages: ReactNodes[], titles: string[] }
   const convertContenttoHTML = function (content) {
     // Safeguard against null/undefined content
     if (!content) {
@@ -107,6 +111,42 @@ export default function WorkshopPage({
       const codeEditorSegments = [];
       const secretSegments = [];
       const infoSegments = [];
+      // Auto-close Secret blocks that are opened without a closer before a blank line, heading, new block, or EOF
+      const autoCloseSecretBlocks = (str) => {
+        const lines = str.split(/\r?\n/);
+        let inFence = false;
+        let openSince = -1;
+        for (let i = 0; i < lines.length; i++) {
+          let line = lines[i];
+          if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
+          if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
+          if (inFence) continue;
+          // If we see a closer without opener, drop it
+          if (/^\s*<\/\s*Secret\s*>\s*$/.test(line) && openSince === -1) { lines[i] = ''; continue; }
+          // Opening Secret
+          if (/<Secret\b[^>]*>/.test(line)) {
+            if (/<\/\s*Secret\s*>/.test(line)) continue; // balanced on same line
+            if (openSince === -1) openSince = i;
+            continue;
+          }
+          // If currently open, decide if we should auto-close at boundary
+          if (openSince !== -1) {
+            const isHeading = /^\s*#{1,6}\s+/.test(line);
+            const isTagStart = /^\s*<\s*[A-Za-z]/.test(line);
+            if ((!line.trim() || isHeading || isTagStart) && !/<\/\s*Secret\s*>/.test(line)) {
+              let j = i - 1;
+              while (j >= openSince && lines[j].trim() === '') j--;
+              const at = j >= openSince ? j : openSince;
+              lines[at] = (lines[at] || '') + '</Secret>';
+              openSince = -1;
+            }
+          }
+        }
+        if (openSince !== -1) {
+          lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Secret>';
+        }
+        return lines.join('\n');
+      };
       const maskBlocks = (src) => {
         // Mask CodeEditor inner content, keep attributes and add data-index
         let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
@@ -125,18 +165,7 @@ export default function WorkshopPage({
           const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
           return `<Secret${newAttrs}></Secret>`;
         });
-        // Mask Info blocks (balanced)
-        masked = masked.replace(/<Info\b[^>]*>([\s\S]*?)<\/Info>/gi, (m, inner) => {
-          const idx = infoSegments.length;
-          infoSegments.push(inner);
-          return `<dhrift-info data-index="${idx}"></dhrift-info>`;
-        });
-        // Mask single-line Info without closer (rest of the line)
-        masked = masked.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
-          const idx = infoSegments.length;
-          infoSegments.push(inner);
-          return `<dhrift-info data-index="${idx}"></dhrift-info>`;
-        });
+        // Do not mask Info; leave Info blocks intact for splitting
         return masked;
       };
       const restoreBlocks = (src) => {
@@ -152,12 +181,7 @@ export default function WorkshopPage({
           const inner = (idx >= 0 && secretSegments[idx] != null) ? secretSegments[idx] : '';
           return `<Secret${attrs}>${inner}</Secret>`;
         });
-        restored = restored.replace(/<dhrift-info\b([^>]*)><\/dhrift-info>/gi, (m, attrs) => {
-          const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
-          const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
-          const inner = (idx >= 0 && infoSegments[idx] != null) ? infoSegments[idx] : '';
-          return `<Info${attrs}>${inner}</Info>`;
-        });
+        // No Info placeholders to restore (Info left intact)
         return restored;
       };
       const escapeCurlyForMDX = (str) => {
@@ -255,73 +279,99 @@ export default function WorkshopPage({
         return lines.join('\n');
       };
 
-      const maskedContent = maskBlocks(autoCloseInfoBlocks(content));
+      const maskedContent = maskBlocks(autoCloseSecretBlocks(autoCloseInfoBlocks(content)));
+      // General sanitize before parse
+      const sanitizeSource = (str) => sanitizeBeforeParse(str);
       let maskedEscaped = escapeCurlyForMDX(maskedContent);
-      // Final safety: normalize stray <br> to <br /> to satisfy MDX even if inside lists
-      maskedEscaped = maskedEscaped
-        .replace(/<br\s*>/gi, '<br />')
-        .replace(/<br\s*\/\s*>/gi, '<br />');
-      // Use plain Markdown parser for splitting to avoid MDX parse errors
+      maskedEscaped = sanitizeSource(maskedEscaped);
+      // Use plain Markdown parser for splitting and build pages by grouping top-level nodes
       const processor = unified().use(remarkParse).use(remarkGfm).use(remarkFrontmatter);
       const tree = processor.parse(maskedEscaped);
       const splitOnH2 = (currentFile?.data?.long_pages === false) || (currentFile?.data?.long_pages === 'false') || (currentFile?.data?.long_pages === undefined);
-      const starts = [];
-
-      // Build suppressed ranges using mdxJsxFlowElement node positions
-      const suppressedRanges = [];
-      // Build suppressed ranges using regex for Info blocks (CodeEditor/Secret were masked already)
-      const buildRanges = (openRe, closeRe) => {
-        openRe.lastIndex = 0; closeRe.lastIndex = 0;
-        let mOpen;
-        while ((mOpen = openRe.exec(maskedEscaped)) !== null) {
-          const start = mOpen.index;
-          closeRe.lastIndex = openRe.lastIndex;
-          const mClose = closeRe.exec(maskedEscaped);
-          if (!mClose) break;
-          const end = mClose.index + mClose[0].length;
-          suppressedRanges.push([start, end]);
-          openRe.lastIndex = end;
+      const children = Array.isArray(tree.children) ? tree.children : [];
+      const pageStartIdx = [];
+      for (let idx = 0; idx < children.length; idx++) {
+        const node = children[idx];
+        if (node?.type === 'heading') {
+          if (node.depth === 1 || (node.depth === 2 && splitOnH2)) pageStartIdx.push(idx);
         }
+      }
+      // helper to extract plain text from mdast subtree
+      const mdText = (n) => {
+        if (!n) return '';
+        if (n.type === 'text') return n.value || '';
+        if (Array.isArray(n.children)) return n.children.map(mdText).join('');
+        return '';
       };
-      buildRanges(/<\s*Info\b[^>]*>/ig, /<\s*\/\s*Info\s*>/ig);
-
-      const isInSuppressed = (offset) => {
-        for (const [s, e] of suppressedRanges) {
-          if (offset >= s && offset < e) return true;
-        }
-        return false;
-      }
-
-      if (Array.isArray(tree.children)) {
-        for (const node of tree.children) {
-          if (node.type === 'heading') {
-            if (node.depth === 1 || (node.depth === 2 && splitOnH2)) {
-              const off = node.position?.start?.offset;
-              if (typeof off === 'number' && !isInSuppressed(off)) starts.push(off);
-            }
-          }
-        }
-      }
-      if (starts.length === 0) {
+      if (pageStartIdx.length === 0) {
         const el = ConvertMarkdown({ content: restoreBlocks(maskedEscaped), allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
-        return [<div key={`page-0`} className="page-content">{el}</div>];
+        return { pages: [<div key={`page-0`} className="page-content">{el}</div>], titles: [] };
       }
       const slices = [];
-      for (let i = 0; i < starts.length; i++) {
-        const start = starts[i];
-        const end = (i + 1 < starts.length) ? starts[i + 1] : maskedEscaped.length;
-        slices.push(maskedEscaped.slice(start, end));
+      const titles = [];
+      for (let i = 0; i < pageStartIdx.length; i++) {
+        const startIdx = pageStartIdx[i];
+        const endIdx = (i + 1 < pageStartIdx.length) ? pageStartIdx[i + 1] : children.length;
+        const startNode = children[startIdx];
+        const endNode = children[endIdx - 1];
+        const startOff = startNode?.position?.start?.offset ?? 0;
+        const endOff = endNode?.position?.end?.offset ?? maskedEscaped.length;
+        slices.push(maskedEscaped.slice(startOff, endOff));
+        // title from first heading node text
+        const title = mdText(startNode).trim() || `Page ${i + 2}`; // +2 accounts for Frontmatter page
+        titles.push(title);
       }
-      return slices.map((md, index) => (
-        <div key={`page-${index}`} className="page-content">
-          {ConvertMarkdown({ content: restoreBlocks(md), allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
-        </div>
-      ));
+      const pagesOut = slices.map((md, index) => {
+        // Restore masked blocks, then re-sanitize this slice to drop any leading stray closers or void tag issues
+        const restored = restoreBlocks(md);
+        let cleaned = dropLeadingSliceArtifacts(sanitizeSource(restored));
+        const slicePage = index + 2; // account for Frontmatter as page 1
+        if (debugSanitize && (!debugPage || slicePage === debugPage)) {
+          try {
+            const preview = cleaned.split(/\r?\n/).slice(0, 60).join('\n');
+            // eslint-disable-next-line no-console
+            console.log(`SANITIZED SLICE [page ${slicePage}] preview:\n` + preview);
+          } catch {}
+        }
+        // Extra guard: strip stray closing tags for Secret placeholders/tags within this slice only
+        const stripStrayClosers = (t, tagNames) => {
+          const reOpen = (nm) => new RegExp(`<\\s*${nm}\\b[^>]*>`, 'gi');
+          const reClose = (nm) => new RegExp(`<\\s*/\\s*${nm}\\s*>`, 'gi');
+          const depths = Object.fromEntries(tagNames.map(n => [n.toLowerCase(), 0]));
+          const lines = t.split(/\r?\n/);
+          for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            // first count openers on this line
+            tagNames.forEach((nm) => {
+              const key = nm.toLowerCase();
+              const opens = (line.match(reOpen(nm)) || []).length;
+              depths[key] += opens;
+            });
+            // then drop unmatched closers
+            tagNames.forEach((nm) => {
+              line = line.replace(reClose(nm), (m) => {
+                const key = nm.toLowerCase();
+                if (depths[key] > 0) { depths[key]--; return m; }
+                return '';
+              });
+            });
+            lines[i] = line;
+          }
+          return lines.join('\n');
+        };
+        cleaned = stripStrayClosers(cleaned, ['dhrift-secret','Secret','dhrift-info','dhrift-codeeditor']);
+        return (
+          <div key={`page-${index}`} className="page-content">
+            {ConvertMarkdown({ content: cleaned, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
+          </div>
+        );
+      });
+      return { pages: pagesOut, titles };
 
     } catch (error) {
       console.error('Error converting markdown:', error);
       setMarkdownError(error);
-      return [];
+      return { pages: [], titles: [] };
     }
   }
 
@@ -331,6 +381,9 @@ export default function WorkshopPage({
     const urlParams = new URLSearchParams(window.location.search);
     setGitFile(urlParams.get('file'));
     setEditing(urlParams.get('edit'));
+    setDebugSanitize(urlParams.get('debugSanitize') === '1');
+    const dbg = urlParams.get('debugPage');
+    setDebugPage(dbg ? Number(dbg) : null);
     if (urlParams.get('sidebar')) {
       setLanguage(urlParams.get('sidebar'));
     }
@@ -378,7 +431,12 @@ export default function WorkshopPage({
     setSecondPageLink(`${'./dynamic'}?${urlParams}`);
     if (currentFile != null && content !== '' && metadata != null) {
       const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
-      setPages([frontMatterContent, ...convertContenttoHTML(content)]);
+      const { pages: convPages, titles } = convertContenttoHTML(content);
+      setPages([frontMatterContent, ...convPages]);
+      // Pre-seed pageTitles from mdast titles to improve robustness
+      const seeded = [{ title: 'Frontmatter', index: 1, active: currentPage === 1 }]
+        .concat(titles.map((t, i) => ({ title: t, index: i + 2, active: currentPage === i + 2 })));
+      setPageTitles(seeded);
       setCurrentContentLoaded(true);
       if (initialLoading) setInitialLoading(false);
     }
@@ -432,7 +490,8 @@ export default function WorkshopPage({
       const child = page?.props?.children;
       const heading = findFirstHeading(child);
       const tag = heading?.type;
-      let titleText = heading ? getText(heading.props?.children) : `Page ${index + 1}`;
+      // Prefer existing seeded title if available and heading missing
+      let titleText = heading ? getText(heading.props?.children) : (pageTitles[index]?.title || `Page ${index + 1}`);
       let parent = undefined;
       let parentIndex = undefined;
       if (tag === 'h1') {

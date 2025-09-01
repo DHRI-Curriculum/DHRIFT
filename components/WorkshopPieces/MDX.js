@@ -19,6 +19,7 @@ import JSTerminal from '../Editor/JSTerminal';
 import Info from './Info';
 import SecretComponent from './SecretComponent';
 import remarkDeflist from 'remark-deflist'
+import { sanitizeBeforeParse } from '../../utils/sanitizer'
 
 
 export default async function MDX({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, setFileFrontmatter }) {
@@ -123,6 +124,11 @@ export default async function MDX({ content, allUploads, workshopTitle, language
   // Auto-close bare <Download ...> if not followed by </Download>
   safeContent = safeContent.replace(/<Download(\b[^>]*?)>(?!\s*<\s*\/\s*Download\s*>)/gi, '<Download$1></Download>')
 
+  // Force self-closing placeholders to avoid dangling closers across slices
+  safeContent = safeContent
+    .replace(/<dhrift-info\b([^>]*)><\/dhrift-info>/gi, '<dhrift-info$1 />')
+    .replace(/<dhrift-keywords\b([^>]*)><\/dhrift-keywords>/gi, '<dhrift-keywords$1 />')
+
   // Strip stray </Quiz> that appear before any <Quiz> opener in the document
   const stripStrayQuizClosers = (str) => {
     const lines = str.split(/\r?\n/)
@@ -190,6 +196,33 @@ export default async function MDX({ content, allUploads, workshopTitle, language
     return lines.join('\n')
   }
   safeContent = normalizeQuizBlocks(safeContent)
+
+  // Normalize <kbd> usage: auto-close unclosed <kbd>... and strip stray </kbd>
+  const normalizeKbd = (str) => {
+    const lines = str.split(/\r?\n/)
+    let inFence = false
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i]
+      if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; lines[i] = line; continue }
+      if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; lines[i] = line; continue }
+      if (inFence) { lines[i] = line; continue }
+      // Balance per line: append missing closers, strip stray closers
+      const openCount = (line.match(/<\s*kbd\b[^>]*>/gi) || []).length
+      const closeCount = (line.match(/<\s*\/\s*kbd\s*>/gi) || []).length
+      if (openCount > closeCount) {
+        const missing = openCount - closeCount
+        line = line + Array(missing).fill('</kbd>').join('')
+      }
+      let depth = 0
+      line = line.replace(/<\s*kbd\b[^>]*>/gi, (m) => { depth++; return m })
+                 .replace(/<\s*\/\s*kbd\s*>/gi, (m) => depth > 0 ? (depth--, m) : '')
+      lines[i] = line
+    }
+    return lines.join('\n')
+  }
+  safeContent = normalizeKbd(safeContent)
+  // Apply shared sanitizer for MDX safety
+  safeContent = sanitizeBeforeParse(safeContent)
 
   let file
   try {
