@@ -16,28 +16,28 @@ export default function QuizComponent({ className, children }) {
     const listRoot = Array.isArray(children) ? children[0] : children;
     const listItemsRaw = listRoot?.props?.children;
     const listItems = Array.isArray(listItemsRaw) ? listItemsRaw : (listItemsRaw != null ? [listItemsRaw] : []);
+
+    const getText = (node) => {
+        if (node == null) return '';
+        if (typeof node === 'string') return node;
+        if (Array.isArray(node)) return node.map(getText).join('');
+        if (node.props && node.props.children !== undefined) return getText(node.props.children);
+        return '';
+    };
+
     const lis = listItems
         .map((child, index) => {
             if (!child || child.type !== 'li') return null;
-            let labelChildren = child.props?.children;
-            const parts = Array.isArray(labelChildren) ? [...labelChildren] : [labelChildren];
-            // Determine correctness by trailing '*' on the last stringy segment, then remove it from label
+            const rawText = getText(child.props?.children || '').replace(/\r\n?/g, '\n');
+            let text = rawText;
             let correct = false;
-            for (let i = parts.length - 1; i >= 0; i--) {
-                const seg = parts[i];
-                if (typeof seg === 'string') {
-                    const trimmed = seg.trimEnd();
-                    if (trimmed.endsWith('*')) {
-                        correct = true;
-                        // remove only the final '*' while preserving preceding text/spacing
-                        const lastStar = seg.lastIndexOf('*');
-                        parts[i] = seg.slice(0, lastStar);
-                    }
-                    break;
-                }
-                if (seg != null) break; // non-string node at end; stop scanning
+            // Determine correctness by trailing '*', ignoring trailing whitespace
+            const m = /(.*?)(\s*\*)\s*$/.exec(text);
+            if (m) {
+                correct = true;
+                text = m[1];
             }
-            const label = <>{parts}</>;
+            const label = text.trimEnd();
             return { index, correct, li: label };
         })
         .filter(Boolean);

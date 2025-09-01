@@ -22,10 +22,10 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
-import { sanitizeBeforeParse, removeDanglingSelfClose, stripStrayClosers, defaultStrayCloserTags, balanceKbdNesting } from '../../utils/sanitizer';
+import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
 
 
-export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc }) {
+export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, segments }) {
 
     // Helper: render a markdown string to React nodes (for nested content inside custom tags)
     const renderMarkdownToReact = (mdString) => {
@@ -47,6 +47,8 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             return mdString;
         }
     }
+
+    const externalSegments = segments || {};
 
     const Imager = ({ className, ...props }) => {
         let newProps = { ...props };
@@ -97,6 +99,15 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     }
 
     const CodeEditor = ({ children, ...props }) => {
+        const decodeEntities = (s) => {
+            if (!s) return s;
+            return String(s)
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&amp;/g, '&')
+                .replace(/&#123;/g, '{')
+                .replace(/&#125;/g, '}');
+        };
         const flattenToText = (node) => {
             if (node == null) return '';
             if (typeof node === 'string') return node;
@@ -105,7 +116,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             return '';
         }
 
-        let codeText = flattenToText(children)
+        let codeText = decodeEntities(flattenToText(children))
             .replace(/^\s*\n/, '')
             .replace(/\n\s*$/, '')
             .replace(/\r\n/g, '\n')
@@ -321,81 +332,11 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     if (!content) return null;
 
     try {
-        // Prevent HTML <link> parsing for our custom <Link>
-        let safeContent = (content || '')
-            .replace(/<\s*Link(\s|>)/g, '<dhrift-link$1')
-            .replace(/<\/\s*Link\s*>/g, '</dhrift-link>');
-
-        // Auto-close Info blocks that are opened but not closed before a blank line (outside fences/comments)
-        const autoCloseInfoBlocks = (str) => {
-            const lines = str.split(/\r?\n/);
-            let inFence = false;
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                // toggle fences
-                if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; }
-                else if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; }
-                if (inFence) continue;
-                // skip commented lines
-                if (/<!--\s*<Info\b/i.test(line)) continue;
-                if (/<Info\b[^>]*>/.test(line)) {
-                    // if the same line has a closer, skip
-                    if (/<\/\s*Info\s*>/.test(line)) continue;
-                    // search until next blank line or fence for a closer
-                    let j = i + 1;
-                    let foundClose = false;
-                    while (j < lines.length) {
-                        const l2 = lines[j];
-                        if (!l2.trim()) break; // blank line ends paragraph
-                        if (!inFence && (l2.startsWith('```') || l2.startsWith('~~~'))) break;
-                        if (/<\/\s*Info\s*>/.test(l2)) { foundClose = true; break; }
-                        j++;
-                    }
-                    if (!foundClose) {
-                        const insertAt = j - 1 >= i ? j - 1 : i;
-                        lines[insertAt] = (lines[insertAt] || '') + '</Info>';
-                    }
-                }
-            }
-            return lines.join('\n');
-        };
-        safeContent = autoCloseInfoBlocks(safeContent);
-
-        // Auto-close Secret blocks that are opened without a closer before a blank line, heading, new tag, or EOF
-        const autoCloseSecretBlocks = (str) => {
-            const lines = str.split(/\r?\n/);
-            let inFence = false;
-            let openSince = -1;
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
-                if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
-                if (inFence) continue;
-                // Drop stray closer when not currently open
-                if (/^\s*<\/\s*Secret\s*>\s*$/.test(line) && openSince === -1) { lines[i] = ''; continue; }
-                // Opening Secret
-                if (/<Secret\b[^>]*>/.test(line)) {
-                    if (/<\/\s*Secret\s*>/.test(line)) continue; // balanced on same line
-                    if (openSince === -1) openSince = i;
-                    continue;
-                }
-                if (openSince !== -1) {
-                    const isHeading = /^\s*#{1,6}\s+/.test(line);
-                    const isTagStart = /^\s*<\s*[A-Za-z]/.test(line);
-                    if ((!line.trim() || isHeading || isTagStart) && !/<\/\s*Secret\s*>/.test(line)) {
-                        let j = i - 1; while (j >= openSince && lines[j].trim() === '') j--;
-                        const at = j >= openSince ? j : openSince;
-                        lines[at] = (lines[at] || '') + '</Secret>';
-                        openSince = -1;
-                    }
-                }
-            }
-            if (openSince !== -1) {
-                lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Secret>';
-            }
-            return lines.join('\n');
-        };
-        safeContent = autoCloseSecretBlocks(safeContent);
+        // Minimal, shared pipeline
+        let safeContent = (content || '');
+        safeContent = sanitizeBeforeParse(safeContent);
+        safeContent = dropLeadingSliceArtifacts(safeContent);
+        safeContent = escapeCurlyForMDX(safeContent);
 
         // First, strip stray </Quiz> that appear before any opener in the document (global)
         const stripStrayQuizClosers = (str) => {
@@ -505,171 +446,14 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             }
             return lines.join('\n');
         };
-        safeContent = normalizeKbd(safeContent);
+        // (legacy transforms removed; rely on shared sanitizer + masking upstream)
 
-        // Fix self-closing custom tags to proper open/close so HTML parser doesn't swallow following content
-        // Specific known tags + generic PascalCase components
-        safeContent = safeContent
-            .replace(/<PythonREPL\s*\/>/g, '<PythonREPL></PythonREPL>')
-            .replace(/<Terminal\s*\/>/g, '<Terminal></Terminal>')
-            .replace(/<Jupyter([^>]*)\/>/g, '<Jupyter$1></Jupyter>')
-            .replace(/<Download([^>]*)\/>/g, '<Download$1></Download>')
-            // Generic: any self-closing PascalCase component becomes open/close
-            .replace(/<([A-Z][A-Za-z0-9]*)([^>]*)\/>/g, '<$1$2></$1>');
-
-        // Auto-close bare <Download ...> if not followed by </Download>
-        safeContent = safeContent.replace(/<Download(\b[^>]*?)>(?!\s*<\s*\/\s*Download\s*>)/gi, '<Download$1></Download>');
-
-        // Capture CodeEditor inner content exactly and replace with placeholder to preserve formatting
-        const codeEditorSegments = [];
-        safeContent = safeContent.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
-            const idx = codeEditorSegments.length;
-            codeEditorSegments.push(inner);
-            return `<dhrift-codeeditor${attrs} data-index="${idx}"></dhrift-codeeditor>`;
-        });
-
-        // Isolate Secret content from outer Markdown parsing to prevent fence leakage
-        const secretSegments = [];
-        safeContent = safeContent.replace(/<Secret\b([^>]*)>([\s\S]*?)<\/Secret>/gi, (m, attrs, inner) => {
-            const idx = secretSegments.length;
-            secretSegments.push(inner);
-            return `<dhrift-secret data-index="${idx}"></dhrift-secret>`;
-        });
-
-        // Isolate Info content into placeholders to avoid MDX parsing issues and unbalanced tags
-        const infoSegments = [];
-        // Balanced Info blocks
-        safeContent = safeContent.replace(/<Info\b[^>]*>([\s\S]*?)<\/Info>/gi, (m, inner) => {
-            const idx = infoSegments.length;
-            infoSegments.push(inner);
-            return `<dhrift-info data-index="${idx}" />`;
-        });
-        // Single-line Info without closer (capture rest of line)
-        safeContent = safeContent.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
-            const idx = infoSegments.length;
-            infoSegments.push(inner);
-            return `<dhrift-info data-index="${idx}" />`;
-        });
-
-        // Isolate Keywords content so we can parse terms/definitions from raw markdown reliably
-        const keywordsSegments = [];
-        safeContent = safeContent.replace(/<Keywords\b[^>]*>([\s\S]*?)<\/Keywords>/gi, (m, inner) => {
-            const idx = keywordsSegments.length;
-            keywordsSegments.push(inner);
-            return `<dhrift-keywords data-index="${idx}" />`;
-        });
-
-        // Generalized sanitizer (shared)
+        // Generalized sanitizer (shared) + boundary cleanup to match tests
         safeContent = sanitizeBeforeParse(safeContent);
+        safeContent = dropLeadingSliceArtifacts(safeContent);
 
-        // Escape curly braces in plain text (outside fences/inline code) to satisfy MDX parser
-        const escapeCurlyForMDX = (str) => {
-            let out = '';
-            let i = 0;
-            let inFence = false;
-            let inInline = false;
-            const knownHtml = new Set(['codeeditor','dhrift-codeeditor','secret','pythonrepl','terminal','jupyter','download','dhrift-secret','quiz','info','link','img','a','strong','em','p','div','span','ul','ol','li','pre','code','h1','h2','h3','h4','h5','h6','table','thead','tbody','tr','td','th','blockquote','hr','br','sup','sub','kbd','input','meta']);
-            const voidTags = new Set(['br','hr','img','meta','link','input','source','track','area','base','col','embed','param','wbr']);
-            const isAllowedTag = (name) => {
-                if (!name) return false;
-                const lower = name.toLowerCase();
-                if (knownHtml.has(lower)) return true;
-                if (lower.startsWith('dhrift-')) return true;
-                // Allow arbitrary PascalCase custom components (ANOTHER-EXAMPLE tags etc.)
-                return /^[A-Z]/.test(name);
-            }
-            while (i < str.length) {
-                if (!inInline && (str.startsWith('```', i) || str.startsWith('~~~', i))) {
-                    inFence = !inFence;
-                    out += str.substr(i, 3);
-                    i += 3;
-                    continue;
-                }
-                if (!inFence && str[i] === '`') {
-                    inInline = !inInline;
-                    out += str[i++];
-                    continue;
-                }
-                const ch = str[i];
-                if (!inFence && !inInline && (ch === '{' || ch === '}')) {
-                    out += (ch === '{') ? '&#123;' : '&#125;';
-                    i++;
-                    continue;
-                }
-                if (!inFence && !inInline && ch === '<') {
-                    // Allow known tags and their closing forms; escape everything else
-                    // Extract simple tag name
-                    let j = i + 1;
-                    let isClosing = false;
-                    if (str[j] === '/') { isClosing = true; j++; }
-                    let name = '';
-                    while (j < str.length) {
-                        const c = str[j];
-                        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '-' ) { // allow dash in names like dhrift-secret
-                            name += c;
-                            j++;
-                        } else {
-                            break;
-                        }
-                    }
-                    if (isAllowedTag(name)) {
-                        // For void HTML tags in MDX, ensure self-closing form (<br />)
-                        if (!isClosing && voidTags.has(name.toLowerCase())) {
-                            // find end of tag '>'
-                            let k = j;
-                            while (k < str.length && str[k] !== '>') k++;
-                            if (k < str.length) {
-                                const tagInner = str.slice(i + 1, k); // without '<' and '>'
-                                const alreadySelfClosed = /\/\s*$/.test(tagInner.trim());
-                                if (!alreadySelfClosed) {
-                                    out += '<' + tagInner.replace(/\s*$/, '') + ' />';
-                                    i = k + 1;
-                                    continue;
-                                }
-                            }
-                        }
-                        out += ch; i++; continue;
-                    } else {
-                        out += '&lt;'; i++; continue;
-                    }
-                }
-                out += ch;
-                i++;
-            }
-            return out;
-        };
-        safeContent = escapeCurlyForMDX(safeContent);
-        // Final safety: normalize stray <br> variants and drop any dangling '/>' or bare '</>' fragments
-        safeContent = safeContent
-            .replace(/<br\s*>/gi, '<br />')
-            .replace(/<br\s*\/\s*>/gi, '<br />');
-        // Drop bare fragment closers </> anywhere
-        safeContent = safeContent.replace(/<\s*\/\s*>/g, '');
-        // Drop dangling '/>' that are not part of a tag context
-        safeContent = removeDanglingSelfClose(safeContent);
-        // One more opener-first stray closer sweep to be safe
-        safeContent = stripStrayClosers(safeContent, defaultStrayCloserTags);
-        // Ensure correct <kbd> nesting across entire slice (inject missing closers before new opens)
-        safeContent = balanceKbdNesting(safeContent);
-
-        // Robust <kbd> balancing across the whole document (handles stray closers)
-        // 1) Remove duplicate consecutive </kbd>
-        safeContent = safeContent.replace(/(<\s*\/\s*kbd\s*>\s*){2,}/gi, '</kbd>');
-        // 2) Global balance scan to remove stray closers and ensure depth doesn't go negative
-        (function(){
-            let depth = 0;
-            safeContent = safeContent.replace(/<\/?\s*kbd\s*>/gi, (m) => {
-                if (/^<\s*\//.test(m)) {
-                    if (depth > 0) { depth--; return m; }
-                    return ''; // stray closer
-                } else {
-                    depth++; return m;
-                }
-            });
-            if (depth > 0) {
-                safeContent += Array(depth).fill('</kbd>').join('');
-            }
-        })();
+        // escapeCurlyForMDX already applied above via shared import
+        // Final safety steps are already covered by shared sanitizer in the upstream pipeline.
 
         const mdxHandlers = {
             mdxJsxFlowElement(h, node) {
@@ -736,7 +520,9 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     'dhrift-info': (props) => {
                         const idxStr = props['data-index'] || props['data-Index'] || props['dataindex'];
                         const idx = parseInt(idxStr, 10);
-                        const md = infoSegments[idx] || '';
+                        const md = (externalSegments.infoSegments && externalSegments.infoSegments[idx] !== undefined)
+                          ? externalSegments.infoSegments[idx]
+                          : '';
                         const rendered = renderMarkdownToReact(md);
                         return (
                             <div className='info-alert'>
@@ -750,7 +536,9 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     'dhrift-codeeditor': (props) => {
                         const idxStr = props['data-index'] || props['data-Index'] || props['dataindex'];
                         const idx = parseInt(idxStr, 10);
-                        const raw = codeEditorSegments[idx] || '';
+                        const raw = (externalSegments.codeEditorSegments && externalSegments.codeEditorSegments[idx] !== undefined)
+                          ? externalSegments.codeEditorSegments[idx]
+                          : '';
                         return (
                             <CodeEditor
                                 allUploads={allUploads}
@@ -813,7 +601,9 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     'dhrift-secret': (props) => {
                         const idxStr = props['data-index'] || props['data-Index'] || props['dataindex'];
                         const idx = parseInt(idxStr, 10);
-                        const md = secretSegments[idx] || '';
+                        const md = (externalSegments.secretSegments && externalSegments.secretSegments[idx] !== undefined)
+                          ? externalSegments.secretSegments[idx]
+                          : '';
                         const rendered = renderMarkdownToReact(md);
                         return (
                             <div className='secret'>
@@ -829,15 +619,11 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     PythonREPL: () => <PythonREPLComponent />,
                     terminal: () => <JSTerminal />,
                     Terminal: () => <JSTerminal />,
-                    'dhrift-keywords': (props) => {
-                        const idxStr = props['data-index'] || props['data-Index'] || props['dataindex'];
-                        const idx = parseInt(idxStr, 10);
-                        const raw = keywordsSegments[idx] || '';
-                        return <Keywords raw={raw} />;
-                    },
+                    // dhrift-keywords deprecated; parse inline
                     keywords: (props) => <Keywords {...props} />,
                     Keywords: (props) => <Keywords {...props} />,
                     'dhrift-link': (props) => <LinkComp {...props} />,
+                    Link: (props) => <LinkComp {...props} />,
                     quiz: (props) => <Quiz {...props} />,
                     Quiz: (props) => <Quiz {...props} />,
                 }

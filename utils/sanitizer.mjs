@@ -1,13 +1,11 @@
-// Shared sanitizer utilities for Markdown/MDX preprocessing and page-slice hygiene
-// All functions are pure string transforms; callers compose them as needed.
-
-const COMPONENT_TAGS = [
+// ESM mirror of sanitizer.js for Node scripts. Keep in sync with utils/sanitizer.js
+export const COMPONENT_TAGS = [
   'Info','Secret','Keywords','CodeEditor','Download','Jupyter','PythonREPL','Terminal','Link','Quiz'
 ];
-const PLACEHOLDER_TAGS = [
+export const PLACEHOLDER_TAGS = [
   'dhrift-info','dhrift-secret','dhrift-keywords','dhrift-codeeditor'
 ];
-const COMMON_HTML_TAGS = [
+export const COMMON_HTML_TAGS = [
   'p','li','ul','ol','div','span','code','pre','em','strong','h1','h2','h3','h4','h5','h6','table','thead','tbody','tr','td','th','blockquote','hr','br','sup','sub','kbd','input','meta','img','a'
 ];
 
@@ -26,24 +24,6 @@ export function normalizeVoids(str) {
 function isFenceLine(line) {
   const t = String(line || '').replace(/^\s+/, '');
   return t.startsWith('```') || t.startsWith('~~~');
-}
-
-// Escape a leading '>' that would start a Markdown blockquote; avoids accidental
-// blockquotes inside JSX components like <Quiz> options. Leaves valid HTML tags intact.
-export function escapeLeadingBlockquote(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    const m = /^\s*>\s*(?![A-Za-z/])/.exec(line);
-    if (m) {
-      const idx = line.indexOf('>');
-      lines[i] = line.slice(0, idx) + '&gt;' + line.slice(idx + 1);
-    }
-  }
-  return lines.join('\n');
 }
 
 export function ensureDownloadClosed(str) {
@@ -93,7 +73,8 @@ export function normalizeQuizBlocks(str) {
   let inFence = false, openSince = -1;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
+    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
     if (inFence) continue;
     if (openSince !== -1) {
       const isHeading = /^\s*#{1,6}\s+/.test(line);
@@ -127,16 +108,15 @@ export function normalizeKbd(str) {
   let inFence = false;
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; lines[i] = line; continue; }
+    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; lines[i] = line; continue; }
+    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; lines[i] = line; continue; }
     if (inFence) { lines[i] = line; continue; }
-    // Balance per-line: append missing </kbd> if more openers than closers
     const openCount = (line.match(/<\s*kbd\b[^>]*>/gi) || []).length;
     const closeCount = (line.match(/<\s*\/\s*kbd\s*>/gi) || []).length;
     if (openCount > closeCount) {
       const missing = openCount - closeCount;
       line = line + Array(missing).fill('</kbd>').join('');
     }
-    // Remove stray </kbd> that appear before any opener on the same line
     let depth = 0;
     line = line.replace(/<\s*kbd\b[^>]*>/gi, (m) => { depth++; return m; })
                .replace(/<\s*\/\s*kbd\s*>/gi, (m) => depth > 0 ? (depth--, m) : '');
@@ -153,9 +133,7 @@ function balanceKbdGlobally(str) {
     if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
     if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
   }
-  // Simple global depth scan ignoring code fences by temporarily removing fence blocks
   let s = lines.join('\n');
-  // Remove duplicate consecutive </kbd>
   s = s.replace(/(<\s*\/\s*kbd\s*>\s*){2,}/gi, '</kbd>');
   let depth = 0;
   s = s.replace(/<\/?\s*kbd\s*>/gi, (m) => {
@@ -197,9 +175,8 @@ export function stripStrayClosers(str, tagNames = defaultStrayCloserTags) {
         if (depths[name] > 0) {
           depths[name]--;
           out += full;
-        } // else drop stray closer
+        }
       } else {
-        // opener; if self-closing, do not change depth
         if (!selfClosing) depths[name]++;
         out += full;
       }
@@ -216,10 +193,8 @@ export function removeDanglingSelfClose(str) {
   let inFence = false;
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; lines[i] = line; continue; }
-    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; lines[i] = line; continue; }
+    if (isFenceLine(line)) { inFence = !inFence; lines[i] = line; continue; }
     if (inFence) { lines[i] = line; continue; }
-    // Drop pure fragment closers '</>' which MDX doesn't expect in MD
     if (/^\s*<\s*\/\s*>\s*$/.test(line)) { lines[i] = ''; continue; }
     let out = '';
     let j = 0;
@@ -232,10 +207,10 @@ export function removeDanglingSelfClose(str) {
       const absLastLt = relLastLt === -1 ? -1 : j + relLastLt;
       const absLastGt = relLastGt === -1 ? -1 : j + relLastGt;
       if (absLastLt > absLastGt) {
-        out += line.slice(j, idx + 2); // inside a tag
+        out += line.slice(j, idx + 2);
         j = idx + 2;
       } else {
-        out += line.slice(j, idx); // drop dangling '/>'
+        out += line.slice(j, idx);
         j = idx + 2;
       }
     }
@@ -260,13 +235,13 @@ export function convertHtmlCommentsToMDX(str) {
         const idx = line.indexOf('<!--', i);
         if (idx === -1) { buf += line.slice(i); break; }
         buf += line.slice(i, idx) + '{/*';
-        i = idx + 4;
+        i = idx + 4; // after '<!--'
         inComment = true;
       } else {
         const idx = line.indexOf('-->', i);
         if (idx === -1) { buf += line.slice(i); i = line.length; break; }
         buf += line.slice(i, idx) + '*/}';
-        i = idx + 3;
+        i = idx + 3; // after '-->'
         inComment = false;
       }
     }
@@ -296,6 +271,132 @@ export function ensureBlankLinesAroundBlockHtml(str, tags = ['p']) {
     if (isClose && next.trim() !== '') out.push('');
   }
   return out.join('\n');
+}
+
+// Replace angle-bracket autolinks like <https://example.com> with plain URLs to avoid MDX JSX parse
+export function fixAngleBracketAutolinks(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    lines[i] = line.replace(/<\s*(https?:\/\/[^>\s]+)\s*>/g, '$1');
+  }
+  return lines.join('\n');
+}
+
+// Escape lines that look like JSX/HTML with colons or dots in the tag name (e.g., <Axes: ...>, <pandas.core...>)
+export function escapeSuspiciousTagStarts(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    // Escape Jupyter-style repr like: <class 'pandas.core.frame.DataFrame'>
+    if (/^\s*<\s*class\b/i.test(line)) {
+      const idx = line.indexOf('<');
+      lines[i] = line.slice(0, idx) + '&lt;' + line.slice(idx + 1);
+      continue;
+    }
+    const m = /^\s*<\s*([A-Za-z][A-Za-z0-9_.:-]*)/.exec(line);
+    if (m) {
+      const name = m[1];
+      if (/[.:]/.test(name) && !/^https?:/.test(name)) {
+        // Escape leading '<' to render as text
+        const idx = line.indexOf('<');
+        lines[i] = line.slice(0, idx) + '&lt;' + line.slice(idx + 1);
+      }
+    }
+  }
+  return lines.join('\n');
+}
+
+// Escape bare inline tag examples like <a> or <head> in prose
+export function escapeBareInlineTags(str, tags = ['a','head']) {
+  const tagAlt = tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    // Avoid inside inline code by splitting on backticks and only transforming even segments
+    const parts = line.split('`');
+    for (let j = 0; j < parts.length; j += 2) {
+      parts[j] = parts[j].replace(/<\s*(?:a|head)\s*>/gi, m => m.replace('<','&lt;').replace('>','&gt;'));
+    }
+    out.push(parts.join('`'));
+  }
+  return out.join('\n');
+}
+
+// Escape triple angle runs like "<<<" and ">>>" in prose to avoid MDX confusion
+export function escapeTripleAngleRuns(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    lines[i] = line.replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
+  }
+  return lines.join('\n');
+}
+
+// Escape a leading '>' that would start a Markdown blockquote; avoids accidental
+// blockquotes inside JSX components like <Quiz> options. Leaves valid HTML tags intact.
+export function escapeLeadingBlockquote(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    const m = /^\s*>\s*(?![A-Za-z/])/.exec(line);
+    if (m) {
+      const idx = line.indexOf('>');
+      lines[i] = line.slice(0, idx) + '&gt;' + line.slice(idx + 1);
+    }
+  }
+  return lines.join('\n');
+}
+
+// Merge a line with only <p> and the following line ending with </p> into plain text
+export function mergeAdjacentPTagLines(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    const m = /^\s*<\s*p\b[^>]*>\s*$/.exec(line);
+    if (m && i + 1 < lines.length) {
+      const next = lines[i + 1];
+      if (/</.test(next) && /<\s*\/\s*p\s*>\s*$/.test(next)) {
+        out.push(next.replace(/\s*<\s*\/\s*p\s*>\s*$/i, ''));
+        i++; // skip next
+        continue;
+      }
+    }
+    out.push(line);
+  }
+  return out.join('\n');
+}
+// Convert one-line <p>text</p> into plain text to avoid MDX inline HTML issues
+export function dropInlinePTagsToText(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    lines[i] = line.replace(/^\s*<\s*p\b[^>]*>\s*([^<][^>]*)\s*<\s*\/\s*p\s*>\s*$/i, '$1');
+  }
+  return lines.join('\n');
 }
 
 // Ensure component tags like <Quiz> and </Quiz> are on their own lines
@@ -379,7 +480,7 @@ export function mergeCodeEditorBlocks(str) {
     if (isFenceLine(line)) { inFence = !inFence; if (!capturing) out.push(line); continue; }
     if (inFence) { if (capturing) buf.push(line); else out.push(line); continue; }
     if (!capturing) {
-      const m = /^\s*<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>\s*$/.exec(line);
+      const m = /^\s*<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>\s*$/i.exec(line);
       if (m) {
         capturing = true;
         attrs = m[1] || '';
@@ -388,7 +489,9 @@ export function mergeCodeEditorBlocks(str) {
       }
       out.push(line);
     } else {
-      if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/.test(line)) {
+      // capturing until standalone </CodeEditor>
+      if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/i.test(line)) {
+        // flush a merged block
         out.push(`<CodeEditor${attrs}>`);
         if (buf.length) out.push(buf.join('\n'));
         out.push(`</CodeEditor>`);
@@ -400,6 +503,7 @@ export function mergeCodeEditorBlocks(str) {
       }
     }
   }
+  // If file ended while capturing, flush as-is (without a closing editor)
   if (capturing) {
     out.push(`<CodeEditor${attrs}>`);
     if (buf.length) out.push(buf.join('\n'));
@@ -408,157 +512,32 @@ export function mergeCodeEditorBlocks(str) {
   return out.join('\n');
 }
 
-// Ensure that content of certain block HTML tags starts on its own line (e.g., <p ...>Text -> <p ...>\nText)
-export function ensureBlockHtmlContentOnOwnLine(str, tags = ['p']) {
-  const tagAlt = tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-  const openRe = new RegExp(`^\\s*<\\s*(?:${tagAlt})\\b`, 'i');
+// Convert a same-line empty CodeEditor pair into just an opening tag.
+// Example: "<CodeEditor attrs></CodeEditor>" -> "<CodeEditor attrs>"
+export function openEmptyCodeEditorPairs(str) {
+  let s = String(str || '');
+  // Replace any immediate open+close pair with just an opening tag
+  s = s.replace(/<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>/gi, '<CodeEditor$1>');
+  return s;
+}
+
+// Escape < and > inside CodeEditor blocks to prevent MDX JSX parsing of code content.
+export function escapeAnglesInsideCodeEditor(str) {
   const lines = String(str || '').split(/\r?\n/);
-  const out = [];
   let inFence = false;
+  let inEditor = false;
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    const isFence = line.startsWith('```') || line.startsWith('~~~');
-    if (isFence) { inFence = !inFence; out.push(line); continue; }
-    if (inFence) { out.push(line); continue; }
-    if (openRe.test(line)) {
-      const pos = line.indexOf('>');
-      if (pos !== -1) {
-        const after = line.slice(pos + 1);
-        if (after.trim() !== '') {
-          out.push(line.slice(0, pos + 1));
-          out.push(after.replace(/^\s+/, ''));
-          continue;
-        }
-      }
+    if (isFenceLine(line)) { inFence = !inFence; lines[i] = line; continue; }
+    if (inFence) { lines[i] = line; continue; }
+    if (!inEditor) {
+      if (/^\s*<\s*CodeEditor\b[^>]*>\s*$/i.test(line)) { inEditor = true; lines[i] = line; continue; }
+      lines[i] = line; continue;
+    } else {
+      if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/i.test(line)) { inEditor = false; lines[i] = line; continue; }
+      // Escape only raw < and > that are not part of tags (best-effort: convert all to entities)
+      lines[i] = line.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-    out.push(line);
-  }
-  return out.join('\n');
-}
-
-// Ensure a blank line after inline closing tags like "...text</p>" when they end a line
-export function ensureBlankAfterInlineClose(str, tags = ['p']) {
-  const tagAlt = tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-  const inlineCloseRe = new RegExp(`</\\s*(?:${tagAlt})\\s*>\\s*$`, 'i');
-  const pureCloseRe = new RegExp(`^\\s*<\\s*/\\s*(?:${tagAlt})\\s*>\\s*$`, 'i');
-  const lines = String(str || '').split(/\r?\n/);
-  const out = [];
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const isFence = line.startsWith('```') || line.startsWith('~~~');
-    if (isFence) { inFence = !inFence; out.push(line); continue; }
-    if (inFence) { out.push(line); continue; }
-    out.push(line);
-    if (inlineCloseRe.test(line) && !pureCloseRe.test(line)) {
-      const next = (i + 1 < lines.length) ? lines[i + 1] : '';
-      if (next.trim() !== '') out.push('');
-    }
-  }
-  return out.join('\n');
-}
-
-// Replace angle-bracket autolinks like <https://example.com> with plain URLs to avoid MDX JSX parse
-export function fixAngleBracketAutolinks(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    lines[i] = line.replace(/<\s*(https?:\/\/[^>\s]+)\s*>/g, '$1');
-  }
-  return lines.join('\n');
-}
-
-// Escape lines that look like JSX/HTML with colons or dots in the tag name (e.g., <Axes: ...>, <pandas.core...>)
-export function escapeSuspiciousTagStarts(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    // Escape Jupyter-style repr like: <class 'pandas.core.frame.DataFrame'>
-    if (/^\s*<\s*class\b/i.test(line)) {
-      const idx = line.indexOf('<');
-      lines[i] = line.slice(0, idx) + '&lt;' + line.slice(idx + 1);
-      continue;
-    }
-    const m = /^\s*<\s*([A-Za-z][A-Za-z0-9_.:-]*)/.exec(line);
-    if (m) {
-      const name = m[1];
-      if (/[.:]/.test(name) && !/^https?:/.test(name)) {
-        const idx = line.indexOf('<');
-        lines[i] = line.slice(0, idx) + '&lt;' + line.slice(idx + 1);
-      }
-    }
-  }
-  return lines.join('\n');
-}
-
-// Escape bare inline tag examples like <a> or <head> in prose
-export function escapeBareInlineTags(str, tags = ['a','head']) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  const out = [];
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
-    if (inFence) { out.push(line); continue; }
-    const parts = line.split('`');
-    for (let j = 0; j < parts.length; j += 2) {
-      parts[j] = parts[j].replace(/<\s*(?:a|head)\s*>/gi, m => m.replace('<','&lt;').replace('>','&gt;'));
-    }
-    out.push(parts.join('`'));
-  }
-  return out.join('\n');
-}
-
-// Escape triple angle runs like "<<<" and ">>>" in prose to avoid MDX confusion
-export function escapeTripleAngleRuns(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    lines[i] = line.replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
-  }
-  return lines.join('\n');
-}
-
-// Merge a line with only <p> and the following line ending with </p> into plain text
-export function mergeAdjacentPTagLines(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  const out = [];
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
-    if (inFence) { out.push(line); continue; }
-    const m = /^\s*<\s*p\b[^>]*>\s*$/.exec(line);
-    if (m && i + 1 < lines.length) {
-      const next = lines[i + 1];
-      if (/</.test(next) && /<\s*\/\s*p\s*>\s*$/.test(next)) {
-        out.push(next.replace(/\s*<\s*\/\s*p\s*>\s*$/i, ''));
-        i++;
-        continue;
-      }
-    }
-    out.push(line);
-  }
-  return out.join('\n');
-}
-// Convert one-line <p>text</p> into plain text to avoid MDX inline HTML issues
-export function dropInlinePTagsToText(str) {
-  const lines = String(str || '').split(/\r?\n/);
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    lines[i] = line.replace(/^\s*<\s*p\b[^>]*>\s*([^<][^>]*)\s*<\s*\/\s*p\s*>\s*$/i, '$1');
   }
   return lines.join('\n');
 }
@@ -620,27 +599,72 @@ export function quoteLinkNumericPage(str) {
   }
   return lines.join('\n');
 }
+// Ensure that content of certain block HTML tags starts on its own line (e.g., <p ...>Text -> <p ...>\nText)
+export function ensureBlockHtmlContentOnOwnLine(str, tags = ['p']) {
+  const tagAlt = tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const openRe = new RegExp(`^\\s*<\\s*(?:${tagAlt})\\b`, 'i');
+  const lines = String(str || '').split(/\r?\n/);
+  const out = [];
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    if (openRe.test(line)) {
+      const pos = line.indexOf('>');
+      if (pos !== -1) {
+        const after = line.slice(pos + 1);
+        if (after.trim() !== '') {
+          // Move inline content to its own line
+          out.push(line.slice(0, pos + 1));
+          out.push(after.replace(/^\s+/, ''));
+          continue;
+        }
+      }
+    }
+    out.push(line);
+  }
+  return out.join('\n');
+}
+
+// Ensure a blank line after inline closing tags like "...text</p>" when they end a line
+export function ensureBlankAfterInlineClose(str, tags = ['p']) {
+  const tagAlt = tags.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const inlineCloseRe = new RegExp(`</\\s*(?:${tagAlt})\\s*>\\s*$`, 'i');
+  const pureCloseRe = new RegExp(`^\\s*<\\s*/\\s*(?:${tagAlt})\\s*>\\s*$`, 'i');
+  const lines = String(str || '').split(/\r?\n/);
+  const out = [];
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    out.push(line);
+    if (inlineCloseRe.test(line) && !pureCloseRe.test(line)) {
+      const next = (i + 1 < lines.length) ? lines[i + 1] : '';
+      if (next.trim() !== '') out.push('');
+    }
+  }
+  return out.join('\n');
+}
+
 export function autoCloseInfoBlocks(str) {
   const lines = (str || '').split(/\r?\n/);
   let inFence = false;
   let openSince = -1;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
-    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
     if (inFence) continue;
-    // Drop stray closer when not currently open
     if (/^\s*<\/\s*Info\s*>\s*$/.test(line) && openSince === -1) { lines[i] = ''; continue; }
-    // Opening Info
     if (/<Info\b[^>]*>/.test(line)) {
-      if (/<\/\s*Info\s*>/.test(line)) continue; // balanced on same line
+      if (/<\/\s*Info\s*>/.test(line)) continue;
       if (openSince === -1) openSince = i;
       continue;
     }
     if (openSince !== -1) {
       const isHeading = /^\s*#{1,6}\s+/.test(line);
       const isTag = /^\s*<\s*[A-Za-z]/.test(line);
-      // Do NOT close on blank lines. Close before a new heading or a new top-level tag line.
       if ((isHeading || isTag) && !/<\/\s*Info\s*>/.test(line)) {
         let j = i - 1; while (j >= openSince && lines[j].trim() === '') j--;
         const at = j >= openSince ? j : openSince;
@@ -648,7 +672,6 @@ export function autoCloseInfoBlocks(str) {
         openSince = -1;
       }
     }
-    // If we encounter a natural closing tag on a later line, clear the open marker
     if (/<\/\s*Info\s*>/.test(line)) openSince = -1;
   }
   if (openSince !== -1) {
@@ -662,19 +685,17 @@ export function autoCloseSecretBlocks(str) {
   let inFence = false, openSince = -1;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; continue; }
-    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; continue; }
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
     if (inFence) continue;
     if (/^\s*<\/\s*Secret\s*>\s*$/.test(line) && openSince === -1) { lines[i] = ''; continue; }
     if (/<Secret\b[^>]*>/.test(line)) {
-      if (/<\/\s*Secret\s*>/.test(line)) continue;
+      if (/<\/\s*Secret\s*>/.test(line)) continue; 
       if (openSince === -1) openSince = i;
       continue;
     }
     if (openSince !== -1) {
       const isHeading = /^\s*#{1,6}\s+/.test(line);
       const isTag = /^\s*<\s*[A-Za-z]/.test(line);
-      // Do NOT close on blank lines; only before heading/tag or at EOF
       if ((isHeading || isTag) && !/<\/\s*Secret\s*>/.test(line)) {
         let j = i - 1; while (j >= openSince && lines[j].trim() === '') j--;
         const at = j >= openSince ? j : openSince;
@@ -697,13 +718,62 @@ export function dropLeadingSliceArtifacts(str, tagNames = defaultStrayCloserTags
     if (/^\s*$/.test(l)) continue;
     if (/^\s*<\s*\/\s*>\s*$/.test(l)) { lines[i] = ''; continue; }
     if (/^\s*\/>/.test(l)) { lines[i] = l.replace(/^\s*\/>\s*/, ''); break; }
-    // Leading stray closers for known tags
     const tagAlt = tagNames.join('|').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const re = new RegExp(`^\\s*<\\s*/\\s*(?:${tagAlt})\\s*>\\s*$`, 'i');
     if (re.test(l)) { lines[i] = ''; continue; }
     break;
   }
   return lines.join('\n');
+}
+
+export function balanceKbdNesting(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let outLines = [];
+  let depth = 0;
+  let inFence = false;
+  const isFence = (line) => line.startsWith('```') || line.startsWith('~~~');
+  for (let li = 0; li < lines.length; li++) {
+    let line = lines[li];
+    if (isFence(line)) { inFence = !inFence; outLines.push(line); continue; }
+    if (inFence) { outLines.push(line); continue; }
+    const isHeading = /^\s*#{1,6}\s+/.test(line);
+    const isBlank = line.trim() === '';
+    if ((isHeading || isBlank) && depth > 0) {
+      if (outLines.length === 0) {
+        outLines.push(Array(depth).fill('</kbd>').join(''));
+      } else {
+        outLines[outLines.length - 1] += Array(depth).fill('</kbd>').join('');
+      }
+      depth = 0;
+    }
+    let res = '';
+    let i = 0;
+    let inInline = false;
+    const tokenRe = /<\s*kbd\s*>|<\s*\/\s*kbd\s*>|`/gi;
+    let m;
+    while ((m = tokenRe.exec(line)) !== null) {
+      res += line.slice(i, m.index);
+      const tok = m[0];
+      i = m.index + tok.length;
+      if (tok === '`') { inInline = !inInline; res += tok; continue; }
+      if (inInline) { res += tok; continue; }
+      if (/^<\s*kbd\s*>/i.test(tok)) {
+        if (depth > 0) { res += '</kbd>'; }
+        res += tok; depth++;
+      } else if (/^<\s*\/\s*kbd\s*>/i.test(tok)) {
+        if (depth > 0) { res += tok; depth--; }
+      } else {
+        res += tok;
+      }
+    }
+    res += line.slice(i);
+    outLines.push(res);
+  }
+  if (depth > 0) {
+    if (outLines.length === 0) outLines = [Array(depth).fill('</kbd>').join('')];
+    else outLines[outLines.length - 1] += Array(depth).fill('</kbd>').join('');
+  }
+  return outLines.join('\n');
 }
 
 export function sanitizeBeforeParse(str, options = {}) {
@@ -736,63 +806,75 @@ export function sanitizeBeforeParse(str, options = {}) {
   s = normalizeKbd(s);
   s = balanceKbdGlobally(s);
   s = balanceKbdNesting(s);
-  // Drop empty Info blocks (common authoring artifact): <Info></Info>
   s = s.replace(/^\s*<Info\b[^>]*>\s*<\/\s*Info\s*>\s*$/gmi, '');
   s = stripStrayClosers(s, tags);
   s = removeDanglingSelfClose(s);
   return s;
 }
 
-export function balanceKbdNesting(str) {
+export function escapeCurlyForMDX(str) {
+  let out = '';
   const lines = String(str || '').split(/\r?\n/);
-  let outLines = [];
-  let depth = 0;
   let inFence = false;
-  const isFence = (line) => line.startsWith('```') || line.startsWith('~~~');
+  let inMdxComment = false; // span may cross lines
   for (let li = 0; li < lines.length; li++) {
-    let line = lines[li];
-    // Toggle code fence state on fence lines
-    if (isFence(line)) { inFence = !inFence; outLines.push(line); continue; }
-    if (inFence) { outLines.push(line); continue; }
-    const isHeading = /^\s*#{1,6}\s+/.test(line);
-    const isBlank = line.trim() === '';
-    if ((isHeading || isBlank) && depth > 0) {
-      // Close any open kbd before paragraph break or new block start
-      if (outLines.length === 0) {
-        outLines.push(Array(depth).fill('</kbd>').join(''));
-      } else {
-        outLines[outLines.length - 1] += Array(depth).fill('</kbd>').join('');
+    const line = lines[li];
+    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; out += line + '\n'; continue; }
+    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; out += line + '\n'; continue; }
+    if (inFence) { out += line + '\n'; continue; }
+    let i = 0; let inInline = false; let buf = '';
+    while (i < line.length) {
+      if (inMdxComment) {
+        const endIdx = line.indexOf('*/}', i);
+        if (endIdx === -1) { buf += line.slice(i); i = line.length; break; }
+        buf += line.slice(i, endIdx + 3);
+        i = endIdx + 3;
+        inMdxComment = false;
+        continue;
       }
-      depth = 0;
-    }
-    // Balance nesting within the current line, respecting inline backticks
-    let res = '';
-    let i = 0;
-    let inInline = false;
-    const tokenRe = /<\s*kbd\s*>|<\s*\/\s*kbd\s*>|`/gi;
-    let m;
-    while ((m = tokenRe.exec(line)) !== null) {
-      res += line.slice(i, m.index);
-      const tok = m[0];
-      i = m.index + tok.length;
-      if (tok === '`') { inInline = !inInline; res += tok; continue; }
-      if (inInline) { res += tok; continue; }
-      if (/^<\s*kbd\s*>/i.test(tok)) {
-        if (depth > 0) { res += '</kbd>'; }
-        res += tok; depth++;
-      } else if (/^<\s*\/\s*kbd\s*>/i.test(tok)) {
-        if (depth > 0) { res += tok; depth--; }
-        // else stray closer: drop
-      } else {
-        res += tok;
+      const ch = line[i];
+      if (ch === '`') { inInline = !inInline; buf += ch; i++; continue; }
+      if (!inInline && ch === '{' && line.slice(i, i + 3) === '{/*') {
+        // Preserve MDX comments intact
+        buf += '{/*';
+        i += 3;
+        inMdxComment = true;
+        continue;
       }
+      if (!inInline && (ch === '{' || ch === '}')) {
+        buf += (ch === '{') ? '&#123;' : '&#125;';
+        i++; continue;
+      }
+      buf += ch; i++;
     }
-    res += line.slice(i);
-    outLines.push(res);
+    out += buf + '\n';
   }
-  if (depth > 0) {
-    if (outLines.length === 0) outLines = [Array(depth).fill('</kbd>').join('')];
-    else outLines[outLines.length - 1] += Array(depth).fill('</kbd>').join('');
-  }
-  return outLines.join('\n');
+  return out.replace(/\n$/, '');
 }
+
+export default {
+  COMPONENT_TAGS,
+  PLACEHOLDER_TAGS,
+  COMMON_HTML_TAGS,
+  defaultStrayCloserTags,
+  normalizeVoids,
+  ensureDownloadClosed,
+  convertHtmlCommentsToMDX,
+  ensureBlankLinesAroundBlockHtml,
+  ensureBlockHtmlContentOnOwnLine,
+  ensureBlankAfterInlineClose,
+  fixAngleBracketAutolinks,
+  escapeSuspiciousTagStarts,
+  removeQuizCloserAfterMdxComment,
+  stripStrayQuizClosers,
+  normalizeQuizBlocks,
+  normalizeKbd,
+  stripStrayClosers,
+  removeDanglingSelfClose,
+  autoCloseInfoBlocks,
+  autoCloseSecretBlocks,
+  dropLeadingSliceArtifacts,
+  balanceKbdNesting,
+  sanitizeBeforeParse,
+  escapeCurlyForMDX,
+};

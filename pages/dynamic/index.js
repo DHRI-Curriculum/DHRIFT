@@ -24,7 +24,10 @@ import remarkMdx from 'remark-mdx'
 import { ErrorBoundary } from "react-error-boundary";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { sanitizeBeforeParse, dropLeadingSliceArtifacts } from '../../utils/sanitizer'
+import { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, autoCloseSecretBlocks, escapeCurlyForMDX } from '../../utils/sanitizer'
+import remarkDeflist from 'remark-deflist'
+import slicesUtil from '../../utils/slices.mjs'
+const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
 
@@ -108,9 +111,7 @@ export default function WorkshopPage({
       // Split using mdast heading positions. Ignore headings whose start offsets fall inside
       // any <Secret>...</Secret> or <CodeEditor>...</CodeEditor> range in the original source.
       // Also: protect CodeEditor and Secret inner content from MDX escaping by masking/restoring.
-      const codeEditorSegments = [];
-      const secretSegments = [];
-      const infoSegments = [];
+      // (segments now provided by shared maskBlocks below)
       // Auto-close Secret blocks that are opened without a closer before a blank line, heading, new block, or EOF
       const autoCloseSecretBlocks = (str) => {
         const lines = str.split(/\r?\n/);
@@ -133,7 +134,8 @@ export default function WorkshopPage({
           if (openSince !== -1) {
             const isHeading = /^\s*#{1,6}\s+/.test(line);
             const isTagStart = /^\s*<\s*[A-Za-z]/.test(line);
-            if ((!line.trim() || isHeading || isTagStart) && !/<\/\s*Secret\s*>/.test(line)) {
+            // Do not close on blank lines; only at heading or new tag line
+            if ((isHeading || isTagStart) && !/<\/\s*Secret\s*>/.test(line)) {
               let j = i - 1;
               while (j >= openSince && lines[j].trim() === '') j--;
               const at = j >= openSince ? j : openSince;
@@ -141,13 +143,15 @@ export default function WorkshopPage({
               openSince = -1;
             }
           }
+          // If a natural closer appears later, clear the open marker
+          if (/<\/\s*Secret\s*>/.test(line)) openSince = -1;
         }
         if (openSince !== -1) {
           lines[lines.length - 1] = (lines[lines.length - 1] || '') + '</Secret>';
         }
         return lines.join('\n');
       };
-      const maskBlocks = (src) => {
+      const maskBlocksLocal = (src) => {
         // Mask CodeEditor inner content, keep attributes and add data-index
         let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
           const idx = codeEditorSegments.length;
@@ -168,7 +172,7 @@ export default function WorkshopPage({
         // Do not mask Info; leave Info blocks intact for splitting
         return masked;
       };
-      const restoreBlocks = (src) => {
+      const restoreBlocksLocal = (src) => {
         let restored = src.replace(/<CodeEditor\b([^>]*)><\/CodeEditor>/gi, (m, attrs) => {
           const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
           const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
@@ -249,53 +253,16 @@ export default function WorkshopPage({
         }
         return out;
       };
-      // Auto-close Info blocks that are opened but not closed before a blank line (outside fences)
-      const autoCloseInfoBlocks = (str) => {
-        const lines = str.split(/\r?\n/);
-        let inFence = false;
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i];
-          if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; }
-          else if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; }
-          if (inFence) continue;
-          if (/<!--\s*<Info\b/i.test(line)) continue;
-          if (/<Info\b[^>]*>/.test(line)) {
-            if (/<\/\s*Info\s*>/.test(line)) continue;
-            let j = i + 1;
-            let foundClose = false;
-            while (j < lines.length) {
-              const l2 = lines[j];
-              if (!l2.trim()) break;
-              if (!inFence && (l2.startsWith('```') || l2.startsWith('~~~'))) break;
-              if (/<\/\s*Info\s*>/.test(l2)) { foundClose = true; break; }
-              j++;
-            }
-            if (!foundClose) {
-              const insertAt = j - 1 >= i ? j - 1 : i;
-              lines[insertAt] = (lines[insertAt] || '') + '</Info>';
-            }
-          }
-        }
-        return lines.join('\n');
-      };
-
-      const maskedContent = maskBlocks(autoCloseSecretBlocks(autoCloseInfoBlocks(content)));
+      // Mask placeholders using shared utils to avoid MDX parsing inner CodeEditor/Secret/Info
+      const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(content));
+      const { masked: maskedContent, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(preAuto);
       // General sanitize before parse
       const sanitizeSource = (str) => sanitizeBeforeParse(str);
       let maskedEscaped = escapeCurlyForMDX(maskedContent);
       maskedEscaped = sanitizeSource(maskedEscaped);
-      // Use plain Markdown parser for splitting and build pages by grouping top-level nodes
-      const processor = unified().use(remarkParse).use(remarkGfm).use(remarkFrontmatter);
-      const tree = processor.parse(maskedEscaped);
-      const splitOnH2 = (currentFile?.data?.long_pages === false) || (currentFile?.data?.long_pages === 'false') || (currentFile?.data?.long_pages === undefined);
-      const children = Array.isArray(tree.children) ? tree.children : [];
-      const pageStartIdx = [];
-      for (let idx = 0; idx < children.length; idx++) {
-        const node = children[idx];
-        if (node?.type === 'heading') {
-          if (node.depth === 1 || (node.depth === 2 && splitOnH2)) pageStartIdx.push(idx);
-        }
-      }
+      // Split using shared utility for complete functional reuse
+      const longPages = (currentFile?.data?.long_pages === true) || (currentFile?.data?.long_pages === 'true');
+      const slicesArr = splitToSlices(maskedEscaped, { longPages });
       // helper to extract plain text from mdast subtree
       const mdText = (n) => {
         if (!n) return '';
@@ -303,28 +270,29 @@ export default function WorkshopPage({
         if (Array.isArray(n.children)) return n.children.map(mdText).join('');
         return '';
       };
-      if (pageStartIdx.length === 0) {
-        const el = ConvertMarkdown({ content: restoreBlocks(maskedEscaped), allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
+      if (slicesArr.length === 0) {
+        const el = ConvertMarkdown({ content: maskedEscaped, segments: { codeEditorSegments, secretSegments, infoSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
         return { pages: [<div key={`page-0`} className="page-content">{el}</div>], titles: [] };
       }
-      const slices = [];
-      const titles = [];
-      for (let i = 0; i < pageStartIdx.length; i++) {
-        const startIdx = pageStartIdx[i];
-        const endIdx = (i + 1 < pageStartIdx.length) ? pageStartIdx[i + 1] : children.length;
-        const startNode = children[startIdx];
-        const endNode = children[endIdx - 1];
-        const startOff = startNode?.position?.start?.offset ?? 0;
-        const endOff = endNode?.position?.end?.offset ?? maskedEscaped.length;
-        slices.push(maskedEscaped.slice(startOff, endOff));
-        // title from first heading node text
-        const title = mdText(startNode).trim() || `Page ${i + 2}`; // +2 accounts for Frontmatter page
-        titles.push(title);
-      }
-      const pagesOut = slices.map((md, index) => {
-        // Restore masked blocks, then re-sanitize this slice to drop any leading stray closers or void tag issues
-        const restored = restoreBlocks(md);
-        let cleaned = dropLeadingSliceArtifacts(sanitizeSource(restored));
+      // Titles: parse each slice's first heading
+      const titles = slicesArr.map((slice, i) => {
+        try {
+          const t = unified().use(remarkParse).parse(slice);
+          const first = (Array.isArray(t.children) ? t.children[0] : null);
+          if (first && first.type === 'heading') return mdText(first).trim() || `Page ${i + 2}`;
+        } catch {}
+        return `Page ${i + 2}`;
+      });
+      const pagesOut = slicesArr.map((md, index) => {
+        // OPTION B parity: validate MDX parse on masked content first (like test script)
+        let maskedClean = dropLeadingSliceArtifacts(sanitizeSource(md));
+        try {
+          mdxParseMaskedSliceOrThrow(maskedClean);
+        } catch (e) {
+          throw e; // surface MDX errors matching test semantics
+        }
+        // Render masked slice directly; ConvertMarkdown will map placeholders using provided segments
+        let cleaned = md;
         const slicePage = index + 2; // account for Frontmatter as page 1
         if (debugSanitize && (!debugPage || slicePage === debugPage)) {
           try {
@@ -333,36 +301,9 @@ export default function WorkshopPage({
             console.log(`SANITIZED SLICE [page ${slicePage}] preview:\n` + preview);
           } catch {}
         }
-        // Extra guard: strip stray closing tags for Secret placeholders/tags within this slice only
-        const stripStrayClosers = (t, tagNames) => {
-          const reOpen = (nm) => new RegExp(`<\\s*${nm}\\b[^>]*>`, 'gi');
-          const reClose = (nm) => new RegExp(`<\\s*/\\s*${nm}\\s*>`, 'gi');
-          const depths = Object.fromEntries(tagNames.map(n => [n.toLowerCase(), 0]));
-          const lines = t.split(/\r?\n/);
-          for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            // first count openers on this line
-            tagNames.forEach((nm) => {
-              const key = nm.toLowerCase();
-              const opens = (line.match(reOpen(nm)) || []).length;
-              depths[key] += opens;
-            });
-            // then drop unmatched closers
-            tagNames.forEach((nm) => {
-              line = line.replace(reClose(nm), (m) => {
-                const key = nm.toLowerCase();
-                if (depths[key] > 0) { depths[key]--; return m; }
-                return '';
-              });
-            });
-            lines[i] = line;
-          }
-          return lines.join('\n');
-        };
-        cleaned = stripStrayClosers(cleaned, ['dhrift-secret','Secret','dhrift-info','dhrift-codeeditor']);
         return (
           <div key={`page-${index}`} className="page-content">
-            {ConvertMarkdown({ content: cleaned, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
+            {ConvertMarkdown({ content: cleaned, segments: { codeEditorSegments, secretSegments, infoSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
           </div>
         );
       });
