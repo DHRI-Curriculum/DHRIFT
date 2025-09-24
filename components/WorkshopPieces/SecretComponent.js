@@ -5,8 +5,6 @@ import { ArrowDropDown } from '@mui/material/';
 export default function SecretComponent(props) {
   const [show, setShow] = useState(false);
   const children = props.text;
-  console.log(children);
-
   return (
     <div className="secret">
       <Button
@@ -25,7 +23,7 @@ export default function SecretComponent(props) {
         {!show && 'Reveal'}
         {show && 'Hide'}
       </Button>
-      {show && <div className="secret-content">
+      {show && <div className="secret-content" style={{ whiteSpace: 'pre-line' }}>
         {children}
       </div>}
     </div>

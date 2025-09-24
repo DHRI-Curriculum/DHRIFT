@@ -214,7 +214,8 @@ export function removeDanglingSelfClose(str) {
         j = idx + 2;
       }
     }
-    lines[i] = out.replace(/(^|\s)<\s*\/\s*>($|\s)/g, '$1$2');
+    const cleaned = out.replace(/<\s*\/\s*>/g, '&lt;/>');
+    lines[i] = cleaned;
   }
   return lines.join('\n');
 }
@@ -482,6 +483,17 @@ export function mergeCodeEditorBlocks(str) {
     if (!capturing) {
       const m = /^\s*<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>\s*$/i.exec(line);
       if (m) {
+        let hasCloser = false;
+        for (let j = i + 1; j < lines.length; j++) {
+          const peek = lines[j];
+          if (isFenceLine(peek)) break;
+          if (/^\s*<\s*CodeEditor\b/i.test(peek)) break;
+          if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/i.test(peek)) { hasCloser = true; break; }
+        }
+        if (!hasCloser) {
+          out.push(line);
+          continue;
+        }
         capturing = true;
         attrs = m[1] || '';
         buf = [];
@@ -515,10 +527,30 @@ export function mergeCodeEditorBlocks(str) {
 // Convert a same-line empty CodeEditor pair into just an opening tag.
 // Example: "<CodeEditor attrs></CodeEditor>" -> "<CodeEditor attrs>"
 export function openEmptyCodeEditorPairs(str) {
-  let s = String(str || '');
-  // Replace any immediate open+close pair with just an opening tag
-  s = s.replace(/<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>/gi, '<CodeEditor$1>');
-  return s;
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    const m = /^\s*<\s*CodeEditor\b([^>]*)>\s*<\s*\/\s*CodeEditor\s*>\s*$/i.exec(line);
+    if (m) {
+      let hasCloser = false;
+      for (let j = i + 1; j < lines.length; j++) {
+        const peek = lines[j];
+        if (isFenceLine(peek)) break;
+        if (/^\s*<\s*CodeEditor\b/i.test(peek)) break;
+        if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/i.test(peek)) { hasCloser = true; break; }
+      }
+      if (hasCloser) {
+        out.push(`<CodeEditor${m[1] || ''}>`);
+        continue;
+      }
+    }
+    out.push(line);
+  }
+  return out.join('\n');
 }
 
 // Escape < and > inside CodeEditor blocks to prevent MDX JSX parsing of code content.
@@ -564,7 +596,19 @@ export function closeBareCodeEditor(str) {
     let line = lines[i];
     if (isFenceLine(line)) { inFence = !inFence; continue; }
     if (inFence) continue;
-    lines[i] = line.replace(/^\s*<\s*CodeEditor\b([^>]*)>\s*$/i, (m, attrs) => `<CodeEditor${attrs}></CodeEditor>`);
+    const m = /^\s*<\s*CodeEditor\b([^>]*)>\s*$/i.exec(line);
+    if (m) {
+      let hasCloser = false;
+      for (let j = i + 1; j < lines.length; j++) {
+        const peek = lines[j];
+        if (isFenceLine(peek)) break;
+        if (/^\s*<\s*CodeEditor\b/i.test(peek)) break;
+        if (/^\s*<\s*\/\s*CodeEditor\s*>\s*$/i.test(peek)) { hasCloser = true; break; }
+      }
+      if (!hasCloser) {
+        lines[i] = `<CodeEditor${m[1] || ''}></CodeEditor>`;
+      }
+    }
   }
   return lines.join('\n');
 }
@@ -779,6 +823,7 @@ export function balanceKbdNesting(str) {
 export function sanitizeBeforeParse(str, options = {}) {
   const tags = options.tags || defaultStrayCloserTags;
   let s = String(str || '');
+  s = s.replace(/<\s*\/\s*>/g, '&lt;/>');
   s = normalizeVoids(s);
   s = ensureDownloadClosed(s);
   s = convertHtmlCommentsToMDX(s);

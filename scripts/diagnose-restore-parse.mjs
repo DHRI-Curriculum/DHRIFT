@@ -23,7 +23,7 @@ const max = Number((process.argv.find(a => a.startsWith('--max=')) || '').split(
 const filePath = path.isAbsolute(fileArg) ? fileArg : path.join(process.cwd(), fileArg);
 const raw0 = fs.readFileSync(filePath, 'utf8');
 const raw = autoCloseSecretBlocks(autoCloseInfoBlocks(raw0));
-const { masked, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(raw);
+const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(raw);
 const maskedSanitized = sanitizeBeforeParse(masked);
 const slicesArr = splitToSlices(maskedSanitized, { longPages: false });
 
@@ -41,7 +41,7 @@ for (let i = 0; i < Math.min(slicesArr.length, max); i++) {
     continue;
   }
   // Now restore placeholders and try parsing again like the browser renderer path
-  const restored = restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments });
+  const restored = restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments, keywordSegments });
   const restoredClean = escapeCurlyForMDX(dropLeadingSliceArtifacts(sanitizeBeforeParse(restored)));
   try {
     unified().use(remarkParse, { fragment: true }).use(remarkMdx).use(remarkGfm).use(remarkFrontmatter).use(remarkDeflist).parse(restoredClean);
@@ -57,4 +57,3 @@ if (maskedErrs === 0 && restoredErrs === 0) {
 } else {
   console.log(`Done. Masked errors=${maskedErrs}, Restored errors=${restoredErrs}`);
 }
-

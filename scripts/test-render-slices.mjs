@@ -32,7 +32,7 @@ async function main() {
   const fm = matter(raw);
   const longPages = fm.data?.long_pages === true || fm.data?.long_pages === 'true';
   const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(fm.content));
-  const { masked, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(preAuto);
+  const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preAuto);
   const maskedSanitized = sanitizeBeforeParse(masked);
   const slices = splitToSlices(maskedSanitized, { longPages });
   const results = [];
@@ -40,8 +40,8 @@ async function main() {
   for (let i=0;i<limit;i++){
     const slice = slices[i];
     // For MDX parse, default to masked (placeholders). If --restored, parse restored content instead.
-    const target = doMdx ? (parseRestored ? restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments }) : slice)
-                         : restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments });
+    const target = doMdx ? (parseRestored ? restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments, keywordSegments }) : slice)
+                         : restoreBlocks(slice, { codeEditorSegments, secretSegments, infoSegments, keywordSegments });
     let cleaned = dropLeadingSliceArtifacts(sanitizeBeforeParse(target));
     if (doMdx) {
       try {

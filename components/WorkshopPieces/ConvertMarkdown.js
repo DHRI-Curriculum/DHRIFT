@@ -619,7 +619,14 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     PythonREPL: () => <PythonREPLComponent />,
                     terminal: () => <JSTerminal />,
                     Terminal: () => <JSTerminal />,
-                    // dhrift-keywords deprecated; parse inline
+                    'dhrift-keywords': (props) => {
+                        const idxStr = props['data-index'] || props['data-Index'] || props['dataindex'];
+                        const idx = parseInt(idxStr, 10);
+                        const raw = (externalSegments.keywordSegments && externalSegments.keywordSegments[idx] !== undefined)
+                          ? externalSegments.keywordSegments[idx]
+                          : '';
+                        return <Keywords raw={raw} {...props} />;
+                    },
                     keywords: (props) => <Keywords {...props} />,
                     Keywords: (props) => <Keywords {...props} />,
                     'dhrift-link': (props) => <LinkComp {...props} />,

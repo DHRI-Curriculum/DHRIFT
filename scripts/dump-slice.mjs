@@ -44,6 +44,7 @@ function maskBlocks(src) {
   const codeEditorSegments = [];
   const secretSegments = [];
   const infoSegments = [];
+  const keywordSegments = [];
   let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
     const idx = codeEditorSegments.length;
     codeEditorSegments.push(inner);
@@ -62,14 +63,21 @@ function maskBlocks(src) {
     const idx = infoSegments.length; infoSegments.push(inner);
     return `<dhrift-info data-index="${idx}"></dhrift-info>`;
   });
+  masked = masked.replace(/<Keywords\b([^>]*)>([\s\S]*?)<\/Keywords>/gi, (m, attrs, inner) => {
+    const idx = keywordSegments.length;
+    keywordSegments.push(inner);
+    const hasData = /data-index\s*=/.test(attrs);
+    const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+    return `<dhrift-keywords${newAttrs}></dhrift-keywords>`;
+  });
   masked = masked.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
     const idx = infoSegments.length; infoSegments.push(inner);
     return `<dhrift-info data-index="${idx}"></dhrift-info>`;
   });
-  return { masked, codeEditorSegments, secretSegments, infoSegments };
+  return { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments };
 }
 
-function restoreBlocks(src, { codeEditorSegments, secretSegments, infoSegments }) {
+function restoreBlocks(src, { codeEditorSegments, secretSegments, infoSegments, keywordSegments }) {
   let restored = src.replace(/<dhrift-codeeditor\b([^>]*)><\/dhrift-codeeditor>/gi, (m, attrs) => {
     const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
     const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
@@ -88,16 +96,22 @@ function restoreBlocks(src, { codeEditorSegments, secretSegments, infoSegments }
     const inner = (idx >= 0 && infoSegments[idx] != null) ? infoSegments[idx] : '';
     return `<Info${attrs}>${inner}</Info>`;
   });
+  restored = restored.replace(/<dhrift-keywords\b([^>]*)><\/dhrift-keywords>/gi, (m, attrs) => {
+    const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
+    const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
+    const inner = (idx >= 0 && keywordSegments[idx] != null) ? keywordSegments[idx] : '';
+    return `<Keywords${attrs}>${inner}</Keywords>`;
+  });
   return restored;
 }
 
 const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(fm.content));
-const { masked, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(preAuto);
+const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preAuto);
 const maskedSanitized = sanitizeSource(masked);
 const slices = splitToSlices(maskedSanitized, { longPages: false });
 const idx = page - 2; // convert to zero-based slice index
 if (idx < 0 || idx >= slices.length) { console.error('bad page'); process.exit(1); }
 // Simulate dynamic route restore + sanitize + boundary cleanup
-const restored = restoreBlocks(slices[idx], { codeEditorSegments, secretSegments, infoSegments });
+const restored = restoreBlocks(slices[idx], { codeEditorSegments, secretSegments, infoSegments, keywordSegments });
 let cleaned = dropLeadingSliceArtifacts(sanitizeSource(restored));
 console.log(cleaned.split(/\r?\n/).map((l,i)=>String(i+1).padStart(3,' ')+': '+l).join('\n'));

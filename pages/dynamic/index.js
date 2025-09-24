@@ -188,74 +188,9 @@ export default function WorkshopPage({
         // No Info placeholders to restore (Info left intact)
         return restored;
       };
-      const escapeCurlyForMDX = (str) => {
-        let out = '';
-        let i = 0;
-        let inFence = false;
-        let inInline = false;
-        const knownHtml = new Set(['codeeditor','dhrift-codeeditor','secret','pythonrepl','terminal','jupyter','download','dhrift-secret','quiz','info','link','img','a','strong','em','p','div','span','ul','ol','li','pre','code','h1','h2','h3','h4','h5','h6','table','thead','tbody','tr','td','th','blockquote','hr','br','sup','sub','kbd','input','meta']);
-        const voidTags = new Set(['br','hr','img','meta','link','input','source','track','area','base','col','embed','param','wbr']);
-        const isAllowedTag = (name) => {
-          if (!name) return false;
-          const lower = name.toLowerCase();
-          if (knownHtml.has(lower)) return true;
-          if (lower.startsWith('dhrift-')) return true;
-          return /^[A-Z]/.test(name);
-        };
-        while (i < str.length) {
-          if (!inInline && (str.startsWith('```', i) || str.startsWith('~~~', i))) {
-            inFence = !inFence;
-            out += str.substr(i, 3);
-            i += 3;
-            continue;
-          }
-          if (!inFence && str[i] === '`') {
-            inInline = !inInline;
-            out += str[i++];
-            continue;
-          }
-          const ch = str[i];
-          if (!inFence && !inInline && (ch === '{' || ch === '}')) {
-            out += (ch === '{') ? '&#123;' : '&#125;';
-            i++;
-            continue;
-          }
-          if (!inFence && !inInline && ch === '<') {
-            let j = i + 1;
-            let isClosing = false;
-            if (str[j] === '/') { isClosing = true; j++; }
-            let name = '';
-            while (j < str.length) {
-              const c = str[j];
-              if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c === '-') { name += c; j++; }
-              else break;
-            }
-            if (isAllowedTag(name)) {
-              // Normalize void tags to self-closing for MDX
-              if (!isClosing && voidTags.has(name.toLowerCase())) {
-                let k = j;
-                while (k < str.length && str[k] !== '>') k++;
-                if (k < str.length) {
-                  const tagInner = str.slice(i + 1, k);
-                  const alreadySelfClosed = /\/\s*$/.test(tagInner.trim());
-                  if (!alreadySelfClosed) {
-                    out += '<' + tagInner.replace(/\s*$/, '') + ' />';
-                    i = k + 1;
-                    continue;
-                  }
-                }
-              }
-              out += ch; i++; continue; }
-            else { out += '&lt;'; i++; continue; }
-          }
-          out += ch;
-          i++;
-        }
-        return out;
-      };
       // Mask placeholders using shared utils to avoid MDX parsing inner CodeEditor/Secret/Info
       const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(content));
-      const { masked: maskedContent, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(preAuto);
+      const { masked: maskedContent, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preAuto);
       // General sanitize before parse
       const sanitizeSource = (str) => sanitizeBeforeParse(str);
       let maskedEscaped = escapeCurlyForMDX(maskedContent);
@@ -271,7 +206,7 @@ export default function WorkshopPage({
         return '';
       };
       if (slicesArr.length === 0) {
-        const el = ConvertMarkdown({ content: maskedEscaped, segments: { codeEditorSegments, secretSegments, infoSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
+        const el = ConvertMarkdown({ content: maskedEscaped, segments: { codeEditorSegments, secretSegments, infoSegments, keywordSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc });
         return { pages: [<div key={`page-0`} className="page-content">{el}</div>], titles: [] };
       }
       // Titles: parse each slice's first heading
@@ -303,7 +238,7 @@ export default function WorkshopPage({
         }
         return (
           <div key={`page-${index}`} className="page-content">
-            {ConvertMarkdown({ content: cleaned, segments: { codeEditorSegments, secretSegments, infoSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
+            {ConvertMarkdown({ content: cleaned, segments: { codeEditorSegments, secretSegments, infoSegments, keywordSegments }, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc })}
           </div>
         );
       });

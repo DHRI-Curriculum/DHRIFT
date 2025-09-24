@@ -12,6 +12,7 @@ export function maskBlocks(src) {
   const codeEditorSegments = [];
   const secretSegments = [];
   const infoSegments = [];
+  const keywordSegments = [];
   let masked = src.replace(/<CodeEditor\b([^>]*)>([\s\S]*?)<\/CodeEditor>/gi, (m, attrs, inner) => {
     const idx = codeEditorSegments.length;
     codeEditorSegments.push(inner);
@@ -30,15 +31,22 @@ export function maskBlocks(src) {
     const idx = infoSegments.length; infoSegments.push(inner);
     return `<dhrift-info data-index="${idx}"></dhrift-info>`;
   });
+  masked = masked.replace(/<Keywords\b([^>]*)>([\s\S]*?)<\/Keywords>/gi, (m, attrs, inner) => {
+    const idx = keywordSegments.length;
+    keywordSegments.push(inner);
+    const hasData = /data-index\s*=/.test(attrs);
+    const newAttrs = hasData ? attrs : `${attrs} data-index="${idx}"`;
+    return `<dhrift-keywords${newAttrs}></dhrift-keywords>`;
+  });
   // Handle dangling Info opener at file end
   masked = masked.replace(/<Info\b[^>]*>([^\n]*)$/gmi, (m, inner) => {
     const idx = infoSegments.length; infoSegments.push(inner);
     return `<dhrift-info data-index="${idx}"></dhrift-info>`;
   });
-  return { masked, codeEditorSegments, secretSegments, infoSegments };
+  return { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments };
 }
 
-export function restoreBlocks(src, { codeEditorSegments = [], secretSegments = [], infoSegments = [] }) {
+export function restoreBlocks(src, { codeEditorSegments = [], secretSegments = [], infoSegments = [], keywordSegments = [] }) {
   let restored = src.replace(/<dhrift-codeeditor\b([^>]*)><\/dhrift-codeeditor>/gi, (m, attrs) => {
     const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
     const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
@@ -56,6 +64,12 @@ export function restoreBlocks(src, { codeEditorSegments = [], secretSegments = [
     const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
     const inner = (idx >= 0 && infoSegments[idx] != null) ? infoSegments[idx] : '';
     return `<Info${attrs}>${inner}</Info>`;
+  });
+  restored = restored.replace(/<dhrift-keywords\b([^>]*)><\/dhrift-keywords>/gi, (m, attrs) => {
+    const mIdx = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs);
+    const idx = mIdx ? parseInt(mIdx[1], 10) : -1;
+    const inner = (idx >= 0 && keywordSegments[idx] != null) ? keywordSegments[idx] : '';
+    return `<Keywords${attrs}>${inner}</Keywords>`;
   });
   return restored;
 }
@@ -101,4 +115,3 @@ export default {
   splitToSlices,
   mdxParseMaskedSliceOrThrow,
 };
-

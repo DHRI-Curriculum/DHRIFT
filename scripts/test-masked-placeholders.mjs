@@ -30,12 +30,12 @@ const raw = fs.readFileSync(filePath, 'utf8');
 const fm = matter(raw);
 
 const preSan = sanitizeBeforeParse(fm.content);
-const { masked, codeEditorSegments, secretSegments, infoSegments } = maskBlocks(preSan);
+const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preSan);
 const maskedSanitized = sanitizeBeforeParse(masked);
 const longPages = fm.data?.long_pages === true || fm.data?.long_pages === 'true';
 const slicesArr = splitToSlices(maskedSanitized, { longPages });
 
-const re = /<\s*dhrift-(codeeditor|secret|info)\b([^>]*)>(?:<\/\s*dhrift-\1\s*>)?/gi;
+const re = /<\s*dhrift-(codeeditor|secret|info|keywords)\b([^>]*)>(?:<\/\s*dhrift-\1\s*>)?/gi;
 
 function getIndex(attrs) {
   const m = /data-index\s*=\s*"?(\d+)"?/i.exec(attrs || '');
@@ -56,7 +56,7 @@ for (let i = start; i < end; i++) {
     console.log(`MASKED err page=${page} ${(e?.reason||e?.message||String(e))}`);
     continue;
   }
-  let codeCount = 0, secretCount = 0, infoCount = 0;
+  let codeCount = 0, secretCount = 0, infoCount = 0, keywordCount = 0;
   const bad = [];
   maskedSlice.replace(re, (m, kind, attrs) => {
     const idx = getIndex(attrs);
@@ -69,6 +69,9 @@ for (let i = start; i < end; i++) {
     } else if (kind === 'info') {
       infoCount++;
       if (idx < 0 || idx >= infoSegments.length) bad.push(`info idx=${idx} out of range`);
+    } else if (kind === 'keywords') {
+      keywordCount++;
+      if (idx < 0 || idx >= keywordSegments.length) bad.push(`keywords idx=${idx} out of range`);
     }
     return m;
   });
@@ -76,6 +79,7 @@ for (let i = start; i < end; i++) {
   if (codeCount) parts.push(`code=${codeCount}`);
   if (secretCount) parts.push(`secret=${secretCount}`);
   if (infoCount) parts.push(`info=${infoCount}`);
+  if (keywordCount) parts.push(`keywords=${keywordCount}`);
   const summary = parts.length ? parts.join(' ') : 'no placeholders';
   if (bad.length) {
     console.log(`page=${page} ${summary} INVALID: ${bad.join('; ')}`);
@@ -83,4 +87,3 @@ for (let i = start; i < end; i++) {
     console.log(`page=${page} ${summary}`);
   }
 }
-
