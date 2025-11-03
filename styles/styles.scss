@@ -1312,21 +1312,25 @@ nav.sidenav {
 pre {
   background-color: $primary-color-cream;
   color: $primary-color-black;
-  // padding: 20px;
-  // margin: 20px;
   border-radius: 5px;
-  // overflow-x: scroll;
-  white-space: pre-wrap;
+  padding: 1em;
+  line-height: 1.5;
 
-  code {
+  // Only style non-highlighted code blocks (let highlight.js handle .hljs)
+  code:not(.hljs) {
     background-color: $primary-color-cream;
     color: $primary-color-black;
-    padding: 20px;
-    margin: 20px;
+    padding: 0;
     border-radius: 5px;
-    // overflow-x: scroll;
-    white-space: pre-wrap;
   }
+}
+
+// Inline code (not in pre blocks)
+:not(pre) > code {
+  background-color: $primary-color-cream;
+  color: $primary-color-black;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
 }
 
 // footer styles and imgs
