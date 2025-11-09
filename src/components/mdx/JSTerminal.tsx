@@ -3,6 +3,13 @@
 import { useRef, useEffect } from 'react'
 import { Box, Paper, Typography } from '@mui/material'
 
+// Extend Window interface for jQuery
+declare global {
+  interface Window {
+    jQuery?: any
+  }
+}
+
 /**
  * JavaScript Terminal using jquery.terminal
  * Allows executing JavaScript code in a terminal interface

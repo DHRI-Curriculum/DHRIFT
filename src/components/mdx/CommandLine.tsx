@@ -264,7 +264,7 @@ For actual Linux commands, use the WebVM terminal.`
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'grey.500' }}>
           <TerminalIcon fontSize="small" sx={{ mr: 1 }} />
           <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
-            Command Line Terminal - Type 'help' for commands
+            Command Line Terminal - Type &quot;help&quot; for commands
           </Typography>
         </Box>
 

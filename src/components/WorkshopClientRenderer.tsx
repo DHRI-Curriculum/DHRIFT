@@ -71,6 +71,7 @@ export function WorkshopClientRenderer({
         const mdxModule = await evaluateMDXCached(content, {
           cacheKey,
           scope: { frontmatter },
+          components: mdxComponents,
         })
 
         if (cancelled) return
@@ -165,11 +166,11 @@ export function WorkshopClientRenderer({
         {/* Main content */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Workshop metadata */}
-          <Frontmatter data={frontmatter} />
+          <Frontmatter frontmatter={frontmatter} />
 
           {/* MDX content - compiled in browser */}
           <Box sx={{ mt: 3 }}>
-            <MDXContent components={mdxComponents} />
+            <MDXContent />
           </Box>
         </Box>
 

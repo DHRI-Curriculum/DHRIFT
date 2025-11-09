@@ -21,7 +21,7 @@ export default function NotFound() {
           Page Not Found
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          The workshop or page you're looking for doesn't exist.
+          The workshop or page you&apos;re looking for doesn&apos;t exist.
         </Typography>
         <Button
           component={Link}

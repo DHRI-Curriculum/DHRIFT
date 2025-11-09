@@ -22,16 +22,25 @@ export async function evaluateMDX(
   source: string,
   options: {
     scope?: Record<string, any>
+    components?: Record<string, any>
     development?: boolean
   } = {}
 ): Promise<MDXModule> {
-  const { scope = {}, development = process.env.NODE_ENV === 'development' } = options
+  const {
+    scope = {},
+    components,
+    development = process.env.NODE_ENV === 'development'
+  } = options
 
   try {
     const result = await evaluate(source, {
       ...runtime,
       ...mdxOptions,
       development,
+      // Provide components to MDX
+      ...(components && {
+        useMDXComponents: () => components
+      }),
       // Make scope available to MDX components
       // @ts-ignore - MDX types are a bit loose
       scope,
@@ -54,6 +63,7 @@ export async function evaluateMDXCached(
   source: string,
   options: {
     scope?: Record<string, any>
+    components?: Record<string, any>
     cacheKey?: string
   } = {}
 ): Promise<MDXModule> {
@@ -72,7 +82,9 @@ export async function evaluateMDXCached(
   // Cache result (limit cache size to prevent memory issues)
   if (compilationCache.size > 50) {
     const firstKey = compilationCache.keys().next().value
-    compilationCache.delete(firstKey)
+    if (firstKey !== undefined) {
+      compilationCache.delete(firstKey)
+    }
   }
   compilationCache.set(cacheKey, result)
 

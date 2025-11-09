@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Container, Typography, Pagination, Grid2 as Grid } from '@mui/material'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { evaluate } from '@mdx-js/mdx'
 import * as runtime from 'react/jsx-runtime'
 import {
@@ -48,8 +48,8 @@ export function WorkshopRenderer({
   // Extract table of contents
   const toc = useMemo(() => extractToC(content), [content])
 
-  // MDX components mapping
-  const components = {
+  // MDX components mapping (memoized since it's static)
+  const components = useMemo(() => ({
     // Custom components
     Info,
     Secret,
@@ -79,14 +79,14 @@ export function WorkshopRenderer({
     'dhrift-webvm': WebVM,
     'dhrift-jupyter': Jupyter,
     'dhrift-download': Download,
-  }
+  }), [])
 
   // Render current page MDX
   const [MDXContent, setMDXContent] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
   // Compile and render MDX
-  useMemo(() => {
+  useEffect(() => {
     const compileMDX = async () => {
       try {
         const pageContent = pages[currentPage - 1]
@@ -106,7 +106,7 @@ export function WorkshopRenderer({
     }
 
     compileMDX()
-  }, [currentPage, pages])
+  }, [currentPage, pages, components])
 
   return (
     <Container maxWidth="xl">

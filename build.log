@@ -1,0 +1,35 @@
+
+> dhrift-rewrite@2.0.0 build
+> next build
+
+Running in local mode
+{
+  output: 'export',
+  images: { unoptimized: true },
+  experimental: { optimizeCss: true },
+  webpack: [Function: webpack]
+}
+   ▲ Next.js 15.5.6
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+   Creating an optimized production build ...
+Warning: Built-in CSS support is being disabled due to custom CSS configuration being detected.
+See here for more info: https://nextjs.org/docs/messages/built-in-css-disabled
+
+Warning: Built-in CSS support is being disabled due to custom CSS configuration being detected.
+See here for more info: https://nextjs.org/docs/messages/built-in-css-disabled
+
+Failed to compile.
+
+./src/components/mdx/ImageZoom.tsx
+Module not found: Can't resolve 'style-loader'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/mdx/index.ts
+./src/components/WorkshopClientRenderer.tsx
+
+
+> Build failed because of webpack errors

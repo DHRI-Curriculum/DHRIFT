@@ -166,7 +166,7 @@ Try 'help' for available commands.`
             fontFamily: 'monospace',
           }}
         >
-          Simulated Terminal - Type 'help' for available commands
+          Simulated Terminal - Type &quot;help&quot; for available commands
         </Typography>
 
         <Box

@@ -63,7 +63,7 @@ export function tryParseReactList(children: ReactNode): ParsedItem[] {
       // Extract li elements
       Children.forEach(child.props.children, (li) => {
         if (isValidElement(li) && li.type === 'li') {
-          const text = extractText(li.props.children)
+          const text = extractText((li as any).props.children)
           if (text.trim()) {
             items.push({
               text: text.trim(),
