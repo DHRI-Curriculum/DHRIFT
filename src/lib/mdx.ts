@@ -1,14 +1,19 @@
 /**
  * MDX processing utilities
- * Simplified approach - no 851-line sanitizer!
+ * Server-side compilation with plugin-based architecture
  */
 
 import matter from 'gray-matter'
+import { serialize } from 'next-mdx-remote/serialize'
 import { WorkshopFrontmatterSchema, type WorkshopFrontmatter } from '@/types/workshop'
+import { serializeOptions } from './mdx-config'
+import { preprocessWorkshopMarkdown } from './mdx-preprocess'
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 
 export interface ParsedWorkshop {
   frontmatter: WorkshopFrontmatter
   content: string
+  mdxSource?: MDXRemoteSerializeResult
 }
 
 /**
@@ -21,8 +26,8 @@ export function parseWorkshopMarkdown(markdown: string): ParsedWorkshop {
   // Validate frontmatter with Zod
   const frontmatter = WorkshopFrontmatterSchema.parse(data)
 
-  // Basic preprocessing - much simpler than original!
-  const processedContent = preprocessMarkdown(content)
+  // Minimal preprocessing - only essential fixes
+  const processedContent = preprocessWorkshopMarkdown(content)
 
   return {
     frontmatter,
@@ -31,32 +36,33 @@ export function parseWorkshopMarkdown(markdown: string): ParsedWorkshop {
 }
 
 /**
- * Minimal markdown preprocessing
- * Handles only essential transformations
+ * Server-side MDX compilation
+ * Use this for static generation or server components
  */
-function preprocessMarkdown(markdown: string): string {
-  let processed = markdown
+export async function compileWorkshopMDX(
+  markdown: string
+): Promise<{
+  frontmatter: WorkshopFrontmatter
+  mdxSource: MDXRemoteSerializeResult
+}> {
+  const { data, content } = matter(markdown)
 
-  // Ensure self-closing tags for custom components
-  processed = processed.replace(/<PythonREPL>/g, '<PythonREPL />')
-  processed = processed.replace(/<Terminal>/g, '<Terminal />')
+  // Validate frontmatter
+  const frontmatter = WorkshopFrontmatterSchema.parse(data)
 
-  // Ensure proper spacing around block-level custom components
-  const blockComponents = ['Info', 'Secret', 'Quiz', 'Keywords', 'CodeEditor']
-  blockComponents.forEach(component => {
-    // Add blank lines before opening tags
-    processed = processed.replace(
-      new RegExp(`([^\\n])\\n<${component}`, 'g'),
-      `$1\n\n<${component}`
-    )
-    // Add blank lines after closing tags
-    processed = processed.replace(
-      new RegExp(`</${component}>\\n([^\\n])`, 'g'),
-      `</${component}>\n\n$1`
-    )
+  // Minimal preprocessing
+  const processedContent = preprocessWorkshopMarkdown(content)
+
+  // Server-side MDX compilation with our plugin configuration
+  const mdxSource = await serialize(processedContent, {
+    ...serializeOptions,
+    scope: { frontmatter }, // Make frontmatter available to components
   })
 
-  return processed
+  return {
+    frontmatter,
+    mdxSource,
+  }
 }
 
 /**

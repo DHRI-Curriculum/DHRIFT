@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactNode, Children, isValidElement } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   Box,
   FormControl,
@@ -10,24 +10,55 @@ import {
   Button,
   Alert,
 } from '@mui/material'
+import { parseComponentContent, validateParsedContent } from '@/lib/component-parser'
+import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary'
 
 interface QuizProps {
   children: ReactNode
+  correct?: number | number[] // Optional: explicitly specify correct answer(s)
 }
 
 /**
- * Quiz component
- * Parses children to extract options (lines starting with -)
- * Correct answers are marked with * at the end
+ * Quiz component with robust parsing and error handling
+ *
+ * Supports multiple formats:
+ * - <ul>/<ol> with <li> elements
+ * - Markdown list (- item or * item)
+ * - Plain text lines
+ *
+ * Correct answers can be marked with:
+ * - Asterisk at end: "Answer *"
+ * - Via correct prop: correct={0} or correct={[0, 2]}
  */
-export function Quiz({ children }: QuizProps) {
+export function Quiz({ children, correct }: QuizProps) {
   const [selectedAnswers, setSelectedAnswers] = useState<Set<number>>(
     new Set()
   )
   const [showResult, setShowResult] = useState(false)
 
-  // Parse children to extract quiz options
-  const options = parseQuizOptions(children)
+  // Parse children using flexible multi-strategy parser
+  const parsedItems = parseComponentContent(children)
+  const validation = validateParsedContent(parsedItems)
+
+  // Handle parsing errors gracefully
+  if (!validation.valid) {
+    return (
+      <Alert severity="warning" sx={{ my: 2 }}>
+        Quiz could not be displayed: {validation.error}
+      </Alert>
+    )
+  }
+
+  // Extract options and determine which are correct
+  const options = parsedItems.map((item, index) => {
+    const text = item.text
+    const isCorrect = determineCorrectness(text, index, correct)
+
+    return {
+      text: text.endsWith('*') ? text.slice(0, -1).trim() : text,
+      isCorrect,
+    }
+  })
 
   const handleToggle = (index: number) => {
     const newSelected = new Set(selectedAnswers)
@@ -95,59 +126,36 @@ export function Quiz({ children }: QuizProps) {
 }
 
 /**
- * Parse quiz options from React children
- * Handles both <ul>/<ol> lists and plain text
+ * Determine if an option is correct
+ *
+ * Priority:
+ * 1. Explicit correct prop
+ * 2. Asterisk marker at end of text
  */
-function parseQuizOptions(children: ReactNode): Array<{
-  text: string
-  isCorrect: boolean
-}> {
-  const options: Array<{ text: string; isCorrect: boolean }> = []
-
-  // Helper to extract text from nested children
-  const extractText = (node: ReactNode): string => {
-    if (typeof node === 'string') return node
-    if (typeof node === 'number') return String(node)
-    if (!node) return ''
-    if (Array.isArray(node)) return node.map(extractText).join('')
-    if (isValidElement(node) && node.props.children) {
-      return extractText(node.props.children)
+function determineCorrectness(
+  text: string,
+  index: number,
+  correctProp?: number | number[]
+): boolean {
+  // Check explicit correct prop
+  if (correctProp !== undefined) {
+    if (Array.isArray(correctProp)) {
+      return correctProp.includes(index)
     }
-    return ''
+    return correctProp === index
   }
 
-  // Try to find a ul or ol element
-  let foundList = false
-  Children.forEach(children, (child) => {
-    if (isValidElement(child) && (child.type === 'ul' || child.type === 'ol')) {
-      foundList = true
-      // Extract li elements
-      Children.forEach(child.props.children, (li) => {
-        if (isValidElement(li) && li.type === 'li') {
-          const text = extractText(li.props.children)
-          const isCorrect = text.trim().endsWith('*')
-          options.push({
-            text: isCorrect ? text.trim().slice(0, -1).trim() : text.trim(),
-            isCorrect,
-          })
-        }
-      })
-    }
-  })
+  // Check asterisk marker
+  return text.trim().endsWith('*')
+}
 
-  // Fallback: parse as plain text with lines starting with -
-  if (!foundList) {
-    const text = extractText(children)
-    const lines = text.split('\n').filter(line => line.trim().startsWith('-'))
-    lines.forEach(line => {
-      const content = line.trim().substring(1).trim()
-      const isCorrect = content.endsWith('*')
-      options.push({
-        text: isCorrect ? content.slice(0, -1).trim() : content,
-        isCorrect,
-      })
-    })
-  }
-
-  return options
+/**
+ * Wrap Quiz with error boundary for production use
+ */
+export function QuizWithErrorBoundary(props: QuizProps) {
+  return (
+    <ComponentErrorBoundary componentName="Quiz">
+      <Quiz {...props} />
+    </ComponentErrorBoundary>
+  )
 }

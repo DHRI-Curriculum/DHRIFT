@@ -1,18 +1,38 @@
 'use client'
 
-import { Box, Typography, Chip } from '@mui/material'
-import { type ReactNode, Children, isValidElement } from 'react'
+import { Box, Typography, Chip, Alert } from '@mui/material'
+import { type ReactNode } from 'react'
+import { parseKeywordsContent, validateParsedContent, parseComponentContent } from '@/lib/component-parser'
+import { ComponentErrorBoundary } from '@/components/ComponentErrorBoundary'
 
 interface KeywordsProps {
   children: ReactNode
 }
 
 /**
- * Keywords/Glossary component
- * Displays key terms and their definitions
+ * Keywords/Glossary component with robust parsing
+ *
+ * Supports multiple formats:
+ * - "term: definition" format
+ * - "term - definition" format
+ * - Plain list of terms (no definitions)
  */
 export function Keywords({ children }: KeywordsProps) {
-  const terms = parseKeywords(children)
+  // Parse using flexible parser
+  const parsedItems = parseComponentContent(children)
+  const validation = validateParsedContent(parsedItems)
+
+  // Handle parsing errors gracefully
+  if (!validation.valid) {
+    return (
+      <Alert severity="warning" sx={{ my: 2 }}>
+        Keywords could not be displayed: {validation.error}
+      </Alert>
+    )
+  }
+
+  // Extract terms and definitions
+  const terms = parseKeywordsContent(children)
 
   return (
     <Box
@@ -39,9 +59,11 @@ export function Keywords({ children }: KeywordsProps) {
                 sx={{ mr: 1, fontWeight: 'bold' }}
               />
             </Box>
-            <Typography component="dd" sx={{ ml: 0, color: 'text.secondary' }}>
-              {term.definition}
-            </Typography>
+            {term.definition && (
+              <Typography component="dd" sx={{ ml: 0, color: 'text.secondary' }}>
+                {term.definition}
+              </Typography>
+            )}
           </Box>
         ))}
       </Box>
@@ -50,63 +72,12 @@ export function Keywords({ children }: KeywordsProps) {
 }
 
 /**
- * Parse keywords from React children
- * Handles both <ul>/<ol> lists and plain text
+ * Wrap Keywords with error boundary for production use
  */
-function parseKeywords(children: ReactNode): Array<{
-  term: string
-  definition: string
-}> {
-  const terms: Array<{ term: string; definition: string }> = []
-
-  // Helper to extract text from nested children
-  const extractText = (node: ReactNode): string => {
-    if (typeof node === 'string') return node
-    if (typeof node === 'number') return String(node)
-    if (!node) return ''
-    if (Array.isArray(node)) return node.map(extractText).join('')
-    if (isValidElement(node) && node.props.children) {
-      return extractText(node.props.children)
-    }
-    return ''
-  }
-
-  // Try to find a ul or ol element
-  let foundList = false
-  Children.forEach(children, (child) => {
-    if (isValidElement(child) && (child.type === 'ul' || child.type === 'ol')) {
-      foundList = true
-      // Extract li elements
-      Children.forEach(child.props.children, (li) => {
-        if (isValidElement(li) && li.type === 'li') {
-          const text = extractText(li.props.children)
-          const [term, ...defParts] = text.split(':')
-          if (term && defParts.length > 0) {
-            terms.push({
-              term: term.trim(),
-              definition: defParts.join(':').trim(),
-            })
-          }
-        }
-      })
-    }
-  })
-
-  // Fallback: parse as plain text with lines starting with -
-  if (!foundList) {
-    const text = extractText(children)
-    const lines = text.split('\n').filter(line => line.trim().startsWith('-'))
-    lines.forEach(line => {
-      const content = line.trim().substring(1).trim()
-      const [term, ...defParts] = content.split(':')
-      if (term && defParts.length > 0) {
-        terms.push({
-          term: term.trim(),
-          definition: defParts.join(':').trim(),
-        })
-      }
-    })
-  }
-
-  return terms
+export function KeywordsWithErrorBoundary(props: KeywordsProps) {
+  return (
+    <ComponentErrorBoundary componentName="Keywords">
+      <Keywords {...props} />
+    </ComponentErrorBoundary>
+  )
 }
