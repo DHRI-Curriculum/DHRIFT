@@ -7,89 +7,41 @@ DHRIFT is a **static site with dynamic content fetching**:
 1. **Static Export**: App shell deployed as static HTML/CSS/JS
 2. **Dynamic Workshops**: Each user/institution provides their own workshop repos
 3. **Client-Side Rendering**: Workshops fetched and rendered in browser
-4. **Owner's Token**: Site owner's GitHub token used for API calls (not user's)
+4. **Owner's Token**: Site owner's GitHub token used for API calls (visible in client, but that's OK)
 
 ## User Flow
 
 ```
 1. User visits: https://app.dhrift.org/inst?instUser=DHRI-Curriculum&instRepo=workshops
-2. Client JS fetches: config.yml from DHRI-Curriculum/workshops
+2. Client JS fetches: config.yml from DHRI-Curriculum/workshops (with owner's token)
 3. Client JS fetches: workshop markdown from repos listed in config
 4. Client JS compiles: MDX in browser with custom components
 5. Client JS renders: Interactive workshop with Quiz, REPL, etc.
 ```
 
-## Architecture Challenge: Token Security
+## Token Strategy: Simple & Pragmatic
 
-### Problem
-- GitHub API requires token for reasonable rate limits (5,000 vs 60 req/hour)
-- Static export = no server = can't hide token server-side
-- Can't put token in client bundle (anyone can extract it)
+### Why Token Visibility is OK
 
-### Solution: Serverless Function Proxy
+The token is included in the client bundle (`NEXT_PUBLIC_GITHUB_TOKEN`), which means:
+- ✅ Anyone can see it in browser DevTools
+- ✅ But all workshop repos are **public** anyway
+- ✅ Token only provides read access to public data
+- ✅ With IndexedDB caching, API calls are minimal
+- ✅ Much simpler than serverless proxy
 
-```
-Client (browser)
-    ↓ fetch('/api/github?user=X&repo=Y&path=Z')
-Serverless Function (Vercel/Netlify/Cloudflare)
-    ↓ uses GITHUB_TOKEN from env
-GitHub API
-    ↓ returns content
-Serverless Function
-    ↓ returns to client
-Client renders workshop
-```
+### Rate Limits
+- **Without token**: 60 requests/hour per IP (not enough!)
+- **With token**: 5,000 requests/hour (plenty!)
+
+### With IndexedDB Caching
+- First workshop view: 1-3 API calls
+- Subsequent views: 0 API calls (cached)
+- Cache TTL: 1 hour (configurable)
 
 ## Implementation
 
-### 1. Serverless Function (Vercel)
-
-```typescript
-// api/github.ts (Vercel Edge Function)
-import { NextRequest, NextResponse } from 'next/server'
-
-export const config = {
-  runtime: 'edge',
-}
-
-export default async function handler(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const user = searchParams.get('user')
-  const repo = searchParams.get('repo')
-  const path = searchParams.get('path')
-
-  if (!user || !repo || !path) {
-    return NextResponse.json({ error: 'Missing parameters' }, { status: 400 })
-  }
-
-  // Fetch from GitHub with OWNER'S token
-  const response = await fetch(
-    `https://api.github.com/repos/${user}/${repo}/contents/${path}`,
-    {
-      headers: {
-        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json',
-      },
-    }
-  )
-
-  if (!response.ok) {
-    return NextResponse.json(
-      { error: 'GitHub API error' },
-      { status: response.status }
-    )
-  }
-
-  const data = await response.json()
-
-  // Decode base64 content
-  const content = Buffer.from(data.content, 'base64').toString('utf-8')
-
-  return NextResponse.json({ content })
-}
-```
-
-### 2. Client-Side GitHub Library
+### 1. Client-Side GitHub Library
 
 ```typescript
 // src/lib/github-client.ts
@@ -97,22 +49,35 @@ export default async function handler(req: NextRequest) {
 
 /**
  * Client-side GitHub API wrapper
- * Uses serverless proxy to hide token
+ * Fetches directly from GitHub with owner's token
  */
 export async function fetchGitHubFile(
   user: string,
   repo: string,
   path: string
 ): Promise<string> {
-  const url = `/api/github?user=${user}&repo=${repo}&path=${encodeURIComponent(path)}`
+  const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`
 
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${path}: ${response.statusText}`)
+  const headers: HeadersInit = {
+    'Accept': 'application/vnd.github.v3+json',
   }
 
-  const { content } = await response.json()
+  // Token from environment (visible in bundle, but repos are public)
+  if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
+    headers['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+  }
+
+  const response = await fetch(url, { headers })
+
+  if (!response.ok) {
+    throw new Error(`GitHub API error: ${response.status}`)
+  }
+
+  const data = await response.json()
+
+  // Decode base64 content
+  const content = atob(data.content.replace(/\s/g, ''))
+
   return content
 }
 

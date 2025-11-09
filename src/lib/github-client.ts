@@ -1,13 +1,16 @@
 /**
  * Client-Side GitHub API Library
  *
- * Fetches GitHub content via serverless proxy function.
+ * Fetches GitHub content directly from GitHub API.
+ * Uses owner's token for 5,000 req/hour rate limit (vs 60 without token).
  * Includes IndexedDB caching to minimize API calls and improve performance.
+ *
+ * Token is visible in bundle, but repos are public so this is acceptable.
  */
 
 'use client'
 
-const API_BASE = '/api/github'
+const GITHUB_API_BASE = 'https://api.github.com'
 const DB_NAME = 'dhrift-github-cache'
 const STORE_NAME = 'files'
 const DB_VERSION = 1
@@ -18,27 +21,50 @@ interface CacheEntry {
   timestamp: number
 }
 
+interface GitHubFileResponse {
+  content: string
+  encoding: string
+  size: number
+  name: string
+}
+
 /**
- * Fetch file from GitHub via proxy
+ * Fetch file directly from GitHub API
  */
 export async function fetchGitHubFile(
   user: string,
   repo: string,
   path: string
 ): Promise<string> {
-  const url = `${API_BASE}?user=${encodeURIComponent(user)}&repo=${encodeURIComponent(
-    repo
-  )}&path=${encodeURIComponent(path)}`
+  const url = `${GITHUB_API_BASE}/repos/${user}/${repo}/contents/${path}`
 
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }))
-    throw new Error(`Failed to fetch ${path}: ${error.error || response.statusText}`)
+  const headers: HeadersInit = {
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'DHRIFT',
   }
 
-  const data = await response.json()
-  return data.content
+  // Use token if available (gives 5,000 req/hour vs 60 without)
+  // Token is visible in client bundle, but repos are public so this is fine
+  // Uses NEXT_PUBLIC_GITHUBSECRET from GitHub Actions workflow (secrets.GITHUBKEY)
+  const token = process.env.NEXT_PUBLIC_GITHUBSECRET || process.env.NEXT_PUBLIC_GITHUB_TOKEN
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
+  const response = await fetch(url, { headers })
+
+  if (!response.ok) {
+    throw new Error(
+      `GitHub API error: ${response.status} ${response.statusText} for ${path}`
+    )
+  }
+
+  const data = (await response.json()) as GitHubFileResponse
+
+  // Decode base64 content
+  const content = atob(data.content.replace(/\s/g, ''))
+
+  return content
 }
 
 /**
