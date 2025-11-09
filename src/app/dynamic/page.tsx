@@ -10,21 +10,21 @@ import { Container, Box, Alert, CircularProgress } from '@mui/material'
  */
 function WorkshopContent() {
   const searchParams = useSearchParams()
-  const user = searchParams.get('user')
-  const repo = searchParams.get('repo')
+  const instUser = searchParams.get('instUser')
+  const instRepo = searchParams.get('instRepo')
   const file = searchParams.get('file')
 
   // Validate required parameters
-  if (!user || !repo || !file) {
+  if (!instUser || !instRepo || !file) {
     return (
       <Container maxWidth="lg">
         <Box sx={{ py: 4 }}>
           <Alert severity="error">
             <strong>Missing required parameters</strong>
             <br />
-            Please provide user, repo, and file parameters in the URL:
+            Please provide instUser, instRepo, and file parameters in the URL:
             <br />
-            <code>/workshop?user=USER&repo=REPO&file=FILE</code>
+            <code>/dynamic?instUser=USER&instRepo=REPO&file=FILE</code>
           </Alert>
         </Box>
       </Container>
@@ -32,12 +32,12 @@ function WorkshopContent() {
   }
 
   // Render the workshop
-  return <WorkshopClientRenderer user={user} repo={repo} file={file} />
+  return <WorkshopClientRenderer user={instUser} repo={instRepo} file={file} />
 }
 
 /**
  * Workshop page - static shell for client-side rendering
- * Route: /workshop?user=X&repo=Y&file=Z
+ * Route: /dynamic?instUser=X&instRepo=Y&file=Z
  *
  * DHRIFT Architecture:
  * - Static HTML exported (app shell only)
@@ -47,7 +47,7 @@ function WorkshopContent() {
  * - GitHub API accessed directly with owner's token (visible in bundle)
  * - IndexedDB caching for performance and rate limit management
  */
-export default function WorkshopPage() {
+export default function DynamicWorkshopPage() {
   return (
     <Suspense
       fallback={

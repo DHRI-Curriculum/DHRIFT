@@ -174,7 +174,7 @@ function InstituteContent() {
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={file}>
                   <Card
                     component={Link}
-                    href={`/workshop?user=${config.workshopsuser}&repo=${config.workshopsrepo}&file=${slug}`}
+                    href={`/dynamic?instUser=${config.workshopsuser}&instRepo=${config.workshopsrepo}&file=${slug}`}
                     sx={{
                       textDecoration: 'none',
                       height: '100%',
