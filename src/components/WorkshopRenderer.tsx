@@ -13,6 +13,10 @@ import {
   RREPL,
   CodeEditor,
   Terminal,
+  CommandLine,
+  JSTerminal,
+  WebVM,
+  Jupyter,
   Download,
   Link,
   img,
@@ -55,6 +59,10 @@ export function WorkshopRenderer({
     RREPL,
     CodeEditor,
     Terminal,
+    CommandLine,
+    JSTerminal,
+    WebVM,
+    Jupyter,
     Download,
     Link,
     // Override default img with zoom
@@ -66,6 +74,10 @@ export function WorkshopRenderer({
     'dhrift-keywords': Keywords,
     'dhrift-codeeditor': CodeEditor,
     'dhrift-terminal': Terminal,
+    'dhrift-commandline': CommandLine,
+    'dhrift-jsterminal': JSTerminal,
+    'dhrift-webvm': WebVM,
+    'dhrift-jupyter': Jupyter,
     'dhrift-download': Download,
   }
 
