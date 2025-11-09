@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
+import { useState, type ReactNode, Children, isValidElement } from 'react'
 import {
   Box,
   FormControl,
@@ -95,26 +95,59 @@ export function Quiz({ children }: QuizProps) {
 }
 
 /**
- * Parse quiz options from children
- * Expected format: lines starting with - for options
- * Asterisk (*) at end indicates correct answer
+ * Parse quiz options from React children
+ * Handles both <ul>/<ol> lists and plain text
  */
 function parseQuizOptions(children: ReactNode): Array<{
   text: string
   isCorrect: boolean
 }> {
-  // Convert children to string
-  const content = String(children)
+  const options: Array<{ text: string; isCorrect: boolean }> = []
 
-  // Split into lines and parse
-  const lines = content.split('\n').filter(line => line.trim().startsWith('-'))
+  // Helper to extract text from nested children
+  const extractText = (node: ReactNode): string => {
+    if (typeof node === 'string') return node
+    if (typeof node === 'number') return String(node)
+    if (!node) return ''
+    if (Array.isArray(node)) return node.map(extractText).join('')
+    if (isValidElement(node) && node.props.children) {
+      return extractText(node.props.children)
+    }
+    return ''
+  }
 
-  return lines.map(line => {
-    const text = line.trim().substring(1).trim()
-    const isCorrect = text.endsWith('*')
-    return {
-      text: isCorrect ? text.slice(0, -1).trim() : text,
-      isCorrect,
+  // Try to find a ul or ol element
+  let foundList = false
+  Children.forEach(children, (child) => {
+    if (isValidElement(child) && (child.type === 'ul' || child.type === 'ol')) {
+      foundList = true
+      // Extract li elements
+      Children.forEach(child.props.children, (li) => {
+        if (isValidElement(li) && li.type === 'li') {
+          const text = extractText(li.props.children)
+          const isCorrect = text.trim().endsWith('*')
+          options.push({
+            text: isCorrect ? text.trim().slice(0, -1).trim() : text.trim(),
+            isCorrect,
+          })
+        }
+      })
     }
   })
+
+  // Fallback: parse as plain text with lines starting with -
+  if (!foundList) {
+    const text = extractText(children)
+    const lines = text.split('\n').filter(line => line.trim().startsWith('-'))
+    lines.forEach(line => {
+      const content = line.trim().substring(1).trim()
+      const isCorrect = content.endsWith('*')
+      options.push({
+        text: isCorrect ? content.slice(0, -1).trim() : content,
+        isCorrect,
+      })
+    })
+  }
+
+  return options
 }
