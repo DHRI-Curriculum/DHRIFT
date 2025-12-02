@@ -452,8 +452,8 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         safeContent = sanitizeBeforeParse(safeContent);
         safeContent = dropLeadingSliceArtifacts(safeContent);
 
-        // escapeCurlyForMDX already applied above via shared import
-        // Final safety steps are already covered by shared sanitizer in the upstream pipeline.
+        // Escape curly braces AFTER all sanitization to ensure no raw curlies slip through
+        safeContent = escapeCurlyForMDX(safeContent);
 
         const mdxHandlers = {
             mdxJsxFlowElement(h, node) {
@@ -500,7 +500,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .use(remarkGfm)
             .use(remarkFrontmatter)
             .use(remarkDeflist)
-            .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers, passThrough: ['mdxjsEsm','mdxFlowExpression','mdxTextExpression'] })
+            .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers })
             .use(rehypeHighlight)
             .use(rehypeReact, {
                 createElement,

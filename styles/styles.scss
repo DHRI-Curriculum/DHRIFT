@@ -863,6 +863,11 @@ header {
     padding-left: 0px;
   }
 
+  // Reduce top margin for frontmatter (workshop first page)
+  &:has(> .frontmatter) {
+    margin-top: 20px;
+  }
+
   h1 {
     font-size: 2rem;
     font-family: $headers-font, sans-serif;

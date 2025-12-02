@@ -220,7 +220,9 @@ export function removeDanglingSelfClose(str) {
   return lines.join('\n');
 }
 
-// Convert raw HTML comments to MDX comments outside code fences.
+// Strip raw HTML comments entirely (they're author notes that shouldn't render).
+// Previous approach converted to MDX comments {/* */}, but multi-line comments
+// containing headings caused issues when content was sliced at those headings.
 export function convertHtmlCommentsToMDX(str) {
   const lines = String(str || '').split(/\r?\n/);
   let inFence = false;
@@ -235,18 +237,23 @@ export function convertHtmlCommentsToMDX(str) {
       if (!inComment) {
         const idx = line.indexOf('<!--', i);
         if (idx === -1) { buf += line.slice(i); break; }
-        buf += line.slice(i, idx) + '{/*';
+        buf += line.slice(i, idx); // keep content before comment, drop the rest
         i = idx + 4; // after '<!--'
         inComment = true;
       } else {
         const idx = line.indexOf('-->', i);
-        if (idx === -1) { buf += line.slice(i); i = line.length; break; }
-        buf += line.slice(i, idx) + '*/}';
-        i = idx + 3; // after '-->'
+        if (idx === -1) { i = line.length; break; } // still in comment, drop entire rest of line
+        i = idx + 3; // after '-->', continue processing
         inComment = false;
       }
     }
-    out.push(buf);
+    // Only push the line if we're not entirely inside a comment or if there's content
+    if (!inComment || buf.trim() !== '') {
+      out.push(buf);
+    } else if (inComment) {
+      // We're in a multi-line comment - push empty line to preserve structure
+      out.push('');
+    }
   }
   return out.join('\n');
 }
@@ -820,6 +827,98 @@ export function balanceKbdNesting(str) {
   return outLines.join('\n');
 }
 
+// Strip orphan </Info> and </Secret> closers that remain after their openers were masked
+export function stripOrphanComponentClosers(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    // Check if line is just a closing tag for Info or Secret (common orphans after masking)
+    if (/^\s*<\s*\/\s*(?:Info|Secret)\s*>\s*$/i.test(line)) {
+      lines[i] = '';
+    }
+  }
+  return lines.join('\n');
+}
+
+// Ensure img tags are self-closing for MDX compatibility
+export function ensureImgSelfClosing(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    // Convert <img ...> to <img ... /> (but not if already self-closing)
+    lines[i] = line.replace(/<img\b([^>]*?)(?<!\/)>/gi, '<img$1 />');
+  }
+  return lines.join('\n');
+}
+
+// Remove orphaned <tr> tags (those immediately followed by </table> with no content)
+export function removeOrphanedTrTags(str) {
+  // Remove <tr> followed by whitespace/newlines then </table> or </tr>
+  return str.replace(/<\s*tr\b[^>]*>\s*(?=<\s*\/\s*(?:table|tr)\s*>)/gi, '');
+}
+
+// Normalize multi-line HTML table cells by joining td/th content onto single lines
+export function normalizeMultilineTableCells(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  const out = [];
+  let cellBuf = null;
+  let cellTag = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) {
+      inFence = !inFence;
+      if (cellBuf !== null) { out.push(cellBuf); cellBuf = null; cellTag = null; }
+      out.push(line);
+      continue;
+    }
+    if (inFence) { out.push(line); continue; }
+
+    if (cellBuf !== null) {
+      // We're inside an open cell - look for the closing tag
+      const closeRe = new RegExp(`<\\s*/\\s*${cellTag}\\s*>`, 'i');
+      if (closeRe.test(line)) {
+        // Found the closer - append and flush
+        cellBuf += ' ' + line.trim();
+        out.push(cellBuf);
+        cellBuf = null;
+        cellTag = null;
+      } else {
+        // Still inside cell - accumulate
+        cellBuf += ' ' + line.trim();
+      }
+      continue;
+    }
+
+    // Check for opening td/th without closing on same line
+    const openMatch = /<\s*(td|th)\b[^>]*>/i.exec(line);
+    if (openMatch) {
+      const tag = openMatch[1].toLowerCase();
+      const closeRe = new RegExp(`<\\s*/\\s*${tag}\\s*>`, 'i');
+      if (!closeRe.test(line)) {
+        // Opening without closing on same line - start accumulating
+        cellBuf = line.trimEnd();
+        cellTag = tag;
+        continue;
+      }
+    }
+
+    out.push(line);
+  }
+
+  // Flush any remaining buffer
+  if (cellBuf !== null) out.push(cellBuf);
+
+  return out.join('\n');
+}
+
 export function sanitizeBeforeParse(str, options = {}) {
   const tags = options.tags || defaultStrayCloserTags;
   let s = String(str || '');
@@ -827,6 +926,9 @@ export function sanitizeBeforeParse(str, options = {}) {
   s = normalizeVoids(s);
   s = ensureDownloadClosed(s);
   s = convertHtmlCommentsToMDX(s);
+  s = stripOrphanComponentClosers(s);
+  s = ensureImgSelfClosing(s);
+  s = normalizeMultilineTableCells(s);
   s = ensureBlankLinesAroundBlockHtml(s, ['p']);
   s = ensureComponentTagsOnOwnLine(s, ['Quiz']);
   s = ensureBlankLinesAroundComponents(s, ['Quiz']);
@@ -864,8 +966,9 @@ export function escapeCurlyForMDX(str) {
   let inMdxComment = false; // span may cross lines
   for (let li = 0; li < lines.length; li++) {
     const line = lines[li];
-    if (!inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = true; out += line + '\n'; continue; }
-    if (inFence && (line.startsWith('```') || line.startsWith('~~~'))) { inFence = false; out += line + '\n'; continue; }
+    const trimmed = line.replace(/^\s+/, '');
+    if (!inFence && (trimmed.startsWith('```') || trimmed.startsWith('~~~'))) { inFence = true; out += line + '\n'; continue; }
+    if (inFence && (trimmed.startsWith('```') || trimmed.startsWith('~~~'))) { inFence = false; out += line + '\n'; continue; }
     if (inFence) { out += line + '\n'; continue; }
     let i = 0; let inInline = false; let buf = '';
     while (i < line.length) {
@@ -905,6 +1008,9 @@ export default {
   normalizeVoids,
   ensureDownloadClosed,
   convertHtmlCommentsToMDX,
+  stripOrphanComponentClosers,
+  ensureImgSelfClosing,
+  normalizeMultilineTableCells,
   ensureBlankLinesAroundBlockHtml,
   ensureBlockHtmlContentOnOwnLine,
   ensureBlankAfterInlineClose,
