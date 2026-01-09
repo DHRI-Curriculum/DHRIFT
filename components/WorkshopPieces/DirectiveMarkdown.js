@@ -4,10 +4,10 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkFrontmatter from 'remark-frontmatter';
-import remarkDeflist from 'remark-deflist';
 import remarkDirective from 'remark-directive';
 import remarkDirectiveRehype from 'remark-directive-rehype';
 import remarkRehype from 'remark-rehype';
+import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 
@@ -26,12 +26,14 @@ import {
 } from './DirectiveComponents';
 
 // Custom image component to handle GitHub-hosted images
-function CustomImage({ src, alt, gitUser, gitRepo, gitFile }) {
+function CustomImage({ src, alt, gitUser, gitRepo, gitFile, gitBranch = 'v2' }) {
   let imageSrc = src;
 
-  // If relative path, resolve to GitHub raw URL
-  if (src && !src.startsWith('http') && !src.startsWith('/')) {
-    imageSrc = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${src}`;
+  // If not an external URL, resolve to GitHub raw URL
+  if (src && !src.startsWith('http')) {
+    // Remove leading slash if present for consistent path building
+    const cleanPath = src.startsWith('/') ? src.slice(1) : src;
+    imageSrc = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/${gitBranch}/${cleanPath}`;
   }
 
   return <img src={imageSrc} alt={alt || ''} loading="lazy" />;
@@ -40,23 +42,33 @@ function CustomImage({ src, alt, gitUser, gitRepo, gitFile }) {
 /**
  * DirectiveMarkdown - Clean markdown processor using remark-directive
  *
- * NO SANITIZATION NEEDED - directive syntax (:::info, ::download, :link)
- * parses cleanly without conflicts with MDX/JSX.
+ * Preprocesses content to ensure leaf directives (::name) are properly isolated
+ * on their own lines, as remark-directive requires.
  */
 export default function DirectiveMarkdown({
   content,
   allUploads,
   setCode,
   setEditorOpen,
+  setActiveTab,
   setAskToRun,
   setJupyterSrc,
   gitUser,
   gitRepo,
   gitFile,
+  gitBranch = 'v2',
   instUser,
   instRepo,
 }) {
   if (!content) return null;
+
+  // Preprocess: ensure leaf directives are on their own lines
+  // Handles cases like `::download{files="..."} <br/>` where <br/> breaks parsing
+  let processedContent = content
+    // Move <br>, <br/>, <br /> that follow leaf directives to next line
+    .replace(/(::[\w-]+\{[^}]*\})\s*<br\s*\/?>/gi, '$1\n')
+    // Also handle trailing whitespace after directives
+    .replace(/(::[\w-]+\{[^}]*\})\s+$/gm, '$1');
 
   // Build component map with props passed through
   const components = {
@@ -70,13 +82,21 @@ export default function DirectiveMarkdown({
         {...props}
         setCode={setCode}
         setEditorOpen={setEditorOpen}
+        setActiveTab={setActiveTab}
         setAskToRun={setAskToRun}
       />
     ),
 
     // Leaf directives (::name)
     'download': (props) => <DownloadDirective {...props} allUploads={allUploads} />,
-    'jupyter': (props) => <JupyterDirective {...props} setJupyterSrc={setJupyterSrc} />,
+    'jupyter': (props) => (
+      <JupyterDirective
+        {...props}
+        setJupyterSrc={setJupyterSrc}
+        setEditorOpen={setEditorOpen}
+        setActiveTab={setActiveTab}
+      />
+    ),
     'terminal': () => <TerminalDirective />,
     'pythonrepl': () => <PythonReplDirective />,
 
@@ -86,7 +106,7 @@ export default function DirectiveMarkdown({
 
     // Standard HTML elements
     'img': (props) => (
-      <CustomImage {...props} gitUser={gitUser} gitRepo={gitRepo} gitFile={gitFile} />
+      <CustomImage {...props} gitUser={gitUser} gitRepo={gitRepo} gitFile={gitFile} gitBranch={gitBranch} />
     ),
   };
 
@@ -95,10 +115,10 @@ export default function DirectiveMarkdown({
       .use(remarkParse)
       .use(remarkGfm)
       .use(remarkFrontmatter)
-      .use(remarkDeflist)
       .use(remarkDirective)
       .use(remarkDirectiveRehype)
       .use(remarkRehype, { allowDangerousHtml: true })
+      .use(rehypeRaw)
       .use(rehypeHighlight)
       .use(rehypeReact, {
         createElement,
@@ -107,7 +127,7 @@ export default function DirectiveMarkdown({
         jsxs: prod.jsxs,
         components,
       })
-      .processSync(content);
+      .processSync(processedContent);
 
     return file.result;
   } catch (error) {

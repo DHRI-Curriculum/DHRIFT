@@ -112,7 +112,7 @@ __      __   _  __   ____  __
       </div>
 
     </main>
-    <script>
+    <script type="module">
 
 	//Utility namespace to group all functionality related to printing (both error and non error) messages
 	const color= "\x1b[1;35m";
@@ -373,15 +373,16 @@ __      __   _  __   ____  __
 	initialMessage();
 	async function loadCX()
 	{
-		// Find the latest build
+		// Find the latest build and use ESM version
 		var r = await fetch("https://cxrtnc.leaningtech.com/LATEST.txt");
 		var url = await r.text();
 		url = url.trim();
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.addEventListener("load", runBash, false);
-		document.head.appendChild(script);
+		// Change cx.js to cx.esm.js for proper module loading
+		url = url.replace('/cx.js', '/cx.esm.js');
+		// Use dynamic import for ESM
+		const CheerpXModule = await import(url);
+		window.CheerpX = CheerpXModule.default || CheerpXModule;
+		runBash();
 	}
 	loadCX();
     </script>

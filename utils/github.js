@@ -1,18 +1,51 @@
+/**
+ * Get GitHub API headers with optional authentication
+ * @returns {Headers} Headers object for GitHub API requests
+ */
+export const getGitHubHeaders = () => {
+  const headers = new Headers({ 'Content-Type': 'application/json' });
+  if (process.env.NEXT_PUBLIC_GITHUBSECRET && process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
+    headers.set('Authorization', `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`);
+  }
+  return headers;
+};
+
+/**
+ * Create a fetcher function for SWR that handles GitHub API responses
+ * @param {Object} options - Fetcher options
+ * @param {boolean} options.decodeBase64 - Whether to decode base64 content (default: true)
+ * @param {Function} options.onError - Error callback
+ * @returns {Function} Fetcher function for SWR
+ */
+export const createGitHubFetcher = (options = {}) => {
+  const { decodeBase64 = true, onError } = options;
+  const headers = getGitHubHeaders();
+
+  return (...args) => fetch(...args, {
+    headers,
+    method: 'GET',
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (decodeBase64 && res.content) {
+        return Buffer.from(res.content, 'base64').toString();
+      }
+      return res;
+    })
+    .catch(err => {
+      if (onError) onError(err);
+      throw err;
+    });
+};
+
 const checkGitHubResource = async (user, repo) => {
   try {
     const apiURL = `https://api.github.com/repos/${user}/${repo}`;
-    
-    // Add headers based on environment
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      ...(process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false' && {
-        'Authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-      })
-    });
+    const headers = getGitHubHeaders();
 
-    const response = await fetch(apiURL, { 
+    const response = await fetch(apiURL, {
       method: 'GET',
-      headers 
+      headers
     });
 
     const data = await response.json();

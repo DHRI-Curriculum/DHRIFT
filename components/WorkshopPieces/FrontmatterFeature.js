@@ -25,12 +25,7 @@ export default function FrontmatterFeature({ authors, instructors, editors, cove
             src={src}
             width={500}
             alt={coverImage} />
-          <p
-            className='centered'
-            style={{
-              top: '30%'
-            }}
-          >{frontTitle}</p>
+          <p className='frontmatter-feature-title'>{frontTitle}</p>
         </div>
 
         {authors && authors.length > 0 && <div className='frontmatter-feature-authors'>

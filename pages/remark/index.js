@@ -113,12 +113,12 @@ export default function WorkshopPage({
     }, []);
 
     return (
-      allPages.map((page, index) => {  // page = [h1, p, p]
+      allPages.map((page, pageIndex) => {  // page = [h1, p, p]
         return (
-          <div key={index} className='page-content'>
-            {page.map((element, index) => {
+          <div key={`page-${pageIndex}`} className='page-content'>
+            {page.map((element, elementIndex) => {
               return (
-                <Fragment key={index}>
+                <Fragment key={`element-${pageIndex}-${elementIndex}`}>
                   {element}
                 </Fragment>
               )
@@ -187,7 +187,13 @@ export default function WorkshopPage({
     getMDX()
 
     if (currentFile != null && content != '' && metadata != null && allUploads != undefined) {
-      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
+      const frontMatterContent = (
+        <Frontmatter
+          currentFile={currentFile}
+          setCurrentPage={setCurrentPage}
+          secondPageLink={secondPageLink}
+        />
+      );
       setPages([frontMatterContent, ...convertContenttoHTML(processedContent)]);
       setCurrentContentLoaded(true);
     }

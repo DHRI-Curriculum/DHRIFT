@@ -192,9 +192,9 @@ const ChatBot = () => {
                }}
             >
               {modelList.length > 0 ? (
-                modelList.map((model, index) => (
-                  <MenuItem key={index} value={model.model_id}>
-                    {model.model_id ? model.model_id : `Model ${index + 1}`} {/* Show the model_id */}
+                modelList.map((model) => (
+                  <MenuItem key={model.model_id} value={model.model_id}>
+                    {model.model_id}
                   </MenuItem>
                 ))
               ) : (
@@ -205,7 +205,7 @@ const ChatBot = () => {
 
           <div className="chatbox" ref={chatboxRef}>
             {messages.map((message, index) => (
-              <div key={index} className={`message ${message.sender}`}>
+              <div key={`${message.sender}-${index}-${message.text.slice(0, 20)}`} className={`message ${message.sender}`}>
                 <MarkdownWithHighlight>{message.sender === "user" ? `>> ${message.text}` : `Bot: ${message.text}`}</MarkdownWithHighlight>
               </div>
             ))}

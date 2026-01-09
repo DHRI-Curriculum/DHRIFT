@@ -31,7 +31,6 @@ export default function UploadtoStorage() {
     };
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(file);
         toLocalStorage();
     };
 

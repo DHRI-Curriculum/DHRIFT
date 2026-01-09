@@ -148,19 +148,12 @@ export default function HTMLEditorComponent({
         javascript.current = newValue;
         if (frameReady && isActive) {
             runAll();
-        } else {
-            console.log('Frame not ready or editor not active, queuing JavaScript update');
         }
     };
 
 
     const runAll = () => {
-        if (!isActive) {
-            console.log('Editor not active');
-            return;
-        }
-        if (!frameWindow || !frameDoc) {
-            console.error('Frame not ready');
+        if (!isActive || !frameWindow || !frameDoc) {
             return;
         }
 

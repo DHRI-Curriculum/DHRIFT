@@ -10,7 +10,7 @@ export default function QuizComponent({ className, children }) {
 
 
     const [disabled, setDisabled] = useState(false);
-    const [correct, setCorrect] = useState(0);
+    const [correct, setCorrect] = useState(false);
 
     // list of <li> nodes inside a single <ul>; build labels directly from React children
     const listRoot = Array.isArray(children) ? children[0] : children;
@@ -83,38 +83,25 @@ export default function QuizComponent({ className, children }) {
 
     return (
         <div id={componentUniqueId} className='quiz'>
-            <form
-                onSubmit={onSubmit}
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                }}
-            >
+            <form onSubmit={onSubmit} className="quiz-form">
                 <FormControl component="fieldset">
-                    <FormLabel component="legend">Quiz</FormLabel>
+                    <FormLabel component="legend" className="quiz-label">Quiz</FormLabel>
                     {lis.map(li => (
                         <FormControlLabel
                             key={li.index}
-                            value={li.index}
-                            control={<Checkbox />}
+                            value={String(li.index)}
+                            control={<Checkbox className="quiz-checkbox" />}
                             label={li.li}
-                            className={`${componentUniqueId}-checkbox`}
+                            className="quiz-option"
                             disabled={disabled}
-                            style={{
-                                // no bullet 
-                                listStyleType: 'none',
-                            }}
                         />
-
                     ))}
                 </FormControl>
-                <Button type="submit" className='button button-bark'
-                    id={`${componentUniqueId}-submit`}>
+                <Button type="submit" className='quiz-submit' id={`${componentUniqueId}-submit`}>
                     Check my answer
                 </Button>
             </form>
-            {correct ? <p>Correct!</p> : <p></p>}
+            {correct && <p className="quiz-result">Correct!</p>}
         </div>
     );
 }

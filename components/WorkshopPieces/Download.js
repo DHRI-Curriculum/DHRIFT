@@ -1,4 +1,3 @@
-import { use, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import JSZip from "jszip";
@@ -6,127 +5,58 @@ import { saveAs } from "file-saver";
 
 export default function Download(props) {
     const allUploads = props.allUploads;
-    useEffect(() => {
-        if (allUploads) {
-        }
-    }, [allUploads])
-
 
     const chosenUploads = typeof props.files === 'string' ? props.files.split(',') : [];
-    var filteredUploads = [];
+    const filteredUploads = [];
     if (chosenUploads != undefined && allUploads?.length > 0) {
         chosenUploads.forEach(upload => {
             const currentFile = allUploads?.find(file => file.name === upload.trim());
             if (currentFile != undefined) {
                 filteredUploads.push(currentFile);
             }
-        })
+        });
     }
 
-    let headers;
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-                'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-            });
-    } else {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-            });
-    }
+    const handleDownload = async () => {
+        if (filteredUploads.length === 0) return;
 
-    const handleDownload = (file) => {
-        if (filteredUploads.length > 0) {
-            // download all files as a zip
-            const zip = new JSZip();
-            var downloadFile = function (url, filename) {
-                console.log('url', url)
-                return new Promise((resolve, reject) => {
-                    fetch(url, {
-                        headers: headers,
-                        method: 'GET',
-                    }).then(
-                        res => res.json()
-                    ).then(
-                        // decode from base64
-                        res => {
-                            var resContent = Buffer.from(res.content, 'base64').toString();
-                            if (resContent === '' || resContent === undefined || resContent === null) {
-                                var alt = altDownloadFile(res.download_url, filename);
-                                reject(alt);
-                            }
-                            return resContent;
-                        }
-                    ).then(
-                        res => {
-                            zip.file(filename, res);
-                            resolve();
-                        }
-                    ).catch(
-                        err => {
-                            console.log('err', err)
-                            console.log('workshop.url', url)
-                        }
-                    )
-                })
+        const zip = new JSZip();
+
+        // Download each file using the raw download_url
+        for (const file of filteredUploads) {
+            try {
+                const response = await fetch(file.download_url);
+                const blob = await response.blob();
+                zip.file(file.name, blob);
+            } catch (error) {
+                console.error(`Failed to download ${file.name}:`, error);
             }
-
-            var altDownloadFile = function (url, filename) {
-                // create a popup window with the download url
-                // this is a workaround for the github api not returning the content of the file
-                // if the file is empty
-                return new Promise((resolve, reject) => {
-                    var popup = window.open(url, '_blank');
-                    if (popup == null) {
-                        reject('Please disable your popup blocker and try again.');
-                    } else {
-                        popup.onload = function () {
-                            popup.document.title = filename;
-                            popup.document.execCommand("SaveAs", true, filename);
-                            popup.close();
-                            resolve();
-                        }
-                    }
-                })
-            }
-
-            var downloadAllFiles = async function (files) {
-                for (let i = 0; i < files.length; i++) {
-                    console.log('files[i].url', files[i].url)
-                    await downloadFile(files[i].url, files[i].name);
-                }
-            }
-
-            downloadAllFiles(filteredUploads).then(() => {
-                zip.generateAsync({ type: "blob" })
-                    .then(function (content) {
-                        saveAs(content, "files.zip");
-                    });
-            })
         }
-    }
+
+        // Generate and save the zip
+        const content = await zip.generateAsync({ type: "blob" });
+        saveAs(content, "files.zip");
+    };
+
+    // If no matching files found, show the requested filenames anyway
+    const displayFiles = filteredUploads.length > 0
+        ? filteredUploads.map(f => f.name)
+        : chosenUploads.map(f => f.trim()).filter(Boolean);
+
+    if (displayFiles.length === 0) return null;
 
     return (
-        <div className="download-button"
-            style={{
-                marginTop: '20px',
-                // marginBottom: '10px',
-            }}
-        >
+        <div className="download-button-container">
             <Button
-                className="button button-bark button-download"
-                style={{
-                    cursor: 'pointer',
-                }}
-                onClick={() => handleDownload(filteredUploads)}
+                className="button button-download"
+                onClick={handleDownload}
+                disabled={filteredUploads.length === 0}
             >
                 <DownloadIcon />
-                {filteredUploads.map(file =>
-                    <span key={file.name}>{file.name}</span>
-                )}
+                <span className="download-label">
+                    Download: {displayFiles.join(', ')}
+                </span>
             </Button>
         </div>
-    )
+    );
 }

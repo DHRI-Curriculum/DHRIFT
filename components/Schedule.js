@@ -5,8 +5,6 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import Link from 'next/link';
 
 export default function Schedule({ schedule, ...props }) {
-  console.log('props', props)
-
   const [activeAccordion, setActiveAccordion] = useState(null);
   const formattedDate = (date) => {
 
@@ -76,19 +74,12 @@ export default function Schedule({ schedule, ...props }) {
               </AccordionSummary>
               <AccordionDetails>
                 <div className="accordion-details">
-                  {eventsByDate[date].map((event, index) => (
-                    <div key={index}>
+                  {eventsByDate[date].map((event) => (
+                    <div key={`${event.title}-${event.time}`}>
                       <h3>{event.title}
                         {event.workshop &&
                     <Link href={`dynamic/?user=${props.gitUser}&repo=${props.gitRepo}&file=${event.workshop}&instUser=${props.instGitUser}&instRepo=${props.instGitRepo}`}>
-                          <LaunchIcon className="launch-icon"
-                            
-                            style={{
-                              cursor: 'pointer',
-                              paddingTop: '5px',
-                              color: '#000000',
-                            }}
-                          />
+                          <LaunchIcon className="launch-icon" />
                         </Link>
                         }
                       </h3>

@@ -562,6 +562,7 @@ export function escapeBareInlineTags(str, tags = ['a','head']) {
 }
 
 // Escape triple angle runs like "<<<" and ">>>" in prose to avoid MDX confusion
+// Skips fenced code blocks and inline code spans (backticks)
 export function escapeTripleAngleRuns(str) {
   const lines = String(str || '').split(/\r?\n/);
   let inFence = false;
@@ -569,7 +570,15 @@ export function escapeTripleAngleRuns(str) {
     let line = lines[i];
     if (isFenceLine(line)) { inFence = !inFence; continue; }
     if (inFence) continue;
-    lines[i] = line.replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
+    // Skip inline code spans - split by backticks and only process non-code parts
+    const parts = line.split(/(`[^`]*`)/g);
+    for (let j = 0; j < parts.length; j++) {
+      // Odd indices are inside backticks (the captured groups)
+      if (!parts[j].startsWith('`')) {
+        parts[j] = parts[j].replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
+      }
+    }
+    lines[i] = parts.join('');
   }
   return lines.join('\n');
 }

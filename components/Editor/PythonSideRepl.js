@@ -209,8 +209,7 @@ export default function PythonSideREPLComponent(props) {
               globalThis.pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.0/full/' })
             }
             load().then(() => {
-              console.log("Pyodide version: " + pyodide.version);
-              setIsPyodideReady(true)
+              setIsPyodideReady(true);
             })
           }
         }}

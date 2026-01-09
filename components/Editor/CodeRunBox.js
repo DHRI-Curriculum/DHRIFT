@@ -37,7 +37,18 @@ function normalizeLanguage(lang) {
 export default function CodeRunBox(props) {
     const setCode = props.setCode;
     const setEditorOpen = props.setEditorOpen;
+    const setActiveTab = props.setActiveTab;
     const lang = normalizeLanguage(props.language);
+
+    // Map highlight.js language to editor tab name
+    const getEditorTab = (language) => {
+        const langLower = (language || '').toLowerCase();
+        if (langLower === 'python' || langLower === 'py') return 'python';
+        if (langLower === 'javascript' || langLower === 'js') return 'javascript';
+        if (langLower === 'r') return 'r';
+        if (langLower === 'bash' || langLower === 'shell') return 'computer';
+        return langLower;
+    };
     let highlighted = null;
     try {
         if (hljs.getLanguage(lang)) {
@@ -49,7 +60,6 @@ export default function CodeRunBox(props) {
         try {
             highlighted = hljs.highlightAuto(props.defaultCode);
         } catch (err) {
-            console.log(err);
             highlighted = { value: props.defaultCode };
         }
     }
@@ -68,16 +78,10 @@ export default function CodeRunBox(props) {
                 <Button
                     className='button button-bark'
                     onClick={() => {
-                        
-                        try {
-                            setCode(props.defaultCode);
-                            
-                            setEditorOpen(true);
-                            
-                            props.setAskToRun(true);
-                        } catch (error) {
-                            console.error("Error in Run Code button handler:", error);
-                        }
+                        setCode(props.defaultCode);
+                        if (setActiveTab) setActiveTab(getEditorTab(props.language));
+                        setEditorOpen(true);
+                        props.setAskToRun(true);
                     }}
                 >
                     Run Code
@@ -91,6 +95,7 @@ export default function CodeRunBox(props) {
                 className='button button-bark'
                 onClick={() => {
                     setCode(props.defaultCode);
+                    if (setActiveTab) setActiveTab(getEditorTab(props.language));
                     setEditorOpen(true);
                     props.setAskToRun(true);
                 }}

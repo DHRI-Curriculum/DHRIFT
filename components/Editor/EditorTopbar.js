@@ -9,80 +9,20 @@ export default function EditorTopbar(props) {
     const spinnerNeeded = props.spinnerNeeded;
     const runButtonNeeded = props.runButtonNeeded || false;
     return (
-        <>
-            <div
-                className="editorTopBarButtonsContainer"
-                style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 10,
-                    width: '100%',
-                    background: '#000',
-                    borderBottom: '1px solid #333',
-                    padding: '12px 12px',
-                }}
-            >
-                {/* <Button
-                    color="primary"
-                    aria-label="open drawer"
-                    onClick={props.handleOpenClose}
-                >
-                    <CodeIcon
-                        style={{
-                            color: "#32c259",
-                        }}
-                    />
-                </Button> */}
-                {(!spinnerNeeded && runButtonNeeded) && <Button
-                    onClick={() => {
-                        props.run();
-                    }}
+        <div className="editorTopBarButtonsContainer">
+            {(!spinnerNeeded && runButtonNeeded) && (
+                <Button
+                    onClick={() => props.run()}
                     variant="outlined"
-                    style={{
-                        margin: "6px 8px",
-                        width: "100px",
-                        height: "25px",
-                        backgroundColor: "#32c259",
-                        color: "white",
-                        fontSize: "20px",
-                        borderRadius: "5px",
-                        border: "none",
-                        boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                        outline: "none",
-                        //   padding: "15px"
-                    }}>
-                    <PlayArrowIcon style={{
-                        marginRight: "10px",
-                        fontSize: "20px"
-                    }} />
-                    Run</Button>}
-                {(spinnerNeeded) && <CircularProgress
-                    style={{
-                        marginLeft: "10px",
-                        marginTop: "10px"
-                    }}
-                    />}
-                    {/* {props.snippets && <FileList snippets={props.snippets} />} */}
-
-
-                {/* <Button
-                    variant="text"
-                    onClick={() => {
-                        props.setCode(props.defaultCode);
-                    }}
-                    style={{
-                        color: "#32c259",
-                        fontSize: "16px",
-                        borderRadius: "5px",
-                        border: "none",
-                        boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.75)",
-                        outline: "none",
-                        margin: "10px",
-                        float: "right"
-                    }}>
-                    Revert Code
-                </Button> */}
-            </div>
-        </>
+                    className="run-button"
+                >
+                    <PlayArrowIcon />
+                    Run
+                </Button>
+            )}
+            {spinnerNeeded && (
+                <CircularProgress className="editor-spinner" size={24} />
+            )}
+        </div>
     )
 }

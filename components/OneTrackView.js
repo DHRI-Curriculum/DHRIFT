@@ -33,14 +33,14 @@ export default function OneTrackView({ gitUser, gitRepo, instUser, instRepo, tra
             <p>{trackData.description}</p>
         <div
         className='workshop-grid'>
-            {reverseTrackWorkshops.map((workshop, index) => (
+            {reverseTrackWorkshops.map((workshop) => (
                 <UseWorkshopsCard
                     workshop={workshop}
                     gitUser={gitUser}
                     gitRepo={gitRepo}
                     instRepo={instRepo}
                     instUser={instUser}
-                    key={index}
+                    key={`workshop-${workshop.name}`}
                 />
             ))}
         </div>

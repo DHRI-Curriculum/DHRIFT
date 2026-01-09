@@ -1,16 +1,8 @@
-import EditorTopbar from '../Editor/EditorTopbar';
-import Script from 'next/script';
-import Head from 'next/head';
-
 export default function Webvm(props) {
-    
+    // webvm/index.html has its own serviceWorker.js for cross-origin isolation
     return (
         <div className='webvm'>
-            <Head>
-                <script src={process.env.NEXT_PUBLIC_ASSET_PREFIX +'/coi-serviceworker.js'} async></script>
-            </Head>
-            <iframe src='./webvm/index.html' width='100%' height='95%' id="iframe"></iframe>
-            {/* <iframe src={'https://zweibel.net/webvm/'} width='100%' height='95%' id="iframe"></iframe> */}
-           </div>
+            <iframe src='./webvm/index.html' title="Linux Terminal" />
+        </div>
     )
 }

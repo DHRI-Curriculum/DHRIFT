@@ -26,11 +26,9 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     
     // Update both state and ref when defaultCode changes
     useEffect(() => {
-        console.log("REditorComponent: defaultCode changed:", defaultCode);
         if (defaultCode) {
             Rcode.current = defaultCode;
             setEditorCode(defaultCode);
-            console.log("REditorComponent: Updated code state and ref");
         }
     }, [defaultCode]);
 
@@ -125,19 +123,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
                 />
             </div>
 
-            <div className="outputContainer" id='out'
-                style={{
-                    padding: "10px",
-                    backgroundColor: "#f5f5f5",
-                    color: "#32c259",
-                    fontSize: "20px",
-                    height: "100%",
-                    font: "1.3rem Inconsolata, monospace",
-                    whiteSpace: "pre-wrap",
-                    borderRadius: "5px",
-
-                }}
-            >
+            <div className="outputContainer" id='out'>
                 {/* {output} */}
             </div>
         </Fragment >

@@ -63,12 +63,10 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`;
 
         return (
-            <div className="image-container" style={{ position: 'relative' }}>
-                <div className='markdown-image-container' style={{ position: 'relative' }} aria-label={newProps.alt}>
+            <div className="image-container">
+                <div className='markdown-image-container' aria-label={newProps.alt}>
                     {loadFailed ? (
-                        <div className="image-load-error" style={{
-                            padding: '1rem', border: '1px dashed #ccc', borderRadius: '4px', color: '#666', textAlign: 'center'
-                        }}>
+                        <div className="image-load-error">
                             Image could not be loaded
                             {newProps.alt && <div>Alt text: {newProps.alt}</div>}
                         </div>
@@ -88,9 +86,6 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                                 }
                             }}
                             title={newProps.alt}
-                            style={{
-                                width: 'auto', maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto'
-                            }}
                         />
                     )}
                 </div>

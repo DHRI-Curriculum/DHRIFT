@@ -258,12 +258,10 @@ sys.tracebacklimit = 0
             try {
               getPython();
             } catch (err) {
-              console.log(err);
-              // wait 2 seconds and try again
+              // Retry after 2 seconds on failure
               setTimeout(() => {
                 getPython();
               }, 2000);
-
             }
 
           }}
@@ -313,43 +311,25 @@ sys.tracebacklimit = 0
           <div
             role="separator"
             aria-orientation="horizontal"
+            className="editor-separator"
             onMouseDown={() => setIsResizing(true)}
             onDoubleClick={() => setEditorRatio(0.7)}
-            style={{
-              height: '2px',
-              flex: '0 0 2px',
-              cursor: 'row-resize',
-              background: '#e3e7ea',
-              borderTop: '1px solid #ddd',
-              borderBottom: '1px solid #ddd',
-              margin: 0
-            }}
           />
           <div
             className="outputContainer"
             style={{
-              padding: '10px',
-              backgroundColor: '#f5f5f5',
-              color: '#222',
-              font: '1.1rem Inconsolata, monospace',
-              whiteSpace: 'pre-wrap',
-              borderRadius: '5px',
-              marginTop: 0,
-              overflowY: 'auto',
               ...outputFlexStyle,
             }}
             ref={outDivRef}
           >
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="output-actions">
               <DeleteOutlineIcon
                 onClick={() => { outputRef.current=''; setIsoutput(true); setOutputVersion((v)=>v+1); }}
                 titleAccess="Clear output"
-                style={{ fontSize: '18px', color: '#777', cursor: 'pointer' }}
               />
               <CloseIcon
                 onClick={() => { setIsoutput(false); outputRef.current=''; }}
                 titleAccess="Close output"
-                style={{ fontSize: '18px', color: '#555', cursor: 'pointer' }}
               />
             </div>
             {outputRef.current}
@@ -358,9 +338,6 @@ sys.tracebacklimit = 0
       )}
         <div
           id='figHolder'
-          style={{
-            backgroundColor: 'white',
-          }}
         >
           {isPlot &&
             <>
