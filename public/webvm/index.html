@@ -373,12 +373,10 @@ __      __   _  __   ____  __
 	initialMessage();
 	async function loadCX()
 	{
-		// Find the latest build and use ESM version
-		var r = await fetch("https://cxrtnc.leaningtech.com/LATEST.txt");
-		var url = await r.text();
-		url = url.trim();
-		// Use ES6 module version to fix Chrome CORS issues with dynamic imports
-		var esmUrl = url.replace(/cx\.js$/, 'cx.esm.js');
+		// Use pinned version for stability (can change to test different versions)
+		var version = "1.1.7";
+		var esmUrl = `https://cxrtnc.leaningtech.com/${version}/cx.esm.js`;
+		var fallbackUrl = `https://cxrtnc.leaningtech.com/${version}/cx.js`;
 		try {
 			const CheerpXModule = await import(esmUrl);
 			// Make CheerpX available globally
@@ -389,7 +387,7 @@ __      __   _  __   ____  __
 			// Fallback to classic script if ESM fails
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
-			script.src = url;
+			script.src = fallbackUrl;
 			script.addEventListener("load", runBash, false);
 			document.head.appendChild(script);
 		}
