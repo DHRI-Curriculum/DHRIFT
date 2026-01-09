@@ -377,11 +377,22 @@ __      __   _  __   ____  __
 		var r = await fetch("https://cxrtnc.leaningtech.com/LATEST.txt");
 		var url = await r.text();
 		url = url.trim();
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.addEventListener("load", runBash, false);
-		document.head.appendChild(script);
+		// Use ES6 module version to fix Chrome CORS issues with dynamic imports
+		var esmUrl = url.replace(/cx\.js$/, 'cx.esm.js');
+		try {
+			const CheerpXModule = await import(esmUrl);
+			// Make CheerpX available globally
+			window.CheerpX = CheerpXModule.default || CheerpXModule;
+			runBash();
+		} catch (e) {
+			console.error("Failed to load CheerpX ESM:", e);
+			// Fallback to classic script if ESM fails
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
+			script.addEventListener("load", runBash, false);
+			document.head.appendChild(script);
+		}
 	}
 	loadCX();
     </script>
