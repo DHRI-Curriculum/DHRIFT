@@ -877,6 +877,55 @@ export function normalizeMultilineTableCells(str) {
   return out.join('\n');
 }
 
+// Normalize table rows by joining <tr>...</tr> content onto single lines
+// This prevents blank lines inside rows from triggering paragraph wrapping
+export function normalizeTableRows(str) {
+  const lines = String(str || '').split(/\r?\n/);
+  let inFence = false;
+  const out = [];
+  let rowBuf = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (isFenceLine(line)) {
+      inFence = !inFence;
+      if (rowBuf !== null) { out.push(rowBuf); rowBuf = null; }
+      out.push(line);
+      continue;
+    }
+    if (inFence) { out.push(line); continue; }
+
+    if (rowBuf !== null) {
+      // We're inside an open <tr> - look for closing </tr>
+      if (/<\s*\/\s*tr\s*>/i.test(line)) {
+        // Found the closer - append and flush
+        rowBuf += line.trim();
+        out.push(rowBuf);
+        rowBuf = null;
+      } else {
+        // Still inside row - accumulate (no extra space if line is empty)
+        const trimmed = line.trim();
+        if (trimmed) rowBuf += trimmed;
+      }
+      continue;
+    }
+
+    // Check for opening <tr> without closing on same line
+    if (/<\s*tr\b[^>]*>/i.test(line) && !/<\s*\/\s*tr\s*>/i.test(line)) {
+      // Opening without closing on same line - start accumulating
+      rowBuf = line.trim();
+      continue;
+    }
+
+    out.push(line);
+  }
+
+  // Flush any remaining buffer
+  if (rowBuf !== null) out.push(rowBuf);
+
+  return out.join('\n');
+}
+
 export function sanitizeBeforeParse(str, options = {}) {
   const tags = options.tags || defaultStrayCloserTags;
   let s = String(str || '');
@@ -888,6 +937,7 @@ export function sanitizeBeforeParse(str, options = {}) {
   s = stripOrphanComponentClosers(s);
   s = ensureImgSelfClosing(s);
   s = normalizeMultilineTableCells(s);
+  s = normalizeTableRows(s);
   s = ensureBlankLinesAroundBlockHtml(s, ['p']);
   s = ensureComponentTagsOnOwnLine(s, ['Quiz']);
   s = ensureBlankLinesAroundComponents(s, ['Quiz']);
