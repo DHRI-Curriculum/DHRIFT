@@ -23,6 +23,29 @@ import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
+import { visit } from 'unist-util-visit';
+
+// Rehype plugin to remove <p> tags incorrectly inserted inside table rows
+// This fixes MDX/remark-rehype mangling HTML tables when allowDangerousHtml is false
+function rehypeFixTableParagraphs() {
+    return (tree) => {
+        visit(tree, 'element', (node, index, parent) => {
+            // If this is a <tr> element, check for <p> children and unwrap them
+            if (node.tagName === 'tr' && node.children) {
+                const newChildren = [];
+                for (const child of node.children) {
+                    if (child.type === 'element' && child.tagName === 'p' && child.children) {
+                        // Unwrap: add p's children directly to tr
+                        newChildren.push(...child.children);
+                    } else {
+                        newChildren.push(child);
+                    }
+                }
+                node.children = newChildren;
+            }
+        });
+    };
+}
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, segments }) {
@@ -496,6 +519,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .use(remarkFrontmatter)
             .use(remarkDeflist)
             .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers })
+            .use(rehypeFixTableParagraphs)
             .use(rehypeHighlight)
             .use(rehypeReact, {
                 createElement,
