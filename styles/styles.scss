@@ -874,6 +874,40 @@ header {
     margin-bottom: 30px;
   }
 
+  // Table styles
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    display: block;
+
+    @include respond-above(md) {
+      display: table;
+    }
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  th {
+    background-color: $primary-color-brown;
+    color: $primary-color-white;
+    font-weight: 600;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
 }
 
 .pagination {
