@@ -25,17 +25,18 @@ import * as prod from 'react/jsx-runtime';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
 import { visit } from 'unist-util-visit';
 
-// Rehype plugin to remove <p> tags incorrectly inserted inside table rows
+// Rehype plugin to remove <p> tags incorrectly inserted inside table elements
 // This fixes MDX/remark-rehype mangling HTML tables when allowDangerousHtml is false
 function rehypeFixTableParagraphs() {
+    const tableElements = ['table', 'thead', 'tbody', 'tfoot', 'tr'];
     return (tree) => {
-        visit(tree, 'element', (node, index, parent) => {
-            // If this is a <tr> element, check for <p> children and unwrap them
-            if (node.tagName === 'tr' && node.children) {
+        visit(tree, 'element', (node) => {
+            // If this is a table-related element, check for <p> children and unwrap them
+            if (tableElements.includes(node.tagName) && node.children) {
                 const newChildren = [];
                 for (const child of node.children) {
                     if (child.type === 'element' && child.tagName === 'p' && child.children) {
-                        // Unwrap: add p's children directly to tr
+                        // Unwrap: add p's children directly to parent
                         newChildren.push(...child.children);
                     } else {
                         newChildren.push(child);
