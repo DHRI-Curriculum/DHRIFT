@@ -876,31 +876,47 @@ header {
 
   // Table styles
   table {
-    width: 100%;
+    width: auto;
     max-width: 100%;
     border-collapse: collapse;
     margin: 1.5rem 0;
     font-size: 0.95rem;
+    border: 1px solid #ccc;
+  }
+
+  caption {
+    padding: 0.75rem;
+    text-align: left;
+    caption-side: top;
+  }
+
+  thead th {
+    background-color: $primary-color-brown;
+    color: $primary-color-white;
+    font-weight: 600;
+
+    &:empty {
+      padding: 0.5rem;
+      min-width: 2rem;
+    }
   }
 
   th, td {
     border: 1px solid #ccc;
     padding: 0.5rem 0.75rem;
     text-align: left;
+    vertical-align: middle;
   }
 
-  th {
-    background-color: $primary-color-brown;
-    color: $primary-color-white;
+  // Row headers in tbody (cells with rowspan)
+  tbody th {
+    background-color: darken($primary-color-cream, 5%);
     font-weight: 600;
   }
 
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  tr:hover {
-    background-color: #f1f1f1;
+  tfoot td {
+    background-color: darken($primary-color-cream, 3%);
+    font-style: italic;
   }
 
 }
