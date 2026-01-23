@@ -52,10 +52,10 @@ export default function Download(props) {
                     ).then(
                         // decode from base64
                         res => {
-                            // Check if file is zipped (binary)
-                            const isBinary = /\.(zip)$/i.test(filename);
+                            // Check if file is zipped or pdf or whatever make come!
+                            const isBinary = /\.(zip|pdf)$/i.test(filename);
                             
-                            // For binary files, keep as binary data (to allow for zips)
+                            // For binary files, keep as binary data (to allow for zips and pdfs specifically now)
                             var resContent = isBinary 
                                 ? Buffer.from(res.content, 'base64')
                                 : Buffer.from(res.content, 'base64').toString();
