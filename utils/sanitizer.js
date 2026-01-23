@@ -877,6 +877,22 @@ export function normalizeMultilineTableCells(str) {
   return out.join('\n');
 }
 
+// Normalize entire HTML tables by collapsing all whitespace between tags
+// This prevents MDX from wrapping table content in <p> tags
+export function normalizeHtmlTables(str) {
+  // Match entire <table>...</table> blocks and collapse internal whitespace
+  return String(str || '').replace(
+    /<table\b[^>]*>[\s\S]*?<\/table>/gi,
+    (match) => {
+      // Remove newlines and collapse whitespace between tags
+      return match
+        .replace(/>\s+</g, '><')  // Remove whitespace between tags
+        .replace(/\s+/g, ' ')      // Collapse remaining whitespace
+        .trim();
+    }
+  );
+}
+
 export function sanitizeBeforeParse(str, options = {}) {
   const tags = options.tags || defaultStrayCloserTags;
   let s = String(str || '');
@@ -888,6 +904,7 @@ export function sanitizeBeforeParse(str, options = {}) {
   s = stripOrphanComponentClosers(s);
   s = ensureImgSelfClosing(s);
   s = normalizeMultilineTableCells(s);
+  s = normalizeHtmlTables(s);
   s = ensureBlankLinesAroundBlockHtml(s, ['p']);
   s = ensureComponentTagsOnOwnLine(s, ['Quiz']);
   s = ensureBlankLinesAroundComponents(s, ['Quiz']);
