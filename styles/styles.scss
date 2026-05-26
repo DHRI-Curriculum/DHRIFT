@@ -109,19 +109,21 @@ body {
   min-height: 100vh;
   background-color: var(--color-bg);
 
-  // When the editor drawer is open, shift the reading column and pagination left
-  // so the right-anchored drawer doesn't overlap them. The CSS variable is set
-  // inline on this element and tracks the (resizable) drawer width.
-  &[data-editor-open='true'] {
+  // When the editor drawer is open on tablet+, shift the reading column and pagination
+  // left so the right-anchored drawer doesn't overlap them. Below 768px the drawer
+  // covers the full viewport, so shifting content would push it off-screen.
+  @media (min-width: 768px) {
+    &[data-editor-open='true'] {
+      .v2-main,
+      .v2-pagination-region {
+        margin-right: var(--v2-drawer-width, 0);
+      }
+    }
+
     .v2-main,
     .v2-pagination-region {
-      margin-right: var(--v2-drawer-width, 0);
+      transition: margin-right var(--transition-normal);
     }
-  }
-
-  .v2-main,
-  .v2-pagination-region {
-    transition: margin-right var(--transition-normal);
   }
 }
 
@@ -2305,65 +2307,7 @@ body {
 }
 
 // ============================================
-// FRONTMATTER PAGE
-// ============================================
-.frontmatter-page,
-.v2-frontmatter {
-  text-align: center;
-  padding: var(--space-3xl) var(--space-lg);
-  max-width: 800px;
-  margin: 0 auto;
-
-  h1 {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: var(--space-lg);
-
-    @media (min-width: 768px) {
-      font-size: 3rem;
-    }
-  }
-
-  .frontmatter-meta {
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-xl);
-  }
-
-  .frontmatter-description {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    margin-bottom: var(--space-2xl);
-  }
-
-  .frontmatter-start-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--space-xl);
-    background: var(--color-primary);
-    color: var(--dhrift-cream);
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 500;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all var(--transition-fast);
-
-    &:hover {
-      background: var(--color-primary-hover);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-  }
-}
-
-// ============================================
-// FRONTMATTER (FM) - Redesigned
+// FRONTMATTER (FM)
 // ============================================
 .fm {
   // Full-bleed layout - break out of container

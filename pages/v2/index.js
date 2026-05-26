@@ -459,17 +459,21 @@ export default function WorkshopPageV2({
           )}
         </Container>
 
-        {/* Pagination follows the reading column's width; brand footer stays full-width */}
+        {/* Pagination follows the reading column's width; brand footer stays full-width.
+            Skip pagination on the frontmatter page — the Start Workshop CTA already
+            advances to page 2 and the disabled Previous reads as broken. */}
         <div className="workshop-footer">
-          <div className="v2-pagination-region">
-            <PaginationV2
-              currentPage={currentPage}
-              pageTitles={pageTitles}
-              handlePageChange={handlePageChange}
-              pages={pages}
-              editorOpen={editorOpen}
-            />
-          </div>
+          {currentPage > 1 && (
+            <div className="v2-pagination-region">
+              <PaginationV2
+                currentPage={currentPage}
+                pageTitles={pageTitles}
+                handlePageChange={handlePageChange}
+                pages={pages}
+                editorOpen={editorOpen}
+              />
+            </div>
+          )}
           <Footer workshopMode={true} />
         </div>
       </div>
