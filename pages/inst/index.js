@@ -12,6 +12,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Link from 'next/link';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import heroImage from '../../public/images/learn.jpg';
 import { createGitHubFetcher } from '../../utils/github';
 
@@ -172,17 +173,11 @@ export default function Institute(props) {
 
     const inst = (
         <>
-            <div className="inst-description">
-                {parsedYAML && <p>{parsedYAML.description}</p>}
-                {parsedYAML && (parsedYAML.registerlink || parsedYAML.registerLink) && (
-                    <Link
-                        href={parsedYAML.registerlink || parsedYAML.registerLink}
-                        className="button button-bark"
-                    >
-                        {parsedYAML.registertext || parsedYAML.registerText || 'Register'}
-                    </Link>
-                )}
-            </div>
+            {parsedYAML?.description && (
+                <div className="inst-description">
+                    <p>{parsedYAML.description}</p>
+                </div>
+            )}
             {parsedYAML && (parsedYAML.DHRIFTfrontpage === false || !parsedYAML.DHRIFTfrontpage) && aboutAccordion}
             {sessions && parsedYAML && parsedYAML.showSchedule !== false &&
                 sessions.some(session => session.title !== '') && (
@@ -229,6 +224,15 @@ export default function Institute(props) {
                                 <div className="inst-hero-description">
                                     <p>{parsedYAML.herodescription}</p>
                                 </div>
+                            )}
+                            {parsedYAML && (parsedYAML.registerlink || parsedYAML.registerLink) && (
+                                <Link
+                                    href={parsedYAML.registerlink || parsedYAML.registerLink}
+                                    className="inst-hero-cta"
+                                >
+                                    {parsedYAML.registertext || parsedYAML.registerText || 'Register'}
+                                    <ArrowForwardIcon />
+                                </Link>
                             )}
                         </div>
                     </div>
