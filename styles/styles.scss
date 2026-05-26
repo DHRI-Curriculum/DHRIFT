@@ -108,6 +108,25 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--color-bg);
+
+  // When the editor drawer is open, shift the reading column and pagination left
+  // so the right-anchored drawer doesn't overlap them. The CSS variable is set
+  // inline on this element and tracks the (resizable) drawer width.
+  &[data-editor-open='true'] {
+    .v2-main,
+    .v2-pagination-region {
+      margin-right: var(--v2-drawer-width, 0);
+    }
+  }
+
+  .v2-main,
+  .v2-pagination-region {
+    transition: margin-right var(--transition-normal);
+  }
+}
+
+.v2-pagination-region {
+  width: auto; // shrinks with margin-right so the inner pagination re-centers
 }
 
 // ============================================
@@ -655,12 +674,11 @@ body {
 // ============================================
 // V2 MAIN CONTAINER
 // ============================================
+// Full-width region; the reading column inside re-centers within whatever
+// horizontal space Main has after the drawer claims its share.
 .v2-main-container {
   flex: 1;
   width: 100%;
-  max-width: var(--page-max-width);
-  margin: 0 auto;
-  padding: 0 var(--page-padding);
 }
 
 .v2-main {
@@ -686,8 +704,9 @@ body {
 }
 
 .workshop-container {
-  max-width: 100%;
-  margin: 0;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 var(--page-padding);
 }
 
 .page-content {

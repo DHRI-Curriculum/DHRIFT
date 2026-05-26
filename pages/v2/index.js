@@ -11,7 +11,6 @@ import Footer from '../../components/Footer'
 import Container from '@mui/material/Container'
 import Skeleton from '@mui/material/Skeleton'
 import DrawerEditorMovable from '../../components/Editor/DrawerEditor'
-import { styled } from '@mui/material/styles'
 import useUploads from '../../components/Hooks/UseUploads'
 import useWorkshop from '../../components/Hooks/UseWorkshop'
 import PaginationV2 from '../../components/WorkshopPieces/PaginationV2'
@@ -25,27 +24,9 @@ const buildRawGitHubURL = (user, repo, branch, file) => (
   `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${encodeURI(file)}.md`
 )
 
-// Normalize the drawer's width (number = pixels, string = pass through) into a CSS length
+// Normalize the drawer's width (number = pixels, string = pass through) into a CSS length.
+// Used to feed the inline CSS variable that drives the page's layout shift.
 const toCssWidth = (w) => (typeof w === 'number' ? `${w}px` : w)
-
-const Main = styled('main', {
-  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'drawerWidth',
-})(({ theme, open, drawerWidth }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginRight: 0,
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: toCssWidth(drawerWidth),
-  }),
-}))
 
 /**
  * Find all directive block ranges (:::name ... :::) in content
@@ -396,9 +377,23 @@ export default function WorkshopPageV2({
     )
   }
 
+  // CSS variable on the page root drives the layout shift for Main + pagination.
+  // The value tracks the (resizable) drawer width; the data attribute toggles whether
+  // descendants actually apply the offset.
+  const workshopStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    '--v2-drawer-width': toCssWidth(drawerWidth),
+  }
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <div className="v2-workshop" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div
+        className="v2-workshop"
+        data-editor-open={editorOpen ? 'true' : 'false'}
+        style={workshopStyle}
+      >
         {/* Always show WorkshopHeaderV2 in v2 for consistent design */}
         <WorkshopHeaderV2
           currentPage={currentPage}
@@ -421,7 +416,7 @@ export default function WorkshopPageV2({
           <Head>
             <title>{title}</title>
           </Head>
-          <Main open={editorOpen} drawerWidth={drawerWidth} id="main" className="v2-main">
+          <main id="main" className="v2-main">
             <div className="card-page">
               <div className="workshop-container">
                 {currentContent ? (
@@ -438,7 +433,7 @@ export default function WorkshopPageV2({
                 )}
               </div>
             </div>
-          </Main>
+          </main>
 
           {editors.length > 0 && workshopMode && (
             <DrawerEditorMovable
@@ -464,15 +459,17 @@ export default function WorkshopPageV2({
           )}
         </Container>
 
-        {/* Always show footer/pagination in v2 */}
+        {/* Pagination follows the reading column's width; brand footer stays full-width */}
         <div className="workshop-footer">
-          <PaginationV2
-            currentPage={currentPage}
-            pageTitles={pageTitles}
-            handlePageChange={handlePageChange}
-            pages={pages}
-            editorOpen={editorOpen}
-          />
+          <div className="v2-pagination-region">
+            <PaginationV2
+              currentPage={currentPage}
+              pageTitles={pageTitles}
+              handlePageChange={handlePageChange}
+              pages={pages}
+              editorOpen={editorOpen}
+            />
+          </div>
           <Footer workshopMode={true} />
         </div>
       </div>
