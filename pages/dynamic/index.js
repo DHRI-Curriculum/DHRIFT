@@ -27,6 +27,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, autoCloseSecretBlocks, escapeCurlyForMDX } from '../../utils/sanitizer'
 import remarkDeflist from 'remark-deflist'
 import slicesUtil from '../../utils/slices.mjs'
+import dynamicStyles from '../../styles/dynamicWorkshop.module.scss'
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
@@ -506,6 +507,7 @@ export default function WorkshopPage({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <>
         <div
+          className={dynamicStyles.dynamicWorkshop}
           style={{
             display: 'flex',
             flexDirection: 'column',

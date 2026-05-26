@@ -441,6 +441,8 @@ export default function WorkshopPageV2({
               gitRepo={gitRepo}
               jupyterSrc={jupyterSrc}
               setJupyterSrc={setJupyterSrc}
+              buttonContainerClassName="editor-button-container--v2"
+              buttonClassName="editor-button--compact"
             />
           )}
         </Container>

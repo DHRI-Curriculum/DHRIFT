@@ -1,0 +1,320 @@
+.dynamicWorkshop {
+  --dynamic-bark: #2e2e2e;
+  --dynamic-brown: #3c342f;
+  --dynamic-cream: #f9f3ef;
+  --dynamic-white: #fff;
+  --dynamic-black: #1b1621;
+  --dynamic-sky: #8dd0cd;
+
+  background: var(--dynamic-cream);
+  color: var(--dynamic-black);
+  font-family: 'Poppins', system-ui, sans-serif;
+
+  :global(.workshop-header) {
+    align-content: center;
+    align-items: flex-start;
+    background: var(--dynamic-brown);
+    color: var(--dynamic-white);
+    display: flex;
+    flex-direction: row;
+    height: 100px;
+    justify-content: space-between;
+    left: 0;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 120;
+  }
+
+  :global(.workshop-header a) {
+    color: var(--dynamic-white);
+    text-decoration: none;
+  }
+
+  :global(.workshop-header a:hover) {
+    text-decoration: none;
+  }
+
+  :global(.workshop-header-title) {
+    color: var(--dynamic-white);
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    line-height: 1.2;
+    margin: 21px 0 0;
+  }
+
+  :global(.workshop-header-left),
+  :global(.workshop-header-right) {
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  :global(.workshop-header-left) {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  :global(.workshop-header-right) {
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  :global(.workshop-header-right.drawer-open) {
+    background: var(--dynamic-bark);
+    padding-bottom: 30px;
+    padding-left: 10px;
+  }
+
+  :global(.workshop-header-breadcrumbs) {
+    color: var(--dynamic-white);
+    margin-left: 35px;
+    margin-top: 35px;
+  }
+
+  :global(.workshop-header-breadcrumbs li),
+  :global(.workshop-header-breadcrumbs p),
+  :global(.workshop-header-breadcrumbs div),
+  :global(.workshop-header-breadcrumbs a),
+  :global(.workshop-header-breadcrumbs svg) {
+    color: var(--dynamic-white);
+  }
+
+  :global(.workshop-header-breadcrumbs li) {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 1.2rem;
+  }
+
+  :global(.workshop-header-breadcrumbs p) {
+    padding-left: 5px;
+  }
+
+  :global(.card-page) {
+    flex: 1;
+    padding: 0;
+  }
+
+  :global(.workshop-container) {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  :global(.workshop-container > .page-content) {
+    margin-bottom: 100px;
+    margin-top: 150px;
+    padding-left: 20px;
+  }
+
+  :global(.workshop-container > .page-content:has(.fm)) {
+    margin-top: 20px;
+  }
+
+  :global(.workshop-container > .page-content > .page-content) {
+    margin: 0;
+    padding-left: 0;
+  }
+
+  :global(.page-content h1) {
+    color: var(--dynamic-black);
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 30px;
+  }
+
+  :global(.page-content h2) {
+    border-bottom: 1px solid rgba(60, 52, 47, 0.18);
+    color: var(--dynamic-black);
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+
+  :global(.page-content table) {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin: 1.5rem 0;
+    max-width: 100%;
+    width: auto;
+  }
+
+  :global(.page-content th),
+  :global(.page-content td) {
+    border: 1px solid #ccc;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  :global(.page-content thead th) {
+    background: var(--dynamic-brown);
+    color: var(--dynamic-white);
+    font-weight: 600;
+  }
+
+  :global(.fm) {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  :global(.fm-hero) {
+    background: var(--dynamic-bark);
+    min-height: 380px;
+  }
+
+  :global(.fm-title),
+  :global(.page-content .fm-hero .fm-title) {
+    color: var(--dynamic-white);
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 3rem;
+  }
+
+  :global(.fm-credits) {
+    background: var(--dynamic-black);
+  }
+
+  :global(.pagination) {
+    background: var(--dynamic-brown);
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    margin-top: 20px;
+    position: sticky;
+    z-index: 9;
+  }
+
+  :global(.pagination p) {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    padding-left: 5px;
+  }
+
+  :global(.pagination-button) {
+    border-radius: 5px;
+    color: var(--dynamic-white);
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    text-transform: none;
+    width: 100%;
+  }
+
+  :global(.pagination-button.Mui-disabled) {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  :global(.drawer-left) {
+    z-index: 130;
+  }
+
+  :global(.drawer-left > .MuiPaper-root) {
+    background: var(--dynamic-bark);
+    z-index: 1;
+  }
+
+  :global(nav.sidenav) {
+    align-self: center;
+    position: relative;
+    top: 100px;
+    width: 50%;
+    z-index: 12;
+  }
+
+  :global(nav.sidenav ul li) {
+    border-bottom: 1px solid var(--dynamic-white);
+    font-size: 25px;
+    list-style: none;
+  }
+
+  :global(.sidebar-button) {
+    color: var(--dynamic-white);
+    cursor: pointer;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 1rem;
+    margin-top: 30px;
+    text-align: left;
+    text-transform: none;
+    width: 100%;
+  }
+
+  :global(.editor-button-container) {
+    background: #24272e;
+    color: var(--dynamic-white);
+    position: fixed;
+    right: 0;
+    top: 100px;
+    z-index: 140;
+  }
+
+  :global(.editor-button) {
+    color: var(--dynamic-white);
+  }
+
+  :global(.editor-button-label) {
+    display: inline;
+  }
+
+  :global(.drawer-right > div) {
+    background: rgb(39, 40, 34);
+  }
+
+  :global(.workshop-footer) {
+    bottom: 0;
+    z-index: 10;
+  }
+}
+
+@media (max-width: 1100px) {
+  .dynamicWorkshop {
+    :global(.MuiContainer-root) {
+      margin-left: 0 !important;
+      max-width: 100% !important;
+      padding-left: 48px !important;
+      padding-right: 48px !important;
+    }
+  }
+}
+
+@media (min-width: 48em) {
+  .dynamicWorkshop {
+    :global(.workshop-container > .page-content) {
+      padding-left: 0;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .dynamicWorkshop {
+    :global(.workshop-header) {
+      min-height: 96px;
+      overflow-x: auto;
+      padding: 0 12px;
+    }
+
+    :global(.workshop-header-title) {
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+    }
+
+    :global(.workshop-header-breadcrumbs) {
+      margin-left: 18px;
+    }
+
+    :global(.workshop-container > .page-content) {
+      margin-top: 130px;
+    }
+
+    :global(.MuiContainer-root) {
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+    }
+  }
+}

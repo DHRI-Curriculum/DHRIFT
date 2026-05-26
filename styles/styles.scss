@@ -1308,6 +1308,13 @@ body {
   z-index: calc(var(--z-header) - 1);
 }
 
+.editor-button-container--v2 {
+  top: auto;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  z-index: calc(var(--z-header) + 1);
+}
+
 .editor-button {
   display: flex !important;
   align-items: center !important;
@@ -1330,6 +1337,23 @@ body {
   svg {
     font-size: 1.25rem;
     margin-right: var(--space-xs);
+  }
+}
+
+.editor-button--compact {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  justify-content: center !important;
+
+  .editor-button-label {
+    display: none;
+  }
+
+  svg {
+    margin-right: 0;
   }
 }
 

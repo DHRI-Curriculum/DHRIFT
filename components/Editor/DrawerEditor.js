@@ -191,16 +191,27 @@ export default function DrawerEditor(props) {
     }
 
 
+    const buttonContainerClassName = [
+        'editor-button-container',
+        props.buttonContainerClassName,
+    ].filter(Boolean).join(' ');
+    const buttonClassName = [
+        'editor-button',
+        props.buttonClassName,
+    ].filter(Boolean).join(' ');
+    const buttonLabel = props.buttonLabel || 'Open Code Editor';
+
     return (
         <Fragment>
-            <div className='editor-button-container'>
+            <div className={buttonContainerClassName}>
                 <Button
-                    aria-label="open drawer"
-                    className='editor-button'
+                    aria-label={buttonLabel}
+                    className={buttonClassName}
                     onClick={handleOpenClose}
+                    title={buttonLabel}
                 >
                     <CodeIcon />
-                    Open Code Editor
+                    <span className='editor-button-label'>{buttonLabel}</span>
                 </Button>
             </div>
             <Drawer
