@@ -105,10 +105,10 @@ export default function Presentation(props) {
                         By {authors}
                     </Heading> */}
                 </Slide>
-                {slideContent.map((page, index) => {
+                {slideContent.map((page, slideIndex) => {
                     return (
                         <Slide
-                            key={index}>
+                            key={`slide-${slideIndex}`}>
                             <Button
                                 onClick={handleClose}
                                 style={{
@@ -124,10 +124,10 @@ export default function Presentation(props) {
                                     height: '100%',
                                 }}
                             >
-                                {page.map((item, index) => {
+                                {page.map((item, itemIndex) => {
                                     if (item.type === 'h1' || item.type === 'h2') {
                                         return (
-                                            <Heading key={index}>
+                                            <Heading key={`heading-${slideIndex}-${itemIndex}`}>
                                                 {item.props.children}
                                             </Heading>
                                         )
@@ -137,8 +137,8 @@ export default function Presentation(props) {
 
                                     //                                 else if(item.type=== 'pre') {
                                     //                                     return (
-                                    //                                         <CodePane 
-                                    //                                         key={index}
+                                    //                                         <CodePane
+                                    //                                         key={itemIndex}
                                     //                                         showLineNumbers={false}
                                     //                                         language={item.props.className}
 
@@ -152,7 +152,7 @@ export default function Presentation(props) {
                                         return (
                                             <div
 
-                                                key={index}>
+                                                key={`item-${slideIndex}-${itemIndex}`}>
                                                 {item}
                                             </div>
                                         )

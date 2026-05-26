@@ -263,7 +263,7 @@ export default async function MDX({ content, allUploads, workshopTitle, language
         return file
       })
   } catch (e) {
-    console.log('e', e)
+    // Parse error - return empty
   }
 
   return file

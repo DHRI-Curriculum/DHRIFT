@@ -51,59 +51,25 @@ export default function JSSideTerminal(props) {
 
 
     useEffect(() => {
-        if (props.error) {
-            console.log(props.error)
-        }
+        // Error state is handled by parent component
     }, [props.error])
 
 
     return (
-        <div className="terminal-container"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                // justifyContent: 'center', // Removed
-                // height: '77%', // Removed
-                flex: 1, // Make JSSideTerminal a flex child
-                minHeight: '0', // Allow shrinking
-                overflow: 'hidden' // Prevent its own scrollbars if children manage theirs
-            }}
-        >
+        <div className="terminal-container">
             <div className='repl-header'>
                 <h3>Console</h3>
             </div>
-            <div className='console' style={{ 
-                whiteSpace: 'pre-wrap', 
-                overflowY: 'auto', 
-                border: '1px solid #ccc', 
-                padding: '5px', 
-                marginBottom: '5px',
-                flex: '1', // Takes all available flex space
-                minHeight: '100px', // Ensure it has some minimum height
-                boxSizing: 'border-box'
-            }}>
+            <div className='console'>
                 {props.consoleRef.current}
                 <span className="console-error">{errorString}</span>
             </div>
             {showInteractiveTerminal && (
                 <>
-                    <div className="side-terminal" id={randomID}
-                        style={{
-                            // Styles for when/if it becomes visible again.
-                            // These can be adjusted later. For now, ensuring it's a block
-                            // and can take space if 'showInteractiveTerminal' is true.
-                            width: '100%',
-                            flex: '1', // Example style if it were to take space
-                            minHeight: '50px', 
-                            display: 'block', 
-                            boxSizing: 'border-box'
-                        }}
-                    />
-                    {/* Script for __EVAL is tied to the interactive terminal's functionality */}
+                    <div className="side-terminal" id={randomID} />
                     <Script dangerouslySetInnerHTML={{
-                        __html: `
-                    var __EVAL = (s) => eval(\`void (__EVAL = \${__EVAL.toString()}); \${s}\`);
-                    `}} />
+                        __html: `var __EVAL = (s) => eval(\`void (__EVAL = \${__EVAL.toString()}); \${s}\`);`
+                    }} />
                 </>
             )}
         </div>

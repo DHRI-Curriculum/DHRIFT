@@ -306,7 +306,13 @@ export default function WorkshopPage({
     urlParams.set('page', 2);
     setSecondPageLink(`${'./dynamic'}?${urlParams}`);
     if (currentFile != null && content !== '' && metadata != null) {
-      const frontMatterContent = Frontmatter(currentFile, setCurrentPage, setCurrentContent, pages, instUser, instRepo, workshopTitle, pageTitles, currentPage, router, secondPageLink);
+      const frontMatterContent = (
+        <Frontmatter
+          currentFile={currentFile}
+          setCurrentPage={setCurrentPage}
+          secondPageLink={secondPageLink}
+        />
+      );
       const { pages: convPages, titles } = convertContenttoHTML(content);
       setPages([frontMatterContent, ...convPages]);
       // Pre-seed pageTitles from mdast titles to improve robustness

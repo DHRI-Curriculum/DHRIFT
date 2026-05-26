@@ -11,11 +11,26 @@ import Webllm from '../Wasm/Webllm';
 import HTMLEditorComponent from './HTMLEditorComponent';
 import { useState, useEffect, useRef, Fragment } from 'react';
 
+// Display names for editor tabs
+const editorLabels = {
+    python: 'Python',
+    jupyter: 'Jupyter',
+    javascript: 'JavaScript',
+    r: 'R',
+    computer: 'Terminal',
+    command_line: 'Terminal',
+    html: 'HTML',
+    html_css: 'HTML/CSS',
+    llm: 'AI Chat',
+};
+
 export default function DrawerEditor(props) {
-    
-    const language = props.language.toLowerCase();  // this is the language of the editor
+
+    const editors = props.editors || [];  // available editor tabs
+    const activeTab = (props.activeTab || editors[0] || '').toLowerCase();  // currently selected tab
+    const setActiveTab = props.setActiveTab;  // function to switch tabs
     const text = props.text;  // this is the text in the editor
-    
+
     const open = props.open;  // this is the state of the drawer
     const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
     const [show, setShow] = useState(false);
@@ -104,10 +119,10 @@ export default function DrawerEditor(props) {
     const scrollContainerRef = useRef(null);
 
     const whichEditor = () => {
-        
-        if (language === 'python') {
+
+        if (activeTab === 'python') {
             return (
-                <PythonEditorComponent language={language}
+                <PythonEditorComponent language={activeTab}
                     defaultCode={text}
                     text={text}
                     handleOpenClose={handleOpenClose}
@@ -116,7 +131,7 @@ export default function DrawerEditor(props) {
                     {...props} />
             )
         }
-        else if (language === 'jupyter') {
+        else if (activeTab === 'jupyter') {
             return (
                 <Jupyter
                     handleOpenClose={handleOpenClose}
@@ -125,9 +140,9 @@ export default function DrawerEditor(props) {
                 />
             )
         }
-        else if (language === 'javascript') {
+        else if (activeTab === 'javascript') {
             return (
-                <JSEditorComponent language={language}
+                <JSEditorComponent language={activeTab}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     scrollContainerRef={scrollContainerRef}
@@ -135,16 +150,16 @@ export default function DrawerEditor(props) {
                     {...props} />
             )
         }
-        else if (language === 'r') {
+        else if (activeTab === 'r') {
             return (
-                <REditorComponent language={language}
+                <REditorComponent language={activeTab}
                     defaultCode={text}
                     handleOpenClose={handleOpenClose}
                     runButtonNeeded={true}
                     {...props} />
             )
         }
-        else if (language === 'computer' || language === 'command_line') {
+        else if (activeTab === 'computer' || activeTab === 'command_line') {
             return (
                 <Webvm
                     handleOpenClose={handleOpenClose}
@@ -152,12 +167,12 @@ export default function DrawerEditor(props) {
                 />
             )
         }
-        else if (language === 'html' || language === 'html_css') {
+        else if (activeTab === 'html' || activeTab === 'html_css') {
             return (
                 <HTMLEditorComponent isActive={show} />
             )
         }
-        else if (language === 'llm') {
+        else if (activeTab === 'llm') {
             return (
                 <Webllm
                     handleOpenClose={handleOpenClose}
@@ -169,7 +184,7 @@ export default function DrawerEditor(props) {
         else {
             return (
                 <div>
-                    <h2>Language not supported</h2>
+                    <h2>Editor not supported: {activeTab}</h2>
                 </div>
             )
         }
@@ -181,11 +196,8 @@ export default function DrawerEditor(props) {
             <div className='editor-button-container'>
                 <Button
                     aria-label="open drawer"
-                    className={'editor-button'}
+                    className='editor-button'
                     onClick={handleOpenClose}
-                    style={{
-                        color: "white",
-                    }}
                 >
                     <CodeIcon />
                     Open Code Editor
@@ -198,9 +210,8 @@ export default function DrawerEditor(props) {
                 className='drawer-right'
                 onClose={handleOpenClose}
                 ModalProps={{
-                    keepMounted: true, // Better open performance on mobile.
+                    keepMounted: true,
                 }}
-                // if small, then drawer is 100% width, otherwise some portion
                 sx={{
                     width: { xs: '100%', sm: '100%', md: '45%' },
                     flexShrink: { xs: 1, sm: 0 },
@@ -214,60 +225,42 @@ export default function DrawerEditor(props) {
                     },
                     display: !show ? 'none' : 'block',
                 }}
-
-            ><div
+            >
+                <div
                     id="dragger"
                     onMouseDown={event => {
                         handleMousedown(event);
-                        // setIsResizing(true);
                     }}
                     onClick={event => {
                         event.stopPropagation();
                     }}
-                    style={{
-                        width: '5px',
-                        cursor: 'ew-resize',
-                        padding: '4px 0 0',
-                        borderTop: '1px solid #ddd',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        zIndex: '100',
-                        backgroundColor: '#f4f7f9'
-                    }}
                 />
                 <Button
-                    aria-label="open drawer"
-                    className={'editor-button'}
+                    aria-label="close drawer"
+                    className='editor-button editor-close-button'
                     onClick={handleOpenClose}
-                    style={{
-                        color: "white",
-                    }}
                 >
-                    <CodeIcon /> Close Code Editor
+                    <CodeIcon /> Close Editor
                 </Button>
-                {/* {language === 'jupyter' &&
-                    <Button
-                        aria-label="load notebook/data"
-                        className={'data-load-button'}
-                        onClick={() => {
-                            JupyterLoad(props);
-                        }}
-                        style={{
-                            color: "white",
-                        }}
-                    > Load Notebook/Data</Button>
-                } */}
-                <div id='drawer-editor' className='drawer-editor'
-                    style={{
-                        flex: 1,
-                        minHeight: 0,
-                        overflowY: 'auto',
-                        paddingRight: '8px',
-                    }}
-                    ref={scrollContainerRef}
-                >
+                {editors.length > 1 && (
+                    <div className="editor-tabs">
+                        {editors.map((editor) => {
+                            const editorKey = editor.toLowerCase();
+                            const label = editorLabels[editorKey] || editor;
+                            const isActive = activeTab === editorKey;
+                            return (
+                                <button
+                                    key={editorKey}
+                                    className={`editor-tab ${isActive ? 'editor-tab--active' : ''}`}
+                                    onClick={() => setActiveTab(editorKey)}
+                                >
+                                    {label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
+                <div id='drawer-editor' className='drawer-editor' ref={scrollContainerRef}>
                     {whichEditor()}
                 </div>
             </Drawer>

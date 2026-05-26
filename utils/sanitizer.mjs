@@ -342,20 +342,23 @@ export function escapeBareInlineTags(str, tags = ['a','head']) {
 }
 
 // Escape triple angle runs like "<<<" and ">>>" in prose to avoid MDX confusion
-// Preserve content inside both fenced code blocks (```) and inline code (`)
+// Skips fenced code blocks and inline code spans (backticks)
 export function escapeTripleAngleRuns(str) {
   const lines = String(str || '').split(/\r?\n/);
   let inFence = false;
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; lines[i] = line; continue; }
-    if (inFence) { lines[i] = line; continue; }
-    // Split by inline code backticks and preserve content within them
-    const parts = line.split('`');
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    // Skip inline code spans - split by backticks and only process non-code parts
+    const parts = line.split(/(`[^`]*`)/g);
     for (let j = 0; j < parts.length; j++) {
-      parts[j] = parts[j].replace(/<\s*<\s*</g, '<<<').replace(/>\s*>\s*>/g, '>>>');
+      // Odd indices are inside backticks (the captured groups)
+      if (!parts[j].startsWith('`')) {
+        parts[j] = parts[j].replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
+      }
     }
-    lines[i] = parts.join('`');
+    lines[i] = parts.join('');
   }
   return lines.join('\n');
 }
@@ -925,6 +928,17 @@ export function normalizeMultilineTableCells(str) {
   return out.join('\n');
 }
 
+// Collapse HTML table blocks so MDX does not insert paragraphs inside table elements.
+export function normalizeHtmlTables(str) {
+  return String(str || '').replace(
+    /<table\b[^>]*>[\s\S]*?<\/table>/gi,
+    (match) => match
+      .replace(/>\s+</g, '><')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
+}
+
 export function sanitizeBeforeParse(str, options = {}) {
   const tags = options.tags || defaultStrayCloserTags;
   let s = String(str || '');
@@ -935,6 +949,7 @@ export function sanitizeBeforeParse(str, options = {}) {
   s = stripOrphanComponentClosers(s);
   s = ensureImgSelfClosing(s);
   s = normalizeMultilineTableCells(s);
+  s = normalizeHtmlTables(s);
   s = ensureBlankLinesAroundBlockHtml(s, ['p']);
   s = ensureComponentTagsOnOwnLine(s, ['Quiz']);
   s = ensureBlankLinesAroundComponents(s, ['Quiz']);
@@ -1017,6 +1032,7 @@ export default {
   stripOrphanComponentClosers,
   ensureImgSelfClosing,
   normalizeMultilineTableCells,
+  normalizeHtmlTables,
   ensureBlankLinesAroundBlockHtml,
   ensureBlockHtmlContentOnOwnLine,
   ensureBlankAfterInlineClose,

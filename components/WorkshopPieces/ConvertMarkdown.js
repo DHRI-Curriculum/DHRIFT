@@ -23,30 +23,6 @@ import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
-import { visit } from 'unist-util-visit';
-
-// Rehype plugin to remove <p> tags incorrectly inserted inside table elements
-// This fixes MDX/remark-rehype mangling HTML tables when allowDangerousHtml is false
-function rehypeFixTableParagraphs() {
-    const tableElements = ['table', 'thead', 'tbody', 'tfoot', 'tr'];
-    return (tree) => {
-        visit(tree, 'element', (node) => {
-            // If this is a table-related element, check for <p> children and unwrap them
-            if (tableElements.includes(node.tagName) && node.children) {
-                const newChildren = [];
-                for (const child of node.children) {
-                    if (child.type === 'element' && child.tagName === 'p' && child.children) {
-                        // Unwrap: add p's children directly to parent
-                        newChildren.push(...child.children);
-                    } else {
-                        newChildren.push(child);
-                    }
-                }
-                node.children = newChildren;
-            }
-        });
-    };
-}
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, segments }) {
@@ -87,12 +63,10 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`;
 
         return (
-            <div className="image-container" style={{ position: 'relative' }}>
-                <div className='markdown-image-container' style={{ position: 'relative' }} aria-label={newProps.alt}>
+            <div className="image-container">
+                <div className='markdown-image-container' aria-label={newProps.alt}>
                     {loadFailed ? (
-                        <div className="image-load-error" style={{
-                            padding: '1rem', border: '1px dashed #ccc', borderRadius: '4px', color: '#666', textAlign: 'center'
-                        }}>
+                        <div className="image-load-error">
                             Image could not be loaded
                             {newProps.alt && <div>Alt text: {newProps.alt}</div>}
                         </div>
@@ -112,9 +86,6 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                                 }
                             }}
                             title={newProps.alt}
-                            style={{
-                                width: 'auto', maxWidth: '100%', height: 'auto', display: 'block', marginLeft: 'auto', marginRight: 'auto'
-                            }}
                         />
                     )}
                 </div>
@@ -525,7 +496,6 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .use(remarkFrontmatter)
             .use(remarkDeflist)
             .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers })
-            .use(rehypeFixTableParagraphs)
             .use(rehypeHighlight)
             .use(rehypeReact, {
                 createElement,

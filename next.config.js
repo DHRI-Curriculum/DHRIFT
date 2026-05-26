@@ -19,20 +19,19 @@ const nextConfig = {
     experimental: {
         optimizeCss: true, // Enable CSS optimization
     },
-    webpack(config) {
-        // CSS handling
-        config.module.rules.push({
-            test: /\.css$/,
-            use: ['style-loader', 'css-loader']
-        });
-        // SCSS handling
-        config.module.rules.push({
-            test: /\.scss$/,
-            use: [
-                'style-loader',
-                'css-loader',
-                'sass-loader'
-            ]
+    webpack(config, { isServer }) {
+        // Fix asset modules for fonts/images in CSS
+        config.module.rules.forEach((rule) => {
+            if (rule.oneOf) {
+                rule.oneOf.forEach((oneOfRule) => {
+                    if (oneOfRule.type === 'asset/resource') {
+                        // Remove filename property that causes issues
+                        if (oneOfRule.generator && oneOfRule.generator.filename) {
+                            delete oneOfRule.generator.filename;
+                        }
+                    }
+                });
+            }
         });
         return config;
     }

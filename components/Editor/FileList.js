@@ -24,7 +24,6 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 
 export default function FileList(filteredSnippets) {
-    console.log(filteredSnippets);
     const [files, setFiles] = useState([]);
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState(null);
@@ -114,7 +113,6 @@ export default function FileList(filteredSnippets) {
                 filename: fileUpload.name,
                 content: reader.result
             };
-            console.log(file);
             const fileList = [...files, file];
             setUserFiles([...userFiles, file]);
             // localStorage filenames = ['filename', 'content'];
@@ -214,8 +212,8 @@ return (
                 label="File"
                 onChange={handleChange}
             >
-                {files.map((file, index) => (
-                    <MenuItem value={file} key={index}>{file.slug}</MenuItem>
+                {files.map((file) => (
+                    <MenuItem value={file} key={`file-${file.slug}`}>{file.slug}</MenuItem>
                 ))}
             </Select>
         </FormControl>

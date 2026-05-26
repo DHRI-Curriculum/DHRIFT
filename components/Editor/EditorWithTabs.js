@@ -126,7 +126,7 @@ export default function EditorWithTabsComponent({ defaultCode = "# Write your co
     function TabObject(name, tabCode, index, id = Math.random().toString(36).substr(2, 7)) {
         return (
             <Tab
-                key={index}
+                key={`tab-${id}-${name}`}
                 label={name}
                 uniqueid={id}
                 onClick={() => {

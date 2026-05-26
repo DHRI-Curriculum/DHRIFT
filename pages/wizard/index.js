@@ -801,7 +801,7 @@ const generalInfoSection = (
         <Stack spacing={2}>
             <h4>Organizers</h4>
             {formik.values.organizers.map((organizer, index) => (
-                <Box key={index} display="flex" alignItems="center" flexWrap="wrap" gap={2}>
+                <Box key={`organizer-${index}-${organizer.name || 'new'}`} display="flex" alignItems="center" flexWrap="wrap" gap={2}>
                     <TextField
                         label={`Organizer ${index + 1}`}
                         type="text"
@@ -831,7 +831,7 @@ const generalInfoSection = (
         <Stack spacing={2}>
             <h3>Sponsors</h3>
             {formik.values.sponsors.map((sponsor, index) => (
-                <Stack key={index} spacing={2} direction="row" alignItems="center">
+                <Stack key={`sponsor-${index}-${sponsor.name || 'new'}`} spacing={2} direction="row" alignItems="center">
                     <TextField
                         label={`Sponsor ${index + 1}`}
                         type="text"
@@ -872,7 +872,7 @@ const generalInfoSection = (
         <Stack spacing={2}>
             <h3>Contact</h3>
             {formik.values.contact.map((contact, index) => (
-                <Stack key={index} spacing={2} direction="row" alignItems="center">
+                <Stack key={`contact-${index}-${contact.name || 'new'}`} spacing={2} direction="row" alignItems="center">
                     <TextField
                         label={`Contact ${index + 1}`}
                         type="text"
@@ -920,7 +920,7 @@ const sessionsSection = (
         <h2>Sessions</h2>
         <p>Provide details about each session in your institute.</p>
         {formik.values.sessions.map((session, index) => (
-            <Card key={index} variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
+            <Card key={`session-${index}-${session.title || 'new'}`} variant="outlined" sx={{ padding: 2, marginBottom: 2 }}>
                 <h4>Session {index + 1}</h4>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>

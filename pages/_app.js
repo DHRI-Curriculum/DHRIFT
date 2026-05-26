@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
+import Script from 'next/script';
 
 // MUI base
 import CssBaseline from '@mui/material/CssBaseline';
@@ -89,6 +90,9 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
+      {process.env.NODE_ENV === 'development' && (
+        <Script src="https://unpkg.com/react-grab/dist/index.global.js" strategy="afterInteractive" />
+      )}
       <StyledEngineProvider injectFirst>
         <CssBaseline />
         <ThemeProvider>

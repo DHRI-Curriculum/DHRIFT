@@ -562,20 +562,23 @@ export function escapeBareInlineTags(str, tags = ['a','head']) {
 }
 
 // Escape triple angle runs like "<<<" and ">>>" in prose to avoid MDX confusion
-// Preserve content inside both fenced code blocks (```) and inline code (`)
+// Skips fenced code blocks and inline code spans (backticks)
 export function escapeTripleAngleRuns(str) {
   const lines = String(str || '').split(/\r?\n/);
   let inFence = false;
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    if (isFenceLine(line)) { inFence = !inFence; lines[i] = line; continue; }
-    if (inFence) { lines[i] = line; continue; }
-    // Split by inline code backticks and preserve content within them
-    const parts = line.split('`');
+    if (isFenceLine(line)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    // Skip inline code spans - split by backticks and only process non-code parts
+    const parts = line.split(/(`[^`]*`)/g);
     for (let j = 0; j < parts.length; j++) {
-      parts[j] = parts[j].replace(/<\s*<\s*</g, '<<<').replace(/>\s*>\s*>/g, '>>>');
+      // Odd indices are inside backticks (the captured groups)
+      if (!parts[j].startsWith('`')) {
+        parts[j] = parts[j].replace(/<\s*<\s*</g, '&lt;&lt;&lt;').replace(/>\s*>\s*>/g, '&gt;&gt;&gt;');
+      }
     }
-    lines[i] = parts.join('`');
+    lines[i] = parts.join('');
   }
   return lines.join('\n');
 }
@@ -877,19 +880,14 @@ export function normalizeMultilineTableCells(str) {
   return out.join('\n');
 }
 
-// Normalize entire HTML tables by collapsing all whitespace between tags
-// This prevents MDX from wrapping table content in <p> tags
+// Collapse HTML table blocks so MDX does not insert paragraphs inside table elements.
 export function normalizeHtmlTables(str) {
-  // Match entire <table>...</table> blocks and collapse internal whitespace
   return String(str || '').replace(
     /<table\b[^>]*>[\s\S]*?<\/table>/gi,
-    (match) => {
-      // Remove newlines and collapse whitespace between tags
-      return match
-        .replace(/>\s+</g, '><')  // Remove whitespace between tags
-        .replace(/\s+/g, ' ')      // Collapse remaining whitespace
-        .trim();
-    }
+    (match) => match
+      .replace(/>\s+</g, '><')
+      .replace(/\s+/g, ' ')
+      .trim()
   );
 }
 

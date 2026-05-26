@@ -87,12 +87,12 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                         || open
                     } timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            {pages.children.map((page, index) => (
+                            {pages.children.map((page) => (
                                 <ListItem button className={'nested'}
                                     onClick={() => {
                                         clickAndClose(event, page.index)
                                     }}
-                                    key={index}>
+                                    key={`child-${page.index}-${page.title}`}>
                                     <ListItemText primary={page.title}
                                         className={'sidebar-subitem'}
                                         {...page.active ? { style: { color: 'black' } } : { style: { color: 'white' } }}
@@ -151,8 +151,8 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
             >
                 <nav className='sidenav'>
                     <List>
-                        {newPages.map((page, index) => (
-                            <CollapsibleList pages={page} key={index} />
+                        {newPages.map((page) => (
+                            <CollapsibleList pages={page} key={`page-${page.index}-${page.title}`} />
                         ))}
                     </List>
                 </nav>

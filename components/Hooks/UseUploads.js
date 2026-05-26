@@ -1,54 +1,37 @@
 import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
-import { set } from "date-fns";
+import { createGitHubFetcher } from "../../utils/github";
 
-export default function useUploads({ setAllUploads, allUploads, gitUser, gitRepo, gitFile, uploadsURL, setUploadsURL, ...props }) {
-
+export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch = 'v2' }) {
     const [shouldFetch, setShouldFetch] = useState(false);
 
-    let headers;
-    let builtURL = uploadsURL;
+    // Construct uploads URL from git info
+    const uploadsURL = gitUser && gitRepo
+        ? `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads?ref=${gitBranch}`
+        : null;
 
     useEffect(() => {
         if (uploadsURL) {
-            setShouldFetch(true)
+            setShouldFetch(true);
         }
-    }, [uploadsURL])
+    }, [uploadsURL]);
 
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-                'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-            });
-    } else {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-            });
-    }
+    const fetcher = createGitHubFetcher({
+        decodeBase64: false,
+        onError: () => setShouldFetch(false)
+    });
 
-    const fetcher = (headers) => (...args) => fetch(...args, {
-        headers: headers,
-        method: 'GET',
-    }).then(
-        res => res.json()
-    ).catch(
-        err => {
-            setShouldFetch(false)
-            console.log('err', err)}
-    )
-
-
-    const { data: uploads, error } = useSWRImmutable(shouldFetch
-        ? builtURL : null, fetcher(headers),
-        { revalidateOnMount: true })
+    const { data: uploads } = useSWRImmutable(
+        shouldFetch ? uploadsURL : null,
+        fetcher,
+        { revalidateOnMount: true }
+    );
 
     useEffect(() => {
-        if (uploads) {
-            setAllUploads(uploads)
+        if (uploads && setAllUploads) {
+            setAllUploads(uploads);
         }
-    }, [uploads])
+    }, [uploads, setAllUploads]);
 
-    return uploads
+    return uploads;
 }
