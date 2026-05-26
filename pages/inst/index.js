@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import jsyaml from 'js-yaml';
 import WorkshopsView from '../../components/WorkshopsView';
