@@ -16,6 +16,8 @@ import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkDeflist from 'remark-deflist';
+import remarkDirective from 'remark-directive';
+import remarkDirectiveRehype from 'remark-directive-rehype';
 import remarkRehype from 'remark-rehype';
 import remarkMdx from 'remark-mdx';
 import rehypeHighlight from 'rehype-highlight';
@@ -23,6 +25,7 @@ import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
+import { normalizeKnownAssetUrl } from '../../utils/github';
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, segments }) {
@@ -50,26 +53,42 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
 
     const externalSegments = segments || {};
 
+    const renderHtmlExampleTag = (tagName, props = {}) => {
+        const attrs = Object.entries(props)
+            .filter(([name]) => name !== 'children' && name !== 'node')
+            .map(([name, value]) => value === true ? name : `${name}="${String(value)}"`)
+            .join(' ');
+        const open = attrs ? `<${tagName} ${attrs}>` : `<${tagName}>`;
+
+        return (
+            <code>
+                {open}
+                {props.children}
+                {`</${tagName}>`}
+            </code>
+        );
+    };
+
     const Imager = ({ className, ...props }) => {
-        let newProps = { ...props };
+        let newProps = { ...props, src: normalizeKnownAssetUrl(props.src) };
         const [src, setSrc] = useState(newProps.src);
         const [loadFailed, setLoadFailed] = useState(false);
         const [isGithubUrl, setIsGithubUrl] = useState(false);
 
         if (!newProps.src) {
-            return <div className="image-error">Missing image source</div>;
+            return <span className="image-error">Missing image source</span>;
         }
 
         const builtURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main${newProps.src}`;
 
         return (
-            <div className="image-container">
-                <div className='markdown-image-container' aria-label={newProps.alt}>
+            <span className="image-container">
+                <span className='markdown-image-container' aria-label={newProps.alt}>
                     {loadFailed ? (
-                        <div className="image-load-error">
+                        <span className="image-load-error">
                             Image could not be loaded
-                            {newProps.alt && <div>Alt text: {newProps.alt}</div>}
-                        </div>
+                            {newProps.alt && <span>Alt text: {newProps.alt}</span>}
+                        </span>
                     ) : (
                         <Image
                             className='markdown-image'
@@ -88,8 +107,8 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                             title={newProps.alt}
                         />
                     )}
-                </div>
-            </div>
+                </span>
+            </span>
         );
     }
 
@@ -329,6 +348,21 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
     try {
         // Minimal, shared pipeline
         let safeContent = (content || '');
+        safeContent = safeContent.replace(
+            /^(\s*):{2,4}([\w-]+)(\{[^}]*\})?\s*(?:<br\s*\/?>)?/gim,
+            (match, indent, name, attrs = '') => {
+                const directiveTags = {
+                    download: 'Download',
+                    jupyter: 'Jupyter',
+                    terminal: 'Terminal',
+                    pythonrepl: 'PythonREPL',
+                };
+                const tagName = directiveTags[name.toLowerCase()];
+                if (!tagName) return match;
+                const attrString = attrs ? attrs.slice(1, -1).trim() : '';
+                return `${indent}<${tagName}${attrString ? ` ${attrString}` : ''}></${tagName}>`;
+            }
+        );
         safeContent = sanitizeBeforeParse(safeContent);
         safeContent = dropLeadingSliceArtifacts(safeContent);
         safeContent = escapeCurlyForMDX(safeContent);
@@ -450,35 +484,38 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         // Escape curly braces AFTER all sanitization to ensure no raw curlies slip through
         safeContent = escapeCurlyForMDX(safeContent);
 
+        const mdxAttributesToProps = (attributes = []) => {
+            const props = {};
+            if (Array.isArray(attributes)) {
+                attributes.forEach((attr) => {
+                    if (attr.type === 'mdxJsxAttribute' && attr.name) {
+                        if (typeof attr.value === 'string') props[attr.name] = attr.value;
+                        else if (attr.value && typeof attr.value.value === 'string') props[attr.name] = attr.value.value;
+                    }
+                });
+            }
+            return props;
+        };
+
+        const createMdxElement = (state, node, defaultTag) => {
+            const result = {
+                type: 'element',
+                tagName: node.name || defaultTag,
+                properties: mdxAttributesToProps(node.attributes),
+                children: state.all(node),
+            };
+            state.patch(node, result);
+            return state.applyData(node, result);
+        };
+
         const mdxHandlers = {
-            mdxJsxFlowElement(h, node) {
+            mdxJsxFlowElement(state, node) {
                 const name = node.name || 'div';
-                const props = {};
-                if (Array.isArray(node.attributes)) {
-                    node.attributes.forEach((attr) => {
-                        if (attr.type === 'mdxJsxAttribute' && attr.name) {
-                            if (typeof attr.value === 'string') props[attr.name] = attr.value;
-                            else if (attr.value && typeof attr.value.value === 'string') props[attr.name] = attr.value.value;
-                        }
-                    });
-                }
-                // Let remark-rehype convert children correctly, preserving text and line breaks
-                const children = h.all(node);
-                return h(node, name, props, children);
+                return createMdxElement(state, node, name);
             },
-            mdxJsxTextElement(h, node) {
+            mdxJsxTextElement(state, node) {
                 const name = node.name || 'span';
-                const props = {};
-                if (Array.isArray(node.attributes)) {
-                    node.attributes.forEach((attr) => {
-                        if (attr.type === 'mdxJsxAttribute' && attr.name) {
-                            if (typeof attr.value === 'string') props[attr.name] = attr.value;
-                            else if (attr.value && typeof attr.value.value === 'string') props[attr.name] = attr.value.value;
-                        }
-                    });
-                }
-                const children = h.all(node);
-                return h(node, name, props, children);
+                return createMdxElement(state, node, name);
             },
         };
 
@@ -495,6 +532,8 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .use(remarkGfm)
             .use(remarkFrontmatter)
             .use(remarkDeflist)
+            .use(remarkDirective)
+            .use(remarkDirectiveRehype)
             .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers })
             .use(rehypeHighlight)
             .use(rehypeReact, {
@@ -626,6 +665,13 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                     Keywords: (props) => <Keywords {...props} />,
                     'dhrift-link': (props) => <LinkComp {...props} />,
                     Link: (props) => <LinkComp {...props} />,
+                    html: (props) => renderHtmlExampleTag('html', props),
+                    head: (props) => renderHtmlExampleTag('head', props),
+                    body: (props) => renderHtmlExampleTag('body', props),
+                    script: (props) => renderHtmlExampleTag('script', props),
+                    title: (props) => renderHtmlExampleTag('title', props),
+                    meta: (props) => renderHtmlExampleTag('meta', props),
+                    link: (props) => renderHtmlExampleTag('link', props),
                     quiz: (props) => <Quiz {...props} />,
                     Quiz: (props) => <Quiz {...props} />,
                 }

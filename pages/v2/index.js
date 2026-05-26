@@ -23,6 +23,10 @@ import remarkParse from 'remark-parse'
 
 const drawerWidth = '-30%'
 
+const buildRawGitHubURL = (user, repo, branch, file) => (
+  `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${encodeURI(file)}.md`
+)
+
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -140,6 +144,11 @@ export default function WorkshopPageV2({
   setTitle,
   ...props
 }) {
+  const {
+    workshopMode,
+    setWorkshopMode,
+  } = props
+
   const [content, setContent] = useState('')
   const [currentFile, setCurrentFile] = useState(null)
   const [currentContent, setCurrentContent] = useState(null)
@@ -188,19 +197,19 @@ export default function WorkshopPageV2({
     setGitBranch(branch)
     setCurrentPage(page)
 
-    if (urlParams.get('sidebar')) {
-      setLanguage(urlParams.get('sidebar'))
-    }
-
-    if (file) {
-      // Build URL with branch parameter for GitHub API
-      const url = `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${file}.md?ref=${branch}`
-      setBuiltURL(url)
+    if (gitUser && gitRepo && file) {
+      setBuiltURL(buildRawGitHubURL(gitUser, gitRepo, branch, file))
     }
   }, [gitUser, gitRepo])
 
   // Parse fetched data
   useEffect(() => {
+    if (data?.error) {
+      setMarkdownError(data.error)
+      setInitialLoading(false)
+      return
+    }
+
     if (data && !currentFile && typeof data === 'string') {
       try {
         const matterResult = matter(data)
@@ -216,10 +225,14 @@ export default function WorkshopPageV2({
         }
         setEditors(editorList)
 
-        // Set active tab: check localStorage first, then default to first editor
+        const requestedTab = new URLSearchParams(window.location.search).get('sidebar')
+
+        // Set active tab: check URL first, then localStorage, then default to first editor
         const storageKey = `dhrift-active-tab-${gitFile || 'default'}`
         const savedTab = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null
-        if (savedTab && editorList.includes(savedTab)) {
+        if (requestedTab && editorList.includes(requestedTab)) {
+          setActiveTab(requestedTab)
+        } else if (savedTab && editorList.includes(savedTab)) {
           setActiveTab(savedTab)
         } else if (editorList.length > 0) {
           setActiveTab(editorList[0])
@@ -336,9 +349,9 @@ export default function WorkshopPageV2({
   // Set workshop mode based on current page
   useEffect(() => {
     if (currentPage === 1 || currentPage === 0) {
-      props.setWorkshopMode(false)
+      setWorkshopMode(false)
     } else {
-      props.setWorkshopMode(true)
+      setWorkshopMode(true)
     }
   }, [currentPage])
 
@@ -424,7 +437,7 @@ export default function WorkshopPageV2({
             </div>
           </Main>
 
-          {editors.length > 0 && props.workshopMode && (
+          {editors.length > 0 && workshopMode && (
             <DrawerEditorMovable
               drawerWidth={drawerWidth}
               open={editorOpen}

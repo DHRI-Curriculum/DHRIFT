@@ -3,7 +3,7 @@ import { getGitHubParamsFromURL, validateParams } from '../utils/github';
 import { useRouter } from 'next/router';
 import { GitHubStatus } from './GitHubStatus';
 
-const PAGES_NEEDING_GITHUB = ['/inst', '/workshops', '/dynamic'];
+const PAGES_NEEDING_GITHUB = ['/inst', '/workshops'];
 
 export const GitHubContext = createContext();
 

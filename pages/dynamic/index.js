@@ -32,6 +32,10 @@ const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
 
+const buildGitHubContentsURL = (user, repo, file, branch = 'main') => (
+  `https://api.github.com/repos/${user}/${repo}/contents/${encodeURI(file)}.md?ref=${encodeURIComponent(branch)}`
+);
+
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -89,14 +93,14 @@ export default function WorkshopPage({
 
   const [gitFile, setGitFile] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
+  const [gitBranch, setGitBranch] = useState('main');
   const [editing, setEditing] = useState(false);
   const [markdownError, setMarkdownError] = useState(false);
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
 
   const [allUploads, setAllUploads] = useState(null);
-  const [uploadsURL, setUploadsURL] = useState(null);
 
-  const uploads = useUploads({ setAllUploads, allUploads, gitUser, gitRepo, gitFile, uploadsURL, setUploadsURL, ...props });
+  const uploads = useUploads({ setAllUploads, gitUser, gitRepo, gitBranch });
 
   const router = useRouter();
 
@@ -192,9 +196,24 @@ export default function WorkshopPage({
       // Mask placeholders using shared utils to avoid MDX parsing inner CodeEditor/Secret/Info
       const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(content));
       const { masked: maskedContent, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preAuto);
+      const normalizeLeafDirectives = (str) => str.replace(
+        /^(\s*):{2,4}([\w-]+)(\{[^}]*\})?\s*(?:<br\s*\/?>)?/gim,
+        (match, indent, name, attrs = '') => {
+          const directiveTags = {
+            download: 'Download',
+            jupyter: 'Jupyter',
+            terminal: 'Terminal',
+            pythonrepl: 'PythonREPL',
+          };
+          const tagName = directiveTags[name.toLowerCase()];
+          if (!tagName) return match;
+          const attrString = attrs ? attrs.slice(1, -1).trim() : '';
+          return `${indent}<${tagName}${attrString ? ` ${attrString}` : ''}></${tagName}>`;
+        }
+      );
       // General sanitize before parse
       const sanitizeSource = (str) => sanitizeBeforeParse(str);
-      let maskedEscaped = escapeCurlyForMDX(maskedContent);
+      let maskedEscaped = escapeCurlyForMDX(normalizeLeafDirectives(maskedContent));
       maskedEscaped = sanitizeSource(maskedEscaped);
       // Split using shared utility for complete functional reuse
       const longPages = (currentFile?.data?.long_pages === true) || (currentFile?.data?.long_pages === 'true');
@@ -256,7 +275,10 @@ export default function WorkshopPage({
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    setGitFile(urlParams.get('file'));
+    const requestedFile = urlParams.get('file');
+    const requestedBranch = urlParams.get('branch') || 'main';
+    setGitFile(requestedFile);
+    setGitBranch(requestedBranch);
     setEditing(urlParams.get('edit'));
     setDebugSanitize(urlParams.get('debugSanitize') === '1');
     const dbg = urlParams.get('debugPage');
@@ -265,15 +287,19 @@ export default function WorkshopPage({
       setLanguage(urlParams.get('sidebar'));
     }
     setCurrentPage(Number(urlParams.get('page')));
-    if (gitFile === null) {
-      setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitRepo}.md`)
+    if (gitUser && gitRepo) {
+      const filePath = requestedFile || gitRepo;
+      setBuiltURL(buildGitHubContentsURL(gitUser, gitRepo, filePath, requestedBranch));
     }
-    else {
-      setBuiltURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${gitFile}.md`)
-    }
-  }, [gitUser, gitRepo, gitFile, editing, instUser, instRepo])
+  }, [gitUser, gitRepo, editing, instUser, instRepo])
 
   useEffect(() => {
+    if (data?.error) {
+      setMarkdownError(data.error);
+      if (initialLoading) setInitialLoading(false);
+      return;
+    }
+
     if (data && !currentFile && typeof (data) === 'string') {
       try {
         const matterResult = matter(data)
@@ -287,8 +313,7 @@ export default function WorkshopPage({
         setContent(matterResult.content)
       }
       catch (err) {
-        console.log('err', err)
-        console.log('data', data)
+        console.error('Error parsing markdown:', err)
         setMarkdownError(err);
       }
     }
@@ -434,18 +459,6 @@ export default function WorkshopPage({
     }
   }, [currentPage])
 
-  useEffect(() => {
-    if (metadata) {
-      if (metadata?.uploads_dir) {
-        setUploadsURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${metadata.uploads_dir}`);
-      } else {
-        setUploadsURL(`https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${gitFile}`);
-      }
-    }
-
-  }, [metadata])
-
-
   const handlePageChange = (event, value) => {
     // scroll smoothly to top of page
     window.scrollTo({
@@ -453,7 +466,15 @@ export default function WorkshopPage({
       behavior: 'smooth'
     });
     const valueAsNumber = Number(value);
-    router.push(`/dynamic/?user=${gitUser}&repo=${gitRepo}&file=${gitFile}&page=${valueAsNumber}&instUser=${instUser}&instRepo=${instRepo}`, undefined, { shallow: false, scroll: false });
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('user', gitUser);
+    urlParams.set('repo', gitRepo);
+    urlParams.set('file', gitFile);
+    urlParams.set('page', valueAsNumber);
+    if (instUser) urlParams.set('instUser', instUser);
+    if (instRepo) urlParams.set('instRepo', instRepo);
+    if (gitBranch && gitBranch !== 'main') urlParams.set('branch', gitBranch);
+    router.push(`/dynamic/?${urlParams.toString()}`, undefined, { shallow: false, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);
   }

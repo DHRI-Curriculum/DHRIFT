@@ -3,11 +3,125 @@
  * @returns {Headers} Headers object for GitHub API requests
  */
 export const getGitHubHeaders = () => {
-  const headers = new Headers({ 'Content-Type': 'application/json' });
+  const headers = new Headers();
   if (process.env.NEXT_PUBLIC_GITHUBSECRET && process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
     headers.set('Authorization', `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`);
   }
   return headers;
+};
+
+const KNOWN_DHRI_WORKSHOP_FILES = [
+  'DHRIFT_workshop-template.md',
+  'README.md',
+  'catch-our-dhrift.md',
+  'command-line.md',
+  'creating-simulations.md',
+  'data-literacies.md',
+  'git.md',
+  'html-css.md',
+  'intro_to_R.md',
+  'javascript.md',
+  'mapping-javascript.md',
+  'mapping.md',
+  'newest_python.md',
+  'pandas.md',
+  'python.md',
+  'sql.md',
+  'text-analysis.md',
+];
+
+const KNOWN_DHRI_UPLOAD_FILES = [
+  '10_index.html',
+  '10_poem.css',
+  '10_poem.html',
+  '10_poem.js',
+  '10_script.js',
+  '10_styles.css',
+  '11_index.html',
+  '11_map.js',
+  '11_poem.css',
+  '11_poem.html',
+  '11_poem.js',
+  '11_script.js',
+  '11_styles.css',
+  '12_index.html',
+  '12_map.js',
+  '12_nyc-data.css',
+  '12_nyc-data.html',
+  '12_nyc-data.js',
+  '12_poem.css',
+  '12_poem.html',
+  '12_poem.js',
+  '12_script.js',
+  '12_styles.css',
+  '8_index.html',
+  '8_script.js',
+  '8_styles.css',
+  '9_index.html',
+  '9_script.js',
+  '9_styles.css',
+  'aesop.txt',
+  'index.html',
+  'jupyter_notebooks_tutorial.ipynb',
+  'mobydick.txt',
+  'nycneighborhoods.js',
+  'nycneighborhoods.json',
+  'nypl_items.csv',
+  'poem.json',
+  'script.js',
+];
+
+export const buildRawGitHubUrl = ({ user, repo, branch = 'main', path = '' }) => {
+  const cleanPath = path.replace(/^\/+/, '');
+  return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${cleanPath}`;
+};
+
+export const githubApiContentUrlToRawUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== 'api.github.com') return null;
+    const match = parsed.pathname.match(/^\/repos\/([^/]+)\/([^/]+)\/contents\/?(.*)$/);
+    if (!match) return null;
+    const [, user, repo, path] = match;
+    if (!path) return null;
+    return buildRawGitHubUrl({
+      user,
+      repo,
+      branch: parsed.searchParams.get('ref') || 'main',
+      path,
+    });
+  } catch {
+    return null;
+  }
+};
+
+export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = 'v2' }) => {
+  if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
+  return KNOWN_DHRI_WORKSHOP_FILES.map((name) => ({
+    name,
+    path: name,
+    type: 'file',
+    url: `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${name}?ref=${branch}`,
+    download_url: buildRawGitHubUrl({ user: gitUser, repo: gitRepo, branch, path: name }),
+  }));
+};
+
+export const getKnownUploadListing = ({ gitUser, gitRepo, branch = 'v2' }) => {
+  if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
+  return KNOWN_DHRI_UPLOAD_FILES.map((name) => ({
+    name,
+    path: `uploads/${name}`,
+    type: 'file',
+    url: `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${name}?ref=${branch}`,
+    download_url: buildRawGitHubUrl({ user: gitUser, repo: gitRepo, branch, path: `uploads/${name}` }),
+  }));
+};
+
+export const normalizeKnownAssetUrl = (src) => {
+  if (src === 'https://docs.github.com/assets/cb-113970/images/help/pages/branch-publishing-selection.png') {
+    return 'https://docs.github.com/assets/images/help/pages/publishing-source-drop-down.png';
+  }
+  return src;
 };
 
 /**
@@ -21,21 +135,50 @@ export const createGitHubFetcher = (options = {}) => {
   const { decodeBase64 = true, onError } = options;
   const headers = getGitHubHeaders();
 
-  return (...args) => fetch(...args, {
-    headers,
-    method: 'GET',
-  })
-    .then(res => res.json())
-    .then(res => {
-      if (decodeBase64 && res.content) {
-        return Buffer.from(res.content, 'base64').toString();
+  return async (...args) => {
+    try {
+      const rawUrl = decodeBase64 && typeof args[0] === 'string'
+        ? githubApiContentUrlToRawUrl(args[0])
+        : null;
+
+      if (rawUrl) {
+        const rawResponse = await fetch(rawUrl, { method: 'GET' });
+        if (rawResponse.ok) {
+          return rawResponse.text();
+        }
       }
-      return res;
-    })
-    .catch(err => {
+
+      const res = await fetch(...args, {
+        headers,
+        method: 'GET',
+      });
+      const contentType = res.headers.get('content-type') || '';
+      const isJson = contentType.includes('application/json');
+      const body = isJson ? await res.json() : await res.text();
+
+      if (!res.ok) {
+        const message = isJson && body?.message ? body.message : res.statusText;
+        throw new Error(`GitHub request failed (${res.status}): ${message}`);
+      }
+
+      if (!isJson) {
+        return body;
+      }
+
+      if (body?.message && !body.content) {
+        throw new Error(body.message);
+      }
+
+      if (decodeBase64 && body.content) {
+        return Buffer.from(body.content, 'base64').toString();
+      }
+
+      return body;
+    } catch (err) {
       if (onError) onError(err);
       throw err;
-    });
+    }
+  };
 };
 
 const checkGitHubResource = async (user, repo) => {

@@ -26,7 +26,8 @@ const editorLabels = {
 
 export default function DrawerEditor(props) {
 
-    const editors = props.editors || [];  // available editor tabs
+    const fallbackEditor = props.language || props.programming_language;
+    const editors = props.editors?.length ? props.editors : (fallbackEditor ? [fallbackEditor] : []);  // available editor tabs
     const activeTab = (props.activeTab || editors[0] || '').toLowerCase();  // currently selected tab
     const setActiveTab = props.setActiveTab;  // function to switch tabs
     const text = props.text;  // this is the text in the editor
