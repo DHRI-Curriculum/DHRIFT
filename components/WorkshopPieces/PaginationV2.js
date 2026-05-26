@@ -55,12 +55,6 @@ export default function PaginationV2({
         </span>
       </button>
 
-      <div className="v2-pagination-center">
-        <span className="v2-pagination-page">
-          {currentPage} / {pages.length}
-        </span>
-      </div>
-
       <button
         className={`v2-pagination-btn v2-pagination-next ${!nextInfo ? 'disabled' : ''}`}
         onClick={() => handlePageChange(null, currentPage + 1)}

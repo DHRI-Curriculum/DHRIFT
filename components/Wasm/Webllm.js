@@ -44,23 +44,28 @@ const ChatBot = () => {
   const [isResponding, setIsResponding] = useState(false); // Bot is generating response
   const [selectedModel, setSelectedModel] = useState(""); // Selected model ID
   const [modelList, setModelList] = useState([]); // List of available models
+  const [modelError, setModelError] = useState(""); // User-visible model loading issue
   const chatboxRef = useRef(null); // Reference to the chatbox
 
   useEffect(() => {
     // Load the model list from prebuiltAppConfig.model_list
     const fetchModelList = () => {
       setIsModelLoading(true); // Set loading state to true
+      if (typeof navigator !== "undefined" && !navigator.gpu) {
+        setModelError("WebGPU is not available in this browser, so the local chat model cannot run here.");
+        setIsModelLoading(false);
+        return;
+      }
+
       const { model_list } = webllm.prebuiltAppConfig;
 
       // Debugging: log the model_list to verify it's loaded
-      console.log("Model list loaded from prebuiltAppConfig:", model_list);
-
       if (Array.isArray(model_list) && model_list.length > 0) {
         setModelList(model_list); // Set the model list state
         // setSelectedModel(model_list[0]?.model_id || ""); // Set the first model ID as the default
         setSelectedModel("Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC");
       } else {
-        console.error("Model list is empty or invalid:", model_list);
+        setModelError("No WebLLM models are available in this build.");
       }
       setIsModelLoading(false); // Stop loading after the list is fetched
     };
@@ -69,6 +74,7 @@ const ChatBot = () => {
   }, []);
 
   const loadModel = async (modelId) => {
+    if (!modelId) return null;
     setIsModelLoading(true); // Set loading state to true
     try {
       const initProgressCallback = (progressObject) => {
@@ -83,19 +89,13 @@ const ChatBot = () => {
       const engine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
       setModel(engine);
       setIsModelLoading(false); // Model loaded
+      return engine;
     } catch (error) {
-      console.error("Error initializing model:", error);
+      setModelError(error.message || "The local chat model could not be initialized.");
       setIsModelLoading(false); // Stop loading if there's an error
+      return null;
     }
   };
-
-  // Load the initial model on component mount
-  useEffect(() => {
-    if (selectedModel) {
-      setIsModelLoading(true); // Set loading state
-      loadModel(selectedModel); // Load the selected model using model_id
-    }
-  }, [selectedModel]); // Reload model when the selected model changes
 
   // Scroll to the bottom of the chatbox whenever a new message is added
   useEffect(() => {
@@ -112,7 +112,9 @@ const ChatBot = () => {
     const userMessage = input;
     setInput(""); // Clear the input field
 
-    if (model) {
+    const activeModel = model || await loadModel(selectedModel);
+
+    if (activeModel) {
       setIsResponding(true); // Start loading for response
       try {
         const conversationHistory = messages.map((message) => ({
@@ -122,7 +124,7 @@ const ChatBot = () => {
 
         conversationHistory.push({ role: "user", content: userMessage });
 
-        const responseStream = await model.chat.completions.create({
+        const responseStream = await activeModel.chat.completions.create({
           messages: conversationHistory,
           stream: true,
         });
@@ -149,7 +151,7 @@ const ChatBot = () => {
           setIsResponding(false);
         }
       } catch (error) {
-        console.error("Error generating response:", error);
+        setModelError(error.message || "The local chat model could not generate a response.");
         setIsResponding(false);
       }
     }
@@ -164,6 +166,8 @@ const ChatBot = () => {
 
   const handleModelChange = (event) => {
     setSelectedModel(event.target.value); // Update selected model (model_id)
+    setModel(null);
+    setModelError("");
   };
 
   return (
@@ -180,6 +184,11 @@ const ChatBot = () => {
         </Box>
       ) : (
         <>
+          {modelError && (
+            <Typography variant="body2" color="textSecondary">
+              {modelError}
+            </Typography>
+          )}
           <FormControl fullWidth margin="normal">
             <InputLabel id="model-select-label">Select Model</InputLabel>
             <Select
@@ -222,12 +231,12 @@ const ChatBot = () => {
           placeholder="Type a message..."
           className="input-field"
           onKeyDown={handleKeyDown}
-          disabled={isModelLoading || isResponding}
+          disabled={isModelLoading || isResponding || Boolean(modelError)}
         />
         <button
           onClick={handleSendMessage}
           className="send-button"
-          disabled={isModelLoading || isResponding}
+          disabled={isModelLoading || isResponding || Boolean(modelError)}
         >
           Send
         </button>

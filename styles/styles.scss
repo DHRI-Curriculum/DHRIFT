@@ -121,8 +121,10 @@ body {
   border-bottom: 1px solid var(--dhrift-cream-dark);
 
   &--frontmatter {
-    background: transparent;
-    border-bottom: none;
+    // page 1 is always 0% — hide the empty progress track so the header reads as solid
+    .v2-header-progress {
+      visibility: hidden;
+    }
   }
 }
 
@@ -574,7 +576,7 @@ body {
   color: var(--color-text);
   min-width: 0;
   flex: 1;
-  max-width: 45%;
+  max-width: 48%;
 
   &:hover:not(.disabled) {
     border-color: var(--color-primary);
@@ -583,9 +585,13 @@ body {
   }
 
   &.disabled {
-    opacity: 0.4;
+    opacity: 0.35;
+    background: transparent;
+    border-style: dashed;
     cursor: not-allowed;
     pointer-events: none;
+
+    .v2-pagination-icon { color: var(--color-text-muted); }
   }
 }
 
@@ -644,22 +650,6 @@ body {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
   margin-top: var(--space-xs);
-}
-
-.v2-pagination-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.v2-pagination-page {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  background: var(--dhrift-cream-dark);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: 4px;
 }
 
 // ============================================
@@ -868,6 +858,7 @@ body {
 // Image containers (from ConvertMarkdown)
 .image-container,
 .markdown-image-container {
+  display: block;
   position: relative;
 }
 
@@ -882,6 +873,7 @@ body {
 }
 
 .image-load-error {
+  display: block;
   padding: var(--space-lg);
   border: 1px dashed var(--dhrift-cream-dark);
   border-radius: 8px;
@@ -891,6 +883,7 @@ body {
 }
 
 .image-error {
+  display: block;
   color: var(--color-text-muted);
   font-style: italic;
 }
@@ -2589,8 +2582,17 @@ body {
   color: var(--color-primary);
   margin-bottom: var(--space-lg);
   padding-bottom: var(--space-sm);
-  border-bottom: 2px solid var(--dhrift-teal);
-  display: inline-block;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--dhrift-teal);
+  }
 }
 
 // Generic list styling
@@ -2613,7 +2615,7 @@ body {
       content: '';
       position: absolute;
       left: 0;
-      top: 0.85em;
+      top: calc(var(--space-sm) + 0.7em); // center bullet on first text line
       width: 6px;
       height: 6px;
       background: var(--dhrift-teal);
@@ -2774,7 +2776,7 @@ body {
       content: '';
       position: absolute;
       left: 0;
-      top: 0.75em;
+      top: calc(var(--space-sm) + 0.55em);
       width: 6px;
       height: 6px;
       background: var(--dhrift-teal);
@@ -3528,10 +3530,6 @@ body {
 
   .v2-pagination-btn {
     max-width: 100%;
-  }
-
-  .v2-pagination-center {
-    order: -1;
   }
 }
 

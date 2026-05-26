@@ -1,14 +1,19 @@
 import useSWRImmutable from "swr/immutable";
-import { useState, useEffect } from "react";
-import { createGitHubFetcher } from "../../utils/github";
+import { useMemo, useState, useEffect } from "react";
+import { createGitHubFetcher, getKnownUploadListing } from "../../utils/github";
 
-export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch = 'v2' }) {
+export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch }) {
     const [shouldFetch, setShouldFetch] = useState(false);
 
     // Construct uploads URL from git info
+    const refParam = gitBranch ? `?ref=${gitBranch}` : '';
     const uploadsURL = gitUser && gitRepo
-        ? `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads?ref=${gitBranch}`
+        ? `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads${refParam}`
         : null;
+    const knownUploads = useMemo(
+        () => getKnownUploadListing({ gitUser, gitRepo, branch: gitBranch || 'main' }),
+        [gitUser, gitRepo, gitBranch]
+    );
 
     useEffect(() => {
         if (uploadsURL) {
@@ -22,16 +27,17 @@ export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch 
     });
 
     const { data: uploads } = useSWRImmutable(
-        shouldFetch ? uploadsURL : null,
+        shouldFetch && !knownUploads ? uploadsURL : null,
         fetcher,
         { revalidateOnMount: true }
     );
 
     useEffect(() => {
-        if (uploads && setAllUploads) {
-            setAllUploads(uploads);
+        const sourceUploads = knownUploads || uploads;
+        if (Array.isArray(sourceUploads) && setAllUploads) {
+            setAllUploads(sourceUploads);
         }
-    }, [uploads, setAllUploads]);
+    }, [uploads, knownUploads, setAllUploads]);
 
-    return uploads;
+    return knownUploads || uploads;
 }

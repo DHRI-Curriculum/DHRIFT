@@ -50,7 +50,8 @@ export default function SidebarDrawerV2({
     const hasChildren = page.children && page.children.length > 0;
     const isActive = page.active || (hasChildren && page.children.some((child) => child.active));
 
-    const handleClick = () => {
+    const handleClick = (event) => {
+      event?.stopPropagation();
       setOpen(!open);
     };
 

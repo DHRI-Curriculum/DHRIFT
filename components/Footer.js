@@ -14,6 +14,7 @@ export default function Footer({ workshopMode }) {
                     <Image
                         src={DHRIFTLogo}
                         width={400}
+                        priority
                         className="img-fluid"
                         alt='DHRIFT'
                     />

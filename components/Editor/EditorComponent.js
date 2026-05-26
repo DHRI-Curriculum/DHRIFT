@@ -43,6 +43,7 @@ export default function CodeEditorComponent({ code, onChange, maxLines = null, m
         enableSnippets: false,
         showLineNumbers: true,
         tabSize: 2,
+        useWorker: false,
       }}
       onLoad={editorInstance => {
         setTimeout(() => {

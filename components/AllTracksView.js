@@ -25,14 +25,11 @@ export default function AllTracksView({ gitUser, gitRepo, instUser, instRepo }) 
     return (
         <Grid container spacing={3} className='tracks-grid'>
             {Array.isArray(tracks.tracks) && tracks.tracks.map(track => {
-                const imageBuiltURL = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${track.coverimage}`;
                 const randomNumberBetween1and7 = Math.floor(Math.random() * 7) + 1;
-                var coverimage = track.coverimage;
-                if (!track.coverimage) {
-                    {
-                        track.coverimage = "/images/img" + randomNumberBetween1and7 + ".jpg";
-                    }
-                }
+                const coverimage = track.coverimage || `/images/img${randomNumberBetween1and7}.jpg`;
+                const coverImageUrl = coverimage.startsWith('/')
+                    ? coverimage
+                    : `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${coverimage}`;
                 return (
                     <Grid item xs={12} sm={6} md={6} lg={4} key={track.short_name}>
                         <Card className='track-card' variant="outlined">
@@ -41,7 +38,7 @@ export default function AllTracksView({ gitUser, gitRepo, instUser, instRepo }) 
                                     <CardMedia
                                         component="img"
                                         height="240"
-                                        image={`https://raw.githubusercontent.com/${gitUser}/${gitRepo}/main/${track.coverimage}`}
+                                        image={coverImageUrl}
                                         alt={track.name}
                                     />
                                 </div>

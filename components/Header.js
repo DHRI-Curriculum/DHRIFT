@@ -30,7 +30,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
         <div className="mobile-drawer">
             <div className="mobile-drawer-header">
                 <Link href="http://www.dhrift.org" className="mobile-drawer-logo">
-                    <Image src={logo} alt="DHRIFT" width={200} />
+                    <Image src={logo} alt="DHRIFT" width={200} priority />
                 </Link>
                 <button
                     className="mobile-drawer-close"

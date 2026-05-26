@@ -96,6 +96,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                             height={0}
                             src={src}
                             alt={newProps.alt || 'Image'}
+                            priority
                             onError={() => {
                                 if (!isGithubUrl) {
                                     setSrc(builtURL);

@@ -13,10 +13,10 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Link from 'next/link';
 import heroImage from '../../public/images/learn.jpg';
+import { createGitHubFetcher } from '../../utils/github';
 
 export default function Institute(props) {
 
-    props.setWorkshopMode(false)
     const [builtURL, setBuiltURL] = useState(null);
     const [parsedYAML, setParsedYAML] = useState(null);
     const [sessions, setSessions] = useState(null);
@@ -24,30 +24,11 @@ export default function Institute(props) {
     const [date, setDate] = useState(null);
     const [showAbout, setShowAbout] = useState(true);
 
-    let headers;
+    useEffect(() => {
+        props.setWorkshopMode(false)
+    }, [props.setWorkshopMode])
 
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-                'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-            });
-    } else {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-            });
-    }
-
-    const fetcher = (headers) => (...args) => fetch(...args, {
-        headers: headers,
-        method: 'GET',
-    }).then(
-        res => res.json()
-    ).then(
-        // decode from base64
-        res => Buffer.from(res.content, 'base64').toString()
-    )
+    const fetcher = createGitHubFetcher({ decodeBase64: true });
 
     useEffect(() => {
         setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
@@ -56,7 +37,7 @@ export default function Institute(props) {
         }
     }, [props.instGitUser, props.instGitRepo])
 
-    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
+    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher,
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
 
     useEffect(() => {
@@ -74,7 +55,6 @@ export default function Institute(props) {
 
     useEffect(() => {
         if (parsedYAML) {
-            console.log(parsedYAML)
             setSessions(parsedYAML.sessions)
             props.setGitUser(parsedYAML.workshopsuser)
             props.setGitRepo(parsedYAML.workshopsrepo)
@@ -139,12 +119,11 @@ export default function Institute(props) {
                     <>
                         <h3>Contacts</h3>
                         {parsedYAML.contact.map((contact, index) => {
-                            console.log(contact)
                             if (contact.name !== '') {
-                                return <>
+                                return <React.Fragment key={`contact-${contact.name}-${index}`}>
                                     <h4>{contact.name}</h4>
-                                    {contact.email && <p>Email: <a href={`mailto ${contact.email}`}>{contact.email}</a></p>}
-                                </>
+                                    {contact.email && <p>Email: <a href={`mailto:${contact.email}`}>{contact.email}</a></p>}
+                                </React.Fragment>
                             }
                         }
                         )}

@@ -21,29 +21,31 @@ import { Alert, AlertTitle } from '@mui/material'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 
-const drawerWidth = '-30%'
-
 const buildRawGitHubURL = (user, repo, branch, file) => (
   `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${encodeURI(file)}.md`
 )
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginRight: 0,
-    }),
+// Normalize the drawer's width (number = pixels, string = pass through) into a CSS length
+const toCssWidth = (w) => (typeof w === 'number' ? `${w}px` : w)
+
+const Main = styled('main', {
+  shouldForwardProp: (prop) => prop !== 'open' && prop !== 'drawerWidth',
+})(({ theme, open, drawerWidth }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  marginRight: 0,
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
   }),
-)
+  ...(open && {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginRight: toCssWidth(drawerWidth),
+  }),
+}))
 
 /**
  * Find all directive block ranges (:::name ... :::) in content
@@ -168,6 +170,7 @@ export default function WorkshopPageV2({
   const [builtURL, setBuiltURL] = useState(null)
   const [gitFile, setGitFile] = useState(null)
   const [gitBranch, setGitBranch] = useState('v2') // Default to v2 branch
+  const [drawerWidth, setDrawerWidth] = useState('45%')
 
   const gitUser = props.gitUser
   const gitRepo = props.gitRepo
@@ -418,7 +421,7 @@ export default function WorkshopPageV2({
           <Head>
             <title>{title}</title>
           </Head>
-          <Main open={editorOpen} id="main" className="v2-main">
+          <Main open={editorOpen} drawerWidth={drawerWidth} id="main" className="v2-main">
             <div className="card-page">
               <div className="workshop-container">
                 {currentContent ? (
@@ -440,6 +443,7 @@ export default function WorkshopPageV2({
           {editors.length > 0 && workshopMode && (
             <DrawerEditorMovable
               drawerWidth={drawerWidth}
+              setDrawerWidth={setDrawerWidth}
               open={editorOpen}
               setEditorOpen={setEditorOpen}
               text={code}

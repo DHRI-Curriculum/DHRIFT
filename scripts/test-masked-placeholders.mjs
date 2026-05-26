@@ -4,7 +4,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import sanitizerPkg from '../utils/sanitizer.mjs';
 import slices from '../utils/slices.mjs';
-const { sanitizeBeforeParse, dropLeadingSliceArtifacts } = sanitizerPkg;
+const { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, autoCloseSecretBlocks } = sanitizerPkg;
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slices;
 
 // Validate and summarize how masked placeholders would be handled at render time.
@@ -29,8 +29,8 @@ const filePath = path.isAbsolute(file) ? file : path.join(process.cwd(), file);
 const raw = fs.readFileSync(filePath, 'utf8');
 const fm = matter(raw);
 
-const preSan = sanitizeBeforeParse(fm.content);
-const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preSan);
+const preAuto = autoCloseSecretBlocks(autoCloseInfoBlocks(fm.content));
+const { masked, codeEditorSegments, secretSegments, infoSegments, keywordSegments } = maskBlocks(preAuto);
 const maskedSanitized = sanitizeBeforeParse(masked);
 const longPages = fm.data?.long_pages === true || fm.data?.long_pages === 'true';
 const slicesArr = splitToSlices(maskedSanitized, { longPages });

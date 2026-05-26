@@ -4,35 +4,18 @@ import { Container } from '@mui/material';
 import Head from 'next/head';
 import Header from '../../components/Header';
 import WorkshopsView from '../../components/WorkshopsView';
+import jsyaml from 'js-yaml';
+import { createGitHubFetcher } from '../../utils/github';
 
 export default function Workshops(props) {
-    props.setWorkshopMode(false)
     const [shouldFetch, setShouldFetch] = useState(false);
     const [builtURL, setBuiltURL] = useState(null);
-    let headers;
+    const fetcher = createGitHubFetcher({ decodeBase64: true });
 
-    if (process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-                'authorization': `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`
-            });
-    } else {
-        headers = new Headers(
-            {
-                'Content-Type': 'application/json',
-            });
-    }
+    useEffect(() => {
+        props.setWorkshopMode(false)
+    }, [props.setWorkshopMode])
 
-    const fetcher = (headers) => (...args) => fetch(...args, {
-        headers: headers,
-        method: 'GET',
-    }).then(
-        res => res.json()
-    ).then(
-        // decode from base64
-        res => Buffer.from(res.content, 'base64').toString()
-    )
     useEffect(() => {
         setBuiltURL(`https://api.github.com/repos/${props.instGitUser}/${props.instGitRepo}/contents/config.yml`)
         if (props.instGitUser && props.instGitRepo) {
@@ -48,8 +31,16 @@ export default function Workshops(props) {
 
 
 
-    const { data: config, isLoading, error } = useSWR(shouldFetch ? builtURL : null, fetcher(headers),
+    const { data: config } = useSWR(shouldFetch ? builtURL : null, fetcher,
         { revalidateOnFocus: false, revalidateOnReconnect: false, revalidateIfStale: false })
+
+    useEffect(() => {
+        if (config && (!props.gitUser || !props.gitRepo)) {
+            const parsedConfig = jsyaml.load(config);
+            props.setGitUser(parsedConfig.workshopsuser);
+            props.setGitRepo(parsedConfig.workshopsrepo);
+        }
+    }, [config, props.gitUser, props.gitRepo, props.setGitUser, props.setGitRepo])
 
     return (
         <>

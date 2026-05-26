@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import trianglify from 'trianglify';
 
 const TrianglifyBasic = () => {
   const containerRef = useRef(null);
   const [seed, setSeed] = useState(Math.random());
   const [cellSize, setCellSize] = useState(Math.random() * 40 + 20); // 20-60
   const [variance, setVariance] = useState(Math.random() * 2); // 0-2
-  const [intensity, setIntensity] = useState(0.5 + Math.random() * 0.5); // 0.5-1
-
   const palettes = [
     // Primary theme colors
     ['#2E2E2E', '#3C342F', '#F9976A'], // bark, brown, sun
@@ -19,29 +16,37 @@ const TrianglifyBasic = () => {
     ['#F9976A', '#8dd0cd', '#F9F3EF'], // accent theme
   ];
 
-  const generatePattern = () => {
-    if (!containerRef.current) return;
-
-    const pattern = trianglify({
-      width: 400,
-      height: 250,
-      cellSize: cellSize,
-      xColors: palettes[Math.floor(Math.random() * palettes.length)],
-      variance: variance,
-      strokeWidth: 1.51,
-      fill: true,
-      seed: seed
-    });
-
-    // Clear previous canvas
-    containerRef.current.innerHTML = '';
-    const canvas = pattern.toSVG();
-    containerRef.current.appendChild(canvas);
-  };
-
   useEffect(() => {
+    let cancelled = false;
+
+    const generatePattern = async () => {
+      if (!containerRef.current) return;
+
+      const { default: trianglify } = await import('trianglify');
+      if (cancelled || !containerRef.current) return;
+
+      const pattern = trianglify({
+        width: 400,
+        height: 250,
+        cellSize: cellSize,
+        xColors: palettes[Math.floor(Math.random() * palettes.length)],
+        variance: variance,
+        strokeWidth: 1.51,
+        fill: true,
+        seed: seed
+      });
+
+      // Clear previous canvas
+      containerRef.current.innerHTML = '';
+      const canvas = pattern.toSVG();
+      containerRef.current.appendChild(canvas);
+    };
+
     generatePattern();
-  }, [seed, cellSize, variance, intensity]);
+    return () => {
+      cancelled = true;
+    };
+  }, [seed, cellSize, variance]);
 
   return (
     <div className="w-full max-w-3xl mx-auto p-4">

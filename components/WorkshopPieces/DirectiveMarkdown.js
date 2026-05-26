@@ -10,6 +10,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
+import { normalizeKnownAssetUrl } from '../../utils/github';
 
 // Import directive components
 import {
@@ -25,14 +26,30 @@ import {
   LinkDirective,
 } from './DirectiveComponents';
 
+function renderHtmlExampleTag(tagName, props = {}) {
+  const attrs = Object.entries(props)
+    .filter(([name]) => name !== 'children' && name !== 'node')
+    .map(([name, value]) => value === true ? name : `${name}="${String(value)}"`)
+    .join(' ');
+  const open = attrs ? `<${tagName} ${attrs}>` : `<${tagName}>`;
+
+  return (
+    <code>
+      {open}
+      {props.children}
+      {`</${tagName}>`}
+    </code>
+  );
+}
+
 // Custom image component to handle GitHub-hosted images
 function CustomImage({ src, alt, gitUser, gitRepo, gitFile, gitBranch = 'v2' }) {
-  let imageSrc = src;
+  let imageSrc = normalizeKnownAssetUrl(src);
 
   // If not an external URL, resolve to GitHub raw URL
-  if (src && !src.startsWith('http')) {
+  if (imageSrc && !imageSrc.startsWith('http')) {
     // Remove leading slash if present for consistent path building
-    const cleanPath = src.startsWith('/') ? src.slice(1) : src;
+    const cleanPath = imageSrc.startsWith('/') ? imageSrc.slice(1) : imageSrc;
     imageSrc = `https://raw.githubusercontent.com/${gitUser}/${gitRepo}/${gitBranch}/${cleanPath}`;
   }
 
@@ -101,8 +118,18 @@ export default function DirectiveMarkdown({
     'pythonrepl': () => <PythonReplDirective />,
 
     // Text directives (:name[text]{attrs})
-    'link': (props) => <LinkDirective {...props} instUser={instUser} instRepo={instRepo} />,
+    'link': (props) => (
+      props.workshop || props.page
+        ? <LinkDirective {...props} instUser={instUser} instRepo={instRepo} />
+        : renderHtmlExampleTag('link', props)
+    ),
     'kbd': ({ children }) => <kbd>{children}</kbd>,
+    'html': (props) => renderHtmlExampleTag('html', props),
+    'head': (props) => renderHtmlExampleTag('head', props),
+    'body': (props) => renderHtmlExampleTag('body', props),
+    'script': (props) => renderHtmlExampleTag('script', props),
+    'title': (props) => renderHtmlExampleTag('title', props),
+    'meta': (props) => renderHtmlExampleTag('meta', props),
 
     // Standard HTML elements
     'img': (props) => (

@@ -40,7 +40,8 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
     const newPages = rearrangePages(pages);
     const CollapsibleList = ({ pages }) => {
         const [open, setOpen] = useState(false)
-        const handleClick = () => {
+        const handleClick = (event) => {
+            event?.stopPropagation();
             setOpen(!open)
         }
         return (
@@ -51,7 +52,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                     <ListItem>
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
-                            onClick={() => {
+                            onClick={(event) => {
                                 clickAndClose(event, pages.index)
                             }}
                             {...pages.active ? { style: { color: '#8dd0cd' } } : { style: { color: 'white' } }}
@@ -62,7 +63,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                     <ListItem>
                         <ListItemText primary={pages.title}
                             className={'sidebar-item'}
-                            onClick={() => { clickAndClose(event, pages.index) }}
+                            onClick={(event) => { clickAndClose(event, pages.index) }}
                             {...pages.active ? { style: { color: '#8dd0cd' } } : { style: { color: 'white' } }}
                         />
                         <ListItemSecondaryAction onClick={handleClick}>
@@ -89,7 +90,7 @@ export default function SidebarDrawer({ pages, currentPage, handlePageChange, dr
                         <List component="div" disablePadding>
                             {pages.children.map((page) => (
                                 <ListItem button className={'nested'}
-                                    onClick={() => {
+                                onClick={(event) => {
                                         clickAndClose(event, page.index)
                                     }}
                                     key={`child-${page.index}-${page.title}`}>

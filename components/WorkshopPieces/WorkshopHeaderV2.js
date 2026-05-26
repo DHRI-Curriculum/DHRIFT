@@ -104,7 +104,7 @@ export default function WorkshopHeaderV2({
                 </Link>
               )}
 
-              {pageTitles[currentPage - 1] && (
+              {pageTitles[currentPage - 1] && !isFrontmatter && (
                 <span className="v2-breadcrumb-current">
                   {pageTitles[currentPage - 1].title}
                 </span>

@@ -46,8 +46,14 @@ function MyApp({ Component, pageProps }) {
     setQuery(urlParams);
     setInstGitUser(urlParams.get('instUser'));
     setInstGitRepo(urlParams.get('instRepo'));
-    if (router.pathname === '/inst' && urlParams.get('user') && urlParams.get('repo')) {
-      router.push('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
+    if (
+      router.pathname === '/inst' &&
+      urlParams.get('user') &&
+      urlParams.get('repo') &&
+      !urlParams.get('instUser') &&
+      !urlParams.get('instRepo')
+    ) {
+      router.replace('/inst?instUser=' + urlParams.get('user') + '&instRepo=' + urlParams.get('repo'))
     }
     if (urlParams.get('user') && urlParams.get('repo')) {
       setGitUser(urlParams.get('user'));
@@ -62,7 +68,6 @@ function MyApp({ Component, pageProps }) {
         localStorage.removeItem('app-cache-time');
         clearCache()
         setCacheCleared(true)
-        console.log('cache cleared')
       }
     }
   }, [router])

@@ -2,9 +2,12 @@ import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { useState } from 'react';
 
 export default function Download(props) {
     const allUploads = props.allUploads;
+    const [downloadError, setDownloadError] = useState('');
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const chosenUploads = typeof props.files === 'string' ? props.files.split(',') : [];
     const filteredUploads = [];
@@ -20,22 +23,29 @@ export default function Download(props) {
     const handleDownload = async () => {
         if (filteredUploads.length === 0) return;
 
+        setDownloadError('');
+        setIsDownloading(true);
         const zip = new JSZip();
 
-        // Download each file using the raw download_url
-        for (const file of filteredUploads) {
-            try {
+        try {
+            // Download each file using the raw download_url
+            for (const file of filteredUploads) {
                 const response = await fetch(file.download_url);
+                if (!response.ok) {
+                    throw new Error(`Could not download ${file.name}`);
+                }
                 const blob = await response.blob();
                 zip.file(file.name, blob);
-            } catch (error) {
-                console.error(`Failed to download ${file.name}:`, error);
             }
-        }
 
-        // Generate and save the zip
-        const content = await zip.generateAsync({ type: "blob" });
-        saveAs(content, "files.zip");
+            // Generate and save the zip
+            const content = await zip.generateAsync({ type: "blob" });
+            saveAs(content, "files.zip");
+        } catch (error) {
+            setDownloadError(error.message || 'The requested files could not be downloaded.');
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     // If no matching files found, show the requested filenames anyway
@@ -50,13 +60,18 @@ export default function Download(props) {
             <Button
                 className="button button-download"
                 onClick={handleDownload}
-                disabled={filteredUploads.length === 0}
+                disabled={filteredUploads.length === 0 || isDownloading}
             >
                 <DownloadIcon />
                 <span className="download-label">
-                    Download: {displayFiles.join(', ')}
+                    {isDownloading ? 'Preparing download...' : `Download: ${displayFiles.join(', ')}`}
                 </span>
             </Button>
+            {downloadError && (
+                <p className="download-error" role="alert">
+                    {downloadError}
+                </p>
+            )}
         </div>
     );
 }

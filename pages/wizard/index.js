@@ -143,7 +143,6 @@ export default function Form(props) {
     useEffect(() => {
         const useDummyData = router.query.useDummyData === 'true';
         if (useDummyData) {
-            console.log('Using dummy data');
             const dummyData = {
                 organizers: [{ name: 'John Doe', email: 'john.doe@example.com' }],
                 institution: 'Example Institute',
@@ -245,7 +244,6 @@ export default function Form(props) {
         function handle_auth_complete(event) {
             const data = JSON.parse(event.data);
             if (data.auth === 'complete') {
-                console.log(localStorage.getItem('githubToken'));
                 checkAuth();
             }
             else {
@@ -307,11 +305,9 @@ export default function Form(props) {
             body: JSON.stringify({ token: localStorage.getItem('githubToken'), formDataForGithub: formDataForGithub })
         });
         if (response.ok) {
-            console.log('Workshops repo cloned');
         }
         else {
-            console.log('Error cloning workshops repo');
-            console.log(response);
+            console.error('Error cloning workshops repo', response);
         }
     }
 
@@ -321,8 +317,8 @@ export default function Form(props) {
             ...formik.values,
             sessions: formik.values.sessions.map(session => ({
                 ...session,
-                instructors: session.instructors.map(instructor => ({ name: instructor })),
-                helpers: session.helpers.map(helper => ({ name: helper.name })),
+                instructors: session.instructors.map(instructor => ({ name: instructor.name, email: instructor.email })),
+                helpers: session.helpers.map(helper => ({ name: helper.name, email: helper.email })),
             })),
             origin: window.location.origin
         };
@@ -372,7 +368,6 @@ export default function Form(props) {
             setInstName(data.instUser);
             uploadFiles(imagesToSend);
             if (formik.values.cloneWorkshops) {
-                console.log('Cloning workshops repo');
                 cloneWorkshopsRepo(formDataForGithub);
             }
 
@@ -381,8 +376,7 @@ export default function Form(props) {
             setShowProgress(false);
         }
         else {
-            console.log('Error creating institute');
-            console.log(response);
+            console.error('Error creating institute', response);
             setShowProgress(false);
         }
 
@@ -1149,4 +1143,3 @@ const sessionsSection = (
         </>
     );
 }
-

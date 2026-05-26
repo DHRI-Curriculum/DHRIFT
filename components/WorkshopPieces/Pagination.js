@@ -57,7 +57,7 @@ export default function Pagination({ pages, currentPage, handlePageChange, pageT
             <>
                 <Button
                     className='pagination-button'
-                    onClick={() => handlePageChange(event, Number(currentPage) - 1)}
+                    onClick={(event) => handlePageChange(event, Number(currentPage) - 1)}
                     disabled={currentPage === 1}
                 >
                     <ArrowBackIcon />
@@ -65,7 +65,7 @@ export default function Pagination({ pages, currentPage, handlePageChange, pageT
                 </Button>
                 <Button
                     className='pagination-button'
-                    onClick={() => handlePageChange(event, Number(currentPage) + 1)}
+                    onClick={(event) => handlePageChange(event, Number(currentPage) + 1)}
                     disabled={currentPage === pages.length}
                     sx={{
                         justifySelf: 'flex-end',
@@ -85,7 +85,7 @@ export default function Pagination({ pages, currentPage, handlePageChange, pageT
                 >
                     <Button
                         className='pagination-button'
-                        onClick={() => handlePageChange(event, Number(currentPage) - 1)}
+                        onClick={(event) => handlePageChange(event, Number(currentPage) - 1)}
                         disabled={currentPage === 1}
                     >
                         <ArrowBackIcon />
@@ -93,7 +93,7 @@ export default function Pagination({ pages, currentPage, handlePageChange, pageT
                     </Button>
                     <Button
                         className='pagination-button'
-                        onClick={() => handlePageChange(event, Number(currentPage) + 1)}
+                        onClick={(event) => handlePageChange(event, Number(currentPage) + 1)}
                         disabled={currentPage === pages.length}
                         sx={{
                             justifySelf: 'flex-end',

@@ -1,10 +1,6 @@
-const { default: next } = require('next');
 const withMDX = require('@next/mdx')({
     extension: /\.(md|mdx)$/,
 })
-
-const isGitHub = process.env.GITHUB_ACTIONS === "true";
-console.log(`Running in ${isGitHub ? "GitHub Actions" : "local"} mode`);
 
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
 process.env.NEXT_PUBLIC_GITHUBSECRET = process.env.GITHUBSECRET || false;
@@ -18,6 +14,7 @@ const nextConfig = {
     // Add CSS optimization
     experimental: {
         optimizeCss: true, // Enable CSS optimization
+        largePageDataBytes: 192 * 1024,
     },
     webpack(config, { isServer }) {
         // Fix asset modules for fonts/images in CSS
@@ -36,7 +33,5 @@ const nextConfig = {
         return config;
     }
 }
-
-console.log(nextConfig);
 
 module.exports = nextConfig;

@@ -37,7 +37,12 @@ export default function DrawerEditor(props) {
     const [show, setShow] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
     const [lastDownX, setLastDownX] = useState(0);
-    const [newWidth, setNewWidth] = useState('45%');
+
+    // Drawer width is lifted to the parent when provided (v2 needs it for layout);
+    // otherwise we keep local state as a fallback for v1 callers.
+    const [localWidth, setLocalWidth] = useState('45%');
+    const newWidth = props.drawerWidth ?? localWidth;
+    const setNewWidth = props.setDrawerWidth ?? setLocalWidth;
 
     const handleMousedown = e => {
         setIsResizing(true);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
@@ -42,7 +42,10 @@ export default function QuizComponent({ className, children }) {
         })
         .filter(Boolean);
 
-    const componentUniqueId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const componentUniqueId = useMemo(
+        () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+        []
+    );
 
     const onSubmit = (e) => {
         e.preventDefault();

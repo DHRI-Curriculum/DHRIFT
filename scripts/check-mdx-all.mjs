@@ -7,14 +7,15 @@ import slices from '../utils/slices.mjs';
 const { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, autoCloseSecretBlocks } = sanitizerPkg;
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slices;
 
-const root = process.argv[2] || process.env.WORKSHOPS_DIR || 'apps/workshops';
+const root = process.argv[2] || process.env.WORKSHOPS_DIR || '.';
 const dir = path.isAbsolute(root) ? root : path.join(process.cwd(), root);
+const SKIP_DIRS = new Set(['.git', '.next', 'node_modules', 'out']);
 
 function* walk(dirPath) {
   const ents = fs.readdirSync(dirPath, { withFileTypes: true });
   for (const e of ents) {
     const p = path.join(dirPath, e.name);
-    if (e.isDirectory()) yield* walk(p);
+    if (e.isDirectory() && !SKIP_DIRS.has(e.name)) yield* walk(p);
     else if (e.isFile() && p.endsWith('.md')) yield p;
   }
 }
