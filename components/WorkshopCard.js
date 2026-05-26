@@ -23,8 +23,8 @@ const getCategoryColor = (language) => {
 export default function WorkshopCard({ workshop, gitUser, gitRepo, instUser, instRepo }) {
   const [parsedWorkshop, setParsedWorkshop] = useState(null);
 
-  // Build URL for fetching workshop content
-  const builtURL = workshop?.url?.split('?')[0];
+  // Prefer the raw file URL so known V2 listings keep their branch-specific content.
+  const builtURL = workshop?.download_url || workshop?.url;
 
   const fetcher = createGitHubFetcher({ decodeBase64: true });
   const { data } = useSWRImmutable(builtURL, fetcher);
