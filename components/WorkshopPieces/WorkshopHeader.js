@@ -10,6 +10,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
     setCurrentContent, handlePageChange, instUser, instRepo
 }) {
     const [queryString, setQueryString] = useState('');
+    const [workshopPath, setWorkshopPath] = useState('');
     const [parentLink, setParentLink] = useState('');
     const [firstPageLink, setFirstPageLink] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -21,23 +22,20 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
 
     useEffect(() => {
         setQueryString(window.location.search);
-    }, [router])
+        setWorkshopPath(window.location.pathname.replace(/\/$/, '') || router.pathname);
+    }, [router.asPath, router.pathname])
 
     useEffect(() => {
-        if (queryString) {
-            const urlParams = new URLSearchParams(queryString);
-            urlParams.set('page', currentPageParentPage);
-            setParentLink(`${'./dynamic'}?${urlParams}`);
-        }
-    }, [currentPageParentPage])
+        if (queryString && workshopPath) {
+            const firstPageParams = new URLSearchParams(queryString);
+            firstPageParams.set('page', 1);
+            setFirstPageLink(`${workshopPath}?${firstPageParams}`);
 
-    useEffect(() => {
-        if (queryString) {
-            const urlParams = new URLSearchParams(queryString);
-            urlParams.set('page', 1);
-            setFirstPageLink(`${'./dynamic'}?${urlParams}`);
+            const parentPageParams = new URLSearchParams(queryString);
+            parentPageParams.set('page', currentPageParentPage);
+            setParentLink(`${workshopPath}?${parentPageParams}`);
         }
-    }, [queryString])
+    }, [queryString, workshopPath, currentPageParentPage])
 
     return (
         <div className='workshop-header'>
