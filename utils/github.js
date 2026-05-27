@@ -99,6 +99,14 @@ export const githubApiContentUrlToRawUrl = (url) => {
   }
 };
 
+const isRawGitHubUrl = (url) => {
+  try {
+    return new URL(url).hostname === 'raw.githubusercontent.com';
+  } catch {
+    return false;
+  }
+};
+
 export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = ALIGNED_WORKSHOP_BRANCH }) => {
   if (gitUser?.toLowerCase() !== 'dhri-curriculum' || gitRepo?.toLowerCase() !== 'workshops') return null;
   return KNOWN_DHRI_WORKSHOP_FILES.map((name) => ({
@@ -148,6 +156,14 @@ export const createGitHubFetcher = (options = {}) => {
       const rawUrl = decodeBase64 && typeof args[0] === 'string'
         ? githubApiContentUrlToRawUrl(args[0])
         : null;
+
+      if (typeof args[0] === 'string' && isRawGitHubUrl(args[0])) {
+        const rawResponse = await fetch(args[0], { method: 'GET' });
+        if (!rawResponse.ok) {
+          throw new Error(`GitHub raw request failed (${rawResponse.status}): ${rawResponse.statusText}`);
+        }
+        return rawResponse.text();
+      }
 
       if (rawUrl) {
         const rawResponse = await fetch(rawUrl, { method: 'GET' });
