@@ -1,5 +1,6 @@
 'use client'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState } from 'react'
@@ -10,7 +11,6 @@ import WorkshopHeaderV2 from '../../components/WorkshopPieces/WorkshopHeaderV2'
 import Footer from '../../components/Footer'
 import Container from '@mui/material/Container'
 import Skeleton from '@mui/material/Skeleton'
-import DrawerEditorMovable from '../../components/Editor/DrawerEditor'
 import useUploads from '../../components/Hooks/UseUploads'
 import useWorkshop from '../../components/Hooks/UseWorkshop'
 import PaginationV2 from '../../components/WorkshopPieces/PaginationV2'
@@ -24,6 +24,8 @@ import { ALIGNED_WORKSHOP_BRANCH } from '../../utils/github'
 const buildRawGitHubURL = (user, repo, branch, file) => (
   `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${encodeURI(file)}.md`
 )
+
+const DrawerEditorMovable = dynamic(() => import('../../components/Editor/DrawerEditor'), { ssr: false })
 
 // Normalize the drawer's width (number = pixels, string = pass through) into a CSS length.
 // Used to feed the inline CSS variable that drives the page's layout shift.

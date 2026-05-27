@@ -78,7 +78,7 @@ export default function WorkshopHeaderV2({
             >
               {pages && instUser && instRepo && (
                 <Tooltip title="Back to Institute" arrow>
-                  <Link href={instURL} className="v2-breadcrumb-link">
+                  <Link href={instURL} className="v2-breadcrumb-link" prefetch={false}>
                     <HomeIcon fontSize="small" />
                   </Link>
                 </Tooltip>
@@ -89,6 +89,7 @@ export default function WorkshopHeaderV2({
                   href={firstPageLink}
                   onClick={() => setCurrentPage(1)}
                   className="v2-breadcrumb-link v2-breadcrumb-workshop"
+                  prefetch={false}
                 >
                   {workshopTitle}
                 </Link>
@@ -99,6 +100,7 @@ export default function WorkshopHeaderV2({
                   href={parentLink}
                   onClick={() => setCurrentPage(currentPageParentPage)}
                   className="v2-breadcrumb-link v2-breadcrumb-parent"
+                  prefetch={false}
                 >
                   {currentPageParent}
                 </Link>

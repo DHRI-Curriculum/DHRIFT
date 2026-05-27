@@ -8,7 +8,7 @@ import remarkDirective from 'remark-directive';
 import remarkDirectiveRehype from 'remark-directive-rehype';
 import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeDhriftHighlight from '../../utils/rehypeDhriftHighlight';
 import rehypeReact from 'rehype-react';
 import { ALIGNED_WORKSHOP_BRANCH, normalizeKnownAssetUrl } from '../../utils/github';
 
@@ -202,7 +202,7 @@ export default function DirectiveMarkdown({
       .use(remarkDirectiveRehype)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)
-      .use(rehypeHighlight)
+      .use(rehypeDhriftHighlight)
       .use(rehypeReact, {
         createElement,
         Fragment,

@@ -7,7 +7,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import remarkGfm from "remark-gfm";
 import rehypeReact from 'rehype-react'
-import rehypeHighlight from 'rehype-highlight'
+import rehypeDhriftHighlight from '../../utils/rehypeDhriftHighlight'
 import remarkDirective from 'remark-directive'
 import remarkDirectiveRehype from 'remark-directive-rehype'
 import remarkFrontmatter from 'remark-frontmatter'
@@ -240,7 +240,7 @@ export default async function MDX({ content, allUploads, workshopTitle, language
         }
         )
         // .use(MDXTagPlugin)
-        .use(rehypeHighlight)
+        .use(rehypeDhriftHighlight)
         .use(rehypeReact,
           {
             createElement: createElement,

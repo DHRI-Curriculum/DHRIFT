@@ -47,6 +47,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                         href={link.href}
                         className="mobile-drawer-link"
                         onClick={handleDrawerToggle}
+                        prefetch={link.href.startsWith('/') ? false : undefined}
                     >
                         {link.label}
                     </Link>
@@ -81,6 +82,7 @@ export default function Header({ title, instUser, instRepo, gitUser, gitRepo }) 
                                 key={link.label}
                                 href={link.href}
                                 className="site-header-link"
+                                prefetch={link.href.startsWith('/') ? false : undefined}
                             >
                                 {link.label}
                             </Link>

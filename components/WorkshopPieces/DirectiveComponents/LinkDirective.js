@@ -7,7 +7,7 @@ export default function LinkDirective({ children, workshop, page, instUser, inst
   }${page ? `&page=${page}` : ''}`;
 
   return (
-    <Link href={href}>
+    <Link href={href} prefetch={false}>
       {children}
     </Link>
   );

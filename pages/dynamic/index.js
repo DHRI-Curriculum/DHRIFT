@@ -1,5 +1,6 @@
 'use client'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import Header from '../../components/Header'
 import matter from 'gray-matter'
 import { useEffect, useState, Fragment } from 'react'
@@ -10,7 +11,6 @@ import WorkshopHeader from '../../components/WorkshopPieces/WorkshopHeader'
 import Footer from '../../components/Footer'
 import Container from '@mui/material/Container';
 import Skeleton from '@mui/material/Skeleton';
-import DrawerEditorMovable from '../../components/Editor/DrawerEditor'
 import { styled } from '@mui/material/styles';
 import useUploads from '../../components/Hooks/UseUploads';
 import useWorkshop from '../../components/Hooks/UseWorkshop';
@@ -32,6 +32,8 @@ import { LEGACY_DYNAMIC_WORKSHOP_BRANCH } from '../../utils/github'
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
+
+const DrawerEditorMovable = dynamic(() => import('../../components/Editor/DrawerEditor'), { ssr: false })
 
 const buildGitHubContentsURL = (user, repo, file, branch = LEGACY_DYNAMIC_WORKSHOP_BRANCH) => (
   `https://api.github.com/repos/${user}/${repo}/contents/${encodeURI(file)}.md?ref=${encodeURIComponent(branch)}`

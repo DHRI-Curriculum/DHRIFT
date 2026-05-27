@@ -56,7 +56,7 @@ export default function WorkshopCard({ workshop, gitUser, gitRepo, instUser, ins
   const workshopLink = `./v2?user=${gitUser}&repo=${gitRepo}&file=${workshop.name.split('.')[0]}&branch=${ALIGNED_WORKSHOP_BRANCH}&instUser=${instUser}&instRepo=${instRepo}`;
 
   return (
-    <Link href={workshopLink} className="workshop-card">
+    <Link href={workshopLink} className="workshop-card" prefetch={false}>
       <article className="workshop-card-inner">
         {/* Category accent bar */}
         <div className="workshop-card-accent" style={{ backgroundColor: category.bg }} />

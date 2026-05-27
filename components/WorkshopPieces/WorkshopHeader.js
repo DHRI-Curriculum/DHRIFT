@@ -58,7 +58,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                         separator="›"
                         aria-label="breadcrumb">
                         {pages && instUser && instRepo &&
-                            <Link href={instURL}>
+                            <Link href={instURL} prefetch={false}>
                                 <HomeIcon
                                     className='home-icon'
                                     sx={{
@@ -72,6 +72,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                                 onClick={() => {
                                     setCurrentPage(1);
                                 }}
+                                prefetch={false}
                             >
                                 {workshopTitle}
                             </Link>
@@ -81,6 +82,7 @@ export default function WorkshopHeader({ currentPage, setCurrentPage, pageTitles
                                 onClick={() => {
                                     setCurrentPage(currentPageParentPage);
                                 }}
+                                prefetch={false}
                             >
                                 {currentPageParent}
                             </Link>

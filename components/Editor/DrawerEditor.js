@@ -1,15 +1,17 @@
 // import InterpreterComponent from './InterpreterComponent';
-import PythonEditorComponent from './PythonEditorComponent';
-import JSEditorComponent from './JSEditorComponent';
-import REditorComponent from './REditorComponent';
-import Jupyter from '../Wasm/Jupyter';
+import dynamic from 'next/dynamic';
 import CodeIcon from '@mui/icons-material/Code';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import Webvm from '../Wasm/Webvm';
-import Webllm from '../Wasm/Webllm';
-import HTMLEditorComponent from './HTMLEditorComponent';
 import { useState, useEffect, useRef, Fragment } from 'react';
+
+const PythonEditorComponent = dynamic(() => import('./PythonEditorComponent'), { ssr: false });
+const JSEditorComponent = dynamic(() => import('./JSEditorComponent'), { ssr: false });
+const REditorComponent = dynamic(() => import('./REditorComponent'), { ssr: false });
+const HTMLEditorComponent = dynamic(() => import('./HTMLEditorComponent'), { ssr: false });
+const Jupyter = dynamic(() => import('../Wasm/Jupyter'), { ssr: false });
+const Webvm = dynamic(() => import('../Wasm/Webvm'), { ssr: false });
+const Webllm = dynamic(() => import('../Wasm/Webllm'), { ssr: false });
 
 // Display names for editor tabs
 const editorLabels = {
@@ -35,6 +37,7 @@ export default function DrawerEditor(props) {
     const open = props.open;  // this is the state of the drawer
     const setOpen = props.setEditorOpen;  // this is the function to set the state of the drawer
     const [show, setShow] = useState(false);
+    const [hasOpened, setHasOpened] = useState(open);
     const [isResizing, setIsResizing] = useState(false);
     const [lastDownX, setLastDownX] = useState(0);
 
@@ -107,12 +110,14 @@ export default function DrawerEditor(props) {
                 setShow(!show);
             }, timer);
         } else {
+            setHasOpened(true);
             setShow(!show);
         }
     }
 
     useEffect(() => {
         if (open) {
+            setHasOpened(true);
             setShow(true);
         }
     }, [open])
@@ -259,27 +264,31 @@ export default function DrawerEditor(props) {
                 >
                     <CodeIcon /> Close Editor
                 </Button>
-                {editors.length > 1 && (
-                    <div className="editor-tabs">
-                        {editors.map((editor) => {
-                            const editorKey = editor.toLowerCase();
-                            const label = editorLabels[editorKey] || editor;
-                            const isActive = activeTab === editorKey;
-                            return (
-                                <button
-                                    key={editorKey}
-                                    className={`editor-tab ${isActive ? 'editor-tab--active' : ''}`}
-                                    onClick={() => setActiveTab(editorKey)}
-                                >
-                                    {label}
-                                </button>
-                            );
-                        })}
-                    </div>
+                {hasOpened && (
+                    <>
+                        {editors.length > 1 && (
+                            <div className="editor-tabs">
+                                {editors.map((editor) => {
+                                    const editorKey = editor.toLowerCase();
+                                    const label = editorLabels[editorKey] || editor;
+                                    const isActive = activeTab === editorKey;
+                                    return (
+                                        <button
+                                            key={editorKey}
+                                            className={`editor-tab ${isActive ? 'editor-tab--active' : ''}`}
+                                            onClick={() => setActiveTab(editorKey)}
+                                        >
+                                            {label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                        <div id='drawer-editor' className='drawer-editor' ref={scrollContainerRef}>
+                            {whichEditor()}
+                        </div>
+                    </>
                 )}
-                <div id='drawer-editor' className='drawer-editor' ref={scrollContainerRef}>
-                    {whichEditor()}
-                </div>
             </Drawer>
         </Fragment>
     )

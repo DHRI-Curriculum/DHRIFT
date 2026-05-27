@@ -244,7 +244,7 @@ export default function Frontmatter({
         <div className="fm-hero-content">
           <h1 className="fm-title">{coverTitle || title}</h1>
           {description && <p className="fm-description">{description}</p>}
-          <Link href={secondPageLink || '#'} onClick={handleStartClick} className="fm-cta">
+          <Link href={secondPageLink || '#'} onClick={handleStartClick} className="fm-cta" prefetch={false}>
             Start Workshop <ArrowForwardIcon />
           </Link>
         </div>
@@ -334,7 +334,7 @@ export default function Frontmatter({
 
         {/* Bottom CTA */}
         <section className="fm-bottom-cta">
-          <Link href={secondPageLink || '#'} onClick={handleStartClick} className="fm-cta fm-cta-large">
+          <Link href={secondPageLink || '#'} onClick={handleStartClick} className="fm-cta fm-cta-large" prefetch={false}>
             Start Workshop <ArrowForwardIcon />
           </Link>
         </section>

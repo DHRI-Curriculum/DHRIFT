@@ -20,7 +20,7 @@ import remarkDirective from 'remark-directive';
 import remarkDirectiveRehype from 'remark-directive-rehype';
 import remarkRehype from 'remark-rehype';
 import remarkMdx from 'remark-mdx';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeDhriftHighlight from '../../utils/rehypeDhriftHighlight';
 import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
@@ -37,7 +37,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
                 .use(remarkParse)
                 .use(remarkGfm)
                 .use(remarkRehype)
-                .use(rehypeHighlight)
+                .use(rehypeDhriftHighlight)
                 .use(rehypeReact, {
                     createElement,
                     Fragment,
@@ -536,7 +536,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
             .use(remarkDirective)
             .use(remarkDirectiveRehype)
             .use(remarkRehype, { allowDangerousHtml: false, handlers: mdxHandlers })
-            .use(rehypeHighlight)
+            .use(rehypeDhriftHighlight)
             .use(rehypeReact, {
                 createElement,
                 Fragment,

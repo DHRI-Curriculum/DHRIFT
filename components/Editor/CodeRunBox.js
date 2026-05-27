@@ -1,44 +1,13 @@
 import React, { useState } from 'react';
-import hljs from 'highlight.js'
 import Button from '@mui/material/Button';
 import 'highlight.js/styles/atom-one-dark.css'
-
-
-function normalizeLanguage(lang) {
-    if (!lang) return 'plaintext';
-    const s = String(lang).toLowerCase().trim();
-    switch (s) {
-        case 'javascript':
-        case 'js':
-            return 'javascript';
-        case 'python':
-        case 'py':
-            return 'python';
-        case 'r':
-            return 'r';
-        case 'html':
-        case 'xml':
-            return 'xml';
-        case 'bash':
-        case 'shell':
-        case 'sh':
-        case 'zsh':
-            return 'bash';
-        case 'json':
-            return 'json';
-        case 'markdown':
-        case 'md':
-            return 'markdown';
-        default:
-            return s;
-    }
-}
+import highlighter, { normalizeHighlightLanguage } from '../../utils/dhriftHighlighter';
 
 export default function CodeRunBox(props) {
     const setCode = props.setCode;
     const setEditorOpen = props.setEditorOpen;
     const setActiveTab = props.setActiveTab;
-    const lang = normalizeLanguage(props.language);
+    const lang = normalizeHighlightLanguage(props.language);
 
     // Map highlight.js language to editor tab name
     const getEditorTab = (language) => {
@@ -51,14 +20,14 @@ export default function CodeRunBox(props) {
     };
     let highlighted = null;
     try {
-        if (hljs.getLanguage(lang)) {
-            highlighted = hljs.highlight(props.defaultCode, { language: lang, ignoreIllegals: true });
+        if (highlighter.getLanguage(lang)) {
+            highlighted = highlighter.highlight(props.defaultCode, { language: lang, ignoreIllegals: true });
         } else {
-            highlighted = hljs.highlightAuto(props.defaultCode);
+            highlighted = highlighter.highlightAuto(props.defaultCode);
         }
     } catch (e) {
         try {
-            highlighted = hljs.highlightAuto(props.defaultCode);
+            highlighted = highlighter.highlightAuto(props.defaultCode);
         } catch (err) {
             highlighted = { value: props.defaultCode };
         }

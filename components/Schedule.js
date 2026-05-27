@@ -79,7 +79,7 @@ export default function Schedule({ schedule, ...props }) {
                     <div key={`${event.title}-${event.time}`}>
                       <h3>{event.title}
                         {event.workshop &&
-                    <Link href={`dynamic/?user=${props.gitUser}&repo=${props.gitRepo}&file=${event.workshop}&branch=${LEGACY_DYNAMIC_WORKSHOP_BRANCH}&instUser=${props.instGitUser}&instRepo=${props.instGitRepo}`}>
+                    <Link href={`dynamic/?user=${props.gitUser}&repo=${props.gitRepo}&file=${event.workshop}&branch=${LEGACY_DYNAMIC_WORKSHOP_BRANCH}&instUser=${props.instGitUser}&instRepo=${props.instGitRepo}`} prefetch={false}>
                           <LaunchIcon className="launch-icon" />
                         </Link>
                         }

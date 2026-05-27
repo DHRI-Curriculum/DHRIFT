@@ -1,7 +1,5 @@
 import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import { useState } from 'react';
 
 export default function Download(props) {
@@ -25,9 +23,16 @@ export default function Download(props) {
 
         setDownloadError('');
         setIsDownloading(true);
-        const zip = new JSZip();
 
         try {
+            const [zipModule, fileSaverModule] = await Promise.all([
+                import('jszip'),
+                import('file-saver'),
+            ]);
+            const JSZip = zipModule.default || zipModule;
+            const saveAs = fileSaverModule.saveAs || fileSaverModule.default;
+            const zip = new JSZip();
+
             // Download each file using the raw download_url
             for (const file of filteredUploads) {
                 const response = await fetch(file.download_url);
