@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import useSWRImmutable from 'swr/immutable';
 import matter from 'gray-matter';
 import Link from 'next/link';
-import { createGitHubFetcher } from '../utils/github';
+import { ALIGNED_WORKSHOP_BRANCH, createGitHubFetcher } from '../utils/github';
 
 // Category colors based on programming language/topic
 const getCategoryColor = (language) => {
@@ -53,7 +53,7 @@ export default function WorkshopCard({ workshop, gitUser, gitRepo, instUser, ins
   const truncatedDesc = description?.length > 180 ? description.substring(0, 180) + '...' : description;
   const timeDisplay = Array.isArray(estimatedTime) ? estimatedTime[0] : estimatedTime;
 
-  const workshopLink = `./v2?user=${gitUser}&repo=${gitRepo}&file=${workshop.name.split('.')[0]}&branch=v2&instUser=${instUser}&instRepo=${instRepo}`;
+  const workshopLink = `./v2?user=${gitUser}&repo=${gitRepo}&file=${workshop.name.split('.')[0]}&branch=${ALIGNED_WORKSHOP_BRANCH}&instUser=${instUser}&instRepo=${instRepo}`;
 
   return (
     <Link href={workshopLink} className="workshop-card">

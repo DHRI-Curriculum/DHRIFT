@@ -10,7 +10,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
-import { normalizeKnownAssetUrl } from '../../utils/github';
+import { ALIGNED_WORKSHOP_BRANCH, normalizeKnownAssetUrl } from '../../utils/github';
 
 // Import directive components
 import {
@@ -98,7 +98,7 @@ function renderHtmlExampleTag(tagName, props = {}) {
 }
 
 // Custom image component to handle GitHub-hosted images
-function CustomImage({ src, alt, gitUser, gitRepo, gitFile, gitBranch = 'v2' }) {
+function CustomImage({ src, alt, gitUser, gitRepo, gitFile, gitBranch = ALIGNED_WORKSHOP_BRANCH }) {
   let imageSrc = normalizeKnownAssetUrl(src);
 
   // If not an external URL, resolve to GitHub raw URL
@@ -128,7 +128,7 @@ export default function DirectiveMarkdown({
   gitUser,
   gitRepo,
   gitFile,
-  gitBranch = 'v2',
+  gitBranch = ALIGNED_WORKSHOP_BRANCH,
   instUser,
   instRepo,
 }) {

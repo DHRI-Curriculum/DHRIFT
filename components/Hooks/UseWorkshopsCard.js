@@ -4,7 +4,7 @@ import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
 import matter from "gray-matter";
 import TrianglifyBasic from '../Backgrounds';
-import { createGitHubFetcher } from '../../utils/github';
+import { LEGACY_DYNAMIC_WORKSHOP_BRANCH, createGitHubFetcher } from '../../utils/github';
 
 export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, instRepo }) {
     const [parsedWorkshop, setParsedWorkshop] = useState(null);
@@ -37,7 +37,7 @@ export default function UseWorkshopCard({ workshop, gitUser, gitRepo, instUser, 
         }
     }, [coverimage, gitUser, gitRepo, randomNum]);
 
-    const workshopLink = `./dynamic?user=${gitUser}&repo=${gitRepo}&file=${workshop.name.split('.')[0]}&instUser=${instUser}&instRepo=${instRepo}`;
+    const workshopLink = `./dynamic?user=${gitUser}&repo=${gitRepo}&file=${workshop.name.split('.')[0]}&branch=${LEGACY_DYNAMIC_WORKSHOP_BRANCH}&instUser=${instUser}&instRepo=${instRepo}`;
 
     // Don't render unpublished workshops
     if (parsedWorkshop?.data?.published === false) {

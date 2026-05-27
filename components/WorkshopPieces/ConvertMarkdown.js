@@ -25,7 +25,7 @@ import rehypeReact from 'rehype-react';
 import React, { createElement, Fragment } from 'react';
 import * as prod from 'react/jsx-runtime';
 import { sanitizeBeforeParse, dropLeadingSliceArtifacts, escapeCurlyForMDX } from '../../utils/sanitizer';
-import { normalizeKnownAssetUrl } from '../../utils/github';
+import { LEGACY_DYNAMIC_WORKSHOP_BRANCH, normalizeKnownAssetUrl } from '../../utils/github';
 
 
 export default function ConvertMarkdown({ content, allUploads, workshopTitle, language, setCode, setEditorOpen, setAskToRun, gitUser, gitRepo, gitFile, instUser, instRepo, setJupyterSrc, segments }) {
@@ -338,7 +338,7 @@ export default function ConvertMarkdown({ content, allUploads, workshopTitle, la
         const workshop = props.workshop;
         const pageNumber = props.page;
         return (
-            <a href={`/dynamic?user=${gitUser}&repo=${gitRepo}&file=${workshop}&page=${pageNumber}&instUser=${instUser}&instRepo=${instRepo}`}>
+            <a href={`/dynamic?user=${gitUser}&repo=${gitRepo}&file=${workshop}&branch=${LEGACY_DYNAMIC_WORKSHOP_BRANCH}&page=${pageNumber}&instUser=${instUser}&instRepo=${instRepo}`}>
                 {children}
             </a>
         )

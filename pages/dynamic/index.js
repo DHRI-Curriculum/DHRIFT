@@ -28,11 +28,12 @@ import { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, au
 import remarkDeflist from 'remark-deflist'
 import slicesUtil from '../../utils/slices.mjs'
 import dynamicStyles from '../../styles/dynamicWorkshop.module.scss'
+import { LEGACY_DYNAMIC_WORKSHOP_BRANCH } from '../../utils/github'
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
 
-const buildGitHubContentsURL = (user, repo, file, branch = 'main') => (
+const buildGitHubContentsURL = (user, repo, file, branch = LEGACY_DYNAMIC_WORKSHOP_BRANCH) => (
   `https://api.github.com/repos/${user}/${repo}/contents/${encodeURI(file)}.md?ref=${encodeURIComponent(branch)}`
 );
 
@@ -93,7 +94,7 @@ export default function WorkshopPage({
 
   const [gitFile, setGitFile] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
-  const [gitBranch, setGitBranch] = useState('main');
+  const [gitBranch, setGitBranch] = useState(LEGACY_DYNAMIC_WORKSHOP_BRANCH);
   const [editing, setEditing] = useState(false);
   const [markdownError, setMarkdownError] = useState(false);
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
@@ -276,7 +277,7 @@ export default function WorkshopPage({
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const requestedFile = urlParams.get('file');
-    const requestedBranch = urlParams.get('branch') || 'main';
+    const requestedBranch = urlParams.get('branch') || LEGACY_DYNAMIC_WORKSHOP_BRANCH;
     setGitFile(requestedFile);
     setGitBranch(requestedBranch);
     setEditing(urlParams.get('edit'));
@@ -473,7 +474,7 @@ export default function WorkshopPage({
     urlParams.set('page', valueAsNumber);
     if (instUser) urlParams.set('instUser', instUser);
     if (instRepo) urlParams.set('instRepo', instRepo);
-    if (gitBranch && gitBranch !== 'main') urlParams.set('branch', gitBranch);
+    if (gitBranch && gitBranch !== LEGACY_DYNAMIC_WORKSHOP_BRANCH) urlParams.set('branch', gitBranch);
     router.push(`/dynamic/?${urlParams.toString()}`, undefined, { shallow: false, scroll: false });
     setCurrentPage(valueAsNumber);
     setCurrentContent(pages[valueAsNumber - 1]);

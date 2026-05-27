@@ -1,6 +1,6 @@
 import useSWRImmutable from "swr/immutable";
 import { useMemo, useState, useEffect } from "react";
-import { createGitHubFetcher, getKnownUploadListing } from "../../utils/github";
+import { ALIGNED_WORKSHOP_BRANCH, createGitHubFetcher, getKnownUploadListing } from "../../utils/github";
 
 export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch }) {
     const [shouldFetch, setShouldFetch] = useState(false);
@@ -11,7 +11,7 @@ export default function useUploads({ setAllUploads, gitUser, gitRepo, gitBranch 
         ? `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads${refParam}`
         : null;
     const knownUploads = useMemo(
-        () => getKnownUploadListing({ gitUser, gitRepo, branch: gitBranch || 'main' }),
+        () => getKnownUploadListing({ gitUser, gitRepo, branch: gitBranch || ALIGNED_WORKSHOP_BRANCH }),
         [gitUser, gitRepo, gitBranch]
     );
 

@@ -1,3 +1,6 @@
+export const ALIGNED_WORKSHOP_BRANCH = 'main';
+export const LEGACY_DYNAMIC_WORKSHOP_BRANCH = 'legacy-dynamic';
+
 /**
  * Get GitHub API headers with optional authentication
  * @returns {Headers} Headers object for GitHub API requests
@@ -96,7 +99,7 @@ export const githubApiContentUrlToRawUrl = (url) => {
   }
 };
 
-export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = 'v2' }) => {
+export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = ALIGNED_WORKSHOP_BRANCH }) => {
   if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
   return KNOWN_DHRI_WORKSHOP_FILES.map((name) => ({
     name,
@@ -107,7 +110,7 @@ export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = 'v2' }) => 
   }));
 };
 
-export const getKnownUploadListing = ({ gitUser, gitRepo, branch = 'v2' }) => {
+export const getKnownUploadListing = ({ gitUser, gitRepo, branch = ALIGNED_WORKSHOP_BRANCH }) => {
   if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
   return KNOWN_DHRI_UPLOAD_FILES.map((entry) => {
     const name = typeof entry === 'string' ? entry : entry.name;

@@ -19,6 +19,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { Alert, AlertTitle } from '@mui/material'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
+import { ALIGNED_WORKSHOP_BRANCH } from '../../utils/github'
 
 const buildRawGitHubURL = (user, repo, branch, file) => (
   `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${encodeURI(file)}.md`
@@ -150,7 +151,7 @@ export default function WorkshopPageV2({
   const [allUploads, setAllUploads] = useState(null)
   const [builtURL, setBuiltURL] = useState(null)
   const [gitFile, setGitFile] = useState(null)
-  const [gitBranch, setGitBranch] = useState('v2') // Default to v2 branch
+  const [gitBranch, setGitBranch] = useState(ALIGNED_WORKSHOP_BRANCH)
   const [drawerWidth, setDrawerWidth] = useState('45%')
 
   const gitUser = props.gitUser
@@ -174,7 +175,7 @@ export default function WorkshopPageV2({
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const file = urlParams.get('file')
-    const branch = urlParams.get('branch') || 'v2'
+    const branch = urlParams.get('branch') || ALIGNED_WORKSHOP_BRANCH
     const page = Number(urlParams.get('page')) || 1
 
     setGitFile(file)
