@@ -26,6 +26,61 @@ import {
   LinkDirective,
 } from './DirectiveComponents';
 
+const supportedDirectiveNames = new Set([
+  'info',
+  'secret',
+  'quiz',
+  'keywords',
+  'codeeditor',
+  'download',
+  'jupyter',
+  'terminal',
+  'pythonrepl',
+  'link',
+  'kbd',
+  'html',
+  'head',
+  'body',
+  'script',
+  'title',
+  'meta',
+]);
+
+function restoreUnsupportedDirectives() {
+  const directiveTypes = new Set(['containerDirective', 'leafDirective', 'textDirective']);
+
+  return (tree, file) => {
+    const source = String(file.value || '');
+
+    const originalSource = (node) => {
+      const start = node.position?.start?.offset;
+      const end = node.position?.end?.offset;
+      if (typeof start === 'number' && typeof end === 'number' && source) {
+        return source.slice(start, end);
+      }
+      return `${node.type === 'containerDirective' ? ':::' : ':'}${node.name}`;
+    };
+
+    const walk = (node) => {
+      if (!Array.isArray(node.children)) return;
+
+      for (let i = 0; i < node.children.length; i += 1) {
+        const child = node.children[i];
+        if (directiveTypes.has(child.type) && !supportedDirectiveNames.has(child.name)) {
+          const value = originalSource(child);
+          node.children[i] = child.type === 'textDirective'
+            ? { type: 'text', value }
+            : { type: 'paragraph', children: [{ type: 'text', value }] };
+        } else {
+          walk(child);
+        }
+      }
+    };
+
+    walk(tree);
+  };
+}
+
 function renderHtmlExampleTag(tagName, props = {}) {
   const attrs = Object.entries(props)
     .filter(([name]) => name !== 'children' && name !== 'node')
@@ -143,6 +198,7 @@ export default function DirectiveMarkdown({
       .use(remarkGfm)
       .use(remarkFrontmatter)
       .use(remarkDirective)
+      .use(restoreUnsupportedDirectives)
       .use(remarkDirectiveRehype)
       .use(remarkRehype, { allowDangerousHtml: true })
       .use(rehypeRaw)

@@ -66,6 +66,7 @@ const KNOWN_DHRI_UPLOAD_FILES = [
   'mobydick.txt',
   'nycneighborhoods.js',
   'nycneighborhoods.json',
+  { name: 'nyc_311_raw.json', path: 'uploads/newest_python/nyc_311_raw.json' },
   'nypl_items.csv',
   'poem.json',
   'script.js',
@@ -108,13 +109,17 @@ export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = 'v2' }) => 
 
 export const getKnownUploadListing = ({ gitUser, gitRepo, branch = 'v2' }) => {
   if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
-  return KNOWN_DHRI_UPLOAD_FILES.map((name) => ({
-    name,
-    path: `uploads/${name}`,
-    type: 'file',
-    url: `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/uploads/${name}?ref=${branch}`,
-    download_url: buildRawGitHubUrl({ user: gitUser, repo: gitRepo, branch, path: `uploads/${name}` }),
-  }));
+  return KNOWN_DHRI_UPLOAD_FILES.map((entry) => {
+    const name = typeof entry === 'string' ? entry : entry.name;
+    const path = typeof entry === 'string' ? `uploads/${name}` : entry.path;
+    return {
+      name,
+      path,
+      type: 'file',
+      url: `https://api.github.com/repos/${gitUser}/${gitRepo}/contents/${path}?ref=${branch}`,
+      download_url: buildRawGitHubUrl({ user: gitUser, repo: gitRepo, branch, path }),
+    };
+  });
 };
 
 export const normalizeKnownAssetUrl = (src) => {
