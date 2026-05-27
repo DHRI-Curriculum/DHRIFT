@@ -100,7 +100,7 @@ export const githubApiContentUrlToRawUrl = (url) => {
 };
 
 export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = ALIGNED_WORKSHOP_BRANCH }) => {
-  if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
+  if (gitUser?.toLowerCase() !== 'dhri-curriculum' || gitRepo?.toLowerCase() !== 'workshops') return null;
   return KNOWN_DHRI_WORKSHOP_FILES.map((name) => ({
     name,
     path: name,
@@ -111,7 +111,7 @@ export const getKnownWorkshopListing = ({ gitUser, gitRepo, branch = ALIGNED_WOR
 };
 
 export const getKnownUploadListing = ({ gitUser, gitRepo, branch = ALIGNED_WORKSHOP_BRANCH }) => {
-  if (gitUser !== 'dhri-curriculum' || gitRepo !== 'workshops') return null;
+  if (gitUser?.toLowerCase() !== 'dhri-curriculum' || gitRepo?.toLowerCase() !== 'workshops') return null;
   return KNOWN_DHRI_UPLOAD_FILES.map((entry) => {
     const name = typeof entry === 'string' ? entry : entry.name;
     const path = typeof entry === 'string' ? `uploads/${name}` : entry.path;
