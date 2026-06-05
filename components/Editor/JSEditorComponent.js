@@ -126,9 +126,11 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                 consoleRef.current += lineOutput + "\n";
             }
 
-            writeln(result);
+            if (result !== undefined) {
+                writeln(result);
+            }
             forceUpdate();
-            setIsoutput(true);
+            setIsoutput(!!consoleRef.current || !!outputRef.current);
             setOutputVersion((v) => v + 1);
         } catch (e) {
             setError(e);
@@ -260,8 +262,18 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                             titleAccess="Close output"
                         />
                     </div>
-                    {consoleRef.current}
-                    {outputRef.current}
+                    {consoleRef.current && (
+                        <div className="output-section output-section-console">
+                            <div className="output-section-label">Console Output</div>
+                            <pre>{consoleRef.current}</pre>
+                        </div>
+                    )}
+                    {outputRef.current && (
+                        <div className="output-section output-section-result">
+                            <div className="output-section-label">Result</div>
+                            <pre>{outputRef.current}</pre>
+                        </div>
+                    )}
                     {isError && (
                         <div className="output-error">
                             {error && (error.stack ? error.stack : String(error))}

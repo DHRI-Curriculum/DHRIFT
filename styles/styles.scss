@@ -1532,6 +1532,22 @@ body {
   }
 }
 
+.output-section + .output-section {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid #30363d;
+}
+
+.output-section-label {
+  margin-bottom: var(--space-xs);
+  color: #8b949e;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 // Terminal container (for JS/Python REPL)
 .terminal-container {
   display: flex;
