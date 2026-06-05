@@ -124,6 +124,7 @@ export default function DirectiveMarkdown({
   setEditorOpen,
   setActiveTab,
   setAskToRun,
+  editors,
   setJupyterSrc,
   gitUser,
   gitRepo,
@@ -156,6 +157,7 @@ export default function DirectiveMarkdown({
         setEditorOpen={setEditorOpen}
         setActiveTab={setActiveTab}
         setAskToRun={setAskToRun}
+        editors={editors}
       />
     ),
 

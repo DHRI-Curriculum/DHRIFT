@@ -256,6 +256,7 @@ export default function WorkshopPageV2({
             setEditorOpen={setEditorOpen}
             setActiveTab={setActiveTab}
             setAskToRun={setAskToRun}
+            editors={editors}
             setJupyterSrc={setJupyterSrc}
             gitUser={gitUser}
             gitRepo={gitRepo}

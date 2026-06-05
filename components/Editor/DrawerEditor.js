@@ -180,7 +180,11 @@ export default function DrawerEditor(props) {
         }
         else if (activeTab === 'html' || activeTab === 'html_css') {
             return (
-                <HTMLEditorComponent isActive={show} />
+                <HTMLEditorComponent
+                    defaultCode={text}
+                    isActive={show}
+                    {...props}
+                />
             )
         }
         else if (activeTab === 'llm') {

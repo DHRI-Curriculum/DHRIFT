@@ -65,7 +65,7 @@ function reconstructCode(node, depth = 0) {
   return '';
 }
 
-export default function CodeEditorDirective({ children, language, setCode, setEditorOpen, setActiveTab, setAskToRun }) {
+export default function CodeEditorDirective({ children, language, setCode, setEditorOpen, setActiveTab, setAskToRun, editors }) {
   // Reconstruct code from potentially-parsed markdown children
   let codeText = reconstructCode(children);
 
@@ -80,6 +80,7 @@ export default function CodeEditorDirective({ children, language, setCode, setEd
       setEditorOpen={setEditorOpen}
       setActiveTab={setActiveTab}
       setAskToRun={setAskToRun}
+      editors={editors}
     />
   );
 }

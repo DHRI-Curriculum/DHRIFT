@@ -7,6 +7,7 @@ const EditorComponent = dynamic(
 import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { getRunRequestCode, isRunRequest, isRunRequestForEditor } from "./runRequest";
 
 
 export default function JSEditorComponent({ defaultCode = '// Write JavaScript Here', scrollContainerRef, ...props }) {
@@ -15,6 +16,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     const [outputVersion, setOutputVersion] = useState(0);
     const outputRef = useRef(null);
     const consoleRef = useRef(null);
+    const lastRunRequestId = useRef(null);
     const [error, setError] = useState(null);
     const [isoutput, setIsoutput] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -22,7 +24,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     
     // Update JScode when defaultCode changes
     useEffect(() => {
-        if (defaultCode) {
+        if (defaultCode !== undefined && defaultCode !== null) {
             setJSCode(defaultCode);
         }
     }, [defaultCode]);
@@ -96,8 +98,9 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         outputRef.current += JSoutput(str) + "\n";
     }
 
-    var JSrun = function () {
+    var JSrun = function (codeToRun = JScode) {
         var str;
+        const sourceCode = codeToRun ?? '';
         setIsError(false);
         setError(null);
         setIsoutput(false);
@@ -114,7 +117,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             console.oldLog = console.log;
             console.log = log;
 
-            var result = eval(JScode);
+            var result = eval(sourceCode);
 
             // Process loggedLines
             for (var i = 0; i < loggedLines.length; i++) {
@@ -143,8 +146,21 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     };
     // Auto-run parity with Python when askToRun is true
     useEffect(() => {
+        if (isRunRequest(props.askToRun)) {
+            if (!isRunRequestForEditor(props.askToRun, 'javascript')) return;
+            if (lastRunRequestId.current === props.askToRun.id) return;
+
+            lastRunRequestId.current = props.askToRun.id;
+            const requestedCode = getRunRequestCode(props.askToRun, defaultCode ?? JScode);
+            setJSCode(requestedCode);
+            JSrun(requestedCode);
+            return;
+        }
+
         if (props.askToRun === true) {
-            JSrun();
+            const requestedCode = defaultCode ?? JScode;
+            setJSCode(requestedCode);
+            JSrun(requestedCode);
             if (props.setAskToRun) props.setAskToRun(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -16,13 +16,15 @@ import { Console, Hook, Unhook } from 'console-feed';
 import JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import debounce from 'lodash.debounce';
+import { getRunRequestCode, isRunRequest, isRunRequestForEditor } from "./runRequest";
 
 export default function HTMLEditorComponent({ 
     defaultCode = "<!-- Write your HTML here -->", 
     defaultCSS = "/* Write CSS Here */",
     defaultJS = '// Write Javascript Here',
     includeFrames = '[html, css, javascript]',
-    isActive = true
+    isActive = true,
+    ...props
 }) {
     // State initialization
     const [frameKey, setFrameKey] = useState(Math.random());
@@ -32,6 +34,7 @@ export default function HTMLEditorComponent({
     const [logs, setLogs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [toShow, setToShow] = useState(false);
+    const [editorVersion, setEditorVersion] = useState(0);
 
     // Refs initialization
     const code = useRef(window?.localStorage?.getItem('code') || defaultCode);
@@ -40,6 +43,20 @@ export default function HTMLEditorComponent({
     const consoleRef = useRef(null);
     const frameScripts = useRef([]);
     const contentRef = useRef(null);
+    const lastAppliedRunRequestId = useRef(null);
+    const lastRunRequestId = useRef(null);
+
+    const applyCodeForLanguage = (nextCode, language = 'html') => {
+        const languageKey = (language || 'html').toLowerCase();
+        if (languageKey === 'css') {
+            css.current = nextCode;
+        } else if (languageKey === 'javascript' || languageKey === 'js') {
+            javascript.current = nextCode;
+        } else {
+            code.current = nextCode;
+        }
+        setEditorVersion((version) => version + 1);
+    };
 
     // Frame initialization
     const frameStyle = `
@@ -88,43 +105,6 @@ export default function HTMLEditorComponent({
         return () => Unhook(consoleRef.current);
     }
 
-    useEffect(() => {
-        if (frameReady && isActive) {
-            consoleHook();
-            runAll();
-        }
-    }, [frameReady, isActive]);
-
-
-    // all this below can be wrapped into useAllotment hook or smth like that
-    const isMountedRef = useRef(false);
-    const [Allotment, setAllotment] = useState(null);
-    useEffect(() => {
-        isMountedRef.current = true;
-        import("allotment")
-            .then((mod) => {
-                if (!isMountedRef.current) {
-                    return;
-                }
-                setAllotment(mod.Allotment);
-            })
-            .catch((err) =>
-                console.error(err, `could not import allotment ${err.message}`)
-            );
-        return () => {
-            isMountedRef.current = false;
-        };
-    }, []);
-    if (!Allotment) {
-        return <div>loading...</div>;
-    }
-    // end of hook
-
-    const onChangeHTML = (newValue) => {
-        code.current = newValue;
-        runAll();
-    };
-
     const frameEval = (allCode) => {
         if (!frameWindow) {
             console.error('Frame window not available');
@@ -139,20 +119,7 @@ export default function HTMLEditorComponent({
         }
     }
 
-    const onChangeCss = (newValue) => {
-        css.current = newValue;
-        runAll();
-    };
-
-    const onChangeJavascript = (newValue) => {
-        javascript.current = newValue;
-        if (frameReady && isActive) {
-            runAll();
-        }
-    };
-
-
-    const runAll = () => {
+    function runAll() {
         if (!isActive || !frameWindow || !frameDoc) {
             return;
         }
@@ -223,6 +190,90 @@ export default function HTMLEditorComponent({
             frameWindow.console.error('Error running code:', error);
         }
     }
+
+    useEffect(() => {
+        if (frameReady && isActive) {
+            consoleHook();
+            runAll();
+        }
+    }, [frameReady, isActive]);
+
+    useEffect(() => {
+        if (isRunRequest(props.askToRun)) return;
+        if (defaultCode !== undefined && defaultCode !== null) {
+            applyCodeForLanguage(defaultCode, 'html');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultCode, props.askToRun]);
+
+    useEffect(() => {
+        if (isRunRequest(props.askToRun)) {
+            if (!isRunRequestForEditor(props.askToRun, ['html', 'html_css', 'css'])) return;
+
+            const requestedCode = getRunRequestCode(props.askToRun, defaultCode);
+            if (lastAppliedRunRequestId.current !== props.askToRun.id) {
+                lastAppliedRunRequestId.current = props.askToRun.id;
+                applyCodeForLanguage(requestedCode, props.askToRun.language);
+            }
+            if (!frameReady || !isActive || lastRunRequestId.current === props.askToRun.id) return;
+
+            lastRunRequestId.current = props.askToRun.id;
+            runAll();
+            return;
+        }
+
+        if (props.askToRun === true) {
+            applyCodeForLanguage(defaultCode, 'html');
+            if (frameReady && isActive) {
+                runAll();
+                if (props.setAskToRun) props.setAskToRun(false);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.askToRun, frameReady, isActive]);
+
+
+    // all this below can be wrapped into useAllotment hook or smth like that
+    const isMountedRef = useRef(false);
+    const [Allotment, setAllotment] = useState(null);
+    useEffect(() => {
+        isMountedRef.current = true;
+        import("allotment")
+            .then((mod) => {
+                if (!isMountedRef.current) {
+                    return;
+                }
+                setAllotment(mod.Allotment);
+            })
+            .catch((err) =>
+                console.error(err, `could not import allotment ${err.message}`)
+            );
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+    if (!Allotment) {
+        return <div>loading...</div>;
+    }
+    // end of hook
+
+    const onChangeHTML = (newValue) => {
+        code.current = newValue;
+        runAll();
+    };
+
+    const onChangeCss = (newValue) => {
+        css.current = newValue;
+        runAll();
+    };
+
+    const onChangeJavascript = (newValue) => {
+        javascript.current = newValue;
+        if (frameReady && isActive) {
+            runAll();
+        }
+    };
+
 
     const FramePane = () => {
         return (
@@ -327,7 +378,7 @@ ${code.current}
     return (
         <div style={{ height: '100vh', width: '100%' }}>
             <DownloadButtons />
-            <Allotment minSize={90} >
+            <Allotment minSize={90} key={editorVersion}>
                 <Allotment.Pane minSize={100}>
                     <Allotment vertical>
                         <Allotment.Pane minSize={20}>

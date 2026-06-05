@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 const EditorComponent = dynamic(() => import('./EditorComponent'), { ssr: false });
 import CloseIcon from '@mui/icons-material/Close';
 import EditorTopbar from './EditorTopbar';
+import { getRunRequestCode, isRunRequest, isRunRequestForEditor } from './runRequest';
 // import { WebR } from '@r-wasm/webr';
 // import { WebR } from 'webr';
 
@@ -19,6 +20,7 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     const [output, setOutput] = useState('');
     const [runningCode, setRunningCode] = useState(false);
     const outputRef = useRef('');
+    const lastRunRequestId = useRef(null);
     const [result, setResult] = useState(['Loading webR...']);
     // Use both state and ref for code
     const [editorCode, setEditorCode] = useState(defaultCode);
@@ -87,11 +89,23 @@ export default function REditorComponent({ defaultCode, minLines, codeOnChange, 
     }
 
     useEffect(() => {
+        if (isRunRequest(props.askToRun)) {
+            if (!isRunRequestForEditor(props.askToRun, 'r')) return;
+            if (lastRunRequestId.current === props.askToRun.id) return;
+
+            lastRunRequestId.current = props.askToRun.id;
+            const requestedCode = getRunRequestCode(props.askToRun, defaultCode);
+            Rcode.current = requestedCode;
+            setEditorCode(requestedCode);
+            runR(requestedCode);
+            return;
+        }
+
         Rcode.current = defaultCode;
         if (props.askToRun === true) {
             runR(Rcode.current);
+            props.setAskToRun(false);
         }
-        props.setAskToRun(false);
       }, [props.askToRun])
 
     const height = props.height ? props.height : '100%';

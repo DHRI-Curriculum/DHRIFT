@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { PyodideContext } from '../Wasm/PyodideProvider';
 import EditorTopbar from "./EditorTopbar";
+import { getRunRequestCode, isRunRequest, isRunRequestForEditor } from "./runRequest";
 
 export default function PythonEditorComponent({ defaultCode, minLines, codeOnChange, scrollContainerRef, ...props }) {
 
@@ -22,6 +23,7 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
   const outputRef = useRef(null);
+  const lastRunRequestId = useRef(null);
   const [runningCode, setRunningCode] = useState(false);
   const [outputVersion, setOutputVersion] = useState(0);
   const [isPlot, setIsPlot] = useState(false);
@@ -46,12 +48,33 @@ export default function PythonEditorComponent({ defaultCode, minLines, codeOnCha
 
 
   useEffect(() => {
-    setCodeState(startingCode);
-    if (pyodideLoaded && props.askToRun === true) {
-      runPyodide(startingCode);
+    if (startingCode !== undefined && startingCode !== null) {
+      setCodeState(startingCode);
     }
-    props.setAskToRun(false);
-  }, [props.askToRun])
+  }, [startingCode])
+
+  useEffect(() => {
+    if (isRunRequest(props.askToRun)) {
+      if (!isRunRequestForEditor(props.askToRun, 'python')) return;
+      if (lastRunRequestId.current === props.askToRun.id) return;
+
+      const requestedCode = getRunRequestCode(props.askToRun, startingCode);
+      setCodeState(requestedCode);
+      if (!pyodideLoaded) return;
+
+      lastRunRequestId.current = props.askToRun.id;
+      runPyodide(requestedCode);
+      return;
+    }
+
+    if (props.askToRun === true) {
+      setCodeState(startingCode);
+      if (pyodideLoaded) {
+        runPyodide(startingCode);
+        props.setAskToRun(false);
+      }
+    }
+  }, [props.askToRun, pyodideLoaded])
 
   const onChange = (newValue) => {
     setCodeState(newValue);
