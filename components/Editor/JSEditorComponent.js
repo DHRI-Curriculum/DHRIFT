@@ -94,6 +94,27 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         return String(value);
     };
 
+    var JSerror = function (value, sourceCode = "") {
+        if (!value) {
+            return "";
+        }
+
+        const name = value.name || "Error";
+        const message = value.message || String(value);
+        const locationMatch = value.stack && value.stack.match(/<anonymous>:(\d+):(\d+)/);
+        const line = locationMatch ? Number(locationMatch[1]) : 0;
+        const column = locationMatch ? Number(locationMatch[2]) : 0;
+        const sourceLines = sourceCode.split(/\r\n|\r|\n/);
+        const hasSourceLocation =
+            line >= 1 &&
+            line <= sourceLines.length &&
+            column >= 1 &&
+            column <= sourceLines[line - 1].length + 1;
+        const location = hasSourceLocation ? `\nLine ${line}, column ${column}` : "";
+
+        return `${name}: ${message}${location}`;
+    };
+
     var writeln = function (str) {
         outputRef.current += JSoutput(str) + "\n";
     }
@@ -101,6 +122,8 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
     var JSrun = function (codeToRun = JScode) {
         var str;
         const sourceCode = codeToRun ?? '';
+        var loggedLines = [];
+        var originalLog = console.log;
         setIsError(false);
         setError(null);
         setIsoutput(false);
@@ -108,22 +131,18 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         outputRef.current = "";
         consoleRef.current = "";
         try {
-            var loggedLines = []; // Store arrays of arguments for each log call
-            // store logged values in loggedLines array
-            var log = function (...args) { // Capture all arguments for a single console.log call
-                loggedLines.push(args);
+            var log = function (...args) {
+                // Snapshot arguments immediately so later mutations do not rewrite earlier logs.
+                loggedLines.push(args.map(arg => JSoutput(arg)).join(' '));
             };
-            // capture console.log output 
-            console.oldLog = console.log;
+            // capture console.log output
             console.log = log;
 
             var result = eval(sourceCode);
 
             // Process loggedLines
             for (var i = 0; i < loggedLines.length; i++) {
-                // Join arguments of a single log call with spaces, processed by JSoutput
-                const lineOutput = loggedLines[i].map(arg => JSoutput(arg)).join(' ');
-                consoleRef.current += lineOutput + "\n";
+                consoleRef.current += loggedLines[i] + "\n";
             }
 
             if (result !== undefined) {
@@ -133,10 +152,13 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             setIsoutput(!!consoleRef.current || !!outputRef.current);
             setOutputVersion((v) => v + 1);
         } catch (e) {
-            setError(e);
+            for (var i = 0; i < loggedLines.length; i++) {
+                consoleRef.current += loggedLines[i] + "\n";
+            }
+            setError(JSerror(e, sourceCode));
             setIsError(true);
         } finally {
-            try { if (console.oldLog) console.log = console.oldLog; } catch (_) {}
+            try { console.log = originalLog; } catch (_) {}
         }
         if (str != undefined) { outputRef.current += str; }
         // console.log has already been restored
@@ -276,7 +298,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
                     )}
                     {isError && (
                         <div className="output-error">
-                            {error && (error.stack ? error.stack : String(error))}
+                            {error && String(error)}
                         </div>
                     )}
                 </div>

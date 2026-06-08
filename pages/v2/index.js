@@ -27,6 +27,24 @@ const buildRawGitHubURL = (user, repo, branch, file) => (
 
 const DrawerEditorMovable = dynamic(() => import('../../components/Editor/DrawerEditor'), { ssr: false })
 
+const getLocalStorageItem = (key) => {
+  if (typeof window === 'undefined') return null
+  try {
+    return window.localStorage.getItem(key)
+  } catch (_) {
+    return null
+  }
+}
+
+const setLocalStorageItem = (key, value) => {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem(key, value)
+  } catch (_) {
+    // Saved editor preferences are optional; blocked storage should not break workshops.
+  }
+}
+
 // Normalize the drawer's width (number = pixels, string = pass through) into a CSS length.
 // Used to feed the inline CSS variable that drives the page's layout shift.
 const toCssWidth = (w) => (typeof w === 'number' ? `${w}px` : w)
@@ -216,7 +234,7 @@ export default function WorkshopPageV2({
 
         // Set active tab: check URL first, then localStorage, then default to first editor
         const storageKey = `dhrift-active-tab-${gitFile || 'default'}`
-        const savedTab = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null
+        const savedTab = getLocalStorageItem(storageKey)
         if (requestedTab && editorList.includes(requestedTab)) {
           setActiveTab(requestedTab)
         } else if (savedTab && editorList.includes(savedTab)) {
@@ -235,7 +253,7 @@ export default function WorkshopPageV2({
   useEffect(() => {
     if (activeTab && gitFile) {
       const storageKey = `dhrift-active-tab-${gitFile}`
-      localStorage.setItem(storageKey, activeTab)
+      setLocalStorageItem(storageKey, activeTab)
     }
   }, [activeTab, gitFile])
 
