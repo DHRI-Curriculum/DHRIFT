@@ -8,7 +8,9 @@ import EditorTopbar from "./EditorTopbar";
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { getRunRequestCode, isRunRequest, isRunRequestForEditor } from "./runRequest";
+import { parse } from "acorn";
 
+const USER_CODE_SOURCE_URL = "dhrift-user-code.js";
 
 export default function JSEditorComponent({ defaultCode = '// Write JavaScript Here', scrollContainerRef, ...props }) {
     const [JScode, setJSCode] = useState(defaultCode);
@@ -94,6 +96,59 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
         return String(value);
     };
 
+    var stripSourceUrlComments = function (sourceCode) {
+        return sourceCode
+            .replace(/^\s*\/\/[#@]\s*sourceURL=.*$/gm, "")
+            .replace(/^\s*\/\*[#@]\s*sourceURL=.*?\*\/\s*$/gm, "");
+    };
+
+    var getSourceLocation = function (line, column, sourceCode = "") {
+        const sourceLines = sourceCode.split(/\r\n|\r|\n/);
+        const normalizedLine = Number(line);
+        const normalizedColumn = Number(column);
+        const hasSourceLocation =
+            normalizedLine >= 1 &&
+            normalizedLine <= sourceLines.length &&
+            normalizedColumn >= 1 &&
+            normalizedColumn <= sourceLines[normalizedLine - 1].length + 1;
+
+        return hasSourceLocation
+            ? { line: normalizedLine, column: normalizedColumn }
+            : null;
+    };
+
+    var parseSyntaxError = function (sourceCode) {
+        try {
+            parse(sourceCode, {
+                ecmaVersion: "latest",
+                sourceType: "script",
+                locations: true,
+            });
+            return null;
+        } catch (error) {
+            const line = error.loc?.line;
+            const column = error.loc?.column !== undefined ? error.loc.column + 1 : undefined;
+            return {
+                error,
+                location: getSourceLocation(line, column, sourceCode),
+            };
+        }
+    };
+
+    var getRuntimeErrorLocation = function (value, sourceCode = "") {
+        if (!value?.stack) return null;
+
+        const escapedSourceUrl = USER_CODE_SOURCE_URL.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const sourceFramePattern = new RegExp(`${escapedSourceUrl}:(\\d+):(\\d+)`);
+        const locationMatch = value.stack
+            .split("\n")
+            .map(line => line.match(sourceFramePattern))
+            .find(Boolean);
+
+        if (!locationMatch) return null;
+        return getSourceLocation(locationMatch[1], locationMatch[2], sourceCode);
+    };
+
     var JSerror = function (value, sourceCode = "") {
         if (!value) {
             return "";
@@ -101,16 +156,8 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
 
         const name = value.name || "Error";
         const message = value.message || String(value);
-        const locationMatch = value.stack && value.stack.match(/<anonymous>:(\d+):(\d+)/);
-        const line = locationMatch ? Number(locationMatch[1]) : 0;
-        const column = locationMatch ? Number(locationMatch[2]) : 0;
-        const sourceLines = sourceCode.split(/\r\n|\r|\n/);
-        const hasSourceLocation =
-            line >= 1 &&
-            line <= sourceLines.length &&
-            column >= 1 &&
-            column <= sourceLines[line - 1].length + 1;
-        const location = hasSourceLocation ? `\nLine ${line}, column ${column}` : "";
+        const errorLocation = value.location || getRuntimeErrorLocation(value, sourceCode);
+        const location = errorLocation ? `\nLine ${errorLocation.line}, column ${errorLocation.column}` : "";
 
         return `${name}: ${message}${location}`;
     };
@@ -121,7 +168,7 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
 
     var JSrun = function (codeToRun = JScode) {
         var str;
-        const sourceCode = codeToRun ?? '';
+        const sourceCode = stripSourceUrlComments(codeToRun ?? '');
         var loggedLines = [];
         var originalLog = console.log;
         setIsError(false);
@@ -138,7 +185,13 @@ export default function JSEditorComponent({ defaultCode = '// Write JavaScript H
             // capture console.log output
             console.log = log;
 
-            var result = eval(sourceCode);
+            const syntaxError = parseSyntaxError(sourceCode);
+            if (syntaxError) {
+                syntaxError.error.location = syntaxError.location;
+                throw syntaxError.error;
+            }
+
+            var result = eval(`${sourceCode}\n//# sourceURL=${USER_CODE_SOURCE_URL}`);
 
             // Process loggedLines
             for (var i = 0; i < loggedLines.length; i++) {
