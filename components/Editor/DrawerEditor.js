@@ -39,35 +39,47 @@ export default function DrawerEditor(props) {
     const [show, setShow] = useState(false);
     const [hasOpened, setHasOpened] = useState(open);
     const [isResizing, setIsResizing] = useState(false);
-    const [lastDownX, setLastDownX] = useState(0);
 
     // Drawer width is lifted to the parent when provided (v2 needs it for layout);
     // otherwise we keep local state as a fallback for v1 callers.
     const [localWidth, setLocalWidth] = useState('45%');
-    const newWidth = props.drawerWidth ?? localWidth;
-    const setNewWidth = props.setDrawerWidth ?? setLocalWidth;
+    const committedWidth = props.drawerWidth ?? localWidth;
+    const setCommittedWidth = props.setDrawerWidth ?? setLocalWidth;
+    const [visualWidth, setVisualWidth] = useState(committedWidth);
+    const visualWidthRef = useRef(committedWidth);
+    const isResizingRef = useRef(false);
+
+    useEffect(() => {
+        visualWidthRef.current = visualWidth;
+    }, [visualWidth]);
+
+    useEffect(() => {
+        if (!isResizing) {
+            setVisualWidth(committedWidth);
+        }
+    }, [committedWidth, isResizing]);
 
     const handleMousedown = e => {
+        e.preventDefault();
+        isResizingRef.current = true;
         setIsResizing(true);
-        setLastDownX(e.clientX);
-    };
-
-    const handleMouseup = e => {
-        setIsResizing(false);
-        if (document.getElementById('iframe')) {
-            document.getElementById('iframe').style.pointerEvents = 'auto';
-        }
-        document.body.style.webkitUserSelect = 'auto';
-        document.body.style.mozUserSelect = 'auto';
-        document.body.style.msUserSelect = 'auto';
-        document.body.style.oUserSelect = 'auto';
-        document.body.style.userSelect = 'auto';
     };
 
     useEffect(() => {
+        const resetResizeSideEffects = () => {
+            if (document.getElementById('iframe')) {
+                document.getElementById('iframe').style.pointerEvents = 'auto';
+            }
+            document.body.style.webkitUserSelect = 'auto';
+            document.body.style.mozUserSelect = 'auto';
+            document.body.style.msUserSelect = 'auto';
+            document.body.style.oUserSelect = 'auto';
+            document.body.style.userSelect = 'auto';
+        };
+
         const handleMousemove = e => {
             // we don't want to do anything if we aren't resizing.
-            if (!isResizing) {
+            if (!isResizingRef.current) {
                 return;
             }
             // make the iframe  have pointer-events: none;
@@ -89,8 +101,18 @@ export default function DrawerEditor(props) {
             let minWidth = 50;
             let maxWidth = 1800;
             if (offsetRight > minWidth && offsetRight < maxWidth) {
-                setNewWidth(offsetRight);
+                visualWidthRef.current = offsetRight;
+                setVisualWidth(offsetRight);
             }
+        };
+
+        const handleMouseup = () => {
+            if (isResizingRef.current) {
+                setCommittedWidth(visualWidthRef.current);
+            }
+            isResizingRef.current = false;
+            setIsResizing(false);
+            resetResizeSideEffects();
         };
 
         document.addEventListener('mousemove', handleMousemove);
@@ -100,7 +122,7 @@ export default function DrawerEditor(props) {
             document.removeEventListener('mousemove', handleMousemove);
             document.removeEventListener('mouseup', handleMouseup);
         }
-    }, [isResizing]);
+    }, [setCommittedWidth]);
 
     const handleOpenClose = () => {
         setOpen(!open);
@@ -242,7 +264,7 @@ export default function DrawerEditor(props) {
                     width: { xs: '100%', sm: '100%', md: '45%' },
                     flexShrink: { xs: 1, sm: 0 },
                     '& .MuiDrawer-paper': {
-                        width: { xs: '100%', sm: '100%', md: newWidth },
+                        width: { xs: '100%', sm: '100%', md: visualWidth },
                         boxSizing: 'border-box',
                         display: 'flex',
                         flexDirection: 'column',

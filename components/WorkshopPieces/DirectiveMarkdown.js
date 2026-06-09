@@ -81,6 +81,46 @@ function restoreUnsupportedDirectives() {
   };
 }
 
+function preserveCodeEditorSource() {
+  return (tree, file) => {
+    const source = String(file.value || '');
+
+    const extractBody = (node) => {
+      const start = node.position?.start?.offset;
+      const end = node.position?.end?.offset;
+      if (typeof start !== 'number' || typeof end !== 'number' || !source) return null;
+
+      const raw = source.slice(start, end).replace(/\r\n?/g, '\n');
+      const lines = raw.split('\n');
+      lines.shift();
+      if (lines.length && /^\s*:{3,}\s*$/.test(lines[lines.length - 1])) {
+        lines.pop();
+      }
+      return lines.join('\n');
+    };
+
+    const walk = (node) => {
+      if (!node || typeof node !== 'object') return;
+
+      if (node.type === 'containerDirective' && node.name === 'codeeditor') {
+        const rawCode = extractBody(node);
+        if (rawCode !== null) {
+          node.attributes = {
+            ...(node.attributes || {}),
+            rawCode,
+          };
+        }
+      }
+
+      if (Array.isArray(node.children)) {
+        node.children.forEach(walk);
+      }
+    };
+
+    walk(tree);
+  };
+}
+
 function renderHtmlExampleTag(tagName, props = {}) {
   const attrs = Object.entries(props)
     .filter(([name]) => name !== 'children' && name !== 'node')
@@ -200,6 +240,7 @@ export default function DirectiveMarkdown({
       .use(remarkGfm)
       .use(remarkFrontmatter)
       .use(remarkDirective)
+      .use(preserveCodeEditorSource)
       .use(restoreUnsupportedDirectives)
       .use(remarkDirectiveRehype)
       .use(remarkRehype, { allowDangerousHtml: true })

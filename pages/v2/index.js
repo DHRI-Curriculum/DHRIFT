@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import Header from '../../components/Header'
 import matter from 'gray-matter'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import DirectiveMarkdown from '../../components/WorkshopPieces/DirectiveMarkdown'
 import Frontmatter from '../../components/WorkshopPieces/Frontmatter'
@@ -48,6 +48,72 @@ const setLocalStorageItem = (key, value) => {
 // Normalize the drawer's width (number = pixels, string = pass through) into a CSS length.
 // Used to feed the inline CSS variable that drives the page's layout shift.
 const toCssWidth = (w) => (typeof w === 'number' ? `${w}px` : w)
+
+const scrollAnchorSelector = [
+  '.page-content h1',
+  '.page-content h2',
+  '.page-content h3',
+  '.page-content h4',
+  '.page-content p',
+  '.page-content li',
+  '.page-content pre',
+  '.page-content blockquote',
+  '.page-content table',
+  '.page-content .code-run-box',
+  '.page-content .quiz',
+  '.page-content .secret',
+].join(', ')
+
+const getScrollAnchorTop = () => {
+  const header = document.querySelector('.v2-header')
+  return (header?.getBoundingClientRect().bottom || 0) + 12
+}
+
+const captureVisibleScrollAnchor = () => {
+  if (typeof window === 'undefined') return null
+
+  const viewTop = getScrollAnchorTop()
+  const viewBottom = window.innerHeight
+  const scrollY = window.scrollY
+  const candidates = Array.from(document.querySelectorAll(scrollAnchorSelector))
+
+  const best = candidates.reduce((currentBest, element) => {
+    const rect = element.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return currentBest
+    if (rect.bottom <= viewTop || rect.top >= viewBottom) return currentBest
+
+    const distance = rect.top <= viewTop && rect.bottom >= viewTop
+      ? 0
+      : Math.abs(rect.top - viewTop)
+
+    if (!currentBest || distance < currentBest.distance) {
+      return { element, top: rect.top, distance }
+    }
+
+    return currentBest
+  }, null)
+
+  return best
+    ? { element: best.element, top: best.top, scrollY }
+    : { scrollY }
+}
+
+const restoreVisibleScrollAnchor = (anchor) => {
+  if (!anchor || typeof window === 'undefined') return
+
+  if (anchor.element?.isConnected) {
+    const nextTop = anchor.element.getBoundingClientRect().top
+    const delta = nextTop - anchor.top
+    if (Math.abs(delta) > 0.5) {
+      window.scrollBy(0, delta)
+    }
+    return
+  }
+
+  if (typeof anchor.scrollY === 'number') {
+    window.scrollTo(0, anchor.scrollY)
+  }
+}
 
 /**
  * Find all directive block ranges (:::name ... :::) in content
@@ -174,6 +240,30 @@ export default function WorkshopPageV2({
   const [gitBranch, setGitBranch] = useState(ALIGNED_WORKSHOP_BRANCH)
   const [drawerWidth, setDrawerWidth] = useState('45%')
 
+  const scheduleScrollAnchorRestore = useCallback((anchor) => {
+    if (!anchor || typeof window === 'undefined') return
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        restoreVisibleScrollAnchor(anchor)
+      })
+    })
+  }, [])
+
+  const setEditorOpenPreservingScroll = useCallback((nextOpen) => {
+    const anchor = captureVisibleScrollAnchor()
+    setEditorOpen((previousOpen) => (
+      typeof nextOpen === 'function' ? nextOpen(previousOpen) : nextOpen
+    ))
+    scheduleScrollAnchorRestore(anchor)
+  }, [scheduleScrollAnchorRestore])
+
+  const setDrawerWidthPreservingScroll = useCallback((nextWidth) => {
+    const anchor = captureVisibleScrollAnchor()
+    setDrawerWidth(nextWidth)
+    scheduleScrollAnchorRestore(anchor)
+  }, [scheduleScrollAnchorRestore])
+
   const gitUser = props.gitUser
   const gitRepo = props.gitRepo
   const instUser = props.instGitUser
@@ -271,7 +361,7 @@ export default function WorkshopPageV2({
             content={slice}
             allUploads={allUploads}
             setCode={setCode}
-            setEditorOpen={setEditorOpen}
+            setEditorOpen={setEditorOpenPreservingScroll}
             setActiveTab={setActiveTab}
             setAskToRun={setAskToRun}
             editors={editors}
@@ -460,9 +550,9 @@ export default function WorkshopPageV2({
           {editors.length > 0 && workshopMode && (
             <DrawerEditorMovable
               drawerWidth={drawerWidth}
-              setDrawerWidth={setDrawerWidth}
+              setDrawerWidth={setDrawerWidthPreservingScroll}
               open={editorOpen}
-              setEditorOpen={setEditorOpen}
+              setEditorOpen={setEditorOpenPreservingScroll}
               text={code}
               setText={setCode}
               askToRun={askToRun}

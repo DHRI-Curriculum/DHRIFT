@@ -122,7 +122,7 @@ body {
 
     .v2-main,
     .v2-pagination-region {
-      transition: margin-right var(--transition-normal);
+      transition: none;
     }
   }
 }
@@ -283,25 +283,30 @@ body {
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  background: var(--dhrift-brown);
-  border: none;
-  border-radius: 8px;
+  background: var(--dhrift-brown) !important;
+  border: none !important;
+  border-radius: 8px !important;
   cursor: pointer;
   transition: all var(--transition-fast);
-  color: var(--dhrift-cream);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 500;
-  box-shadow: 0 2px 8px rgba(97, 79, 66, 0.15);
+  color: var(--dhrift-cream) !important;
+  flex-shrink: 0;
+  font-family: var(--font-body) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  min-height: 40px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(97, 79, 66, 0.15) !important;
 
   &:hover {
-    background: var(--dhrift-brown-light);
+    background: var(--dhrift-brown-light) !important;
+    color: var(--dhrift-cream) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(97, 79, 66, 0.2);
+    box-shadow: 0 4px 12px rgba(97, 79, 66, 0.2) !important;
   }
 
   svg {
-    font-size: 1.125rem;
+    color: inherit !important;
+    font-size: 1.125rem !important;
   }
 }
 
@@ -1023,12 +1028,13 @@ body {
 }
 
 .button-bark {
-  background: var(--dhrift-brown);
+  background: var(--dhrift-brown) !important;
+  border: none !important;
   color: var(--dhrift-cream) !important;
   text-decoration: none !important;
 
   &:hover {
-    background: var(--dhrift-brown-light);
+    background: var(--dhrift-brown-light) !important;
     color: var(--dhrift-cream) !important;
   }
 }
@@ -3505,11 +3511,12 @@ body {
 }
 
 .button-bark {
-  background: var(--dhrift-brown);
+  background: var(--dhrift-brown) !important;
+  border: none !important;
   color: var(--dhrift-cream) !important;
 
   &:hover {
-    background: var(--dhrift-brown-light);
+    background: var(--dhrift-brown-light) !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(97, 79, 66, 0.3);
   }

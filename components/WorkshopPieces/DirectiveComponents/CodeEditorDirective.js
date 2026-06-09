@@ -65,9 +65,18 @@ function reconstructCode(node, depth = 0) {
   return '';
 }
 
-export default function CodeEditorDirective({ children, language, setCode, setEditorOpen, setActiveTab, setAskToRun, editors }) {
-  // Reconstruct code from potentially-parsed markdown children
-  let codeText = reconstructCode(children);
+function normalizeRawCode(rawCode) {
+  return rawCode
+    .replace(/\r\n?/g, '\n')
+    .replace(/\\`/g, '`');
+}
+
+export default function CodeEditorDirective({ children, language, rawCode, setCode, setEditorOpen, setActiveTab, setAskToRun, editors }) {
+  // Prefer the original directive body. Reconstructing from parsed markdown
+  // children can drop template-literal backticks and make runnable code invalid.
+  let codeText = typeof rawCode === 'string'
+    ? normalizeRawCode(rawCode)
+    : reconstructCode(children);
 
   // Clean up extra whitespace
   codeText = codeText.trim();
