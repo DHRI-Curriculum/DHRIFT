@@ -8,10 +8,13 @@ class MyDocument extends Document {
 
   
   render() {
-    const favIconLocation = process.env.NEXT_PUBLIC_ASSET_PREFIX + "/favicon.ico";
+    const assetPrefix = process.env.NEXT_PUBLIC_ASSET_PREFIX || '';
+    const favIconLocation = assetPrefix + "/favicon.ico";
+    const coiServiceWorkerLocation = assetPrefix + "/coi-serviceworker.js";
     return (
       <Html>
         <Head>
+          <script src={coiServiceWorkerLocation} defer></script>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
           <link rel="icon" href={favIconLocation} sizes="32x32"></link>
