@@ -13,6 +13,16 @@ const Jupyter = dynamic(() => import('../Wasm/Jupyter'), { ssr: false });
 const Webvm = dynamic(() => import('../Wasm/Webvm'), { ssr: false });
 const Webllm = dynamic(() => import('../Wasm/Webllm'), { ssr: false });
 
+const isUsableDrawerWidth = (width) => {
+    if (typeof width === 'number') return Number.isFinite(width) && width > 0;
+    if (typeof width !== 'string') return false;
+
+    const trimmed = width.trim();
+    if (!trimmed || trimmed.startsWith('-')) return false;
+
+    return /^(\d+(\.\d+)?)(px|%|rem|em|vw|vh)$/.test(trimmed);
+};
+
 // Display names for editor tabs
 const editorLabels = {
     python: 'Python',
@@ -43,7 +53,7 @@ export default function DrawerEditor(props) {
     // Drawer width is lifted to the parent when provided (v2 needs it for layout);
     // otherwise we keep local state as a fallback for v1 callers.
     const [localWidth, setLocalWidth] = useState('45%');
-    const committedWidth = props.drawerWidth ?? localWidth;
+    const committedWidth = isUsableDrawerWidth(props.drawerWidth) ? props.drawerWidth : localWidth;
     const setCommittedWidth = props.setDrawerWidth ?? setLocalWidth;
     const [visualWidth, setVisualWidth] = useState(committedWidth);
     const visualWidthRef = useRef(committedWidth);
