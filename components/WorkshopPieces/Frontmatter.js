@@ -43,6 +43,31 @@ export default function Frontmatter({
     return ConvertMarkdown({ content });
   };
 
+  const normalizeNamedItem = (item, fallbackTitle) => {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) {
+      return { title: fallbackTitle, description: item };
+    }
+
+    const hasDirectFields = ['name', 'title', 'description', 'link', 'required', 'recommended']
+      .some((field) => item[field] !== undefined);
+
+    if (!hasDirectFields) {
+      const entries = Object.entries(item);
+      if (entries.length === 1) {
+        const [title, value] = entries[0];
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          return { ...value, title };
+        }
+        return { title, description: value };
+      }
+    }
+
+    return {
+      ...item,
+      title: item.name || item.title || fallbackTitle,
+    };
+  };
+
   // Render a simple list of strings
   const renderStringList = (items) => {
     if (!items || items.length === 0) return null;
@@ -79,9 +104,10 @@ export default function Frontmatter({
               );
             }
             // Object item
-            const title = prereq?.name || prereq?.title || `Prerequisite ${i + 1}`;
-            const isRequired = prereq?.required;
-            const isRecommended = prereq?.recommended;
+            const item = normalizeNamedItem(prereq, `Prerequisite ${i + 1}`);
+            const title = item.title;
+            const isRequired = item.required;
+            const isRecommended = item.recommended;
             return (
               <div key={`prereq-${title}-${i}`} className={`fm-prereq-card ${isRequired ? 'required' : ''} ${isRecommended ? 'recommended' : ''}`}>
                 <div className="fm-prereq-header">
@@ -89,8 +115,8 @@ export default function Frontmatter({
                   {isRequired && <span className="fm-badge fm-badge-required">Required</span>}
                   {isRecommended && <span className="fm-badge fm-badge-recommended">Recommended</span>}
                 </div>
-                {prereq?.description && (
-                  <p className="fm-prereq-desc">{renderMarkdown(prereq.description)}</p>
+                {item.description && (
+                  <p className="fm-prereq-desc">{renderMarkdown(item.description)}</p>
                 )}
               </div>
             );
@@ -156,16 +182,17 @@ export default function Frontmatter({
               );
             }
             // Object item with name/title, description, link
-            const title = item?.name || item?.title || `Item ${i + 1}`;
+            const normalizedItem = normalizeNamedItem(item, `Item ${i + 1}`);
+            const title = normalizedItem.title;
             return (
               <div key={`linked-${title}-${i}`} className="fm-linked-card">
                 <h4>
-                  {item?.link ? (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer">{title}</a>
+                  {normalizedItem.link ? (
+                    <a href={normalizedItem.link} target="_blank" rel="noopener noreferrer">{title}</a>
                   ) : title}
                 </h4>
-                {item?.description && (
-                  <p>{renderMarkdown(item.description)}</p>
+                {normalizedItem.description && (
+                  <p>{renderMarkdown(normalizedItem.description)}</p>
                 )}
               </div>
             );
