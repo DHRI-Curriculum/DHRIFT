@@ -184,13 +184,16 @@ export default function Frontmatter({
             // Object item with name/title, description, link
             const normalizedItem = normalizeNamedItem(item, `Item ${i + 1}`);
             const title = normalizedItem.title;
+            const hasTitle = title !== `Item ${i + 1}`;
             return (
               <div key={`linked-${title}-${i}`} className="fm-linked-card">
-                <h4>
-                  {normalizedItem.link ? (
-                    <a href={normalizedItem.link} target="_blank" rel="noopener noreferrer">{title}</a>
-                  ) : title}
-                </h4>
+                {hasTitle && (
+                  <h4>
+                    {normalizedItem.link ? (
+                      <a href={normalizedItem.link} target="_blank" rel="noopener noreferrer">{title}</a>
+                    ) : title}
+                  </h4>
+                )}
                 {normalizedItem.description && (
                   <p>{renderMarkdown(normalizedItem.description)}</p>
                 )}
