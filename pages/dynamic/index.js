@@ -28,7 +28,7 @@ import { sanitizeBeforeParse, dropLeadingSliceArtifacts, autoCloseInfoBlocks, au
 import remarkDeflist from 'remark-deflist'
 import slicesUtil from '../../utils/slices.mjs'
 import dynamicStyles from '../../styles/dynamicWorkshop.module.scss'
-import { LEGACY_DYNAMIC_WORKSHOP_BRANCH } from '../../utils/github'
+import { ALIGNED_WORKSHOP_BRANCH, LEGACY_DYNAMIC_WORKSHOP_BRANCH } from '../../utils/github'
 const { maskBlocks, splitToSlices, mdxParseMaskedSliceOrThrow } = slicesUtil;
 
 const drawerWidth = '-30%';
@@ -97,6 +97,7 @@ export default function WorkshopPage({
   const [gitFile, setGitFile] = useState(null);
   const [builtURL, setBuiltURL] = useState(null);
   const [gitBranch, setGitBranch] = useState(LEGACY_DYNAMIC_WORKSHOP_BRANCH);
+  const [attemptedAlignedBranchFallback, setAttemptedAlignedBranchFallback] = useState(false);
   const [editing, setEditing] = useState(false);
   const [markdownError, setMarkdownError] = useState(false);
   const [jupyterSrc, setJupyterSrc] = useState('https://dhri-curriculum.github.io/jupyterlite/lab/index.html');
@@ -280,6 +281,7 @@ export default function WorkshopPage({
     const urlParams = new URLSearchParams(window.location.search);
     const requestedFile = urlParams.get('file');
     const requestedBranch = urlParams.get('branch') || LEGACY_DYNAMIC_WORKSHOP_BRANCH;
+    setAttemptedAlignedBranchFallback(false);
     setGitFile(requestedFile);
     setGitBranch(requestedBranch);
     setEditing(urlParams.get('edit'));
@@ -298,6 +300,28 @@ export default function WorkshopPage({
 
   useEffect(() => {
     if (data?.error) {
+      const isGitHubNotFound = data.error.message?.includes('(404)') || data.error.message?.includes('No commit found');
+      // Institute schedules may still point dynamic workshop links at legacy-dynamic.
+      // If a repo never had that branch, retry the aligned main branch before failing.
+      if (
+        isGitHubNotFound &&
+        gitBranch === LEGACY_DYNAMIC_WORKSHOP_BRANCH &&
+        !attemptedAlignedBranchFallback &&
+        gitUser &&
+        gitRepo &&
+        gitFile
+      ) {
+        setAttemptedAlignedBranchFallback(true);
+        setGitBranch(ALIGNED_WORKSHOP_BRANCH);
+        setBuiltURL(buildGitHubContentsURL(gitUser, gitRepo, gitFile, ALIGNED_WORKSHOP_BRANCH));
+        setMarkdownError(false);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('branch', ALIGNED_WORKSHOP_BRANCH);
+        window.history.replaceState(window.history.state, '', `/dynamic/?${urlParams.toString()}`);
+        return;
+      }
+
       setMarkdownError(data.error);
       if (initialLoading) setInitialLoading(false);
       return;
@@ -305,6 +329,7 @@ export default function WorkshopPage({
 
     if (data && !currentFile && typeof (data) === 'string') {
       try {
+        setMarkdownError(false);
         const matterResult = matter(data)
         setCurrentFile(matterResult)
         setMetadata(matterResult.data)
