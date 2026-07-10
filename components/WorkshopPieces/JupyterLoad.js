@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
 import { Button } from '@mui/material';
+import { buildJupyterLiteUrl } from '../../utils/jupyter';
 
 
 export default function JupyterLoad({ setJupyterSrc, IPYNB: desiredFile }) {
     const handleClick = () => {
-        const fromURLString = `&fromURL=${desiredFile}`;
-        const finalURL = `https://melodic-moonbeam-e29b67.netlify.app/lab/index.html?${fromURLString}`;
-        setJupyterSrc(finalURL);
+        setJupyterSrc(buildJupyterLiteUrl(desiredFile));
     };
 
     return (
