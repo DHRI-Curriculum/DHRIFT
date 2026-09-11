@@ -1,6 +1,19 @@
 export const ALIGNED_WORKSHOP_BRANCH = 'main';
 export const LEGACY_DYNAMIC_WORKSHOP_BRANCH = 'legacy-dynamic';
 
+/**
+ * Authenticate public GitHub API reads with DHRIFT's public read-only credential.
+ * The static client exposes this token, so it must never grant private or write access.
+ */
+export const getGitHubHeaders = () => {
+  const headers = new Headers();
+  const token = process.env.NEXT_PUBLIC_GITHUB_READ_TOKEN;
+  if (token && token !== 'false') {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+  return headers;
+};
+
 const KNOWN_DHRI_WORKSHOP_FILES = [
   'DHRIFT_workshop-template.md',
   'README.md',
@@ -137,6 +150,7 @@ export const normalizeKnownAssetUrl = (src) => {
  */
 export const createGitHubFetcher = (options = {}) => {
   const { decodeBase64 = true, onError } = options;
+  const headers = getGitHubHeaders();
 
   return async (...args) => {
     try {
@@ -160,6 +174,7 @@ export const createGitHubFetcher = (options = {}) => {
       }
 
       const res = await fetch(...args, {
+        headers,
         method: 'GET',
       });
       const contentType = res.headers.get('content-type') || '';
@@ -194,9 +209,11 @@ export const createGitHubFetcher = (options = {}) => {
 const checkGitHubResource = async (user, repo) => {
   try {
     const apiURL = `https://api.github.com/repos/${user}/${repo}`;
+    const headers = getGitHubHeaders();
 
     const response = await fetch(apiURL, {
-      method: 'GET'
+      method: 'GET',
+      headers
     });
 
     const data = await response.json();

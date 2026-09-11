@@ -3,6 +3,8 @@ const withMDX = require('@next/mdx')({
 })
 
 process.env.NEXT_PUBLIC_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS || false;
+// DHRIFT is a static site, so this public read-only credential is embedded in the client bundle.
+process.env.NEXT_PUBLIC_GITHUB_READ_TOKEN = process.env.GITHUB_READ_TOKEN || false;
 process.env.NEXT_PUBLIC_ASSET_PREFIX = process.env.PAGES_PATH || '';
 
 const nextConfig = {

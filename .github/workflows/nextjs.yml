@@ -66,6 +66,7 @@ jobs:
       - name: Build with Next.js
         run: bun run next build
         env:
+          GITHUB_READ_TOKEN: ${{ secrets.DHRIFT_GITHUB_READ_TOKEN }}
           PAGE_URL: ${{ steps.setup-pages.outputs.base_path }}
 
       - name: Upload artifact
