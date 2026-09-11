@@ -1,18 +1,6 @@
 export const ALIGNED_WORKSHOP_BRANCH = 'main';
 export const LEGACY_DYNAMIC_WORKSHOP_BRANCH = 'legacy-dynamic';
 
-/**
- * Get GitHub API headers with optional authentication
- * @returns {Headers} Headers object for GitHub API requests
- */
-export const getGitHubHeaders = () => {
-  const headers = new Headers();
-  if (process.env.NEXT_PUBLIC_GITHUBSECRET && process.env.NEXT_PUBLIC_GITHUBSECRET !== 'false') {
-    headers.set('Authorization', `token ${process.env.NEXT_PUBLIC_GITHUBSECRET}`);
-  }
-  return headers;
-};
-
 const KNOWN_DHRI_WORKSHOP_FILES = [
   'DHRIFT_workshop-template.md',
   'README.md',
@@ -149,7 +137,6 @@ export const normalizeKnownAssetUrl = (src) => {
  */
 export const createGitHubFetcher = (options = {}) => {
   const { decodeBase64 = true, onError } = options;
-  const headers = getGitHubHeaders();
 
   return async (...args) => {
     try {
@@ -173,7 +160,6 @@ export const createGitHubFetcher = (options = {}) => {
       }
 
       const res = await fetch(...args, {
-        headers,
         method: 'GET',
       });
       const contentType = res.headers.get('content-type') || '';
@@ -208,11 +194,9 @@ export const createGitHubFetcher = (options = {}) => {
 const checkGitHubResource = async (user, repo) => {
   try {
     const apiURL = `https://api.github.com/repos/${user}/${repo}`;
-    const headers = getGitHubHeaders();
 
     const response = await fetch(apiURL, {
-      method: 'GET',
-      headers
+      method: 'GET'
     });
 
     const data = await response.json();
